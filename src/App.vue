@@ -1,6 +1,8 @@
 <template>
-  <div>app</div>
-  // Selamlar
+  <div>app
+    Selamlar kızlar
+  </div>
+   
 </template>
 
 <script setup lang="ts"></script>
