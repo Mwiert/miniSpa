@@ -1,5 +1,5 @@
 <template>
-  <div>app</div>
+  <div>selam</div>
 </template>
 
 <script setup lang="ts"></script>
