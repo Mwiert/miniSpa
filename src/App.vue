@@ -1,6 +1,6 @@
 <template>
   <div>app
-    Selamlar kızlar
+    Selamlar kızlarrrrrrrrrrrr
   </div>
    
 </template>
