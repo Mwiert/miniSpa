@@ -3,7 +3,13 @@
 </template>
 
 <script lang="ts">
-export default {}
+export default {
+  data() {
+    return {
+      logo: 'https://cdn.dev.reisetech.io/airline_34x34/'
+    }
+  }
+}
 </script>
 
 <style scoped></style>
