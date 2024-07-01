@@ -1,6 +1,5 @@
 <template>
   <div>app
-    Selamlar kızlar
   </div>
    
 </template>
