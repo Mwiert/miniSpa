@@ -1,13 +1,14 @@
 <template>
-  <div class="flight-card-c">
+  <div class="flight-card-c" @click="handlerSelectCard">
     <div class="brand-logo">
-      <img :src="brandLogo" alt="brand-logo" />
+      <img :src="BrandLogo" alt="brand-logo" />
       <span>{{ flight?.airlineCode }}</span>
     </div>
     <div class="flight-leg">
       <div class="departure">
         <span>{{ flight?.departureAirport }}</span>
-        <span>{{ timeFormat(flight?.departureTime) }}</span>
+
+        <span>{{ DepartureTime }}</span>
       </div>
       <div class="flight-info">
         <span>{{ timeDifference }}</span>
@@ -16,7 +17,7 @@
       </div>
       <div class="arrival">
         <span>{{ flight?.arrivalAirport }}</span>
-        <span>{{ timeFormat(flight?.arrivalTime) }}</span>
+        <span>{{ ArrivalTime }}</span>
       </div>
     </div>
     <div class="leg-price">
@@ -33,22 +34,28 @@ export default {
     brandLogo: String,
     flight: Object
   },
-  created() {
-    console.log(this.$dayjs().format('HH:mm'))
-  },
+
   computed: {
+    BrandLogo() {
+      return `https://cdn.dev.reisetech.io/airline_34x34/${this.flight.airlineCode}.svg`
+    },
     timeDifference() {
-      const hours = this.$dayjs(this.flight.arrivalTime).diff(this.flight.departureTime, 'hours')
-      const minutes = this.$dayjs(this.flight.arrivalTime).diff(
-        this.flight.departureTime,
-        'minutes'
-      )
+      const departure = this.flight.departure.time
+      const arrival = this.flight.arrival.time
+      const hours = this.$dayjs(arrival).diff(departure, 'hours')
+      const minutes = this.$dayjs(arrival).diff(departure, 'minutes')
       return hours + 'h ' + (minutes % 60 == 0 ? '' : (minutes % 60) + 'min')
+    },
+    DepartureTime() {
+      return this.$dayjs(this.flight.departure.time).format('HH:mm')
+    },
+    ArrivalTime() {
+      return this.$dayjs(this.flight.arrival.time).format('HH:mm')
     }
   },
   methods: {
-    timeFormat(dateTime: string) {
-      return this.$dayjs(dateTime).format('HH:mm')
+    handlerSelectCard() {
+      this.$emit('select:flight', this.flight)
     }
   }
 }
@@ -65,13 +72,26 @@ export default {
   overflow: hidden;
   padding: 1rem;
   box-shadow: rgba(218, 216, 216, 0.4) 1px 3px 5px;
-  margin-bottom: 1rem;
+  margin: 0 auto;
+  margin-bottom: 0.75rem;
+  transition-duration: 0.05s;
+  transition-timing-function: ease-in-out;
+  transition-property: transform;
+
+  &:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+  }
+
   .brand-logo {
     width: 30%;
     display: flex;
     flex-direction: column;
-    text-align: center;
-    justify-items: center;
+    align-items: center;
+
+    img {
+      width: 38px;
+    }
   }
   .flight-leg {
     display: flex;
