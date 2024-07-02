@@ -1,5 +1,13 @@
+interface Segment {
+  airport: String
+  time: String
+}
+
 export interface Flight {
-  id: number
-  name: string
-  stars: number
+  airlineCode: string
+  departure: Segment
+  arrival: Segment
+  price: string
+  class: number
+  segmentNumber: number
 }
