@@ -1,14 +1,17 @@
 <template>
-    <div>
+    <div >
+        denemedir
     </div>
-</template>
-
-
-<script>
-export default {
+  </template>
+  
+  <script>
+ 
+  
+  export default {
     name: 'UIDropdown',
-  components: {},
-  data() {
+    components: {
+    },
+    data() {
     return {
     }
   },
@@ -16,5 +19,10 @@ export default {
   mounted() {},
   computed: {},
   methods: {}
-}
-</script>
+  
+  }
+  </script>
+  
+  <style>
+  /* Add your styles here */
+  </style> 

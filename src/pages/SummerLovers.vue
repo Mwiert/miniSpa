@@ -1,20 +1,20 @@
 <template>
-  <div>
-    <UIDropdown />
-  </div>
-</template>
+    <div>
+      <UIDropdown />
+    </div>
+  </template>
+  
 
+  <script lang="ts">
 
-<script lang="ts">
-
-import UIDropdown from "../components/UIDropdown.vue";
-
-export default {
-  name: 'SummerLovers',
-  components: {
-    UIDropdown
+  import UIDropdown from "../components/UIDropdown.vue";
+  export default {
+    name: 'SummerLovers',
+    components: {
+      UIDropdown
+    },
   }
-}
-</script>
-
-<style lang="scss" scoped></style>
+  </script>
+  
+  <style lang="scss" scoped></style>
+  
