@@ -32,18 +32,38 @@ export default {
         return {
             weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
             selectedDate: dayjs(),
-            daysInMonth: []
+            daysInMonth: [],
+            TodaysDate: null
         }
     },
     methods: {
+
         totalDaysInMonth() {
+
             this.daysInMonth = [];
             const startOfMonth = this.selectedDate.startOf('month');
             const endOfMonth = this.selectedDate.endOf('month');
-            
-            for (let i = 1; i <= endOfMonth.date(); i++) {
-                this.daysInMonth.push(i);
+            const offsetValue = (startOfMonth.day() + 6) % 7;
+
+            for (let i = 0 ; i < offsetValue; i++) {
+                this.daysInMonth.push({ date: startOfMonth.subtract(offsetValue - i, 'day')});
+                console.log(typeof this.daysInMonth[i])
             }
+
+            for (let i = 0; i < endOfMonth.date(); i++) {
+                this.daysInMonth.push(i+1);
+                console.log(typeof this.daysInMonth[i])
+            }
+
+            const endOffsetValue = (7-(this.daysInMonth.length % 7)) % 7
+
+            for (let i = 0; i < endOffsetValue; i++) {
+                this.daysInMonth.push({ date: endOfMonth.subtract(i, 'day')});
+                
+
+            }
+            this.daysInMonth.filter(day => day.date === "object")
+
         },
         onClickToRight() {
             this.selectedDate = this.selectedDate.add(1, 'month');
