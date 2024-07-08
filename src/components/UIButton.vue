@@ -1,8 +1,8 @@
 <template>
-  <button :class="['reisetech-btn', `reisetech-btn__${className}`]" :disabled="isDisabled">
-    <span v-if="icon" :class="['icon', icon]"></span>
+  <button :class="['reisetech-btn', `reisetech-btn__${btnClassName}`]" :disabled="isDisabled">
+    <span v-if="icon" :class="['icon', btnIcon]"></span>
     <span v-if="isSpinnerActive" class="spinner"></span>
-    <span v-else>{{ text }}</span>
+    <span v-else>{{ btnText }}</span>
   </button>
 </template>
 
@@ -13,17 +13,22 @@ export default {
     className: String,
     text: String,
     isRouter: Boolean,
-    routerUrl: String, Object,
+    routerUrl: String,
+    Object,
     icon: String,
     isSpinnerActive: Boolean,
     isDisabled: Boolean
   },
   components: {},
   data() {
-    return {}
+    return {
+      btnClassName: this.className,
+      btnText: this.text,
+      btnIcon: this.icon
+    }
   },
-  created() { },
-  mounted() { },
+  created() {},
+  mounted() {},
   computed: {},
   methods: {}
 }
@@ -32,20 +37,39 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
 
-
 .reisetech-btn {
   width: 100%;
   height: 48px;
   border-radius: 24px;
   font-size: 16px;
-  background-color: #FFFFFF;
-  color: white;
+  background-color: transparent;
+  border: 2px;
+  color: black;
   cursor: pointer;
   padding: $padding-medium;
-  border:none;
+  text-align: center;
+  border: 2px solid black;
 
-  &__flight{
+  &__flight {
     background-color: $primary-color;
+    border: none;
+    color: white;
+    &.outline {
+      background-color: white;
+      color: $primary-color;
+      border: 2px solid $primary-color;
+      text-align: center;
+    }
+  }
+  &__hotel {
+    background-color: $secondary-color;
+    border: none;
+    color: white;
+    &.outline {
+      background-color: white;
+      color: $secondary-color;
+      border: 2px solid $secondary-color;
+    }
   }
 
   &:hover {
@@ -53,11 +77,5 @@ export default {
     border: none;
     color: white;
   }
-}
-
-.outline {
-  background-color: white;
-  color: $primary-color;
-  border: 2px solid $primary-color;
 }
 </style>
