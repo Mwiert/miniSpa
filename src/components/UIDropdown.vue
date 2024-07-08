@@ -1,16 +1,13 @@
 <template>
-    <div>
-    </div>
+  <div>denemedir</div>
 </template>
-
 
 <script>
 export default {
-    name: 'UIDropdown',
+  name: 'UIDropdown',
   components: {},
   data() {
-    return {
-    }
+    return {}
   },
   created() {},
   mounted() {},
@@ -18,3 +15,7 @@ export default {
   methods: {}
 }
 </script>
+
+<style>
+/* Add your styles here */
+</style>

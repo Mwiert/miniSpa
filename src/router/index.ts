@@ -1,18 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../pages/HomeView.vue'
-import UIDropdown from '../components/UIDropdown.vue'
+import TimeBenders from '../pages/TimeBenders.vue'
+import PowerPuffGirls from '../pages/PowerPuffGirls.vue'
+import SummerLovers from '../pages/SummerLovers.vue'
+
 const router = createRouter({
   history: createWebHistory('./'),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
+      path: '/timebenders',
+      name: 'TimeBenders',
+      component: TimeBenders
     },
     {
-      path: '/summerlovers',
-      name: 'summerlovers',
-      component: UIDropdown
+      path: '/powerpuffgirls',
+      name: 'PowerPuffGirls',
+      component: PowerPuffGirls
+    },
+    {
+      path: '/summerLovers',
+      name: 'SummerLovers',
+      component: SummerLovers
     }
   ]
 })
