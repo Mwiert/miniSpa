@@ -1,19 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import FlightResults from '@/pages/FlightResults.vue'
-import ExamplePage from '@/pages/ExamplePage.vue'
-
+import PinkPanthers from '../pages/PinkPanthers.vue'
+import PowerPuffGirls from '../pages/PowerPuffGirls.vue'
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('./'),
   routes: [
     {
-      path: '/',
-      name: 'flightresults',
-      component: FlightResults
+      path: '/pinkpanthers',
+      name: 'pinkpanthers',
+      component: PinkPanthers
     },
     {
-      path: '/ex',
-      name: 'examplepage',
-      component: ExamplePage
+      path: '/powerpuffgirls',
+      name: 'powerpuffgirls',
+      component: PowerPuffGirls
     }
   ]
 })
