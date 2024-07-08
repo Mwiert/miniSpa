@@ -1,10 +1,10 @@
 <template>
     <span>
-        <button class="ui-button-c">Button Label</button>
+        <button class="ui-button-c">Button 1</button>
     </span>
 
     <span>
-        <button class="ui-button-c outline">Button Label</button>
+        <button class="ui-button-c outline">Button 2</button>
     </span>
    
 </template>
