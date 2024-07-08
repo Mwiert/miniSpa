@@ -1,10 +1,10 @@
 <template>
     <span>
-        <button>Button Label</button>
+        <button class="ui-button-c">Button Label</button>
     </span>
 
     <span>
-        <button>Button Label</button>
+        <button class="ui-button-c outline">Button Label</button>
     </span>
    
 </template>
@@ -23,5 +23,35 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import '@/assets/css/main.scss';
+
+
+.ui-button-c{
+width: 100%;
+height: 48px;
+border-radius: 24px;
+font-size: 16px;
+background-color: $primary-color;
+color: white;
+cursor: pointer;
+padding: $padding-medium;
+&:hover{
+    background: $accent-primary-color;
+    border: none;
+    color: white;
+}
+}
+
+.outline{
+background-color:white;
+color: $primary-color;
+border: 2px solid $primary-color;
+}
+
+
+
+
+
+
 </style>
