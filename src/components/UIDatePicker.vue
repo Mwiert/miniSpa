@@ -1,27 +1,32 @@
 <template>
     <div class="ui-date-picker-c">
         <div class="ui-date-picker-wrapper">
-            <div class="calendar">
+            <div>
+                <div class="calendar">
                 <div class="header">
                     <button class="nav-button" @click="onClickToLeft">&lt;</button>
                     <span class="current-date">{{ dateHolder }}</span>
                     <button class="nav-button" @click="onClickToRight">&gt;</button>
                 </div>
+                <ul class="weekdays">
+                    <template v-for="(weekday, index) in weekdays" :key="index">
+                        <li> {{ weekday }}</li>
+                    </template>
+                </ul>
+                <ul class= "days">
+                    <template v-for="(day, index) in daysInMonth" :key="index">
+                        <li> {{ day }}</li>
+                    </template>
+                </ul>
             </div>
         
-            <div class="weekdays">
-                <span v-for="(weekday, index) in weekdays" :key="index">
-                    {{ weekday }}
-                </span>
-                <div class="days">
-                <span v-for="(day, index) in daysInMonth" :key="index">
-                    {{ day }}
-                </span>
+            
             </div>
+            
             </div>
            
         </div>
-    </div>
+
 </template>
 
 <script lang="ts">
@@ -45,9 +50,8 @@ export default {
             const endOfMonth = this.selectedDate.endOf('month');
             const offsetValue = (startOfMonth.day() + 6) % 7;
 
-            for (let i = 0 ; i < offsetValue; i++) {
-                this.daysInMonth.push({ date: startOfMonth.subtract(offsetValue - i, 'day')});
-                console.log(typeof this.daysInMonth[i])
+            for (let i = 0; i < offsetValue; i++) {
+                this.daysInMonth.push(" ");
             }
 
             for (let i = 0; i < endOfMonth.date(); i++) {
@@ -57,12 +61,11 @@ export default {
 
             const endOffsetValue = (7-(this.daysInMonth.length % 7)) % 7
 
-            for (let i = 0; i < endOffsetValue; i++) {
-                this.daysInMonth.push({ date: endOfMonth.subtract(i, 'day')});
-                
-
+            for (let i = 0; i <  endOffsetValue; i++) {
+                this.daysInMonth.push(" ");
             }
-            this.daysInMonth.filter(day => day.date === "object")
+            
+            console.log(this.daysInMonth)
 
         },
         onClickToRight() {
@@ -100,8 +103,8 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     
     .ui-date-picker-wrapper {
         background: #FFFFFF;
@@ -113,7 +116,7 @@ export default {
         height: 240px;
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
+        justify-content: space-evenly;
         align-items: center;
 
         .calendar {
@@ -137,8 +140,10 @@ export default {
             }
         }
         .weekdays {
-            padding-bottom: 60px;
+            list-style: none;
+            align-items: center;
             width: 220px;
+            max-width: 220px;
             display: grid;
             grid-template-columns: repeat(7, 1rem);
             justify-content: space-between;
@@ -146,16 +151,19 @@ export default {
             font-weight: 700;
             color: #363636;
             opacity: 0.7;
-            
-            .days {
-            padding-top: 5px;
+        
+        }
+        
+        .days {
+            list-style: none;   
             width: 220px;
+            max-width: 220px;
             font-size: 14px;
             display: grid;
             grid-template-columns: repeat(7, 1rem);
             justify-content: space-between;
             text-align: center;
-        }
+            align-self: center;
         }
     
 
