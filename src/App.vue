@@ -1,6 +1,6 @@
 <template>
   <div class="app-page">
-    <router-view>DENEME</router-view>
+    <router-view>DENEMEs</router-view>
   </div>
 </template>
 
