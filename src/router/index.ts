@@ -26,7 +26,13 @@ const router = createRouter({
       path: '/pinkpanthers',
       name: 'PinkPanthers',
       component: PinkPanthers
+    },
+    {
+      path: '/pinkpanthers',
+      name: 'PinkPanthers',
+      component: PinkPanthers
     }
+    
   ]
 })
 
