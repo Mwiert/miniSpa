@@ -9,10 +9,26 @@
 
   export default {
     name: 'UIDropdown',
-    components: {
-  
-    }
-  };
+
+    components: {},
+    data() {
+      return {
+        
+      }
+    },
+    created() {
+      
+    },
+    mounted() {
+      
+    },
+    computed:{
+
+    },
+    methods: {
+      
+    },
+  }
   </script>
 
   <style>
