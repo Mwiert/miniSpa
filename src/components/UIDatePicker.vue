@@ -116,12 +116,13 @@ export default {
         height: 240px;
         display: flex;
         flex-direction: column;
-        justify-content: space-evenly;
         align-items: center;
+        
 
         .calendar {
-            padding-top: 10px;
-            width: 200px;
+            padding-top: 1rem;
+            width: 100%;
+            justify-content: space-around;
             .header {
                 display: flex;
                 justify-content: space-between;
@@ -129,43 +130,41 @@ export default {
                 .nav-button {
                     background-color: transparent;
                     border: none;
-                    font-size: 1.5rem;
+                    font-size: 1.2rem;
                     font-family: 'Arial';
                     cursor: pointer;
                 }
                 .current-date {
-                    font-size: 1rem;
+                    font-size: 0.9rem;
                     font-weight: 500;
                 }
             }
         }
-        .weekdays {
+        
+        .weekdays, .days {
             list-style: none;
-            align-items: center;
-            width: 220px;
-            max-width: 220px;
+            padding: 0;
+            margin: 0;
+            width: 100%;
             display: grid;
-            grid-template-columns: repeat(7, 1rem);
-            justify-content: space-between;
-            font-size: 14px;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-size: 10px;
+        }
+        
+        .weekdays {
+            padding-top: 20px;
             font-weight: 700;
             color: #363636;
             opacity: 0.7;
-        
         }
-        
-        .days {
-            list-style: none;   
-            width: 220px;
-            max-width: 220px;
-            font-size: 14px;
-            display: grid;
-            grid-template-columns: repeat(7, 1rem);
-            justify-content: space-between;
-            text-align: center;
-            align-self: center;
+        .days{
+            padding-top: 6px;
         }
-    
+        .days li{
+            padding: 10px 9px;
+            line-height: 5px;
+        }
 
     }
 }
