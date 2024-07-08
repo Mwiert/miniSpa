@@ -46,9 +46,12 @@ export default {
   border: 2px;
   color: black;
   cursor: pointer;
+  display: flex;
   padding: $padding-medium;
   text-align: center;
   border: 2px solid black;
+  justify-content: center;
+  align-items: center;
 
   &__flight {
     background-color: $primary-color;
@@ -58,7 +61,6 @@ export default {
       background-color: white;
       color: $primary-color;
       border: 2px solid $primary-color;
-      text-align: center;
     }
   }
   &__hotel {
