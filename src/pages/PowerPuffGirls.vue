@@ -1,9 +1,20 @@
 <template>
-    <div>Deneme</div>
+    <div>
+        <UIButton />
+        </div>
 </template>
 
 <script lang="ts">
+import UIButton from '../components/UIButton.vue'
 export default {
-    name: 'PowerPuffGirls'
+    name: 'PowerPuffGirls',
+    components: {
+        UIButton,
+    },
+    data() {
+        return {
+            
+        }
+    },
 }
 </script>
