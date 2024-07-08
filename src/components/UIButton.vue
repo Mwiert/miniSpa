@@ -1,12 +1,9 @@
 <template>
-  <span>
-    <button class="ui-button-c">Button Label Deneme</button>
-  </span>
-
-  <span>
-    <button class="ui-button-c outline">Button Label</button>
-  </span>
-
+  <button :class="['reisetech-btn', `reisetech-btn__${className}`]" :disabled="isDisabled">
+    <span v-if="icon" :class="['icon', icon]"></span>
+    <span v-if="isSpinnerActive" class="spinner"></span>
+    <span v-else>{{ text }}</span>
+  </button>
 </template>
 
 <script lang="ts">
@@ -36,15 +33,20 @@ export default {
 @import '@/assets/css/main.scss';
 
 
-.ui-button-c {
+.reisetech-btn {
   width: 100%;
   height: 48px;
   border-radius: 24px;
   font-size: 16px;
-  background-color: $primary-color;
+  background-color: #FFFFFF;
   color: white;
   cursor: pointer;
   padding: $padding-medium;
+  border:none;
+
+  &__flight{
+    background-color: $primary-color;
+  }
 
   &:hover {
     background: $accent-primary-color;

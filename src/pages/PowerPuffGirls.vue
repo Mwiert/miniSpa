@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UIButton />
+        <UIButton className="flight" text="Flight Button" :isSpinnerActive="false" :isDisabled="false" />
         </div>
 </template>
 
