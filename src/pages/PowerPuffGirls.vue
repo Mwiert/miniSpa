@@ -1,6 +1,10 @@
 <template>
-    <div>
-        <UIButton />
+    <div class="button-c">
+        <UIButton className="flight" text="Flight Button" :isSpinnerActive="false" :isDisabled="false" />
+        <UIButton className="hotel" text="Hotel Button" :isSpinnerActive="false" :isDisabled="false" />
+        <UIButton className="reisetech-btn" text="Default Button" :isSpinnerActive="false" :isDisabled="false" />
+        <UIButton className="flight outline" text="Flight Outline Button" :isSpinnerActive="false" :isDisabled="false" />
+        <UIButton className="hotel outline" text="Hotel Outline Button" :isSpinnerActive="false" :isDisabled="false" />
         </div>
 </template>
 
@@ -18,3 +22,10 @@ export default {
     },
 }
 </script>
+<style lang="scss" scoped>
+    .button-c{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+</style>
