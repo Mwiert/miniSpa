@@ -1,5 +1,5 @@
 <template>
-    <div class="ui-date-picker-c" >
+    <div class="ui-date-picker-c">
         <div class="ui-date-picker-wrapper">
             <div class="calendar">
                 <div class="header">
@@ -10,84 +10,71 @@
             </div>
         
             <div class="weekdays">
-                <span v-for="(weekdays,index) in weekdays" :key = index>
-                    {{ weekdays }}
+                <span v-for="(weekday, index) in weekdays" :key="index">
+                    {{ weekday }}
                 </span>
                 <div class="days">
-                <span v-for="(days,index) in daysInMonth" :key="index">
-                    {{ days }}
+                <span v-for="(day, index) in daysInMonth" :key="index">
+                    {{ day }}
                 </span>
             </div>
             </div>
-        
+           
         </div>
-
     </div>
 </template>
-
 
 <script lang="ts">
 import dayjs from 'dayjs'
 export default {
-    name:"UIDatePicker",
+    name: "UIDatePicker",
     data() {
         return {
-            
             weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
             selectedDate: dayjs(),
             daysInMonth: []
         }
     },
     methods: {
-        totalDaysInMonth(){
+        totalDaysInMonth() {
+            this.daysInMonth = [];
+            const startOfMonth = this.selectedDate.startOf('month');
+            const endOfMonth = this.selectedDate.endOf('month');
             
-            let startOfMonth = this.selectedDate.startOf('month').format('D');
-            console.log(startOfMonth)
-            let endOfMonth = this.selectedDate.endOf('month').format('D');
-            console.log(endOfMonth)
-
-            for (let i = 0; i < endOfMonth; i++){
-                console.log(i)
-                this.daysInMonth.push(i)     
+            for (let i = 1; i <= endOfMonth.date(); i++) {
+                this.daysInMonth.push(i);
             }
         },
-
-        onClickToRight(){
-            this.selectedDate = this.selectedDate.add(1, 'month')
-
+        onClickToRight() {
+            this.selectedDate = this.selectedDate.add(1, 'month');
+            this.totalDaysInMonth(); 
         },
-
-        onClickToLeft(){
-            this.selectedDate = this.selectedDate.subtract(1, 'month')
+        onClickToLeft() {
+            this.selectedDate = this.selectedDate.subtract(1, 'month');
+            this.totalDaysInMonth(); 
         },
-
-        currentMonth(){
-            return this.selectedDate.format('MMMM')
+        currentMonth() {
+            return this.selectedDate.format('MMMM');
         },
-        currentYear(){
-            return this.selectedDate.format('YYYY')
-        },
+        currentYear() {
+            return this.selectedDate.format('YYYY');
+        }
     },
     computed: {
-
-        dateHolder(){
-            return this.currentMonth() + " " + this.currentYear()
-        },
-        dateDaysHolder(){
-            return this.totalDaysInMonth()
+        dateHolder() {
+            return this.currentMonth() + " " + this.currentYear();
         }
+    },
+    created() {
+        this.totalDaysInMonth();
     }
 }
 </script>
 
- 
 <style lang="scss" scoped>
-
-
 @import '../assets/css/variables.scss';
 
-.ui-date-picker-c{
-
+.ui-date-picker-c {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -96,8 +83,7 @@ export default {
     width: 90%;
     height: 90%;
     
-    .ui-date-picker-wrapper{
-
+    .ui-date-picker-wrapper {
         background: #FFFFFF;
         box-shadow: 2px 2px 6px #5C75991A;
         border: 1px solid #E6E6E6;
@@ -110,28 +96,28 @@ export default {
         justify-content: space-around;
         align-items: center;
 
-        .calendar{
+        .calendar {
             padding-top: 10px;
             width: 200px;
-            .header{
+            .header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                .nav-button{
+                .nav-button {
                     background-color: transparent;
                     border: none;
                     font-size: 1.5rem;
                     font-family: 'Arial';
                     cursor: pointer;
                 }
-                .current-date{
+                .current-date {
                     font-size: 1rem;
                     font-weight: 500;
                 }
             }
         }
-        .weekdays{
-            padding-bottom: 120px;
+        .weekdays {
+            padding-bottom: 60px;
             width: 220px;
             display: grid;
             grid-template-columns: repeat(7, 1rem);
@@ -140,18 +126,19 @@ export default {
             font-weight: 700;
             color: #363636;
             opacity: 0.7;
-            .days{
-
-                width: 220px;
-                display: grid;
-                grid-template-columns: repeat(7, 1rem);
-                justify-content: space-between;
-                text-align: center
-}
-        
+            
+            .days {
+            padding-top: 5px;
+            width: 220px;
+            font-size: 14px;
+            display: grid;
+            grid-template-columns: repeat(7, 1rem);
+            justify-content: space-between;
+            text-align: center;
         }
-        
-    }
+        }
     
+
+    }
 }
 </style>
