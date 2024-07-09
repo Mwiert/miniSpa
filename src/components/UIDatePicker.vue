@@ -17,16 +17,20 @@
                     <ul class="days">
                         <li
                             v-for="(day, index) in daysInMonth" :key="index"
+                            
                             :class="{
-                                'not-current-month': !day.isCurrentMonth,
-                                'selected': day.isSelected,
-                                'past-date': isPastDate(day.date),
-                                'is-today': day.isToday
+                                inactive: day.inactive,
+                                active: day.active,
+                                selected: day.isSelected,
+                                textDecoration: isPastDate(day.date),
+                                blink: Boolean,
+                                between: Boolean,
+                                isToday: day.isToday
                             }" 
                             @click="selectDate(day.date)"
                         >
                             {{ day.date ? day.date.date() : '' }}
-                        </li>
+                        </li>   
                     </ul>
                 </div>
             </div>
@@ -37,6 +41,21 @@
 <script lang="ts">
 import dayjs from 'dayjs';
 
+interface date {
+
+        inactive: Boolean,
+        active: Boolean,
+        selected: Boolean,
+        textDecoration: Boolean,
+        blink: Boolean,
+        between: Boolean,
+        isToday:  Boolean,
+        month: string,
+        year: Number,
+        day: string,
+        
+}
+
 export default {
     name: "UIDatePicker",
     data() {
@@ -44,12 +63,15 @@ export default {
             weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
             selectedDate: dayjs(),
             onClickToLeftBorder: false,
-            daysInMonth: [],
-            TodaysDate: null
+            daysInMonth: [] as date[],
+            TodaysDate: null,
+            
         };
     },
     methods: {
+
         totalDaysInMonth() {
+            
             this.daysInMonth = [];
             const startOfMonth = this.selectedDate.startOf('month');
             const endOfMonth = this.selectedDate.endOf('month');
@@ -58,20 +80,26 @@ export default {
             let today = dayjs().format('D');
 
             for (let i = 0; i < offsetValue; i++) {
-                this.daysInMonth.push({ date: null, isCurrentMonth: false, isToday: false });
+                this.daysInMonth.push({ date: null, inactive: true, isToday: false });
             }
 
             for (let i = 0; i < endOfMonth.date(); i++) {
                 const date = dayjs(new Date(this.selectedDate.year(), this.selectedDate.month(), i + 1));
-                this.daysInMonth.push({ date: date, isCurrentMonth: true, isSelected: this.isSelected(date), isPast: this.isPastDate(date), isToday: Number(today) === i + 1 && this.currentMonth() === dayjs().format('MMMM') && this.currentYear() === dayjs().format('YYYY') });
+                this.daysInMonth.push({ 
+                    date: date, 
+                    inactive: false, 
+                    isSelected: this.isSelected(date), 
+                    isPast: this.isPastDate(date), 
+                    isToday: Number(today) === i + 1 && this.currentMonth() === dayjs().format('MMMM') && this.currentYear() === dayjs().format('YYYY') 
+                });
             }
 
             for (let i = 1; i <= endOffsetValue; i++) {
-                this.daysInMonth.push({ date: null, isCurrentMonth: false, isToday: false });
+                this.daysInMonth.push({ date: null, inactive: true, isToday: false });
             }
 
-            console.log(this.daysInMonth);
         },
+
         onClickToRight() {
             this.selectedDate = this.selectedDate.add(1, 'month');
             this.totalDaysInMonth();
@@ -79,18 +107,35 @@ export default {
             console.log(this.onClickToLeftBorder);
         },
         onClickToLeft() {
-            let month = dayjs().format('MMMM');
-            let year = dayjs().format('YYYY');
-            if (this.currentMonth() === month && this.currentYear() === year) {
+
+            //Unutmayalım diye not geçiyorum toplarız sonra commentleri
+
+            const today = dayjs(); //Bunu yapmak zorunda kalıyorum yoksa duplicate alıyor.
+            const currentMonth = today.format('MMMM'); //Ayı Al
+            const currentYear = today.format('YYYY'); //Yılı Al
+
+            const previousMonth = this.selectedDate.subtract(1, 'month'); //Önceki Ayı Al
+
+            //Eğer seçilen ay bugünkü ay ise ve seçilen yıl bugünkü yıl ise sol bordera tıklanamaz hale getirdik
+            if (previousMonth.isBefore(dayjs().startOf('month'))) {
                 this.onClickToLeftBorder = false;
-                console.log(this.onClickToLeftBorder);
+                this.selectedDate = dayjs();
+                /* selectedDate değeri güncel tarihe ayarlamak için yapıyoruz 
+                mesela biz Temmuz 2024'deyiz onun gibi durumlarda mevcut aya dönüldüğünde doğru şekilde sayılır. */
             } else {
-                this.selectedDate = this.selectedDate.subtract(1, 'month');
-                this.totalDaysInMonth();
-                this.onClickToLeftBorder = true;
-                console.log(this.onClickToLeftBorder);
+                this.selectedDate = previousMonth;
+                // Önceki aya eşit değilse direkt 
             }
+                
+            if (this.currentMonth() === currentMonth && this.currentYear() === currentYear) {
+                this.onClickToLeftBorder = false;
+            } else {
+                this.onClickToLeftBorder = true;
+            }
+
+            this.totalDaysInMonth(); 
         },
+
         currentMonth() {
             return this.selectedDate.format('MMMM');
         },
@@ -105,17 +150,18 @@ export default {
                 this.TodaysDate = date;
                 this.totalDaysInMonth();
             }
+            console.log(date.format('YYYY-MM-DD'));
         },
         isSelected(date) {
             return this.TodaysDate && this.TodaysDate.isSame(date, 'day');
-        }
+        },
     },
     computed: {
         dateHolder() {
             return this.currentMonth() + " " + this.currentYear();
         }
     },
-    created() {
+    mounted() {
         this.totalDaysInMonth();
     }
 };
@@ -144,7 +190,6 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-
         .calendar {
             padding-top: 1rem;
             width: 100%;
@@ -197,26 +242,34 @@ export default {
         .days {
             padding-top: 6px;
 
-            .is-today {
-                background: #f0f0f0;
-                border-radius: 100%;
+            .isToday {
+                background: #e7e7e7;
+                border-radius: 16px;
             }
         }
         .days li {
-            padding: 10px 9px;
+            padding: 10px 8px;
             line-height: 5px;
+            cursor: pointer;
 
-            &.past-date {
+        }
+        .days li.textDecoration {
                 color: grey;
                 text-decoration: line-through;
                 pointer-events: none;
-            }
+                cursor: not-allowed
+        }
 
-            &.selected {
+        .days li.inactive {
+                visibility: hidden;
+                pointer-events: none;
+                cursor: not-allowed;
+        }
+
+        .days li.selected {
                 background-color: $accent-primary-color;
-                color: #fff;
-                border-radius: 50%;
-            }
+                border-radius: 4px;
+                color: white;
         }
     }
 }
