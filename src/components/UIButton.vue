@@ -1,25 +1,20 @@
 <template>
-  <button class="reisetech-btn"
-    :class=" `reisetech-btn__${btnClassName}` "
-    :disabled="isDisabled"
-    @click="handleClick" v-if="!btnIsRouter"
-  >
-    <span v-if="icon && !isSpinnerActive" :class="['icon', btnIcon]"></span>
+  <button class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" :disabled="isDisabled" @click="handleClick"
+    v-if="!btnIsRouter">
+    <span v-if="icon && !isSpinnerActive" class="icon">
+      <img :src="icon" alt="button icon">
+    </span>
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
-    
+
   </button>
-  <router-link  :to="routerUrl" class="reisetech-btn" :class=" `reisetech-btn__${btnClassName}`" role="button" replace="button" v-else>
-    <span v-if="icon" class="icon" :class=" btnIcon"></span>
+  <router-link :to="routerUrl" class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" replace="button" v-else>
+    <span v-if="icon" class="icon" :class="btnIcon"></span>
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
-    
-
-
-
   </router-link>
-    
-  
+
+
 </template>
 
 <script lang="ts">
@@ -54,8 +49,6 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
 
-
-
 .reisetech-btn {
   width: 100%;
   height: 48px;
@@ -80,22 +73,25 @@ export default {
     background-color: $primary-color;
     border: none;
     color: white;
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid $primary-color;
     }
   }
+
   &__hotel {
     background-color: $secondary-color;
     border: none;
     color: white;
+
     &.outline {
       background-color: white;
       color: $secondary-color;
       border: 2px solid $secondary-color;
     }
-   
+
   }
 
   &:hover {
@@ -119,6 +115,16 @@ export default {
   }
 }
 
+.icon {
+  display: inline-block;
+  margin-right: 8px;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 .spinner {
   border: 4px solid rgba(58, 57, 57, 0.3);
   border-radius: 50%;
@@ -133,9 +139,9 @@ export default {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
-
 </style>
