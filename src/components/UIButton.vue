@@ -1,9 +1,22 @@
 <template>
-  <button :class="['reisetech-btn', `reisetech-btn__${btnClassName}`]" :disabled="isDisabled">
-    <span v-if="icon" :class="['icon', btnIcon]"></span>
+    
+    <button class="reisetech-btn" :class=" `reisetech-btn__${btnClassName}`" :disabled="isDisabled" v-if="!btnIsRouter">
+    <span v-if="icon" class="icon" :class=" btnIcon"></span>
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
+    
   </button>
+  <router-link  :to="routerUrl" class="reisetech-btn" :class=" `reisetech-btn__${btnClassName}`" replace="button" v-else>
+    <span v-if="icon" class="icon" :class=" btnIcon"></span>
+    <span v-if="isSpinnerActive" class="spinner"></span>
+    <span v-else>{{ btnText }}</span>
+    
+
+
+
+  </router-link>
+    
+  
 </template>
 
 <script lang="ts">
@@ -24,7 +37,8 @@ export default {
     return {
       btnClassName: this.className,
       btnText: this.text,
-      btnIcon: this.icon
+      btnIcon: this.icon,
+      btnIsRouter: this.isRouter
     }
   },
   created() {},
@@ -36,6 +50,8 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
+
+
 
 .reisetech-btn {
   width: 100%;
@@ -52,6 +68,19 @@ export default {
   border: 2px solid black;
   justify-content: center;
   align-items: center;
+
+  
+
+  &__router-link{
+    background-color: $primary-color;
+    border: none;
+    color: white;
+    &.outline {
+      background-color: white;
+      color: $primary-color;
+      border: 2px solid $primary-color;
+    }
+  }
 
   &__flight {
     background-color: $primary-color;
@@ -72,6 +101,7 @@ export default {
       color: $secondary-color;
       border: 2px solid $secondary-color;
     }
+   
   }
 
   &:hover {
@@ -79,5 +109,9 @@ export default {
     border: none;
     color: white;
   }
+  
+  
+   
 }
+
 </style>
