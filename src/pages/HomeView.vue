@@ -1,6 +1,5 @@
 <template>
   <div class="button-grid-c">
-    
     <UIButton
       className="time-benders"
       text="Timebenders"
@@ -49,7 +48,7 @@ import UIButton from '../components/UIButton.vue'
 import PPGirls from '../assets/images/powerpuffgirls.jpg'
 export default {
   name: 'HomeView',
-  components:{
+  components: {
     UIButton
   },
   data() {
@@ -85,4 +84,3 @@ export default {
 }
 
 </style>
-
