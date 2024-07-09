@@ -1,12 +1,12 @@
+
 <template>
   <div class="grid-container">
-    <div v-for="(header, index) in headers" :key="index" class="grid-header">
+    <div class="grid-header" v-for="(header, index) in headers" :key="index">
       {{ header }}
     </div>
-
-    <div v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
-      <div v-for="(cell, cellIndex) in tableRow" :key="cellIndex" class="grid-item">
-        {{ cell }}
+    <div class="grid-row" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
+      <div v-for="(cell, cellIndex) in headers" :key="cellIndex" class="grid-item">
+        {{ tableRow[cell] }}
       </div>
     </div>
   </div>
@@ -32,23 +32,54 @@ export default {
 }
 </script>
 
-<!-- <stlye lang="scss">
-// .smart-table-body-c {
-//   display: grid;
-//   margin-top: 10px;
-//   margin-bottom: 10px;
-//   gap: 10px;
-//   .grid-header,
-//   .grid-item {
-//     background-color: yellow;
-//     padding: 20px;
-//     border: 1px solid b;
-//     text-align: center;
-//   }
+<style lang="scss" scoped>
 
-//   .grid-header {
-//     font-weight: bold;
-//     background-color: orange;
-//   }
-// }
-</stlye> -->
+.grid-container {
+  display: grid;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.grid-header, .grid-item {
+    padding: 15px;
+    border: 1px solid #ccc;
+    text-align: center;
+    border-radius: 10px;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.grid-header {
+    font-weight: bold;
+    background-color: orange;
+    color: black
+}
+
+.grid-header:hover {
+    background-color: #ffd900;
+}
+
+.grid-item {
+    background-color: #f5f5f5;
+}
+
+.grid-item:hover {
+    background-color: #ff4949;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.grid-container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.grid-row {
+  display: contents; 
+}
+
+</style>
