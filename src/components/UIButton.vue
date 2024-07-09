@@ -1,9 +1,12 @@
-<template>
-  <button class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" :disabled="isDisabled" @click="handleClick"
+<template> 
+<!-- btnIsRouter is checking for button has routing function-->
+<!-- If spinner is not active icon and text will be shown-->
+  <button class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" :disabled="isDisabled"
     v-if="!btnIsRouter">
     <span v-if="icon && !isSpinnerActive" class="icon">
       <img :src="icon" alt="button icon">
     </span>
+
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
 
@@ -21,13 +24,21 @@
 export default {
   name: 'UIButton',
   props: {
+    // Classes such as hotel and flight are derived from the .reisetech-btn class.
+    // .reisetech-btn class has the default css style, but the appearance of the button changes depending on the incoming flight and hotel class.
     className: String,
+    // Text is the label of button
     text: String,
+    // isRouter is checking the button is routing or not
     isRouter: Boolean,
+    // routeUrl is the routing Url
     routerUrl: String,
     Object,
+    // icon is the icons on the button if button has one
     icon: String,
+    // isSpinner is checking loading animation for button exist or not
     isSpinnerActive: Boolean,
+    // isDisabled is checking button is active or disabled
     isDisabled: Boolean
   },
   data() {
@@ -39,22 +50,22 @@ export default {
     }
   },
   methods: {
-    handleClick() {
-      this.$emit('click')
-    }
+   
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
-
+// router-link takes tag 'a' and its default css should be overwritten
 a.reisetech-btn {
 padding:0px;
 }
 
-
 .reisetech-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 48px;
   border-radius: 24px;
@@ -63,16 +74,11 @@ padding:0px;
   border: 2px;
   color: black;
   cursor: pointer;
-  display: flex;
   padding: $padding-medium;
   text-align: center;
   border: 2px solid black;
-  justify-content: center;
-  align-items: center;
   position: relative;
   text-decoration: none;
-  
-  
   
   &__flight {
     background-color: $primary-color;
