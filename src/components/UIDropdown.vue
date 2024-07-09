@@ -1,103 +1,110 @@
 <template>
-<div class="dropdown-wrapper">
-<div class="dropdown-selected-item">
-  {{  selectedItem || 'Please select something' }}
-</div>
-<div class="items-wrapper">
-  <div class="item" v-for="item in items " :key="index">
-    {{ item }}
+  <div>
+    <label for="airlines">
+      <div class="dropdown-select" @click="toggleDropdown">
+        <span :class="['title', { 'placeholder': !selectedAirline }]">{{ selectedAirlineName || placeHolder }}</span>
+        <span v-if="isOpen">&#9650;</span> <!-- Up arrow -->
+        <span v-else>&#9660;</span> <!-- Down arrow -->
+    </div>
+    </label>
+    
+    <div :class="['dropdown-menu', { show: isOpen }]">
+      <div v-for="(item, index) in items" :key="index" class="dropdown-option" @click="sendItem(item)">
+        <span class="airlineName">{{ item.airlineLabel }} {{ item.airlineBrand }}</span>
+      </div>
+    </div>
   </div>
-</div>
-</div>
 </template>
 
 <script lang="ts">
-
 export default {
-name: 'UIDropdown',
-props: {
-items: { type: Array },
-selectedItem: {  },
-selectedItem: {  },
-placeHolder: {  }
-
-},
-data() {
-return {
-  isOpen: false,
+  name: 'UIDropdown',
+  data() {
+    return {
+      isOpen: false
+    }
+  },
+  props: {
+    items: { type: Array, required: true },
+    selectedItem: { type: Object, default: null },
+    selectedItems: { type: Array, default: () => [] },
+    placeHolder: { type: String, default: 'Select an airline' },
+    searchable: { type: Boolean, default: false }
+  },
+  methods: {
+    toggleDropdown() {
+      this.isOpen = !this.isOpen;
+    },
+    sendItem(item) {
+      this.$emit('sendItem', item);
+      this.isOpen = false;
+    }
   }
-      
-},
-created() {},
-mounted() {},
-methods: {
-toggleDropdown() {
-  this.isOpen = !this.isOpen;
-},
-sendItem(items) {
-  this.$emit('sendItem',items)
 }
-},
-computed: {
-airlineName() {
-  return this.items.airlineLabel + " " + this.items.airlineBrand
-}
-}
-}
-
 </script>
 
 <style>
-
-.dropdown-wrapper {
-  padding: 16px;
+.dropdown-select {
+  position: relative;
+  display: inline-block;
+  background-color: #9ea2a5;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  max-width: 200px;
-  margin: 0 auto;
+  transition: background-color 0.3s ease;
 }
 
-.dropdown-selected-item {
-  padding: 16px;
-  border: solid 1px #313131;
-  border-radius: 8px;
-  box-sizing: border-box;
-  margin-bottom: 4px;
+.dropdown-select:hover {
+  background-color: #b6b6bc;
 }
 
-.options-wrapper {
-display: none;
-position: absolute;
-background-color: white;
-box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-min-width: 160px;
-z-index: 1;
-border-radius: 5px;
-overflow: hidden;
-}
-.item:hover{
-  background: #c5c5c5;
-}
-.item{
-padding: 16px;
-border: solid 1px #313131;
-box-sizing: border-box;
-}
-.item:last-of-type{
-border-bottom-left-radius: 8px;
-border-bottom-right-radius: 8px;
-}
-.slide-fade-enter-active {
-transition: all 0.3s ease-out;
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  z-index: 1;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 5px;
 }
 
-.slide-fade-leave-active {
-transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+.dropdown-menu.show {
+  display: block;
 }
 
-.slide-fade-enter-from,
-slide-fade-leave-to {
-transform: translate(-4px) ;
-opacity: 0;
+.dropdown-option {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
+.dropdown-option:hover {
+  background-color: #f1f1f1;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu.show {
+  animation: slideDown 0.3s ease;
+}
+.title.placeholder{
+  color: black
+}
 </style>
