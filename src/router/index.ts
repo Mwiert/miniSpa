@@ -10,12 +10,12 @@ const router = createRouter({
     {
       path: '/timebenders',
       name: 'TimeBenders',
-      component: TimeBenders,
+      component: TimeBenders
     },
     {
       path: '/powerpuffgirls',
       name: 'PowerPuffGirls',
-      component: PowerPuffGirls,
+      component: PowerPuffGirls
     },
     {
       path: '/summerLovers',
