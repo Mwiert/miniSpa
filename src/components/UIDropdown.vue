@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="UIDropdown-c">
     <label for="airlines">
       <div class="dropdown-select" @click="toggleDropdown">
         <span :class="['title', { 'placeholder': !selectedAirline }]">{{ selectedAirlineName || placeHolder }}</span>
