@@ -6,7 +6,7 @@
         :class="{ 'dropdown-button-active': isOpen }"
         class="dropdown-button"
       >
-        {{ selectedAirline || placeHolder }}
+        {{ selectedItem || placeHolder }}
         <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
       </button>
       <div v-if="isOpen" class="dropdown-menu">
@@ -18,36 +18,36 @@
           class="dropdown-search"
         />
         <div
-          v-for="airline in filteredAirlines"
-          :key="airline"
-          @click="selectAirline(airline)"
+          v-for="item in filteredItems"
+          :key="item"
+          @click="selectAirline(item)"
           class="dropdown-item"
         >
-          {{ airline }}
+          {{ item }}
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
 
-export default defineComponent({
+<script lang="ts">
+
+export default {
   name: 'DropdownComponent',
+  
+  data() {
+    return {
+      selectedItem: this.initialSelectedItem as string | null,
+      isOpen: false,
+      searchQuery: '',
+      items: {
+        type: Array
+      }
+    }
+  },
   props: {
-    airlines: {
-      type: Array as () => string[],
-      required: true,
-      default: () => [
-        'Turkish Airlines',
-        'Anadolu Jet',
-        'Sun Express',
-        'Pegasus Europe',
-        'Corendon EU'
-      ]
-    },
-    initialSelectedAirline: {
+    initialSelectedAirline: {             
       type: String,
       default: null
     },
@@ -60,17 +60,10 @@ export default defineComponent({
       default: true
     }
   },
-  data() {
-    return {
-      selectedAirline: this.initialSelectedAirline as string | null,
-      isOpen: false,
-      searchQuery: ''
-    }
-  },
   computed: {
-    filteredAirlines(): string[] {
-      return this.airlines.filter((airline: string) =>
-        airline.toLowerCase().includes(this.searchQuery.toLowerCase())
+    filteredItems(): string[] {
+      return this.items.filter((items: string) =>
+        items.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
     }
   },
@@ -78,13 +71,13 @@ export default defineComponent({
     toggleDropdown() {
       this.isOpen = !this.isOpen
     },
-    selectAirline(airline: string) {
-      this.selectedAirline = airline
+    selectAirline(item: string) {
+      this.selectedItem = item
       this.isOpen = false
-      this.$emit('update:selectedAirline', airline)
+      this.$emit('update:selectedAirline', item)
     }
   }
-})
+}
 </script>
 
 <style scoped>
