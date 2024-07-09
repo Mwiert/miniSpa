@@ -49,6 +49,11 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
 
+a.reisetech-btn {
+padding:0px;
+}
+
+
 .reisetech-btn {
   width: 100%;
   height: 48px;
