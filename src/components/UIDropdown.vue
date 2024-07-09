@@ -1,15 +1,22 @@
 <template>
-  <div>
+  <div class="dropdown-c">
     <div class="dropdown">
       <button
         @click="toggleDropdown"
         :class="{ 'dropdown-button-active': isOpen }"
         class="dropdown-button"
       >
-        {{ selectedAirline || 'Select an Airline' }}
+        {{ selectedAirline || placeHolder }}
         <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
       </button>
       <div v-if="isOpen" class="dropdown-menu">
+        <input
+          v-if="searchable"
+          type="text"
+          v-model="searchQuery"
+          placeholder="Search..."
+          class="dropdown-search"
+        />
         <div
           v-for="airline in filteredAirlines"
           :key="airline"
@@ -43,6 +50,14 @@ export default defineComponent({
     initialSelectedAirline: {
       type: String,
       default: null
+    },
+    placeHolder: {
+      type: String,
+      default: 'Select'
+    },
+    searchable: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -177,5 +192,15 @@ export default defineComponent({
       }
     }
   }
+}
+
+.dropdown-search {
+  width: 90%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin: 7px;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  outline: none;
 }
 </style>
