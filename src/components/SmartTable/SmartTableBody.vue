@@ -22,12 +22,9 @@ export default {
     headers() {
       return this.tableData.length ? Object.keys(this.tableData[0]) : []
     },
-    // gridTemplateColumns() {
-    //   return {
-    //     display: 'grid',
-    //     'grid-template-columns': repeat(${this.headers.length}, ${colwidth})
-    //   }
-    // }
+    gridTemplateColumns() {
+      return `repeat(${this.headers.length}, 1fr)`
+    }
   }
 }
 </script>
@@ -38,7 +35,7 @@ export default {
   display: grid;
     margin-top: 20px;
     margin-bottom: 20px;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: v-bind('gridTemplateColumns'); //computed içerisinde column sayısını dinamik olarak alıp vbind ile css içine geç
     gap: 10px;
 }
 

@@ -6,7 +6,9 @@ const dummy = [
        agencyName: "GTS Acentesi-1",
        rnr: "7WPCFYZQXV",
        rnrStatus: 3,
-       mrb: "mrb"
+       mrb: "mrb",
+       sa: 'sa',
+       hakandeneme: 'hakandemene'
     },
     {
        orderId: 21478,
