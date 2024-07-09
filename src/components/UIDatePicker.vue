@@ -49,6 +49,7 @@ export default {
         return {
             weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
             selectedDate: dayjs(),
+            onClickToLeftBorder: false,
             daysInMonth: [],
             TodaysDate: null
         }
@@ -81,13 +82,31 @@ export default {
 
         },
         onClickToRight() {
+        
             this.selectedDate = this.selectedDate.add(1, 'month');
-            this.totalDaysInMonth(); 
+            this.totalDaysInMonth();
+            this.onClickToLeftBorder = true;; 
+            console.log(this.onClickToLeftBorder)
+        
         },
         onClickToLeft() {
+
+            let month = dayjs().format('MMMM');
+            console.log(month)
+            let year = dayjs().format('YYYY');
+            console.log(year)
+            console.log(this.currentMonth())
+            console.log(this.currentYear())
+            if(this.currentMonth().subtract(1,'MMMM') === month && this.currentYear().add(1,'YYYY') === year){
+                this.onClickToLeftBorder = false;
+                console.log(this.onClickToLeftBorder)
+            }else{
             this.selectedDate = this.selectedDate.subtract(1, 'month');
-            this.totalDaysInMonth(); 
-        },
+            this.totalDaysInMonth();
+            this.onClickToLeftBorder = true;; 
+            console.log(this.onClickToLeftBorder)
+        }
+    },
         currentMonth() {
             return this.selectedDate.format('MMMM');
         },
@@ -157,6 +176,14 @@ export default {
                     font-size: 1.2rem;
                     font-family: 'Arial';
                     cursor: pointer;
+                }
+                .nav-button-invisible{
+                    background-color: transparent;
+                    border: none;
+                    font-size: 1.2rem;
+                    font-family: 'Arial';
+                    opacity: 0;
+                    pointer-events: none;
                 }
                 .current-date {
                     font-size: 0.9rem;
