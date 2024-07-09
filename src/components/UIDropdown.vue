@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dropdown-c">
     <div class="dropdown">
       <button
         @click="toggleDropdown"
@@ -24,23 +24,37 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: 'DropdownComponent',
+import { defineComponent } from 'vue'
 
+export default defineComponent({
+  name: 'DropdownComponent',
+  props: {
+    airlines: {
+      type: Array as () => string[],
+      required: true,
+      default: () => [
+        'Turkish Airlines',
+        'Anadolu Jet',
+        'Sun Express',
+        'Pegasus Europe',
+        'Corendon EU'
+      ]
+    },
+    initialSelectedAirline: {
+      type: String,
+      default: null
+    }
+  },
   data() {
     return {
-      airlines: ['Turkish Airlines', 'Anadolu Jet', 'Sun Express', 'Pegasus Europe', 'Corendon EU'],
-      selectedAirline: null,
-      selectedAirlines: [],
+      selectedAirline: this.initialSelectedAirline as string | null,
       isOpen: false,
-      isMultiOpen: false,
       searchQuery: ''
     }
   },
-
   computed: {
-    filteredAirlines() {
-      return this.airlines.filter((airline) =>
+    filteredAirlines(): string[] {
+      return this.airlines.filter((airline: string) =>
         airline.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
     }
@@ -49,19 +63,14 @@ export default {
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen
-      this.isMultiOpen = false
     },
-    toggleMultiDropdown() {
-      this.isMultiOpen = !this.isMultiOpen
-      this.isOpen = false
-    },
-
-    selectAirline(airline) {
+    selectAirline(airline: string) {
       this.selectedAirline = airline
       this.isOpen = false
-    },
-  },
-};
+      this.$emit('update:selectedAirline', airline)
+    }
+  }
+})
 </script>
 
 <style scoped>
@@ -123,5 +132,4 @@ export default {
 .dropdown-item:hover {
   background-color: #f3f3f3;
 }
-
 </style>
