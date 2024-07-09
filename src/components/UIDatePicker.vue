@@ -14,10 +14,22 @@
                     </template>
                 </ul>
                 <ul class= "days">
-                    <template v-for="(day, index) in daysInMonth" :key="index">
-                        <li> {{ day }}</li>
-                    </template>
-                </ul>
+					
+						<li
+						v-for="(day, index) in daysInMonth" :key="index"
+						:class="{
+						'not-current-month': !day.isCurrentMonth,
+						'selected':day.isSelected,
+						'past-date': isPastDate(day.date)
+						}" 
+						@click="selectDate(day.date)"
+						>
+					
+						{{ day.date.date() }}
+
+					</li>
+						
+				</ul>
             </div>
         
             
@@ -51,18 +63,18 @@ export default {
             const offsetValue = (startOfMonth.day() + 6) % 7;
 
             for (let i = 0; i < offsetValue; i++) {
-                this.daysInMonth.push(" ");
+				this.daysInMonth.push({ date: startOfMonth.subtract(offsetValue - i, 'day'), isCurrentMonth: false });
             }
 
             for (let i = 0; i < endOfMonth.date(); i++) {
-                this.daysInMonth.push(i+1);
-                console.log(typeof this.daysInMonth[i])
+                const date = dayjs(new Date(this.selectedDate.year(), this.selectedDate.month(), i + 1));
+                this.daysInMonth.push({ date: date, isCurrentMonth: true, isSelected: this.isSelected(date), isPast: this.isPastDate(date) });
             }
 
             const endOffsetValue = (7-(this.daysInMonth.length % 7)) % 7
 
-            for (let i = 0; i <  endOffsetValue; i++) {
-                this.daysInMonth.push(" ");
+            for (let i = 1; i <  endOffsetValue; i++) {
+				this.daysInMonth.push({ date: endOfMonth.add(i, 'day'), isCurrentMonth: false });
             }
             
             console.log(this.daysInMonth)
@@ -81,6 +93,18 @@ export default {
         },
         currentYear() {
             return this.selectedDate.format('YYYY');
+        },
+		  isPastDate(date) {
+	 		return date.isBefore(dayjs(), 'day');
+		},
+        selectDate(date) {
+			if (!this.isPastDate(date) && !date.isBefore(this.selectedDate.startOf('month'), 'day')) {
+                this.selectedDate = date;
+                this.totalDaysInMonth();
+            }
+        },
+        isSelected(date) {
+            return this.selectedDate && this.selectedDate.isSame(date, 'day');
         }
     },
     computed: {
@@ -164,6 +188,18 @@ export default {
         .days li{
             padding: 10px 9px;
             line-height: 5px;
+
+            &.past-date {
+				color: grey;
+				text-decoration: line-through;
+				pointer-events: none;
+			}
+
+			&.selected {
+				background-color: $accent-primary-color;
+                color: #fff;
+                border-radius: 50%;
+            }
         }
 
     }

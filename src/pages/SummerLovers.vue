@@ -1,20 +1,48 @@
 <template>
-    <div>
-      <UIDropdown />
+  <div>
+    <UIDropdown :items="items" @sendItem="handlerSelectedItem" />
+    <div v-if="selectedOption">
+      <p>Selected Airline: {{ selectedOption.airlineLabel }} {{ selectedOption.airlineBrand }}</p>
     </div>
-  </template>
-  
+  </div>
+</template>
 
-  <script lang="ts">
+<script lang="ts">
+import UIDropdown from '../components/UIDropdown.vue'
 
-  import UIDropdown from "../components/UIDropdown.vue";
-  export default {
-    name: 'SummerLovers',
-    components: {
-      UIDropdown
-    },
+export default {
+  name: 'summerLovers',
+  components: {
+    UIDropdown
+  },
+  data() {
+    return {
+      items: [
+        {
+          airlineLabel: 'THY',
+          airlineBrand: 'Türk Hava Yollari'
+        },
+        {
+          airlineLabel: 'PGS',
+          airlineBrand: 'Pegasus'
+        },
+        {
+          airlineLabel: 'SUN',
+          airlineBrand: 'Sun Express'
+        }
+      ],
+      selectedOption: null
+    }
+  },
+  methods: {
+    handlerSelectedItem(item) {
+      this.selectedOption = item;
+      console.log("Selected Item:", item);
+    }
   }
-  </script>
-  
-  <style lang="scss" scoped></style>
-  
+}
+</script>
+
+<style>
+
+</style>
