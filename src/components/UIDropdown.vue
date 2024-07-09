@@ -1,15 +1,23 @@
 <template>
-  <div class="dropdown-c" >
-    <label for="airlines">
-      <div class="dropdown-select" @click="toggleDropdown">
-        <span :class="['title', { 'placeholder': !selectedAirline }]">{{ selectedAirlineName || placeHolder }}</span>
-        <span class="arrow" :class="{'arrow-up': isOpen}"></span>
-    </div>
-    </label>
-    
-    <div :class="['dropdown-menu', { show: isOpen }]">
-      <div v-for="(item, index) in items" :key="index" class="dropdown-option" @click="sendItem(item)">
-        <span class="airlineName">{{ item.airlineLabel }} {{ item.airlineBrand }}</span>
+  <div>
+    <div class="dropdown">
+      <button
+        @click="toggleDropdown"
+        :class="{ 'dropdown-button-active': isOpen }"
+        class="dropdown-button"
+      >
+        {{ selectedAirline || 'Select an Airline' }}
+        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
+      </button>
+      <div v-if="isOpen" class="dropdown-menu">
+        <div
+          v-for="airline in filteredAirlines"
+          :key="airline"
+          @click="selectAirline(airline)"
+          class="dropdown-item"
+        >
+          {{ airline }}
+        </div>
       </div>
     </div>
   </div>
@@ -17,100 +25,66 @@
 
 <script lang="ts">
 export default {
-  name: 'UIDropdown',
+  name: 'DropdownComponent',
+
   data() {
     return {
-      isOpen: false
+      airlines: ['Turkish Airlines', 'Anadolu Jet', 'Sun Express', 'Pegasus Europe', 'Corendon EU'],
+      selectedAirline: null,
+      selectedAirlines: [],
+      isOpen: false,
+      isMultiOpen: false,
+      searchQuery: ''
     }
   },
-  props: {
-    items: { type: Array, required: true },
-    selectedItem: { type: Object, default: null },
-    placeHolder: { type: String, default: ' Select' },
-    searchable: { type: Boolean, default: false },
 
+  computed: {
+    filteredAirlines() {
+      return this.airlines.filter((airline) =>
+        airline.toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
+    }
   },
+
   methods: {
     toggleDropdown() {
-      this.isOpen = !this.isOpen;
-      selectedAirline = selectedAirlineName;
+      this.isOpen = !this.isOpen
+      this.isMultiOpen = false
     },
-    sendItem(item) {
-      this.$emit('sendItem', item);
-      this.isOpen = false;
-    }
-  }
-}
+    toggleMultiDropdown() {
+      this.isMultiOpen = !this.isMultiOpen
+      this.isOpen = false
+    },
+
+    selectAirline(airline) {
+      this.selectedAirline = airline
+      this.isOpen = false
+    },
+  },
+};
 </script>
 
-<style>
-
-.dropdown-c{
-  border: #b1b1b1;
-}
-
-.dropdown-select {
+<style scoped>
+.dropdown {
   position: relative;
   display: inline-block;
-  color: rgba(255, 255, 255, 0.816);
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
+  margin: 10px;
+}
+
+.dropdown-button {
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  background-color: rgba(217, 217, 217, 0.729);
-  border: 1px solid rgba(80, 79, 79, 0.234); /* This is the inner border */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.dropdown-select:hover {
-  background-color: #b6b6bc;
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  background-color: white;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  min-width: 200px;
-  z-index: 1;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-top: 5px;
-}
-
-.dropdown-menu.show {
-  display: block;
-}
-
-.dropdown-option {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-}
-
-.dropdown-option:hover {
-  background-color: #363636;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.dropdown-menu.show {
-  animation: slideDown 0.3s ease;
-}
-.title.placeholder{
-  color: #363636;
+.dropdown-button-active {
+  border: 1px solid #000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .arrow {
@@ -120,11 +94,34 @@ export default {
   display: inline-block;
   padding: 5px;
   transform: rotate(45deg);
-  justify-content: center;
 }
 
 .arrow-up {
   transform: rotate(-135deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-item:hover {
+  background-color: #f3f3f3;
 }
 
 </style>
