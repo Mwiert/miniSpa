@@ -1,20 +1,31 @@
 <template>
-    <span>
-        <button class="ui-button-c">Button Label</button>
-    </span>
-
-    <span>
-        <button class="ui-button-c outline">Button Label</button>
-    </span>
-   
+  <button :class="['reisetech-btn', `reisetech-btn__${btnClassName}`]" :disabled="isDisabled">
+    <span v-if="icon" :class="['icon', btnIcon]"></span>
+    <span v-if="isSpinnerActive" class="spinner"></span>
+    <span v-else>{{ btnText }}</span>
+  </button>
 </template>
 
 <script lang="ts">
 export default {
   name: 'UIButton',
+  props: {
+    className: String,
+    text: String,
+    isRouter: Boolean,
+    routerUrl: String,
+    Object,
+    icon: String,
+    isSpinnerActive: Boolean,
+    isDisabled: Boolean
+  },
   components: {},
   data() {
-    return {}
+    return {
+      btnClassName: this.className,
+      btnText: this.text,
+      btnIcon: this.icon
+    }
   },
   created() {},
   mounted() {},
@@ -26,32 +37,47 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
 
+.reisetech-btn {
+  width: 100%;
+  height: 48px;
+  border-radius: 24px;
+  font-size: 16px;
+  background-color: transparent;
+  border: 2px;
+  color: black;
+  cursor: pointer;
+  display: flex;
+  padding: $padding-medium;
+  text-align: center;
+  border: 2px solid black;
+  justify-content: center;
+  align-items: center;
 
-.ui-button-c{
-width: 100%;
-height: 48px;
-border-radius: 24px;
-font-size: 16px;
-background-color: $primary-color;
-color: white;
-cursor: pointer;
-padding: $padding-medium;
-&:hover{
+  &__flight {
+    background-color: $primary-color;
+    border: none;
+    color: white;
+    &.outline {
+      background-color: white;
+      color: $primary-color;
+      border: 2px solid $primary-color;
+    }
+  }
+  &__hotel {
+    background-color: $secondary-color;
+    border: none;
+    color: white;
+    &.outline {
+      background-color: white;
+      color: $secondary-color;
+      border: 2px solid $secondary-color;
+    }
+  }
+
+  &:hover {
     background: $accent-primary-color;
     border: none;
     color: white;
+  }
 }
-}
-
-.outline{
-background-color:white;
-color: $primary-color;
-border: 2px solid $primary-color;
-}
-
-
-
-
-
-
 </style>
