@@ -1,8 +1,13 @@
 <template>
   <div>
-    <div class="dropdown-select" @click="toggleDropdown">
-      <span>{{ placeHolder }}</span>
+    <label for="airlines">
+      <div class="dropdown-select" @click="toggleDropdown">
+        <span :class="['title', { 'placeholder': !selectedAirline }]">{{ selectedAirlineName || placeHolder }}</span>
+        <span v-if="isOpen">&#9650;</span> <!-- Up arrow -->
+        <span v-else>&#9660;</span> <!-- Down arrow -->
     </div>
+    </label>
+    
     <div :class="['dropdown-menu', { show: isOpen }]">
       <div v-for="(item, index) in items" :key="index" class="dropdown-option" @click="sendItem(item)">
         <span class="airlineName">{{ item.airlineLabel }} {{ item.airlineBrand }}</span>
@@ -53,7 +58,7 @@ export default {
 }
 
 .dropdown-select:hover {
-  background-color: #2980b9;
+  background-color: #b6b6bc;
 }
 
 .dropdown-menu {
@@ -98,5 +103,8 @@ export default {
 
 .dropdown-menu.show {
   animation: slideDown 0.3s ease;
+}
+.title.placeholder{
+  color: black
 }
 </style>
