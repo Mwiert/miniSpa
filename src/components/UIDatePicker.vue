@@ -27,9 +27,9 @@
                                 between: Boolean,
                                 isToday: day.isToday
                             }" 
-                            @click="selectDate(day.date)"
+                            @click="selectDate(day)"
                         >
-                            {{ day.date ? day.date.date() : '' }}
+                            {{ day.number }}
                         </li>   
                     </ul>
                 </div>
@@ -43,6 +43,7 @@ import dayjs from 'dayjs';
 
 interface date {
 
+        number: string,
         inactive: Boolean,
         active: Boolean,
         selected: Boolean,
@@ -65,6 +66,7 @@ export default {
             onClickToLeftBorder: false,
             daysInMonth: [] as date[],
             TodaysDate: null,
+            firstSelectedDate: null
             
         };
     },
@@ -88,9 +90,10 @@ export default {
                 this.daysInMonth.push({ 
                     date: date, 
                     inactive: false, 
-                    isSelected: this.isSelected(date), 
+                    isSelected: false, 
                     isPast: this.isPastDate(date), 
-                    isToday: Number(today) === i + 1 && this.currentMonth() === dayjs().format('MMMM') && this.currentYear() === dayjs().format('YYYY') 
+                    isToday: Number(today) === i + 1 && this.currentMonth() === dayjs().format('MMMM') && this.currentYear() === dayjs().format('YYYY'),
+                    number: i+1, 
                 });
             }
 
@@ -104,7 +107,6 @@ export default {
             this.selectedDate = this.selectedDate.add(1, 'month');
             this.totalDaysInMonth();
             this.onClickToLeftBorder = true;
-            console.log(this.onClickToLeftBorder);
         },
         onClickToLeft() {
 
@@ -146,22 +148,25 @@ export default {
             return date && date.isBefore(dayjs(), 'day');
         },
         selectDate(date) {
-            if (date && !this.isPastDate(date) && !date.isBefore(this.selectedDate.startOf('month'), 'day')) {
-                this.TodaysDate = date;
-                this.totalDaysInMonth();
+            if(this.firstSelectedDate == null){
+                this.firstSelectedDate = date;
+                this.firstSelectedDate.isSelected = true;
+            } else {
+                this.firstSelectedDate.isSelected = false;
+                this.firstSelectedDate = date;
+                this.firstSelectedDate.isSelected = true;
             }
-            console.log(date.format('YYYY-MM-DD'));
+        
+            
         },
-        isSelected(date) {
-            return this.TodaysDate && this.TodaysDate.isSame(date, 'day');
-        },
+       
     },
     computed: {
         dateHolder() {
             return this.currentMonth() + " " + this.currentYear();
         }
     },
-    mounted() {
+    created() {
         this.totalDaysInMonth();
     }
 };
