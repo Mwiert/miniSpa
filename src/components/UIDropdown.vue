@@ -1,10 +1,9 @@
 <template>
-  <div>
+  <div class="dropdown-c" >
     <label for="airlines">
       <div class="dropdown-select" @click="toggleDropdown">
         <span :class="['title', { 'placeholder': !selectedAirline }]">{{ selectedAirlineName || placeHolder }}</span>
-        <span v-if="isOpen">&#9650;</span> <!-- Up arrow -->
-        <span v-else>&#9660;</span> <!-- Down arrow -->
+        <span class="arrow" :class="{'arrow-up': isOpen}"></span>
     </div>
     </label>
     
@@ -27,13 +26,14 @@ export default {
   props: {
     items: { type: Array, required: true },
     selectedItem: { type: Object, default: null },
-    selectedItems: { type: Array, default: () => [] },
-    placeHolder: { type: String, default: 'Select an airline' },
-    searchable: { type: Boolean, default: false }
+    placeHolder: { type: String, default: ' Select' },
+    searchable: { type: Boolean, default: false },
+
   },
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen;
+      selectedAirline = selectedAirlineName;
     },
     sendItem(item) {
       this.$emit('sendItem', item);
@@ -44,17 +44,22 @@ export default {
 </script>
 
 <style>
+
+.dropdown-c{
+  border: #b1b1b1;
+}
+
 .dropdown-select {
   position: relative;
   display: inline-block;
-  background-color: #9ea2a5;
-  color: white;
+  color: rgba(255, 255, 255, 0.816);
   padding: 10px 20px;
   font-size: 16px;
-  border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  background-color: rgba(217, 217, 217, 0.729);
+  border: 1px solid rgba(80, 79, 79, 0.234); /* This is the inner border */
 }
 
 .dropdown-select:hover {
@@ -87,7 +92,7 @@ export default {
 }
 
 .dropdown-option:hover {
-  background-color: #f1f1f1;
+  background-color: #363636;
 }
 
 @keyframes slideDown {
@@ -105,6 +110,21 @@ export default {
   animation: slideDown 0.3s ease;
 }
 .title.placeholder{
-  color: black
+  color: #363636;
 }
+
+.arrow {
+  margin-left: 15px;
+  border: solid black;
+  border-width: 0 1px 1px 0;
+  display: inline-block;
+  padding: 5px;
+  transform: rotate(45deg);
+  justify-content: center;
+}
+
+.arrow-up {
+  transform: rotate(-135deg);
+}
+
 </style>
