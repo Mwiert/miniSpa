@@ -1,23 +1,16 @@
 <template>
   <div>
-    <div class="dropdown">
-      <button
-        @click="toggleDropdown"
-        :class="{ 'dropdown-button-active': isOpen }"
-        class="dropdown-button"
-      >
-        {{ selectedAirline || 'Select an Airline' }}
-        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
-      </button>
-      <div v-if="isOpen" class="dropdown-menu">
-        <div
-          v-for="airline in filteredAirlines"
-          :key="airline"
-          @click="selectAirline(airline)"
-          class="dropdown-item"
-        >
-          {{ airline }}
-        </div>
+    <label for="airlines">
+      <div class="dropdown-select" @click="toggleDropdown">
+        <span :class="['title', { 'placeholder': !selectedAirline }]">{{ selectedAirlineName || placeHolder }}</span>
+        <span v-if="isOpen">&#9650;</span> <!-- Up arrow -->
+        <span v-else>&#9660;</span> <!-- Down arrow -->
+    </div>
+    </label>
+    
+    <div :class="['dropdown-menu', { show: isOpen }]">
+      <div v-for="(item, index) in items" :key="index" class="dropdown-option" @click="sendItem(item)">
+        <span class="airlineName">{{ item.airlineLabel }} {{ item.airlineBrand }}</span>
       </div>
     </div>
   </div>
@@ -25,50 +18,40 @@
 
 <script lang="ts">
 export default {
-  name: 'DropdownComponent',
-
+  name: 'UIDropdown',
   data() {
     return {
-      airlines: ['Turkish Airlines', 'Anadolu Jet', 'Sun Express', 'Pegasus Europe', 'Corendon EU'],
-      selectedAirline: null,
-      selectedAirlines: [],
-      isOpen: false,
-      isMultiOpen: false,
-      searchQuery: ''
+      isOpen: false
     }
   },
-
-  computed: {
-    filteredAirlines() {
-      return this.airlines.filter((airline) =>
-        airline.toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
-    }
+  props: {
+    items: { type: Array, required: true },
+    selectedItem: { type: Object, default: null },
+    selectedItems: { type: Array, default: () => [] },
+    placeHolder: { type: String, default: 'Select an airline' },
+    searchable: { type: Boolean, default: false }
   },
-
   methods: {
     toggleDropdown() {
-      this.isOpen = !this.isOpen
-      this.isMultiOpen = false
+      this.isOpen = !this.isOpen;
     },
-    toggleMultiDropdown() {
-      this.isMultiOpen = !this.isMultiOpen
-      this.isOpen = false
-    },
-
-    selectAirline(airline) {
-      this.selectedAirline = airline
-      this.isOpen = false
-    },
-  },
-};
+    sendItem(item) {
+      this.$emit('sendItem', item);
+      this.isOpen = false;
+    }
+  }
+}
 </script>
 
 <style scoped>
-.dropdown {
+.dropdown-select {
   position: relative;
   display: inline-block;
   margin: 10px;
+  
+}
+.dropdown-select:hover {
+  background-color: #b6b6bc;
 }
 
 .dropdown-button {
