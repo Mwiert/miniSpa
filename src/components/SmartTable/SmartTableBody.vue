@@ -1,6 +1,6 @@
 
 <template>
-  <div class="grid-container">
+  <div class="smart-table-body-c">
     <div class="grid-header" v-for="(header, index) in headers" :key="index">
       {{ header }}
     </div>
@@ -31,52 +31,57 @@ export default {
 
 <style lang="scss" scoped>
 
-.grid-container {
+.smart-table-body-c {
   display: grid;
     margin-top: 20px;
     margin-bottom: 20px;
     grid-template-columns: v-bind('gridTemplateColumns'); //computed içerisinde column sayısını dinamik olarak alıp vbind ile css içine geç
     gap: 10px;
-}
 
-.grid-header, .grid-item {
-    padding: 15px;
-    border: 1px solid #ccc;
-    text-align: center;
-    border-radius: 10px;
-    transition: transform 0.2s, background-color 0.3s;
-}
+  &.fadeIn {
+    animation: fadeIn 1s ease-in-out;
+  }
 
-.grid-header {
-    font-weight: bold;
-    background-color: orange;
-    color: black
-}
+  .grid-header {
+  font-weight: bold;
+  background-color: orange;
+  color: black;
+  padding: 15px;
+  border: 1px solid #ccc;
+  text-align: center;
+  border-radius: 10px;
+  transition: transform 0.2s, background-color 0.3s;
 
-.grid-header:hover {
+  &:hover {
     background-color: #ffd900;
+  }
 }
 
 .grid-item {
-    background-color: #f5f5f5;
-}
+  padding: 15px;
+  border: 1px solid #ccc;
+  text-align: center;
+  border-radius: 10px;
+  transition: transform 0.2s, background-color 0.3s;
+  background-color: #f5f5f5;
 
-.grid-item:hover {
+  &:hover {
     background-color: #ff4949;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 }
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.grid-container {
-    animation: fadeIn 1s ease-in-out;
 }
 
 .grid-row {
   display: contents; 
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 </style>
