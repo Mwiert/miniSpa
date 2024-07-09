@@ -9,7 +9,7 @@
     <span v-else>{{ btnText }}</span>
     
   </button>
-  <router-link  :to="routerUrl" class="reisetech-btn" :class=" `reisetech-btn__${btnClassName}`" replace="button" v-else>
+  <router-link  :to="routerUrl" class="reisetech-btn" :class=" `reisetech-btn__${btnClassName}`" role="button" replace="button" v-else>
     <span v-if="icon" class="icon" :class=" btnIcon"></span>
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
@@ -72,7 +72,10 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
-
+  text-decoration: none;
+  
+  
+  
   &__flight {
     background-color: $primary-color;
     border: none;

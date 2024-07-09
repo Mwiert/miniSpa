@@ -34,6 +34,7 @@
       :isSpinnerActive="loadingStates.hotelOutline"
       :isDisabled="loadingStates.hotelOutline"
       @click="setLoadingState('hotelOutline')"
+      :isRouter="true"
       routerUrl="/"
     />
     <UIButton
