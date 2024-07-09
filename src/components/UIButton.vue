@@ -1,6 +1,10 @@
 <template>
-  <button :class="['reisetech-btn', `reisetech-btn__${btnClassName}`]" :disabled="isDisabled">
-    <span v-if="icon" :class="['icon', btnIcon]"></span>
+  <button
+    :class="['reisetech-btn', `reisetech-btn__${btnClassName}`]"
+    :disabled="isDisabled"
+    @click="handleClick"
+  >
+    <span v-if="icon && !isSpinnerActive" :class="['icon', btnIcon]"></span>
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
   </button>
@@ -19,7 +23,6 @@ export default {
     isSpinnerActive: Boolean,
     isDisabled: Boolean
   },
-  components: {},
   data() {
     return {
       btnClassName: this.className,
@@ -27,10 +30,11 @@ export default {
       btnIcon: this.icon
     }
   },
-  created() {},
-  mounted() {},
-  computed: {},
-  methods: {}
+  methods: {
+    handleClick() {
+      this.$emit('click')
+    }
+  }
 }
 </script>
 
@@ -52,6 +56,7 @@ export default {
   border: 2px solid black;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   &__flight {
     background-color: $primary-color;
@@ -78,6 +83,39 @@ export default {
     background: $accent-primary-color;
     border: none;
     color: white;
+  }
+
+  &__disabled {
+    background: #e0e0e0;
+    border: 2px solid #bdbdbd;
+    color: #9e9e9e;
+    cursor: not-allowed;
+    opacity: 0.6;
+
+    &:hover {
+      background: #e0e0e0;
+      border: 2px solid #bdbdbd;
+      color: #9e9e9e;
+    }
+  }
+}
+
+.spinner {
+  border: 4px solid rgba(58, 57, 57, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid rgb(219, 219, 219);
+  width: 24px;
+  height: 24px;
+  animation: spin 2s linear infinite;
+  position: absolute;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>
