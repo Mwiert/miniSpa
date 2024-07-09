@@ -1,25 +1,24 @@
 <template>
     <div class="smart-table-c">
-        <div class="header">
-            Header
-        </div>
+         <SmartTableHeader /> <!-- Header kısmı filters ve searchbar'ı içerir -->
 
         <SmartTableBody :tableData="dummies"/>
 
-
-        <div class="footer">
-            Footer
-        </div>
+        <SmartTableFooter /> <!-- Footer kısmı pagination içerir -->
     </div>
 </template>
 
 <script lang="ts">
+import SmartTableHeader from './SmartTableHeader.vue'
 import SmartTableBody from "./SmartTableBody.vue";
+import SmartTableFooter from './SmartTableFooter.vue'
 import dummies from './dummy.js';
 export default{
     name: 'SmartTable',
     components: {
-        SmartTableBody
+        SmartTableHeader,
+        SmartTableBody,
+        SmartTableFooter
 
     },
     data() {
@@ -32,16 +31,5 @@ export default{
   
 <style lang="scss" scoped>
 
-.smart-table-c {
-    margin: 10px;
-}
-
-.header, .footer {
-    background-color: lightblue;
-    text-align: center;
-    font-size: 50px;
-    padding: 10px;
-    border-radius: 10px;
-}
 </style>
   
