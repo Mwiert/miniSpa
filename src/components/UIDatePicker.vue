@@ -59,7 +59,6 @@ export default {
             daysInMonth: [] as date[],
             TodaysDate: null as date | null,
             firstSelectedDate: null as date | null,
-            secondSelectedDate: null as date | null,
             currentDate: this.initialDate,
             presentDate: dayjs().format('YYYY-MM-DD'),
             minimumDate: dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD'),
@@ -116,14 +115,7 @@ export default {
                 }
             }
 
-            if(this.secondSelectedDate !== null) {
-
-for (let i = 0; i < daysInWholeMonth.length; i++) {
-    if (daysInWholeMonth[i].date === this.secondSelectedDate.date) {
-        daysInWholeMonth[i].selected = true;
-    }
-}
-}
+          
 
             this.daysInMonth = daysInWholeMonth;
 
@@ -145,68 +137,21 @@ for (let i = 0; i < daysInWholeMonth.length; i++) {
             return this.calendarDate.format('YYYY');
         },
         selectDate(date: date) {
-
-            // if(this.firstSelectedDate === null && this.secondSelectedDate === null){
-            //     this.firstSelectedDate = date;
-            //     this.firstSelectedDate.selected = true;
-            //     console.log("ilk seçilen: " +this.firstSelectedDate.date + "ikinci seçilen: " + this.secondSelectedDate.date)
-            // }
-            // else if(this.firstSelectedDate !== null && this.secondSelectedDate === null){
-
-            //     if (this.firstSelectedDate.date < date.date) {
-            //         this.secondSelectedDate = date;
-            //         this.secondSelectedDate.selected = true;
-            //     } else {
-            //         this.secondSelectedDate = this.firstSelectedDate;
-            //         this.firstSelectedDate = date;
-            //         this.secondSelectedDate.selected = true;
-            //     }
-            //     console.log("ilk seçilen: " +this.firstSelectedDate + "ikinci seçilen: " + this.secondSelectedDate)
-
-            // }
-            // else if (this.firstSelectedDate !== null && this.secondSelectedDate !== null){
-            //     if(date > this.secondSelectedDate){
-            //         this.firstSelectedDate = this.secondSelectedDate;
-            //         this.secondSelectedDate = date;
-            //         this.firstSelectedDate.selected = false;
-            //         this.secondSelectedDate.selected = true;
-            //     } else {
-            //         this.firstSelectedDate = date;
-            //         this.firstSelectedDate.selected = true;
-            //         this.secondSelectedDate.selected = false;
-            //     }
-            //     console.log("ilk seçilen: " +this.firstSelectedDate + "ikinci seçilen: " + this.secondSelectedDate)
-
-            // }
             
-             if (this.firstSelectedDate === null) {
+            if (this.firstSelectedDate === null) {
                 console.log(date)
-                 this.firstSelectedDate = date;
+                this.firstSelectedDate = date;
                 this.firstSelectedDate.selected = true;
-            } else if (this.secondSelectedDate === null) {
-                this.secondSelectedDate = date;
-                this.secondSelectedDate.selected = true;
-                console.log(date)
-                if (this.firstSelectedDate.date > this.secondSelectedDate.date) {
-                 [this.firstSelectedDate, this.secondSelectedDate] = [this.secondSelectedDate, this.firstSelectedDate];
-        }
-            }else {
+            } else {
                 this.firstSelectedDate.selected = false;
-                 this.secondSelectedDate.selected = false;
+                this.firstSelectedDate = date;
+                console.log(date)
+                this.firstSelectedDate.selected = true;
+            }
 
-                  this.firstSelectedDate = date;
-                  this.firstSelectedDate.selected = true;
-                  this.secondSelectedDate = null;
-    }
+        this.$emit('dateSelected', this.firstSelectedDate.date);       
 
-    this.$emit('dateSelected', { 
-        firstSelectedDate: this.firstSelectedDate.date,
-        secondSelectedDate: this.secondSelectedDate ? this.secondSelectedDate.date : null
-    }
-    
-);       
-            
-         }
+}
     },
     computed: {
         dateHolder() {

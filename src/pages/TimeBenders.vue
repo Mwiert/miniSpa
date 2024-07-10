@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UIDatePicker :yearRange="4" :initialDate="selectedDate" @dateSelected="handleDateSelected" />
+        <UIDatePicker :yearRange="4" :initialDate="selectedDate" v-model="test" @dateSelected="handleDateSelected" />
     </div>
 </template>
 
@@ -15,15 +15,14 @@ export default {
     },
     data() {
         return {
-            selectedDate: dayjs().format('YYYY-MM-DD')
+            selectedDate: dayjs().format('YYYY-MM-DD'),
         }
     },
     methods: {
 
-        handleDateSelected(firstDate: string,secondDate: string) {
-            this.firstSelectedDate = firstDate;
-            this.secondSelectedDate = secondDate;
-            console.log("Selected Date: ", firstDate, secondDate)
+        handleDateSelected(firstDate: string) {
+            this.selectedDate = firstDate;           
+            console.log("Selected Date: ", firstDate)
         }
     }
 
