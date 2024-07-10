@@ -1,89 +1,89 @@
 <template>
   <div class="ui-dropdown-c">
-  <label class="label">{{ label }}</label>
-      <button
-        @click="toggleDropdown"
-        :class="{ 'ui-dropdown-button-active': isOpen }"
-        class="ui-dropdown-button"
-      >
+    <label class="label">{{ label }}</label>
+    <button
+      @click="toggleDropdown"
+      :class="{ 'ui-dropdown-button-active': isOpen }"
+      class="ui-dropdown-button"
+    >
+      <span :class="{ 'placeholder-text': !selectedItem }">
         {{ selectedItem || placeHolder }}
-        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
-      </button>
-      <div v-if="isOpen" class="ui-dropdown-menu">
+      </span>
+      <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
+    </button>
+    <div v-if="isOpen" class="dropdown-menu">
+      <div class="search-container">
         <input
           v-if="searchable"
           type="text"
           v-model="searchQuery"
           placeholder="Search..."
-          class="ui-dropdown-search"
+          class="dropdown-search"
         />
-        <div
-          v-for="item in filteredItems"
-          :key="item"
-          @click="selectItem(item)"
-          class="ui-dropdown-item"
-        >
-          {{ item }}
-        </div>
+        <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
       </div>
+      <div
+        v-for="(item, index) in filteredItems"
+        :key="index"
+        @click="selectItem(item)"
+        class="dropdown-item"
+      >
+        {{ item }}
+      </div>
+    </div>
   </div>
 </template>
 
-
 <script lang="ts">
-
 export default {
   name: 'DropdownComponent',
-  
+
   data() {
     return {
-      selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
-      isOpen: false,      // checks if our dropdown open or not.
-      searchQuery: ''     // when we search for an item this will fill up.
+      selectedItem: this.initialSelectedItem as string | null,
+      isOpen: false,
+      searchQuery: ''
     }
   },
   props: {
-    dataSize: {           // how many data will shown in the dropdown.
-
-    },
-    label: {              // label on the dropdown to understand what the dropdown contents are.
-      type:String,
-      default:""
-    },
-    initialSelectedItem: {             // represents the currently selected item.
+    initialSelectedItem: {
       type: String,
       default: null
     },
-    placeHolder: {                     // placeHolder before the selection.
+    placeHolder: {
       type: String,
-      default: 'Select an option'
+      default: 'Select an Item'
     },
-    searchable: {                      // in many results user can find what he/she looks for.
+    searchable: {
       type: Boolean,
       default: true
     },
-    items: {                           // items in the database.
-        type: Array as () => string[]
-      },
-
+    items: {
+      type: Array as () => string[]
+    }
   },
   computed: {
-     filteredItems(): string[] {                                    // filters according to the users input.
-       return this.items.filter((item: string) =>
-         item.toLowerCase().includes(this.searchQuery.toLowerCase())
-       )
-     }
+    filteredItems(): string[] {
+      return this.items.filter((item: string) =>
+        item.toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
+    }
   },
   methods: {
-    toggleDropdown() {                                 // closes and opens the dropdown menu onClick.
+    toggleDropdown() {
       this.isOpen = !this.isOpen
     },
-    selectItem(item: string) {                         // emits the selected item.
+    selectItem(item: string) {
       this.selectedItem = item
       this.isOpen = false
       this.$emit('update:selectedItem', item)
     },
-    handleClickOutside(event: MouseEvent) {            // if user clicks anywhere but the dropdown , dropdown closes.
+
+    clearSearch() {
+      this.searchQuery = ''
+    },
+
+    handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
         this.isOpen = false
@@ -95,8 +95,8 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside)
-    }
   }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -104,21 +104,16 @@ export default {
   position: relative;
   display: inline-block;
   margin: 10px;
-  display: flex;
-  flex-direction: column;
-  max-width: fit-content;
 
-  .ui-dropdown-button {
-    min-width: 150px;
+  .dropdown-button {
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 12px;
     cursor: pointer;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px; /* Optional: Adds space above the button */
- 
 
     &-active {
       border: 1px solid #60acfe;
@@ -137,9 +132,13 @@ export default {
         transform: rotate(-135deg);
       }
     }
+
+    .placeholder-text {
+      color: #999;
+    }
   }
 
-  .ui-dropdown-menu {
+  .dropdown-menu {
     position: absolute;
     top: 100%;
     left: 0;
@@ -147,7 +146,8 @@ export default {
     background-color: #fff;
     border: 2px solid #ccc;
     border-radius: 12px;
-    max-height: 300px;
+    max-height: calc(7 * 50px);
+    overflow-x: hidden;
     overflow-y: auto;
     z-index: 1000;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -155,7 +155,7 @@ export default {
     .search-container {
       position: relative;
 
-      .ui-dropdown-search {
+      .dropdown-search {
         width: 90%;
         padding: 10px;
         box-sizing: border-box;
@@ -168,11 +168,11 @@ export default {
       .clear-search {
         position: absolute;
         right: 12px;
-        top: 13px;
-        transform: translateY(-50%, -50%);
+        top: 50%;
+        transform: translateY(-50%);
         cursor: pointer;
         font-size: 25px;
-        color: #ccc;
+        color: #999;
         width: 25px;
         height: 25px;
         background-color: #f0f0f0;
@@ -187,7 +187,7 @@ export default {
       }
     }
 
-    .ui-dropdown-item {
+    .dropdown-item {
       padding: 10px;
       cursor: pointer;
       border-bottom: 1px solid #f0f0f0;
@@ -198,18 +198,14 @@ export default {
     }
   }
 
-  .ui-dropdown-search {
-   width: 90%;
-   padding: 10px;
-   box-sizing: border-box;
-   margin: 7px;
-   border-radius: 10px;
-   border: 2px solid #ccc;
+  .dropdown-search {
+    width: 90%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 7px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
     outline: none;
   }
-  .ui-dropdown-c-label{
-    margin-bottom: 10px; /* Adds space below the label */
-  }
-
 }
 </style>
