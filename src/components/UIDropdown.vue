@@ -1,6 +1,5 @@
 <template>
   <div class="ui-dropdown-c">
-<<<<<<< HEAD
     <button
       @click="toggleDropdown"
       :class="{ 'dropdown-button-active': isOpen }"
@@ -11,26 +10,13 @@
     </button>
     <div v-if="isOpen" class="dropdown-menu">
       <div class="search-container">
-=======
-  <label class="label">{{ label }}</label>
-      <button
-        @click="toggleDropdown"
-        :class="{ 'ui-dropdown-button-active': isOpen }"
-        class="ui-dropdown-button"
-      >
-        {{ selectedItem || placeHolder }}
-        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
-      </button>
-      <div v-if="isOpen" class="ui-dropdown-menu">
->>>>>>> b12f0e6ad4eda3864348fb6a498fd5cff241d62b
         <input
           v-if="searchable"
           type="text"
           v-model="searchQuery"
           placeholder="Search..."
-          class="ui-dropdown-search"
+          class="dropdown-search"
         />
-<<<<<<< HEAD
         <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
       </div>
       <div
@@ -40,17 +26,8 @@
         class="dropdown-item"
       >
         {{ item }}
-=======
-        <div
-          v-for="item in filteredItems"
-          :key="item"
-          @click="selectItem(item)"
-          class="ui-dropdown-item"
-        >
-          {{ item }}
-        </div>
->>>>>>> b12f0e6ad4eda3864348fb6a498fd5cff241d62b
       </div>
+    </div>
   </div>
 </template>
 
@@ -60,40 +37,24 @@ export default {
 
   data() {
     return {
-      selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
-      isOpen: false,      // checks if our dropdown open or not.
-      searchQuery: ''     // when we search for an item this will fill up.
+      selectedItem: this.initialSelectedItem as string | null,
+      isOpen: false,
+      searchQuery: ''
     }
   },
   props: {
-<<<<<<< HEAD
     initialSelectedItem: {
-=======
-    dataSize: {           // how many data will shown in the dropdown.
-
-    },
-    label: {              // label on the dropdown to understand what the dropdown contents are.
-      type:String,
-      default:""
-    },
-    initialSelectedItem: {             // represents the currently selected item.
->>>>>>> b12f0e6ad4eda3864348fb6a498fd5cff241d62b
       type: String,
       default: null
     },
-    placeHolder: {                     // placeHolder before the selection.
+    placeHolder: {
       type: String,
-<<<<<<< HEAD
       default: 'Select an Item'
-=======
-      default: 'Select an option'
->>>>>>> b12f0e6ad4eda3864348fb6a498fd5cff241d62b
     },
-    searchable: {                      // in many results user can find what he/she looks for.
+    searchable: {
       type: Boolean,
       default: true
     },
-<<<<<<< HEAD
     items: {
       type: Array as () => string[]
     }
@@ -104,39 +65,22 @@ export default {
         item.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
     }
-=======
-    items: {                           // items in the database.
-        type: Array as () => string[]
-      },
-
-  },
-  computed: {
-     filteredItems(): string[] {                                    // filters according to the users input.
-       return this.items.filter((item: string) =>
-         item.toLowerCase().includes(this.searchQuery.toLowerCase())
-       )
-     }
->>>>>>> b12f0e6ad4eda3864348fb6a498fd5cff241d62b
   },
   methods: {
-    toggleDropdown() {                                 // closes and opens the dropdown menu onClick.
+    toggleDropdown() {
       this.isOpen = !this.isOpen
     },
-    selectItem(item: string) {                         // emits the selected item.
+    selectItem(item: string) {
       this.selectedItem = item
       this.isOpen = false
       this.$emit('update:selectedItem', item)
     },
-<<<<<<< HEAD
 
     clearSearch() {
       this.searchQuery = ''
     },
 
     handleClickOutside(event: MouseEvent) {
-=======
-    handleClickOutside(event: MouseEvent) {            // if user clicks anywhere but the dropdown , dropdown closes.
->>>>>>> b12f0e6ad4eda3864348fb6a498fd5cff241d62b
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
         this.isOpen = false
@@ -157,24 +101,16 @@ export default {
   position: relative;
   display: inline-block;
   margin: 10px;
-<<<<<<< HEAD
-=======
-  display: flex;
-  flex-direction: column;
-  max-width: fit-content;
->>>>>>> b12f0e6ad4eda3864348fb6a498fd5cff241d62b
 
-  .ui-dropdown-button {
-    min-width: 150px;
+  .dropdown-button {
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 10px;
     cursor: pointer;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px; /* Optional: Adds space above the button */
- 
 
     &-active {
       border: 1px solid #000;
@@ -195,7 +131,7 @@ export default {
     }
   }
 
-  .ui-dropdown-menu {
+  .dropdown-menu {
     position: absolute;
     top: 100%;
     left: 0;
@@ -212,7 +148,7 @@ export default {
     .search-container {
       position: relative;
 
-      .ui-dropdown-search {
+      .dropdown-search {
         width: 90%;
         padding: 10px;
         box-sizing: border-box;
@@ -244,7 +180,7 @@ export default {
       }
     }
 
-    .ui-dropdown-item {
+    .dropdown-item {
       padding: 10px;
       cursor: pointer;
       border-bottom: 1px solid #f0f0f0;
@@ -255,7 +191,6 @@ export default {
     }
   }
 
-<<<<<<< HEAD
   .dropdown-search {
     width: 90%;
     padding: 10px;
@@ -265,20 +200,5 @@ export default {
     border: 2px solid #ccc;
     outline: none;
   }
-=======
-  .ui-dropdown-search {
-   width: 90%;
-   padding: 10px;
-   box-sizing: border-box;
-   margin: 7px;
-   border-radius: 10px;
-   border: 2px solid #ccc;
-    outline: none;
-  }
-  .ui-dropdown-c-label{
-    margin-bottom: 10px; /* Adds space below the label */
-  }
-
->>>>>>> b12f0e6ad4eda3864348fb6a498fd5cff241d62b
 }
 </style>
