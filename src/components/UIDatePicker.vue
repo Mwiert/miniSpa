@@ -4,10 +4,18 @@
             <div>
                 <div class="calendar">
                     <div class="header">
-                        <button class="nav-button" @click="onClickToLeft" v-if="presentDate < currentDate">&lt;</button>
-                        <button class="nav-button-invisible" v-else>&lt;</button>
+                        <button class="nav-button" @click="onClickToLeft" v-show="minDate < currentDate">
+                            
+                        <img src="../assets/icons/arrow-left.svg" alt=""></button>
+                    
                         <span class="current-date">{{ dateHolder }}</span>
-                        <button class="nav-button" @click="onClickToRight">&gt;</button>
+                        <button class="nav-button" @click="onClickToRight" v-show="currentDate < maximumDate">
+                            
+                            <img src="../assets/icons/arrow-right.svg" alt="">
+
+                        </button>
+                       
+                        
                     </div>
                     <ul class="weekdays">
                         <template v-for="(weekday, index) in weekdays" :key="index">
@@ -40,68 +48,77 @@
 
 <script lang="ts">
 import dayjs from 'dayjs';
-
-interface date {
-    date?: string;
-    number?: string;
-    inactive?: boolean;
-    active?: boolean;
-    selected?: boolean;
-    textDecoration?: boolean;
-    blink?: boolean;
-    between?: boolean;
-    isToday?: boolean;
-    month?: string;
-    year?: number;
-    day?: string;
-}
+import date from '../interface/IUIDatePicker';
 
 export default {
     name: "UIDatePicker",
     data() {
         return {
             weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-            calendarDate: dayjs(),
+            calendarDate: dayjs(this.initialDate),
             daysInMonth: [] as date[],
             TodaysDate: null as date | null,
             firstSelectedDate: null as date | null,
-            currentDate: dayjs().format('YYYY-MM-DD'),
-            presentDate: dayjs().format('YYYY-MM-DD')
+            currentDate: this.initialDate,
+            presentDate: dayjs().format('YYYY-MM-DD'),
+            minDate: dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD'),
+            maxDate: dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD'),
         };
     },
+    props: {
+        yearRange: {type: Number, default: 1},
+        initialDate: {type: String, default: dayjs().format('YYYY-MM-DD')},
+    },
+
     methods: {
+    
         totalDaysInMonth() {
-            this.daysInMonth = [];
+            let daysInWholeMonth = [];
             const startOfMonth = this.calendarDate.startOf('month');
             const endOfMonth = this.calendarDate.endOf('month');
             const offsetValue = (startOfMonth.day() + 6) % 7;
             const endOffsetValue = (7 - (offsetValue + endOfMonth.date()) % 7) % 7;
             let today = dayjs().format('D');
-            
+            const date = dayjs(this.currentDate)
             // Create the empty values at the beginning of the month
             for (let i = 0; i < offsetValue; i++) {
-                this.daysInMonth.push({ date: "", inactive: true, isToday: false });
+                daysInWholeMonth.push({ date: "", inactive: true, isToday: false });
             }
 
             // Create the days of the month
             for (let i = 0; i < endOfMonth.date(); i++) {
-                const date = dayjs().startOf('month').add(i, 'day').format('YYYY-MM-DD');
-                const isDateBeforeToday = date < this.presentDate && this.currentMonth() === dayjs().format('MMMM') && this.currentYear() === dayjs().format('YYYY');
-                
-                this.daysInMonth.push({ 
-                    date: date, 
+                const dateSender = date.startOf('month').add(i, 'day');
+            
+
+                daysInWholeMonth.push({ 
+                    date: dayjs(dateSender).format('DD-MM-YYYY'), 
                     inactive: false, 
                     selected: false, 
-                    textDecoration: isDateBeforeToday, 
+                    textDecoration: false, 
                     isToday: Number(today) === i + 1 && this.currentMonth() === dayjs().format('MMMM') && this.currentYear() === dayjs().format('YYYY'),
                     number: String(i + 1) 
                 });
             }
+            
 
             // Create the empty values at the end of the month
             for (let i = 1; i <= endOffsetValue; i++) {
-                this.daysInMonth.push({ date: "", inactive: true, isToday: false });
+                daysInWholeMonth.push({ date: "", inactive: true, isToday: false });
             }
+
+            if(this.firstSelectedDate !== null) {
+
+                for (let i = 0; i < daysInWholeMonth.length; i++) {
+                    if (daysInWholeMonth[i].date === this.firstSelectedDate.date) {
+                        daysInWholeMonth[i].selected = true;
+                    }
+                }
+            }
+
+          
+
+            this.daysInMonth = daysInWholeMonth;
+
         },
         onClickToRight() {
             this.calendarDate = this.calendarDate.add(1, 'month');
@@ -120,6 +137,7 @@ export default {
             return this.calendarDate.format('YYYY');
         },
         selectDate(date: date) {
+            
             if (this.firstSelectedDate === null) {
                 console.log(date)
                 this.firstSelectedDate = date;
@@ -130,7 +148,10 @@ export default {
                 console.log(date)
                 this.firstSelectedDate.selected = true;
             }
-        }
+
+        this.$emit('dateSelected', this.firstSelectedDate.date);       
+
+}
     },
     computed: {
         dateHolder() {
@@ -145,6 +166,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../assets/css/variables.scss';
+@import '../assets/css/_fonts.scss';
 
 .ui-date-picker-c {
     position: absolute;
@@ -167,31 +189,41 @@ export default {
         flex-direction: column;
         align-items: center;
         .calendar {
-            padding-top: 1rem;
+            padding-top: 1.2rem;
             width: 100%;
             justify-content: space-around;
 
             .header {
+                position: relative;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                width: 100%;
 
-                .nav-button {
+                .nav-button {                  
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-45%);
                     background-color: transparent;
                     border: none;
-                    font-size: 1.2rem;
-                    font-family: 'Arial';
+                    font-size: 1rem;
                     cursor: pointer;
+                    width: 30px;
+                    height: 30px;
+                    img{
+                        width: 15px;
+                        height: 15px;
+                    }
                 }
-                .nav-button-invisible {
-                    background-color: transparent;
-                    border: none;
-                    font-size: 1.2rem;
-                    font-family: 'Arial';
-                    opacity: 0;
-                    pointer-events: none;
+                .nav-button:first-child{
+                    left:0;
+                }
+                .nav-button:last-child{
+                    right: 0;
                 }
                 .current-date {
+                    flex-grow: 1;
+                    text-align: center;
                     font-size: 0.9rem;
                     font-weight: 500;
                 }
@@ -226,6 +258,7 @@ export default {
         }
         .days li {
             padding: 10px 8px;
+            font-weight: 500;
             line-height: 5px;
             cursor: pointer;
         }
@@ -249,4 +282,5 @@ export default {
         }
     }
 }
+
 </style>
