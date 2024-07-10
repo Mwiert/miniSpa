@@ -6,12 +6,12 @@
         :class="{ 'ui-dropdown-button-active': isOpen }"
         class="ui-dropdown-button"
       >
-    <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text">
+    <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text"   >
         {{ selectedItem || placeHolder }}
       </span>
         <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
       </button>
-      <div v-if="isOpen" class="ui-dropdown-menu">
+      <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize }">
         <div class="search-container" >
         <input
           v-if="searchable"
@@ -48,9 +48,15 @@ export default {
     }
   },
   props: {
-    dataSize: {           // how many data will shown in the dropdown.
-
+    dataSize: {       
+      type: Number,  // how many data will shown in the dropdown.
+      default:5
     },
+    fontSize: {           // defined fontsize shown in the dropdown.
+      type:String,
+      default:"12px",
+      required:false
+   },
     label: {              // label on the dropdown to understand what the dropdown contents are.
       type:String,
       default:""
@@ -69,6 +75,7 @@ export default {
     },
     items: {                           // items in the database.
         type: Array as () => string[]
+
       },
 
   },
@@ -96,7 +103,7 @@ export default {
       
     },
     clearSearch() {
-      this.searchQuery = ''
+      this.searchQuery = ""
     }
   },
   mounted() {
@@ -175,7 +182,7 @@ export default {
         padding: 10px;
         box-sizing: border-box;
         margin: 7px;
-        border-radius: 10px;
+        border-radius: 20px;
         border: 2px solid #ccc;
         outline: none;
       }
@@ -224,6 +231,11 @@ export default {
   }
   .ui-dropdown-c-label{
     margin-bottom: 10px; /* Adds space below the label */
+  }
+  .label{
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 }
