@@ -55,13 +55,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .button-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   width: 80%;
 }
+
 .button-grid-container {
   display: flex;
   justify-content: center;

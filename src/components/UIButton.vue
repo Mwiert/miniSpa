@@ -1,7 +1,8 @@
 <template>
   <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active icon and text will be shown-->
-  <button class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" :disabled="isDisabled" :style="{height: btnHeight}" v-if="!btnIsRouter">
+  <button class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" :disabled="isDisabled"
+    v-if="!btnIsRouter">
     <span v-if="icon && !isSpinnerActive" class="icon">
       <img :src="icon" alt="button icon">
     </span>
@@ -10,7 +11,8 @@
     <span v-else>{{ btnText }}</span>
 
   </button>
-  <router-link :to="routerUrl" class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" replace="button" :style="{height: btnHeight}" v-else>
+  <router-link :to="routerUrl" class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" replace="button"
+    v-else>
     <span v-if="icon && !isSpinnerActive" class="icon">
       <img :src="icon" alt="button icon">
     </span>
@@ -34,17 +36,16 @@ export default {
     // isRouter is checking the button is routing or not
     isRouter: Boolean,
     // routeUrl is the routing Url
-    routerUrl: String,
-    Object,
+    routerUrl: { type: String, Object },
     // icon is the icons on the button if button has one
     icon: String,
     // isSpinner is checking loading animation for button exist or not
     isSpinnerActive: Boolean,
     // isDisabled is checking button is active or disabled
     isDisabled: Boolean,
-    height: {
+    size: {
       type: String,
-      default: '48px'
+      default: 'large'
     }
   },
   data() {
@@ -53,7 +54,6 @@ export default {
       btnText: this.text,
       btnIcon: this.icon,
       btnIsRouter: this.isRouter,
-      btnHeight: this.height
     }
   },
   methods: {
@@ -64,6 +64,9 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
+$small: 12px;
+$medium: 24px;
+$large: 48px;
 
 // router-link takes tag 'a' and its default css should be overwritten
 a.reisetech-btn {
@@ -86,6 +89,18 @@ a.reisetech-btn {
   border: 2px solid black;
   position: relative;
   text-decoration: none;
+
+  &.small {
+    height: $small;
+  }
+
+  &.medium {
+    height: $medium;
+  }
+
+  &.large {
+    height: $large;
+  }
 
   &__flight {
     background-color: $primary-color;
@@ -186,6 +201,7 @@ a.reisetech-btn {
   margin-right: 8px;
 
   img {
+    object-fit: contain;
     width: 24px;
     height: 24px;
   }
