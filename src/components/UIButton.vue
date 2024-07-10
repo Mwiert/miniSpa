@@ -1,23 +1,29 @@
 <template>
   <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active the icon and the text will be shown-->
-  <button class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" :disabled="isDisabled"
-    v-if="!btnIsRouter">
+  <button
+    class="reisetech-btn"
+    :class="[`reisetech-btn__${btnClassName}`, size]"
+    :disabled="isDisabled"
+    v-if="!btnIsRouter"
+  >
     <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
     <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
-
   </button>
-  <router-link :to="routerUrl" class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" replace="button"
-    v-else>
+  <router-link
+    :to="routerUrl"
+    class="reisetech-btn"
+    :class="[`reisetech-btn__${btnClassName}`, size]"
+    replace="button"
+    v-else
+  >
     <!-- Icon's name should be the name of the .svg file-->
     <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
   </router-link>
-
-
 </template>
 
 <script lang="ts">
@@ -57,9 +63,7 @@ export default {
       btnIconSize: this.iconSize
     }
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 
@@ -101,6 +105,18 @@ a.reisetech-btn {
 
   &.large {
     height: $large;
+  }
+
+  &__default {
+    background-color: white;
+    border: 2px solid black;
+    color: black;
+
+    &:hover {
+      background: $accent-primary-color;
+      border: 2px solid $accent-primary-color;
+      color: white;
+    }
   }
 
   &__flight {
@@ -149,7 +165,6 @@ a.reisetech-btn {
         color: white;
       }
     }
-
   }
 
   &__powerpuff-girls {
@@ -177,7 +192,7 @@ a.reisetech-btn {
   }
 
   &__pink-panthers {
-    background-color: #F39FB1;
+    background-color: #f39fb1;
     border: none;
     color: white;
 
@@ -190,7 +205,7 @@ a.reisetech-btn {
     &.outline {
       background-color: white;
       color: $primary-color;
-      border: 2px solid #F39FB1;
+      border: 2px solid #f39fb1;
 
       &:hover {
         background: $accent-primary-color;
