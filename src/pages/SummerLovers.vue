@@ -1,6 +1,6 @@
 <template>
     <div>
-      <UIDropdown :items="items" :label="label" />
+      <UIDropdown :items="items" :label="label" :fontSize="fontSize" />
     </div>
   </template>
   
@@ -21,8 +21,8 @@
         'Pegasus Europe',
         'Corendon EU'
       ],
-      label: "Please select an airline:"
-    
+      label: "Please select an airline:",
+      fontSize:"12px"
   }
 }
   }
