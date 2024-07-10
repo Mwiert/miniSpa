@@ -73,25 +73,25 @@ export default {
     methods: {
     
         totalDaysInMonth() {
-            this.daysInMonth = [];
+            let daysInWholeMonth = [];
             const startOfMonth = this.calendarDate.startOf('month');
             const endOfMonth = this.calendarDate.endOf('month');
             const offsetValue = (startOfMonth.day() + 6) % 7;
             const endOffsetValue = (7 - (offsetValue + endOfMonth.date()) % 7) % 7;
             let today = dayjs().format('D');
-            
+            const date = dayjs(this.currentDate)
             // Create the empty values at the beginning of the month
             for (let i = 0; i < offsetValue; i++) {
-                this.daysInMonth.push({ date: "", inactive: true, isToday: false });
+                daysInWholeMonth.push({ date: "", inactive: true, isToday: false });
             }
 
             // Create the days of the month
             for (let i = 0; i < endOfMonth.date(); i++) {
-                const date = dayjs().startOf('month').add(i, 'day').format('YYYY-MM-DD');
+                const dateSender = date.startOf('month').add(i, 'day');
             
 
-                this.daysInMonth.push({ 
-                    date: dayjs(date).format('DD-MM-YYYY'), 
+                daysInWholeMonth.push({ 
+                    date: dayjs(dateSender).format('DD-MM-YYYY'), 
                     inactive: false, 
                     selected: false, 
                     textDecoration: false, 
@@ -99,11 +99,14 @@ export default {
                     number: String(i + 1) 
                 });
             }
+            
 
             // Create the empty values at the end of the month
             for (let i = 1; i <= endOffsetValue; i++) {
-                this.daysInMonth.push({ date: "", inactive: true, isToday: false });
+                daysInWholeMonth.push({ date: "", inactive: true, isToday: false });
             }
+            this.daysInMonth = daysInWholeMonth;
+
         },
         onClickToRight() {
             this.calendarDate = this.calendarDate.add(1, 'month');
@@ -170,16 +173,21 @@ export default {
         flex-direction: column;
         align-items: center;
         .calendar {
-            padding-top: 1rem;
+            padding-top: 1.2rem;
             width: 100%;
             justify-content: space-around;
 
             .header {
+                position: relative;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                width: 100%;
 
-                .nav-button {                    
+                .nav-button {                  
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-45%);
                     background-color: transparent;
                     border: none;
                     font-size: 1rem;
@@ -191,14 +199,15 @@ export default {
                         height: 15px;
                     }
                 }
-                .nav-button-invisible {
-                    background-color: transparent;
-                    border: none;
-                    font-size: 1.2rem;
-                    opacity: 0;
-                    pointer-events: none;
+                .nav-button:first-child{
+                    left:0;
+                }
+                .nav-button:last-child{
+                    right: 0;
                 }
                 .current-date {
+                    flex-grow: 1;
+                    text-align: center;
                     font-size: 0.9rem;
                     font-weight: 500;
                 }
