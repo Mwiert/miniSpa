@@ -1,6 +1,6 @@
 <template>
     <div>
-      <UIDropdown :items="items"  :label="label"/>
+      <UIDropdown :items="items" :label="label" />
     </div>
   </template>
   
@@ -21,7 +21,7 @@
         'Pegasus Europe',
         'Corendon EU'
       ],
-      label: 'gamze'
+      label: "Please select an airline:"
     
   }
 }
