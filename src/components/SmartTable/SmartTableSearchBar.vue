@@ -2,7 +2,7 @@
     <form class="search-bar-c">
         <div>
             <input type="text" v-model="searchInput" @input="handleSearch" placeholder="Search">  
-            <button type="button" class="clear-button" @click="clearSearch" v-if="searchInput">✕</button>
+            <button type="button" class="clear-button" @click="clearSearch" v-if="searchInput">✕</button>  <!-- V-if ile arama yerimiz boşken clear butonumuzu gizliyoruz eğer herhangi bir yazı yazılırsa boş olmadığı için false döner ve butonumuz gözükür.-->
         </div>
     </form>
 </template>
