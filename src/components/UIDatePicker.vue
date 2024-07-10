@@ -1,6 +1,7 @@
 <template>
     <div class="ui-date-picker-c">
-      <div type="button" class="ui-date-picker-wrapper">
+        <UIDateRangePicker :selectedDate="currentDate"></UIDateRangePicker>
+        <div class="ui-date-picker-wrapper">
         <div>
           <div class="calendar">
             <div class="header">
@@ -45,9 +46,13 @@
   <script lang="ts">
   import dayjs from 'dayjs'
   import date from '../interface/IUIDatePicker'
+  import UIDateRangePicker from './UIDateRangePicker.vue'
   
   export default {
     name: 'UIDatePicker',
+    components: {
+      UIDateRangePicker
+    },
     data() {
       return {
         weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
@@ -63,8 +68,8 @@
       }
     },
     props: {
-      yearRange: { type: Number, default: 1 },
-      initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
+        yearRange: { type: Number, default: 1 },
+        initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
       
     },
   
@@ -164,14 +169,8 @@
   @import '../assets/css/_fonts.scss';
   
   .ui-date-picker-c {
-    
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;   
+    align-self: center;
+      
     .ui-date-picker-wrapper {
       background: #ffffff;
       box-shadow: 2px 2px 6px #5c75991a;
@@ -183,6 +182,19 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative; 
+
+      &::before {
+        content: '';
+         position: absolute;
+          top: -10px; 
+           left: 15px; 
+            width: 0;
+             height: 0;
+             border-left: 10px solid transparent; 
+              border-right: 10px solid transparent; 
+               border-bottom: 10px solid #ffffff; 
+  }
       .calendar {
         padding-top: 1.2rem;
         width: 100%;
