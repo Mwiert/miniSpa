@@ -4,10 +4,16 @@
             <div>
                 <div class="calendar">
                     <div class="header">
-                        <button class="nav-button" @click="onClickToLeft" v-if="presentDate < currentDate">&lt;</button>
-                        <button class="nav-button-invisible" v-else>&lt;</button>
+                        <button class="nav-button" @click="onClickToLeft" v-if="presentDate < currentDate">
+                            
+                        <img src="../assets/icons/arrow-left.svg" alt=""></button>
+                        <button class="nav-button-invisible" v-else>
+                        </button>
                         <span class="current-date">{{ dateHolder }}</span>
-                        <button class="nav-button" @click="onClickToRight">&gt;</button>
+                        <button class="nav-button" @click="onClickToRight">
+                            <img src="../assets/icons/arrow-right.svg" alt="">
+
+                        </button>
                     </div>
                     <ul class="weekdays">
                         <template v-for="(weekday, index) in weekdays" :key="index">
@@ -40,21 +46,7 @@
 
 <script lang="ts">
 import dayjs from 'dayjs';
-
-interface date {
-    date?: string;
-    number?: string;
-    inactive?: boolean;
-    active?: boolean;
-    selected?: boolean;
-    textDecoration?: boolean;
-    blink?: boolean;
-    between?: boolean;
-    isToday?: boolean;
-    month?: string;
-    year?: number;
-    day?: string;
-}
+import date from '../interface/IUIDatePicker';
 
 export default {
     name: "UIDatePicker",
@@ -176,12 +168,15 @@ export default {
                 justify-content: space-between;
                 align-items: center;
 
-                .nav-button {
-                    background-color: transparent;
+                .nav-button {                    background-color: transparent;
                     border: none;
-                    font-size: 1.2rem;
+                    font-size: 1rem;
                     font-family: 'Arial';
                     cursor: pointer;
+                    img{
+                        width: 15px;
+                        height: 15px;
+                    }
                 }
                 .nav-button-invisible {
                     background-color: transparent;
