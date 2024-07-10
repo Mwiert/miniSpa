@@ -31,9 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
+export default {
   name: 'DropdownComponent',
   props: {
     airlines: {
@@ -96,7 +94,7 @@ export default defineComponent({
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside)
   }
-})
+}
 </script>
 
 <style lang="scss" scoped>
