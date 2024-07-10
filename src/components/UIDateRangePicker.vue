@@ -106,10 +106,9 @@ export default {
         .prompted-date{
             display: flex;
             flex-direction: row;
-            justify-content: center;
             text-align: center;
-            gap: 5px;
-            align-items: center;
+            width: 100%;
+            
 
 
             .day{
@@ -117,6 +116,7 @@ export default {
                 font-weight: bold;
                 color: #2b2b2b;
                 opacity: 0.9;
+                padding: 0 10px;
              
 
             }
