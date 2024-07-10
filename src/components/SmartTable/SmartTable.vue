@@ -1,8 +1,8 @@
 <template>
     <div class="smart-table-c">
-         <SmartTableHeader /> <!-- Header kısmı filters ve searchbar'ı içerir -->
+        <SmartTableHeader v-on:search-input="handleSearchInput" /> <!-- Header kısmı filters ve searchbar'ı içerir v-on ile emit ettiğimiz değerleri alıyoruz-->
 
-        <SmartTableBody :tableData="dummies"/>
+        <SmartTableBody :tableData="filteredData" />
 
         <SmartTableFooter /> <!-- Footer kısmı pagination içerir -->
     </div>
@@ -23,8 +23,26 @@ export default{
     },
     data() {
         return {
-           dummies: dummies
+           dummies: dummies,
+           searchTerm: ''
         };
+    },
+    computed: {
+        filteredData() {
+            if (!this.searchTerm) {
+                return this.dummies; //search yoksa direk bütün verileri göster
+            }//stirngfy yapılabilir ?? 
+            return this.dummies.filter(item => //data içinde dönüyoruz ve tüm data verilerimizi alıyoruz 
+                Object.values(item).some(value => // some eğer search içinde uyuşan bazı terimler varsa bunları true olarak bize döndürüyor örnek olarak pandora live yazmak yerine live yazarsak bize true döner
+                    value && value.toString().toLowerCase().includes(this.searchTerm.toLowerCase())//include kullanmak için ve yazılan sonuçlar doğru gelsin diye ek bir filtreleme yapıyoruz search ve data karşılaştırması yapıp sonucu getiriyoruz
+                )
+            );
+        }
+    },
+    methods: {
+        handleSearchInput(value: string) {
+            this.searchTerm = value;
+        }
     }
 };
 </script>
