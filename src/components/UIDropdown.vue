@@ -1,16 +1,19 @@
 <template>
   <div class="ui-dropdown-c">
+    <label class="ui-dropdown-label">{{ label }}</label>
     <button
       @click="toggleDropdown"
-      :class="{ 'dropdown-button-active': isOpen }"
-      class="dropdown-button"
+      :class="{ 'ui-dropdown-button-active': isOpen }"
+      class="ui-dropdown-button"
+      aria-haspopup="listbox"
+      :aria-expanded="isOpen"
     >
       <span :class="{ 'placeholder-text': !selectedItem }">
         {{ selectedItem || placeHolder }}
       </span>
       <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
     </button>
-    <div v-if="isOpen" class="dropdown-menu">
+    <div v-if="isOpen" class="dropdown-menu" role="listbox">
       <div class="search-container">
         <input
           v-if="searchable"
@@ -18,16 +21,21 @@
           v-model="searchQuery"
           placeholder="Search..."
           class="dropdown-search"
+          aria-controls="dropdown-options"
         />
         <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
       </div>
-      <div
-        v-for="(item, index) in filteredItems"
-        :key="index"
-        @click="selectItem(item)"
-        class="dropdown-item"
-      >
-        {{ item }}
+      <div id="dropdown-options" role="optionlist">
+        <div
+          v-for="(item, index) in filteredItems"
+          :key="index"
+          @click="selectItem(item)"
+          class="dropdown-item"
+          role="option"
+          :aria-selected="item === selectedItem"
+        >
+          {{ item }}
+        </div>
       </div>
     </div>
   </div>
@@ -37,14 +45,11 @@
 export default {
   name: 'DropdownComponent',
 
-  data() {
-    return {
-      selectedItem: this.initialSelectedItem as string | null,
-      isOpen: false,
-      searchQuery: ''
-    }
-  },
   props: {
+    label: {
+      type: String,
+      default: 'Select an option'
+    },
     initialSelectedItem: {
       type: String,
       default: null
@@ -59,6 +64,13 @@ export default {
     },
     items: {
       type: Array as () => string[]
+    }
+  },
+  data() {
+    return {
+      selectedItem: this.initialSelectedItem as string | null,
+      isOpen: false,
+      searchQuery: ''
     }
   },
   computed: {
@@ -77,11 +89,9 @@ export default {
       this.isOpen = false
       this.$emit('update:selectedItem', item)
     },
-
     clearSearch() {
       this.searchQuery = ''
     },
-
     handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
@@ -104,7 +114,15 @@ export default {
   display: inline-block;
   margin: 10px;
 
-  .dropdown-button {
+  .ui-dropdown-label {
+    margin-bottom: 5px;
+    display: block;
+    font-weight: bold;
+    color: #333;
+    font-size: 12px;
+  }
+
+  .ui-dropdown-button {
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
