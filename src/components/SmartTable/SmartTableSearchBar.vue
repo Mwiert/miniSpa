@@ -1,8 +1,8 @@
 <template>
     <form class="search-bar-c">
         <div>
-            <input type="text" v-on:input="searchInput" @input="handleSearch" placeholder="Search">  
-            <button type="button" class="clear-button" @click="clearSearch" v-if="searchInput">✕</button> <!-- V-if ile arama yerimiz boşken clear butonumuzu gizliyoruz eğer herhangi bir yazı yazılırsa boş olmadığı için false döner ve butonumuz gözükür.-->
+            <input type="text" v-model="searchInput" @input="handleSearch" placeholder="Search">  
+            <button type="button" class="clear-button" @click="clearSearch" v-if="searchInput">✕</button>  <!-- V-if ile arama yerimiz boşken clear butonumuzu gizliyoruz eğer herhangi bir yazı yazılırsa boş olmadığı için false döner ve butonumuz gözükür.-->
         </div>
     </form>
 </template>
@@ -49,18 +49,19 @@ export default {
 }
 
 .clear-button {
-  position: relative;
-  right: 25px; 
-  padding: 5px; 
-  background: none;
-  border:none;
-  font-size: 15px;
-  cursor: pointer;
-  color: #007bff;
-  align-self: center;
+    position: relative;
+    right: 25px; 
+    padding: 5px; 
+    background: none;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    color: #007bff;
+    align-self: center;
   
-  &:hover{
-    color: #ff0000;
-  }
+    &:hover {
+        color: #ff0000;
+    }
 }
 </style>
+
