@@ -23,7 +23,7 @@
         <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
       </div>
       <div
-        v-for="item in filteredItems"
+        v-for="item in limitedItems"
         :key="item"
         @click="selectItem(item)"
         class="ui-dropdown-item"
@@ -36,65 +36,60 @@
 
 <script lang="ts">
 export default {
-  name: 'DropdownComponent',
-
-  data() {
-    return {
-      selectedItem: this.initialSelectedItem as string | null, // represents the currently selected item.
-      isOpen: false, // checks if our dropdown open or not.
-      searchQuery: '' // when we search for an item this will fill up.
-    }
-  },
+  name: 'UIDropdown',
   props: {
     dataSize: {
-      // how many data will shown in the dropdown.
+      type: Number,
+      default: 5
     },
     label: {
-      // label on the dropdown to understand what the dropdown contents are.
       type: String,
       default: ''
     },
     initialSelectedItem: {
-      // represents the currently selected item.
       type: String,
       default: null
     },
     placeHolder: {
-      // placeHolder before the selection.
       type: String,
       default: 'Select an option'
     },
     searchable: {
-      // in many results user can find what he/she looks for.
       type: Boolean,
       default: true
     },
     items: {
-      // items in the database.
-      type: Array as () => string[]
+      type: Array as () => string[],
+      required: true
+    }
+  },
+  data() {
+    return {
+      selectedItem: this.initialSelectedItem as string | null,
+      isOpen: false,
+      searchQuery: ''
     }
   },
   computed: {
     filteredItems(): string[] {
-      // filters according to the users input.
       return this.items.filter((item: string) =>
         item.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
+    },
+    limitedItems(): string[] {
+      return this.filteredItems.slice(0, this.dataSize)
     }
   },
   methods: {
     toggleDropdown() {
-      // closes and opens the dropdown menu onClick.
       this.isOpen = !this.isOpen
     },
     selectItem(item: string) {
-      // emits the selected item.
       this.selectedItem = item
       this.isOpen = false
       this.$emit('update:selectedItem', item)
     },
     handleClickOutside(event: MouseEvent) {
-      // if user clicks anywhere but the dropdown , dropdown closes.
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
         this.isOpen = false
@@ -131,7 +126,7 @@ export default {
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px; /* Optional: Adds space above the button */
+    margin-top: 10px;
 
     &-active {
       border: 1px solid #60acfe;
@@ -145,7 +140,7 @@ export default {
     }
 
     .arrow {
-      margin-left: 15px;
+      margin-left: 22px;
       border: solid black;
       border-width: 0 1px 1px 0;
       display: inline-block;
@@ -215,19 +210,6 @@ export default {
         background-color: #f3f3f3;
       }
     }
-  }
-
-  .ui-dropdown-search {
-    width: 90%;
-    padding: 10px;
-    box-sizing: border-box;
-    margin: 7px;
-    border-radius: 10px;
-    border: 2px solid #ccc;
-    outline: none;
-  }
-  .ui-dropdown-c-label {
-    margin-bottom: 10px; /* Adds space below the label */
   }
 }
 </style>
