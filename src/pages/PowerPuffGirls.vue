@@ -10,68 +10,34 @@
      - routerUrl: URL to navigate to when the button is clicked
    -->
 
-    <UIButton
-      className=""
-      text="Home"
-      :isSpinnerActive="loadingStates.home.isLoading"
-      :isDisabled="loadingStates.home.isDisabled"
-      @click="setLoadingState('home')"
-      :isRouter="true"
-      routerUrl="/"
-    />
-    <UIButton
-      className="flight"
-      text="Flight Button"
-      :icon="PPGirls"
-      :isSpinnerActive="loadingStates.flight.isLoading"
-      :isDisabled="loadingStates.flight.isDisabled"
-      @click="setLoadingState('flight')"
-    />
-    <UIButton
-      className="hotel"
-      text="Hotel Button"
-      :isSpinnerActive="loadingStates.hotel.isLoading"
-      :isDisabled="loadingStates.hotel.isDisabled"
-      @click="setLoadingState('hotel')"
-    />
+    <UIButton className="" text="Home" :isSpinnerActive="loadingStates.home.isLoading"
+      :isDisabled="loadingStates.home.isDisabled" @click="setLoadingState('home')" :isRouter="true" routerUrl="/" />
+    <UIButton className="flight" text="Flight Button - default (medium) icon" :icon="'refresh'"
+      :isSpinnerActive="loadingStates.flight.isLoading" :isDisabled="loadingStates.flight.isDisabled"
+      @click="setLoadingState('flight')" />
+    <UIButton className="hotel" text="Hotel Button - small icon" :icon="'refresh'" :iconSize="'s'"
+      :isSpinnerActive="loadingStates.hotel.isLoading" :isDisabled="loadingStates.hotel.isDisabled"
+      @click="setLoadingState('hotel')" />
 
-    <UIButton
-      className="reisetech-btn"
-      text="Default Button"
-      :isSpinnerActive="loadingStates.default.isLoading"
-      :isDisabled="loadingStates.default.isDisabled"
-      @click="setLoadingState('default')"
-    />
+    <UIButton className="reisetech-btn" text="Default Button - large icon" :icon="'refresh'" :iconSize="'l'"
+      :isSpinnerActive="loadingStates.default.isLoading" :isDisabled="loadingStates.default.isDisabled"
+      @click="setLoadingState('default')" />
 
-    <UIButton
-      className="flight outline"
-      text="Flight Outline Button"
-      :isSpinnerActive="loadingStates.flightOutline.isLoading"
-      :isDisabled="loadingStates.flightOutline.isDisabled"
-      @click="setLoadingState('flightOutline')"
-    />
+    <UIButton className="flight outline" text="Flight Outline Button"
+      :isSpinnerActive="loadingStates.flightOutline.isLoading" :isDisabled="loadingStates.flightOutline.isDisabled"
+      @click="setLoadingState('flightOutline')" />
 
-    <UIButton
-      className="hotel outline"
-      text="Hotel Outline Button"
-      :isSpinnerActive="loadingStates.hotelOutline.isLoading"
-      :isDisabled="loadingStates.hotelOutline.isDisabled"
-      @click="setLoadingState('hotelOutline')"
-    />
+    <UIButton className="hotel outline" text="Hotel Outline Button"
+      :isSpinnerActive="loadingStates.hotelOutline.isLoading" :isDisabled="loadingStates.hotelOutline.isDisabled"
+      @click="setLoadingState('hotelOutline')" />
 
-    <UIButton
-      className="disabled"
-      text="Disabled Button"
-      :isSpinnerActive="loadingStates.disabledButton.isLoading"
-      :isDisabled="loadingStates.disabledButton.isDisabled"
-      @click="setLoadingState('disabledButton')"
-    />
+    <UIButton className="disabled" text="Disabled Button" :isSpinnerActive="loadingStates.disabledButton.isLoading"
+      :isDisabled="loadingStates.disabledButton.isDisabled" @click="setLoadingState('disabledButton')" />
   </div>
 </template>
 
 <script lang="ts">
 import UIButton from '../components/UIButton.vue'
-import PPGirls from '../assets/images/powerpuffgirls.jpg'
 
 export default {
   name: 'PowerPuffGirls',
@@ -80,7 +46,6 @@ export default {
   },
   data() {
     return {
-      PPGirls,
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
         home: { isLoading: false, isDisabled: false }, // Initial state for home button
@@ -106,8 +71,9 @@ export default {
   }
 }
 </script>
-//Style to add gap between buttons
+
 <style lang="scss" scoped>
+//Style to add gap between buttons
 .button-c {
   display: flex;
   flex-direction: column;
