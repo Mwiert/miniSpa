@@ -1,9 +1,10 @@
 <template>
   <div class="ui-dropdown-c">
+    <label class="label">{{ label }}</label>
     <button
       @click="toggleDropdown"
-      :class="{ 'dropdown-button-active': isOpen }"
-      class="dropdown-button"
+      :class="{ 'ui-dropdown-button-active': isOpen }"
+      class="ui-dropdown-button"
     >
       <span :class="{ 'placeholder-text': !selectedItem }">
         {{ selectedItem || placeHolder }}
@@ -108,14 +109,14 @@ export default {
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     &-active {
-      border: 1px solid #000;
+      border: 1px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -144,7 +145,7 @@ export default {
     right: 0;
     background-color: #fff;
     border: 2px solid #ccc;
-    border-radius: 8px;
+    border-radius: 12px;
     max-height: calc(7 * 50px);
     overflow-x: hidden;
     overflow-y: auto;
