@@ -1,9 +1,10 @@
-
 <template>
   <div class="smart-table-body-c">
     <div class="grid-header" v-for="(header, index) in headers" :key="index">
-      {{ header }}      
-      <button v-if="sortedColumns[index] == true" @click="sort(header)" class="sort-button">▲</button>
+      {{ header }}
+      <button v-if="sortedColumns[index] == true" @click="sort(header)" class="sort-button">
+        ▲
+      </button>
       <button v-else @click="sort(header)" class="sort-button">▼</button>
     </div>
     <div v-if="noItemsFound" class="grid-row no-items-found"> <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
@@ -36,7 +37,7 @@ export default {
       sortedTableData: Object,
       // To keep track of the sorting status of columns
       sortedColumns: [] as Array<boolean>
-    };
+    }
   },
   computed: {
     headers() {
@@ -47,72 +48,74 @@ export default {
     }
   },
   created() {
-    this.sortedTableData = this.tableData;
-    this.sortedColumns = this.headers.map(() => false);
+    this.sortedTableData = this.tableData
+    this.sortedColumns = this.headers.map(() => false)
   },
-  methods:  {
+  methods: {
     sort(header: string) {
-      console.log("Sort: ", header);
+      console.log('Sort: ', header)
 
       // Get the index of the column and change its previous sort state
-      const index = this.headers.indexOf(header);
-      this.sortedColumns[index] = !this.sortedColumns[index];
+      const index = this.headers.indexOf(header)
+      this.sortedColumns[index] = !this.sortedColumns[index]
 
       // Sort by column data type
-      if (typeof this.sortedTableData[0][header] == "string") {
+      if (typeof this.sortedTableData[0][header] == 'string') {
         this.sortedTableData.sort((a, b) => {
-          return this.sortedColumns[index] 
-            ? a[header].localeCompare(b[header]) 
-            : b[header].localeCompare(a[header]);
-        });
+          return this.sortedColumns[index]
+            ? a[header].localeCompare(b[header])
+            : b[header].localeCompare(a[header])
+        })
       } else {
         this.sortedTableData.sort((a, b) => {
-          return this.sortedColumns[index] 
-            ? a[header] - b[header] 
-            : b[header] - a[header];
-        });
+          return this.sortedColumns[index] ? a[header] - b[header] : b[header] - a[header]
+        })
       }
-
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .smart-table-body-c {
   display: grid;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    grid-template-columns: v-bind('gridTemplateColumns'); //computed içerisinde column sayısını dinamik olarak alıp vbind ile css içine geç
-    gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  grid-template-columns: v-bind(
+    'gridTemplateColumns'
+  ); //computed içerisinde column sayısını dinamik olarak alıp vbind ile css içine geç
+  gap: 10px;
 
   &.fadeIn {
     animation: fadeIn 1s ease-in-out;
   }
 
   .grid-header {
-  font-weight: bold;
-  background-color: orange;
-  color: black;
-  padding: 15px;
-  border: 1px solid #ccc;
-  text-align: center;
-  border-radius: 10px;
-  transition: transform 0.2s, background-color 0.3s;
+    font-weight: bold;
+    background-color: orange;
+    color: black;
+    padding: 15px;
+    border: 1px solid #ccc;
+    text-align: center;
+    border-radius: 10px;
+    transition:
+      transform 0.2s,
+      background-color 0.3s;
 
-  &:hover {
-    background-color: #ffd900;
+    &:hover {
+      background-color: #ffd900;
+    }
   }
-}
 
-.grid-item {
-  padding: 15px;
-  border: 1px solid #ccc;
-  text-align: center;
-  border-radius: 10px;
-  transition: transform 0.2s, background-color 0.3s;
-  background-color: #f5f5f5;
+  .grid-item {
+    padding: 15px;
+    border: 1px solid #ccc;
+    text-align: center;
+    border-radius: 10px;
+    transition:
+      transform 0.2s,
+      background-color 0.3s;
+    background-color: #f5f5f5;
 
   &:hover {
     background-color: #ff4949;
@@ -131,7 +134,7 @@ export default {
 }
 
 .grid-row {
-  display: contents; 
+  display: contents;
 }
 
 .sort-button {
