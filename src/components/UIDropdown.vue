@@ -1,10 +1,9 @@
 <template>
   <div class="ui-dropdown-c">
-    <label class="label">{{ label }}</label>
     <button
       @click="toggleDropdown"
-      :class="{ 'ui-dropdown-button-active': isOpen }"
-      class="ui-dropdown-button"
+      :class="{ 'dropdown-button-active': isOpen }"
+      class="dropdown-button"
     >
       <span :class="{ 'placeholder-text': !selectedItem }">
         {{ selectedItem || placeHolder }}
@@ -109,14 +108,14 @@ export default {
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     &-active {
-      border: 1px solid #60acfe;
+      border: 1px solid #000;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -134,7 +133,7 @@ export default {
     }
 
     .placeholder-text {
-      color: #999;
+      color: #999; /* Faint color for placeholder */
     }
   }
 
@@ -145,7 +144,7 @@ export default {
     right: 0;
     background-color: #fff;
     border: 2px solid #ccc;
-    border-radius: 12px;
+    border-radius: 8px;
     max-height: calc(7 * 50px);
     overflow-x: hidden;
     overflow-y: auto;
@@ -172,7 +171,7 @@ export default {
         transform: translateY(-50%);
         cursor: pointer;
         font-size: 25px;
-        color: #999;
+        color: #ccc;
         width: 25px;
         height: 25px;
         background-color: #f0f0f0;
