@@ -26,7 +26,10 @@ export default {
   props: {
     // Classes such as hotel and flight are derived from the .reisetech-btn class.
     // .reisetech-btn class has the default css style, but the appearance of the button changes depending on the incoming flight and hotel class.
-    className: String,
+    className: {
+      type: String,
+      default: 'default'
+    },
     // Text is the label of button
     text: String,
     // isRouter is checking the button is routing or not
@@ -105,10 +108,22 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid $primary-color;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
@@ -117,10 +132,22 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $secondary-color;
       border: 2px solid $secondary-color;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
 
   }
@@ -130,10 +157,22 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid #98029b;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
@@ -142,10 +181,22 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid #F39FB1;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
@@ -154,10 +205,22 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid #83d9e5;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
@@ -166,16 +229,28 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid #8fbd8d;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
   &:hover {
     background: $accent-primary-color;
-    border: none;
+    border: 2px solid $accent-primary-color;
     color: white;
   }
 
