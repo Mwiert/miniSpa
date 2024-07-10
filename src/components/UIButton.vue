@@ -3,8 +3,8 @@
   <!-- If spinner is not active the icon and the text will be shown-->
   <button class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" :disabled="isDisabled"
     v-if="!btnIsRouter">
-    <!-- Icon's name should be the name of the .svg file-->
-    <SvgIcon v-if="icon && !isSpinnerActive" :name="icon" class="icon" />
+    <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
+    <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
 
@@ -12,7 +12,7 @@
   <router-link :to="routerUrl" class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" replace="button"
     v-else>
     <!-- Icon's name should be the name of the .svg file-->
-    <SvgIcon v-if="icon && !isSpinnerActive" :name="icon" class="icon" />
+    <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
   </router-link>
@@ -35,6 +35,7 @@ export default {
     routerUrl: { type: String, Object },
     // icon is the icons on the button if button has one
     icon: String,
+    iconSize: String,
     // isSpinner is checking loading animation for button exist or not
     isSpinnerActive: Boolean,
     // isDisabled is checking button is active or disabled
@@ -49,7 +50,8 @@ export default {
       btnClassName: this.className,
       btnText: this.text,
       btnIcon: this.icon,
-      btnIsRouter: this.isRouter
+      btnIsRouter: this.isRouter,
+      btnIconSize: this.iconSize
     }
   },
   methods: {
