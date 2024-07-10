@@ -1,5 +1,8 @@
 <template>
   <div class="ui-dropdown-c">
+    <label>
+      {{ label }}
+    </label>
       <button
         @click="toggleDropdown"
         :class="{ 'ui-dropdown-button-active': isOpen }"
@@ -46,7 +49,8 @@ export default {
 
     },
     label: {              // label on the dropdown to understand what the dropdown contents are.
-
+      type: String,
+      default: 'airline : '
     },
     initialSelectedItem: {             // represents the currently selected item.
       type: String,
@@ -102,7 +106,9 @@ export default {
   position: relative;
   display: inline-block;
   margin: 10px;
+  max-width: fit-content;
   .ui-dropdown-button {
+    display: flex;
     min-width: 150px;
     padding: 15px;
     background-color: #fff;
