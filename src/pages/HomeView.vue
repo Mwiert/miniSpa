@@ -1,46 +1,23 @@
 <template>
-  <div class="button-grid-c">
-    
-    <UIButton
-      className="time-benders"
-      text="Timebenders"
-      :isSpinnerActive="loadingStates.flight.isLoading"
-      :isDisabled="loadingStates.flight.isDisabled"
-      @click="setLoadingState('flight')"
-      :isRouter="true"
-      routerUrl="/timebenders"
-    />
+  <div class="button-grid-container">
+    <div class="button-grid">
 
-    <UIButton
-      className="powerpuff-girls"
-       text="PowerPuffGirls"
-       :icon="PPGirls"
-      :isSpinnerActive="loadingStates.flight2.isLoading"
-      :isDisabled="loadingStates.flight2.isDisabled"
-      @click="setLoadingState('flight2')"
-      :isRouter="true"
-      routerUrl="/powerpuffgirls"
-    />
+      <UIButton className="time-benders" text="Timebenders" :isSpinnerActive="loadingStates.flight.isLoading"
+        :isDisabled="loadingStates.flight.isDisabled" @click="setLoadingState('flight')" :isRouter="true"
+        routerUrl="/timebenders" />
 
-    <UIButton
-      className="summer-lovers"
-      text="SummerLovers"
-      :isSpinnerActive="loadingStates.hotel.isLoading"
-      :isDisabled="loadingStates.hotel.isDisabled"
-      @click="setLoadingState('hotel')"
-      :isRouter="true"
-      routerUrl="/summerLovers"
-    />
+      <UIButton className="powerpuff-girls" text="PowerPuffGirls" :icon="PPGirls"
+        :isSpinnerActive="loadingStates.flight2.isLoading" :isDisabled="loadingStates.flight2.isDisabled"
+        @click="setLoadingState('flight2')" :isRouter="true" routerUrl="/powerpuffgirls" />
 
-    <UIButton
-      className="pink-panthers"
-      text="PinkPanthers"
-      :isSpinnerActive="loadingStates.default.isLoading"
-      :isDisabled="loadingStates.default.isDisabled"
-      @click="setLoadingState('default')"
-      :isRouter="true"
-      routerUrl="/pinkpanthers"
-    />
+      <UIButton className="summer-lovers" text="SummerLovers" :isSpinnerActive="loadingStates.hotel.isLoading"
+        :isDisabled="loadingStates.hotel.isDisabled" @click="setLoadingState('hotel')" :isRouter="true"
+        routerUrl="/summerLovers" />
+
+      <UIButton className="pink-panthers" text="PinkPanthers" :isSpinnerActive="loadingStates.default.isLoading"
+        :isDisabled="loadingStates.default.isDisabled" @click="setLoadingState('default')" :isRouter="true"
+        routerUrl="/pinkpanthers" />
+    </div>
   </div>
 </template>
 
@@ -49,7 +26,7 @@ import UIButton from '../components/UIButton.vue'
 import PPGirls from '../assets/images/powerpuffgirls.jpg'
 export default {
   name: 'HomeView',
-  components:{
+  components: {
     UIButton
   },
   data() {
@@ -78,11 +55,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.button-grid-c {
+
+.button-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
+  width: 80%;
 }
-
+.button-grid-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 </style>
-

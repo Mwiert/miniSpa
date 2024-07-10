@@ -1,7 +1,7 @@
 <template>
   <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active icon and text will be shown-->
-  <button class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" :disabled="isDisabled" v-if="!btnIsRouter">
+  <button class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" :disabled="isDisabled" :style="{height: btnHeight}" v-if="!btnIsRouter">
     <span v-if="icon && !isSpinnerActive" class="icon">
       <img :src="icon" alt="button icon">
     </span>
@@ -10,7 +10,7 @@
     <span v-else>{{ btnText }}</span>
 
   </button>
-  <router-link :to="routerUrl" class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" replace="button" v-else>
+  <router-link :to="routerUrl" class="reisetech-btn" :class="`reisetech-btn__${btnClassName}`" replace="button" :style="{height: btnHeight}" v-else>
     <span v-if="icon && !isSpinnerActive" class="icon">
       <img :src="icon" alt="button icon">
     </span>
@@ -41,14 +41,19 @@ export default {
     // isSpinner is checking loading animation for button exist or not
     isSpinnerActive: Boolean,
     // isDisabled is checking button is active or disabled
-    isDisabled: Boolean
+    isDisabled: Boolean,
+    height: {
+      type: String,
+      default: '48px'
+    }
   },
   data() {
     return {
       btnClassName: this.className,
       btnText: this.text,
       btnIcon: this.icon,
-      btnIsRouter: this.isRouter
+      btnIsRouter: this.isRouter,
+      btnHeight: this.height
     }
   },
   methods: {
@@ -70,7 +75,6 @@ a.reisetech-btn {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 48px;
   border-radius: 24px;
   font-size: 16px;
   background-color: transparent;
