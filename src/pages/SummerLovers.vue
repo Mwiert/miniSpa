@@ -26,7 +26,7 @@
       dataSize:5
   }
 }
-  }
-  </script>
-  
-  <style lang="scss" scoped></style>
+}
+</script>
+
+<style lang="scss" scoped></style>

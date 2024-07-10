@@ -12,7 +12,9 @@
       </div>
     </div>
     <div class="grid-row" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
-      <div v-for="(cell, cellIndex) in headers" :key="cellIndex" class="grid-item">
+      <div v-for="(cell, cellIndex) in headers" :key="cellIndex" class="grid-item" :class="{clickable : options.clickable}" 
+      
+      @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])" >
         {{ tableRow[cell] }}
       </div>
     </div>
@@ -24,7 +26,12 @@ export default {
   name: 'SmartTableBody',
   props: {
     tableData: Object,
-    sortableColumns: Array
+    options: Object,
+    sortableColumns: Array,
+    noItemsFound: {
+      type: Boolean,
+      required: true
+    }
   },  
   data() {
     return {
@@ -65,8 +72,21 @@ export default {
           return this.sortedColumns[index] ? a[header] - b[header] : b[header] - a[header]
         })
       }
+
+    },
+    handleClick(cell, rowIndex, cellIndex, cellData) {
+      const columnName = this.headers[cellIndex];
+      console.log(columnName)
+      const clickableColumns = this.options.clickableColumns;
+      if(clickableColumns.includes(columnName)){
+        //gerekli yönlendirme işlemleri burada yapılabilir.
+        window.location.href=`https://www.google.com/search?q=${cellData}`;
+        this.$emit('cell-click', { cell, rowIndex, cellIndex })
+      }
+      
     }
-  }
+  },
+ 
 }
 </script>
 
