@@ -1,16 +1,22 @@
 <template>
     <div class="button-c">
+        <UIButton
+        className=""
+        text="Home"
+        :isSpinnerActive="loadingStates.default.isLoading"
+        :isDisabled="loadingStates.default.isDisabled"
+        @click="setLoadingState('flight')"
+        :isRouter="true"
+        routerUrl="/"
+      />
       <UIButton
         className="flight"
         text="Flight Button"
-        :icon="flightIcon"
+        :icon="PPGirls"
         :isSpinnerActive="loadingStates.flight.isLoading"
         :isDisabled="loadingStates.flight.isDisabled"
         @click="setLoadingState('flight')"
       />
-  
-      
-  
       <UIButton
         className="hotel"
         text="Hotel Button"
@@ -41,8 +47,6 @@
         :isSpinnerActive="loadingStates.hotelOutline.isLoading"
         :isDisabled="loadingStates.hotelOutline.isDisabled"
         @click="setLoadingState('hotelOutline')"
-        :isRouter="true"
-        routerUrl="/"
       />
   
       <UIButton
@@ -56,18 +60,17 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent } from 'vue'
   import UIButton from '../components/UIButton.vue'
-
-  
-  export default defineComponent({
+  import PPGirls from '../assets/images/powerpuffgirls.jpg'
+    
+  export default {
     name: 'PowerPuffGirls',
     components: {
       UIButton
     },
     data() {
       return {
-        
+        PPGirls,
         loadingStates: {
           flight: { isLoading: false, isDisabled: false },
           flight2: { isLoading: false, isDisabled: false },
@@ -87,7 +90,7 @@
         }, 2000)
       }
     }
-  })
+  }
   </script>
   
   <style lang="scss" scoped>

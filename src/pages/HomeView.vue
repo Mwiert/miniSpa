@@ -1,8 +1,7 @@
 <template>
   <div class="button-grid-c">
-    
     <UIButton
-      className="flight"
+      className="time-benders"
       text="Timebenders"
       :isSpinnerActive="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
@@ -12,8 +11,9 @@
     />
 
     <UIButton
-      className="flight"
+      className="powerpuff-girls"
        text="PowerPuffGirls"
+       :icon="PPGirls"
       :isSpinnerActive="loadingStates.flight2.isLoading"
       :isDisabled="loadingStates.flight2.isDisabled"
       @click="setLoadingState('flight2')"
@@ -22,7 +22,7 @@
     />
 
     <UIButton
-      className="hotel"
+      className="summer-lovers"
       text="SummerLovers"
       :isSpinnerActive="loadingStates.hotel.isLoading"
       :isDisabled="loadingStates.hotel.isDisabled"
@@ -32,7 +32,7 @@
     />
 
     <UIButton
-      className="reisetech-btn"
+      className="pink-panthers"
       text="PinkPanthers"
       :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
@@ -45,13 +45,15 @@
 
 <script lang="ts">
 import UIButton from '../components/UIButton.vue'
+import PPGirls from '../assets/images/powerpuffgirls.jpg'
 export default {
   name: 'HomeView',
-  components:{
+  components: {
     UIButton
   },
   data() {
     return {
+      PPGirls,
       loadingStates: {
         flight: { isLoading: false, isDisabled: false },
         flight2: { isLoading: false, isDisabled: false },
@@ -75,10 +77,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.button-grid-c{
+.button-grid-c {
   display: grid;
-  grid-template-columns: repeat(2,1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
-</style>
 
+</style>
