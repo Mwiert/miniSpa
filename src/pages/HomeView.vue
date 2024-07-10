@@ -1,6 +1,5 @@
 <template>
   <div class="button-grid-container">
-    <SvgIcon />
     <div class="button-grid">
       <UIButton
         className="time-benders"
