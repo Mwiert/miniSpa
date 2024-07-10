@@ -1,4 +1,4 @@
-interface date {
+interface DateModel {
     date?: string;
     number?: string;
     inactive?: boolean;
@@ -12,5 +12,5 @@ interface date {
     year?: number;
     day?: string;
 }
+export default DateModel;
 
-export default date;

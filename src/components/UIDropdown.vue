@@ -1,32 +1,31 @@
 <template>
-  <div class="dropdown-c">
-    <div class="dropdown">
+  <div class="ui-dropdown-c">
+  <label class="label">{{ label }}</label>
       <button
         @click="toggleDropdown"
-        :class="{ 'dropdown-button-active': isOpen }"
-        class="dropdown-button"
+        :class="{ 'ui-dropdown-button-active': isOpen }"
+        class="ui-dropdown-button"
       >
         {{ selectedItem || placeHolder }}
-        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
+        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
       </button>
-      <div v-if="isOpen" class="dropdown-menu">
+      <div v-if="isOpen" class="ui-dropdown-menu">
         <input
           v-if="searchable"
           type="text"
           v-model="searchQuery"
           placeholder="Search..."
-          class="dropdown-search"
+          class="ui-dropdown-search"
         />
         <div
-          v-for="(item,index) in items"
-          :key="index"
+          v-for="item in filteredItems"
+          :key="item"
           @click="selectItem(item)"
-          class="dropdown-item"
+          class="ui-dropdown-item"
         >
           {{ item }}
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -38,45 +37,53 @@ export default {
   
   data() {
     return {
-      selectedItem: this.initialSelectedItem as string | null,
-      isOpen: false,
-      searchQuery: ''
+      selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
+      isOpen: false,      // checks if our dropdown open or not.
+      searchQuery: ''     // when we search for an item this will fill up.
     }
   },
   props: {
-    initialSelectedItem: {             
+    dataSize: {           // how many data will shown in the dropdown.
+
+    },
+    label: {              // label on the dropdown to understand what the dropdown contents are.
+      type:String,
+      default:""
+    },
+    initialSelectedItem: {             // represents the currently selected item.
       type: String,
       default: null
     },
-    placeHolder: {
+    placeHolder: {                     // placeHolder before the selection.
       type: String,
-      default: 'Select'
+      default: 'Select an option'
     },
-    searchable: {
+    searchable: {                      // in many results user can find what he/she looks for.
       type: Boolean,
       default: true
     },
-    items: {
+    items: {                           // items in the database.
         type: Array as () => string[]
-      }
+      },
+
   },
   computed: {
-    // filteredItems(): string[] {
-    //   return this.items.filter((item: string) =>
-    //     item.toLowerCase().includes(this.searchQuery.toLowerCase())
-    //   )
-    // }
+     filteredItems(): string[] {                                    // filters according to the users input.
+       return this.items.filter((item: string) =>
+         item.toLowerCase().includes(this.searchQuery.toLowerCase())
+       )
+     }
   },
   methods: {
-    toggleDropdown() {
+    toggleDropdown() {                                 // closes and opens the dropdown menu onClick.
       this.isOpen = !this.isOpen
     },
-    selectItem(item: string) {
+    selectItem(item: string) {                         // emits the selected item.
       this.selectedItem = item
       this.isOpen = false
       this.$emit('update:selectedItem', item)
     },
-    handleClickOutside(event: MouseEvent) {
+    handleClickOutside(event: MouseEvent) {            // if user clicks anywhere but the dropdown , dropdown closes.
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
         this.isOpen = false
@@ -93,21 +100,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dropdown {
+.ui-dropdown-c {
   position: relative;
   display: inline-block;
   margin: 10px;
-}
+  display: flex;
+  flex-direction: column;
+  max-width: fit-content;
 
-  .dropdown-button {
+  .ui-dropdown-button {
+    min-width: 150px;
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 10px;
     cursor: pointer;
-    display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 10px; /* Optional: Adds space above the button */
+ 
 
     &-active {
       border: 1px solid #000;
@@ -128,7 +139,7 @@ export default {
     }
   }
 
-  .dropdown-menu {
+  .ui-dropdown-menu {
     position: absolute;
     top: 100%;
     left: 0;
@@ -144,7 +155,7 @@ export default {
     .search-container {
       position: relative;
 
-      .dropdown-search {
+      .ui-dropdown-search {
         width: 90%;
         padding: 10px;
         box-sizing: border-box;
@@ -176,7 +187,7 @@ export default {
       }
     }
 
-    .dropdown-item {
+    .ui-dropdown-item {
       padding: 10px;
       cursor: pointer;
       border-bottom: 1px solid #f0f0f0;
@@ -187,13 +198,18 @@ export default {
     }
   }
 
-.dropdown-search {
-  width: 90%;
-  padding: 10px;
-  box-sizing: border-box;
-  margin: 7px;
-  border-radius: 10px;
-  border: 2px solid #ccc;
-  outline: none;
+  .ui-dropdown-search {
+   width: 90%;
+   padding: 10px;
+   box-sizing: border-box;
+   margin: 7px;
+   border-radius: 10px;
+   border: 2px solid #ccc;
+    outline: none;
+  }
+  .ui-dropdown-c-label{
+    margin-bottom: 10px; /* Adds space below the label */
+  }
+
 }
 </style>

@@ -1,19 +1,22 @@
 <template>
     <div class="ui-date-picker-c">
+
         <div class="ui-date-picker-wrapper">
             <div>
                 <div class="calendar">
                     <div class="header">
-                        <button class="nav-button" @click="onClickToLeft" v-if="presentDate < currentDate">
+                        <button class="nav-button" @click="onClickToLeft" v-show="minimumDate < currentDate">
                             
                         <img src="../assets/icons/arrow-left.svg" alt=""></button>
-                        <button class="nav-button-invisible" v-else>
-                        </button>
+                    
                         <span class="current-date">{{ dateHolder }}</span>
-                        <button class="nav-button" @click="onClickToRight">
+                        <button class="nav-button" @click="onClickToRight" v-show="currentDate < maximumDate">
+                            
                             <img src="../assets/icons/arrow-right.svg" alt="">
 
                         </button>
+                       
+                        
                     </div>
                     <ul class="weekdays">
                         <template v-for="(weekday, index) in weekdays" :key="index">
@@ -58,10 +61,17 @@ export default {
             TodaysDate: null as date | null,
             firstSelectedDate: null as date | null,
             currentDate: dayjs().format('YYYY-MM-DD'),
-            presentDate: dayjs().format('YYYY-MM-DD')
+            presentDate: dayjs().format('YYYY-MM-DD'),
+            minimumDate: dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD'),
+            maximumDate: dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD'),
         };
     },
+    props: {
+        yearRange: {type: Number, default: 1},
+    },
+
     methods: {
+    
         totalDaysInMonth() {
             this.daysInMonth = [];
             const startOfMonth = this.calendarDate.startOf('month');
@@ -78,13 +88,13 @@ export default {
             // Create the days of the month
             for (let i = 0; i < endOfMonth.date(); i++) {
                 const date = dayjs().startOf('month').add(i, 'day').format('YYYY-MM-DD');
-                const isDateBeforeToday = date < this.presentDate && this.currentMonth() === dayjs().format('MMMM') && this.currentYear() === dayjs().format('YYYY');
-                
+            
+
                 this.daysInMonth.push({ 
-                    date: date, 
+                    date: dayjs(date).format('DD-MM-YYYY'), 
                     inactive: false, 
                     selected: false, 
-                    textDecoration: isDateBeforeToday, 
+                    textDecoration: false, 
                     isToday: Number(today) === i + 1 && this.currentMonth() === dayjs().format('MMMM') && this.currentYear() === dayjs().format('YYYY'),
                     number: String(i + 1) 
                 });
@@ -137,6 +147,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../assets/css/variables.scss';
+@import '../assets/css/_fonts.scss';
 
 .ui-date-picker-c {
     position: absolute;
@@ -168,10 +179,10 @@ export default {
                 justify-content: space-between;
                 align-items: center;
 
-                .nav-button {                    background-color: transparent;
+                .nav-button {                    
+                    background-color: transparent;
                     border: none;
                     font-size: 1rem;
-                    font-family: 'Arial';
                     cursor: pointer;
                     img{
                         width: 15px;
@@ -182,7 +193,6 @@ export default {
                     background-color: transparent;
                     border: none;
                     font-size: 1.2rem;
-                    font-family: 'Arial';
                     opacity: 0;
                     pointer-events: none;
                 }
@@ -221,6 +231,7 @@ export default {
         }
         .days li {
             padding: 10px 8px;
+            font-weight: 500;
             line-height: 5px;
             cursor: pointer;
         }
@@ -244,4 +255,5 @@ export default {
         }
     }
 }
+
 </style>
