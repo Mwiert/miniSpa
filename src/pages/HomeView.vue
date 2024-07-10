@@ -1,7 +1,6 @@
 <template>
   <div class="button-grid-container">
     <div class="button-grid">
-
       <UIButton className="time-benders" text="Timebenders" :isSpinnerActive="loadingStates.flight.isLoading"
         :isDisabled="loadingStates.flight.isDisabled" @click="setLoadingState('flight')" :isRouter="true"
         routerUrl="/timebenders" />
