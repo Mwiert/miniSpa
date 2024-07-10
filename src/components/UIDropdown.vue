@@ -1,18 +1,18 @@
 <template>
   <div class="ui-dropdown-c">
-    <label class="label">{{ label }}</label>
-    <button
-      @click="toggleDropdown"
-      :class="{ 'ui-dropdown-button-active': isOpen }"
-      class="ui-dropdown-button"
-    >
-      <span :class="{ 'placeholder-text': !selectedItem }">
+  <label class="label">{{ label }}</label>
+      <button
+        @click="toggleDropdown"
+        :class="{ 'ui-dropdown-button-active': isOpen }"
+        class="ui-dropdown-button"
+      >
+    <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text">
         {{ selectedItem || placeHolder }}
       </span>
-      <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
-    </button>
-    <div v-if="isOpen" class="dropdown-menu">
-      <div class="search-container">
+        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
+      </button>
+      <div v-if="isOpen" class="ui-dropdown-menu">
+        <div class="search-container" >
         <input
           v-if="searchable"
           type="text"
@@ -22,15 +22,15 @@
         />
         <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
       </div>
-      <div
-        v-for="(item, index) in filteredItems"
-        :key="index"
-        @click="selectItem(item)"
-        class="dropdown-item"
-      >
-        {{ item }}
+        <div
+          v-for="item in filteredItems"
+          :key="item"
+          @click="selectItem(item)"
+          class="ui-dropdown-item"
+        >
+          {{ item }}
+        </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -88,6 +88,10 @@ export default {
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
+      
+    },
+    clearSearch() {
+      this.searchQuery = ''
     }
   },
   mounted() {
@@ -118,6 +122,12 @@ export default {
     &-active {
       border: 1px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .placeholder-text{
+      &-active{
+        color: grey;
+      }
     }
 
     .arrow {
