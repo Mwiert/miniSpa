@@ -1,6 +1,6 @@
 <template>
     <div>
-      <UIDropdown :items="items" :label="label" :fontSize="fontSize" />
+      <UIDropdown :items="items" :label="label" :fontSize="fontSize" :dataSize="dataSize" />
     </div>
   </template>
   
@@ -22,7 +22,8 @@
         'Corendon EU'
       ],
       label: "Please select an airline:",
-      fontSize:"12px"
+      fontSize:"12px",
+      dataSize:5
   }
 }
   }

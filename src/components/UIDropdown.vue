@@ -48,8 +48,9 @@ export default {
     }
   },
   props: {
-    dataSize: {           // how many data will shown in the dropdown.
-
+    dataSize: {       
+      type: Number,  // how many data will shown in the dropdown.
+      default:5
     },
     fontSize: {           // defined fontsize shown in the dropdown.
       type:String,
