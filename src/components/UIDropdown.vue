@@ -134,7 +134,7 @@ export default {
     }
 
     .placeholder-text {
-      color: #999; /* Faint color for placeholder */
+      color: #999;
     }
   }
 
