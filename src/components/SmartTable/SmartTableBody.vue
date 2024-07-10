@@ -2,7 +2,9 @@
 <template>
   <div class="smart-table-body-c">
     <div class="grid-header" v-for="(header, index) in headers" :key="index">
-      {{ header }}
+      {{ header }}      
+      <button v-if="sortedColumns[index] == true" @click="sort(header)" class="sort-button">▲</button>
+      <button v-else @click="sort(header)" class="sort-button">▼</button>
     </div>
     <div class="grid-row" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
       <div v-for="(cell, cellIndex) in headers" :key="cellIndex" class="grid-item">
@@ -17,6 +19,14 @@ export default {
   name: 'SmartTableBody',
   props: {
     tableData: Object
+  },  
+  data() {
+    return {
+      sortedTableData: Object,
+
+      // To keep track of the sorting status of columns
+      sortedColumns: [] as Array<boolean>
+    };
   },
   computed: {
     headers() {
@@ -24,6 +34,35 @@ export default {
     },
     gridTemplateColumns() {
       return `repeat(${this.headers.length}, 1fr)`
+    }
+  },
+  created() {
+    this.sortedTableData = this.tableData;
+    this.sortedColumns = this.headers.map(() => false);
+  },
+  methods:  {
+    sort(header: string) {
+      console.log("Sort: ", header);
+
+      // Get the index of the column and change its previous sort state
+      const index = this.headers.indexOf(header);
+      this.sortedColumns[index] = !this.sortedColumns[index];
+
+      // Sort by column data type
+      if (typeof this.sortedTableData[0][header] == "string") {
+        this.sortedTableData.sort((a, b) => {
+          return this.sortedColumns[index] 
+            ? a[header].localeCompare(b[header]) 
+            : b[header].localeCompare(a[header]);
+        });
+      } else {
+        this.sortedTableData.sort((a, b) => {
+          return this.sortedColumns[index] 
+            ? a[header] - b[header] 
+            : b[header] - a[header];
+        });
+      }
+
     }
   }
 }
@@ -76,6 +115,10 @@ export default {
   display: contents; 
 }
 
+.sort-button {
+  float: right;
+  cursor: pointer;
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
