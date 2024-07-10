@@ -1,7 +1,7 @@
 <template>
     <div class="smart-table-c">
         <SmartTableHeader v-on:search-input="handleSearchInput" /> <!-- Header kısmı filters ve searchbar'ı içerir v-on ile emit ettiğimiz değerleri alıyoruz-->
-        <SmartTableBody :tableData="filteredData" :noItemsFound="filteredData.length === 0" />   <!--noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz-->
+        <SmartTableBody :sortableColumns="sortableColumns" :tableData="filteredData" :noItemsFound="filteredData.length === 0" />   <!--noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz-->
         <SmartTableFooter /> <!-- Footer kısmı pagination içerir -->
     </div>
 </template>
@@ -22,7 +22,10 @@ export default{
     data() {
         return {
            dummies: dummies,
-           searchTerm: ''
+           searchTerm: '',
+
+           // Columns that will have sorting feature
+           sortableColumns: ['orderId', 'orderUuid'] 
         };
     },
     computed: {
