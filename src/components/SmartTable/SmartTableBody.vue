@@ -7,6 +7,11 @@
       </button>
       <button v-else @click="sort(header)" class="sort-button">▼</button>
     </div>
+    <div v-if="noItemsFound" class="grid-row no-items-found"> <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
+      <div :colspan="headers.length" class="no-grid-item">
+        No Item Found
+      </div>
+    </div>
     <div class="grid-row" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
       <div v-for="(cell, cellIndex) in headers" :key="cellIndex" class="grid-item">
         {{ tableRow[cell] }}
@@ -19,12 +24,17 @@
 export default {
   name: 'SmartTableBody',
   props: {
-    tableData: Object
+    tableData: Object,
+
+    noItemsFound:{
+      type:Boolean,
+      required:true
   },
+  },
+  
   data() {
     return {
       sortedTableData: Object,
-
       // To keep track of the sorting status of columns
       sortedColumns: [] as Array<boolean>
     }
@@ -107,11 +117,20 @@ export default {
       background-color 0.3s;
     background-color: #f5f5f5;
 
-    &:hover {
-      background-color: #ff4949;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+  &:hover {
+    background-color: #ff4949;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
+}
+.no-grid-item {
+  padding: 15px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 10px;
+  transition: transform 0.2s, background-color 0.3s;
+  background-color: #ff0000;
+}
 }
 
 .grid-row {
@@ -121,7 +140,10 @@ export default {
 .sort-button {
   float: right;
   cursor: pointer;
+  background: none;
+  border: none;
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
