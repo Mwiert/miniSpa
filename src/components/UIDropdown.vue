@@ -6,10 +6,13 @@
         :class="{ 'ui-dropdown-button-active': isOpen }"
         class="ui-dropdown-button"
       >
+    <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text">
         {{ selectedItem || placeHolder }}
+      </span>
         <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu">
+        <div class="search-container" >
         <input
           v-if="searchable"
           type="text"
@@ -17,6 +20,8 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
+        <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
+      </div>
         <div
           v-for="item in filteredItems"
           :key="item"
@@ -88,6 +93,10 @@ export default {
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
+      
+    },
+    clearSearch() {
+      this.searchQuery = ''
     }
   },
   mounted() {
@@ -123,6 +132,12 @@ export default {
     &-active {
       border: 1px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .placeholder-text{
+      &-active{
+        color: grey;
+      }
     }
 
     .arrow {
