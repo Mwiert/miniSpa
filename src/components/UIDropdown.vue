@@ -37,53 +37,53 @@ export default {
   
   data() {
     return {
-      selectedItem: this.initialSelectedItem as string | null,  //represents the currently selected item.
-      isOpen: false,      //checks if our dropdown open or not.
-      searchQuery: ''     //when we search for an item this fill fill up.
+      selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
+      isOpen: false,      // checks if our dropdown open or not.
+      searchQuery: ''     // when we search for an item this will fill up.
     }
   },
   props: {
-    dataSize: {
+    dataSize: {           // how many data will shown in the dropdown.
 
     },
-    label: {
+    label: {              // label on the dropdown to understand what the dropdown contents are.
       type:String,
       default:""
     },
-    initialSelectedItem: {             
+    initialSelectedItem: {             // represents the currently selected item.
       type: String,
       default: null
     },
-    placeHolder: {
+    placeHolder: {                     // placeHolder before the selection.
       type: String,
       default: 'Select an option'
     },
-    searchable: {
+    searchable: {                      // in many results user can find what he/she looks for.
       type: Boolean,
       default: true
     },
-    items: {
+    items: {                           // items in the database.
         type: Array as () => string[]
       },
 
   },
   computed: {
-     filteredItems(): string[] {
+     filteredItems(): string[] {                                    // filters according to the users input.
        return this.items.filter((item: string) =>
          item.toLowerCase().includes(this.searchQuery.toLowerCase())
        )
      }
   },
   methods: {
-    toggleDropdown() {
+    toggleDropdown() {                                 // closes and opens the dropdown menu onClick.
       this.isOpen = !this.isOpen
     },
-    selectItem(item: string) {
+    selectItem(item: string) {                         // emits the selected item.
       this.selectedItem = item
       this.isOpen = false
       this.$emit('update:selectedItem', item)
     },
-    handleClickOutside(event: MouseEvent) {
+    handleClickOutside(event: MouseEvent) {            // if user clicks anywhere but the dropdown , dropdown closes.
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
         this.isOpen = false
