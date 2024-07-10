@@ -1,6 +1,6 @@
 <template>
     <div>
-        <UIDatePicker :yearRange="4" :initialDate="selectedDate" v-model="test" @dateSelected="handleDateSelected" />
+        <UIDatePicker :yearRange="4" :initialDate="selectedDate" @dateSelected="handleDateSelected" />
     </div>
 </template>
 

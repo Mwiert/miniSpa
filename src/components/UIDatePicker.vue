@@ -4,7 +4,7 @@
             <div>
                 <div class="calendar">
                     <div class="header">
-                        <button class="nav-button" @click="onClickToLeft" v-show="minimumDate < currentDate">
+                        <button class="nav-button" @click="onClickToLeft" v-show="minDate < currentDate">
                             
                         <img src="../assets/icons/arrow-left.svg" alt=""></button>
                     
@@ -61,8 +61,8 @@ export default {
             firstSelectedDate: null as date | null,
             currentDate: this.initialDate,
             presentDate: dayjs().format('YYYY-MM-DD'),
-            minimumDate: dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD'),
-            maximumDate: dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD'),
+            minDate: dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD'),
+            maxDate: dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD'),
         };
     },
     props: {
