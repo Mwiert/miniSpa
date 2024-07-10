@@ -116,6 +116,15 @@ export default {
                 }
             }
 
+            if(this.secondSelectedDate !== null) {
+
+for (let i = 0; i < daysInWholeMonth.length; i++) {
+    if (daysInWholeMonth[i].date === this.secondSelectedDate.date) {
+        daysInWholeMonth[i].selected = true;
+    }
+}
+}
+
             this.daysInMonth = daysInWholeMonth;
 
         },
@@ -136,6 +145,7 @@ export default {
             return this.calendarDate.format('YYYY');
         },
         selectDate(date: date) {
+
             // if(this.firstSelectedDate === null && this.secondSelectedDate === null){
             //     this.firstSelectedDate = date;
             //     this.firstSelectedDate.selected = true;
@@ -173,24 +183,28 @@ export default {
                 console.log(date)
                  this.firstSelectedDate = date;
                 this.firstSelectedDate.selected = true;
-            } else {
+            } else if (this.secondSelectedDate === null) {
+                this.secondSelectedDate = date;
+                this.secondSelectedDate.selected = true;
+                console.log(date)
+                if (this.firstSelectedDate.date > this.secondSelectedDate.date) {
+                 [this.firstSelectedDate, this.secondSelectedDate] = [this.secondSelectedDate, this.firstSelectedDate];
+        }
+            }else {
                 this.firstSelectedDate.selected = false;
-                this.firstSelectedDate = date;
-                console.log(date)
-                this.firstSelectedDate.selected = true;
-            }
-            if (this.secondSelectedDate === null) {
-                console.log(date)
-                this.secondSelectedDate = date;
-                this.secondSelectedDate.selected = true;
-            } else {
-                this.secondSelectedDate.selected = false;
-                this.secondSelectedDate = date;
-                console.log(date)
-                this.secondSelectedDate.selected = true;
-            }
+                 this.secondSelectedDate.selected = false;
 
-            this.$emit('dateSelected', date.date);
+                  this.firstSelectedDate = date;
+                  this.firstSelectedDate.selected = true;
+                  this.secondSelectedDate = null;
+    }
+
+    this.$emit('dateSelected', { 
+        firstSelectedDate: this.firstSelectedDate.date,
+        secondSelectedDate: this.secondSelectedDate ? this.secondSelectedDate.date : null
+    }
+    
+);       
             
          }
     },
