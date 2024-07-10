@@ -1,15 +1,18 @@
 <template>
-  <div class="dropdown-c">
-    <div class="dropdown">
-      <button
-        @click="toggleDropdown"
-        :class="{ 'dropdown-button-active': isOpen }"
-        class="dropdown-button"
-      >
+  <div class="ui-dropdown-c">
+    <label class="label">{{ label }}</label>
+    <button
+      @click="toggleDropdown"
+      :class="{ 'ui-dropdown-button-active': isOpen }"
+      class="ui-dropdown-button"
+    >
+      <span :class="{ 'placeholder-text': !selectedItem }">
         {{ selectedItem || placeHolder }}
-        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
-      </button>
-      <div v-if="isOpen" class="dropdown-menu">
+      </span>
+      <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
+    </button>
+    <div v-if="isOpen" class="dropdown-menu">
+      <div class="search-container">
         <input
           v-if="searchable"
           type="text"
@@ -17,25 +20,24 @@
           placeholder="Search..."
           class="dropdown-search"
         />
-        <div
-          v-for="(item,index) in items"
-          :key="index"
-          @click="selectItem(item)"
-          class="dropdown-item"
-        >
-          {{ item }}
-        </div>
+        <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
+      </div>
+      <div
+        v-for="(item, index) in filteredItems"
+        :key="index"
+        @click="selectItem(item)"
+        class="dropdown-item"
+      >
+        {{ item }}
       </div>
     </div>
   </div>
 </template>
 
-
 <script lang="ts">
-
 export default {
   name: 'DropdownComponent',
-  
+
   data() {
     return {
       selectedItem: this.initialSelectedItem as string | null,
@@ -44,28 +46,28 @@ export default {
     }
   },
   props: {
-    initialSelectedItem: {             
+    initialSelectedItem: {
       type: String,
       default: null
     },
     placeHolder: {
       type: String,
-      default: 'Select'
+      default: 'Select an Item'
     },
     searchable: {
       type: Boolean,
       default: true
     },
     items: {
-        type: Array as () => string[]
-      }
+      type: Array as () => string[]
+    }
   },
   computed: {
-    // filteredItems(): string[] {
-    //   return this.items.filter((item: string) =>
-    //     item.toLowerCase().includes(this.searchQuery.toLowerCase())
-    //   )
-    // }
+    filteredItems(): string[] {
+      return this.items.filter((item: string) =>
+        item.toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
+    }
   },
   methods: {
     toggleDropdown() {
@@ -76,6 +78,11 @@ export default {
       this.isOpen = false
       this.$emit('update:selectedItem', item)
     },
+
+    clearSearch() {
+      this.searchQuery = ''
+    },
+
     handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
@@ -88,29 +95,28 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside)
-    }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-.dropdown {
+.ui-dropdown-c {
   position: relative;
   display: inline-block;
   margin: 10px;
-}
 
   .dropdown-button {
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     &-active {
-      border: 1px solid #000;
+      border: 1px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -126,6 +132,10 @@ export default {
         transform: rotate(-135deg);
       }
     }
+
+    .placeholder-text {
+      color: #999;
+    }
   }
 
   .dropdown-menu {
@@ -135,8 +145,9 @@ export default {
     right: 0;
     background-color: #fff;
     border: 2px solid #ccc;
-    border-radius: 8px;
-    max-height: 300px;
+    border-radius: 12px;
+    max-height: calc(7 * 50px);
+    overflow-x: hidden;
     overflow-y: auto;
     z-index: 1000;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -157,11 +168,11 @@ export default {
       .clear-search {
         position: absolute;
         right: 12px;
-        top: 13px;
-        transform: translateY(-50%, -50%);
+        top: 50%;
+        transform: translateY(-50%);
         cursor: pointer;
         font-size: 25px;
-        color: #ccc;
+        color: #999;
         width: 25px;
         height: 25px;
         background-color: #f0f0f0;
@@ -187,13 +198,14 @@ export default {
     }
   }
 
-.dropdown-search {
-  width: 90%;
-  padding: 10px;
-  box-sizing: border-box;
-  margin: 7px;
-  border-radius: 10px;
-  border: 2px solid #ccc;
-  outline: none;
+  .dropdown-search {
+    width: 90%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 7px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    outline: none;
+  }
 }
 </style>

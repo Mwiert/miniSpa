@@ -1,6 +1,6 @@
 <template>
     <div>
-        <SmartTable />
+        <SmartTable :options="tableOptions" @cell-click="handleCellClick" />
     </div>
 </template>
 
@@ -10,6 +10,23 @@ export default {
     name: 'PinkPanthers',
     components: {
         SmartTable,
+    },
+    data() {
+        return {
+            tableOptions: {
+                header: {},
+                body: {
+                    clickable: true,
+                    clickableColumns: ['orderId']
+                },
+                footer: {}
+            }
+        }
+    },
+    methods: {
+        handleCellClick({cell, rowIndex, cellIndex}) {
+            console.log('Cell clicked:', cell, 'row:', rowIndex, 'cell:', cellIndex)
+        }
     }
 }
 </script>
