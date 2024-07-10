@@ -9,7 +9,7 @@
             </button>
 
             <span class="current-date">{{ dateHolder }}</span>
-            <button class="nav-button" @click="onClickToRight" v-show="currentDate < maximumDate">
+            <button class="nav-button" @click="onClickToRight" v-show="currentDate < maxDate">
               <img src="../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
