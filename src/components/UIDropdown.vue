@@ -5,7 +5,9 @@
       :class="{ 'dropdown-button-active': isOpen }"
       class="dropdown-button"
     >
-      {{ selectedItem || placeHolder }}
+      <span :class="{ 'placeholder-text': !selectedItem }">
+        {{ selectedItem || placeHolder }}
+      </span>
       <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
     </button>
     <div v-if="isOpen" class="dropdown-menu">
@@ -129,6 +131,10 @@ export default {
         transform: rotate(-135deg);
       }
     }
+
+    .placeholder-text {
+      color: #999; /* Faint color for placeholder */
+    }
   }
 
   .dropdown-menu {
@@ -165,7 +171,7 @@ export default {
         transform: translateY(-50%);
         cursor: pointer;
         font-size: 25px;
-        color: #ccc;
+        color: #999;
         width: 25px;
         height: 25px;
         background-color: #f0f0f0;
