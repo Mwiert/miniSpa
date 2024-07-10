@@ -2,10 +2,9 @@
   <div class="smart-table-body-c">
     <div class="grid-header" v-for="(header, index) in headers" :key="index">
       {{ header }}
-      <button v-if="sortedColumns[index] == true" @click="sort(header)" class="sort-button">
-        ▲
+      <button v-if="this.sortableColumns.includes(header)" @click="sort(header)" class="sort-button">
+        {{ sortedColumns[index] == true ? "▲" : "▼" }}
       </button>
-      <button v-else @click="sort(header)" class="sort-button">▼</button>
     </div>
     <div v-if="noItemsFound" class="grid-row no-items-found"> <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
       <div :colspan="headers.length" class="no-grid-item">
@@ -25,13 +24,8 @@ export default {
   name: 'SmartTableBody',
   props: {
     tableData: Object,
-
-    noItemsFound:{
-      type:Boolean,
-      required:true
-  },
-  },
-  
+    sortableColumns: Array
+  },  
   data() {
     return {
       sortedTableData: Object,
