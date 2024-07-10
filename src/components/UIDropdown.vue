@@ -113,7 +113,7 @@ export default {
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
@@ -121,7 +121,7 @@ export default {
  
 
     &-active {
-      border: 1px solid #000;
+      border: 1px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -146,7 +146,7 @@ export default {
     right: 0;
     background-color: #fff;
     border: 2px solid #ccc;
-    border-radius: 8px;
+    border-radius: 12px;
     max-height: 300px;
     overflow-y: auto;
     z-index: 1000;
