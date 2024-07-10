@@ -1,14 +1,13 @@
 <template>
     <div class="ui-date-picker-c">
-        <UIDateRangePicker :selectedDate="currentDate"></UIDateRangePicker>
-        <div class="ui-date-picker-wrapper">
+      <UIDateRangePicker :selectedDate="firstSelectedDate" @dateSelected="updateSelectedDate" @closeCalendar="toggleCalendar"></UIDateRangePicker>
+      <div class="ui-date-picker-wrapper" v-show="openCalendar">
         <div>
           <div class="calendar">
             <div class="header">
               <button class="nav-button" @click="onClickToLeft" v-show="minDate < currentDate">
                 <img src="../assets/icons/arrow-left.svg" alt="" />
               </button>
-  
               <span class="current-date">{{ dateHolder }}</span>
               <button class="nav-button" @click="onClickToRight" v-show="currentDate < maxDate">
                 <img src="../assets/icons/arrow-right.svg" alt="" />
@@ -58,8 +57,7 @@
         weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
         calendarDate: dayjs(this.initialDate),
         daysInMonth: [] as date[],
-        TodaysDate: null as date | null,
-        firstSelectedDate: null as date | null,
+        firstSelectedDate: dayjs(this.initialDate).format('DD-MMMM-YYYY'),
         currentDate: this.initialDate,
         presentDate: dayjs().format('YYYY-MM-DD'),
         minDate: dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD'),
@@ -68,14 +66,16 @@
       }
     },
     props: {
-        yearRange: { type: Number, default: 1 },
-        initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
-      
+      yearRange: { type: Number, default: 1 },
+      initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     },
-  
     methods: {
-      isCalendarOpened() {
-        this.openCalendar = !this.openCalendar
+      updateSelectedDate(date) {
+        this.firstSelectedDate = date;
+        this.applySelectedClass();
+      },
+      toggleCalendar(state) {
+        this.openCalendar = state;
       },
       totalDaysInMonth() {
         let daysInWholeMonth = []
@@ -112,15 +112,8 @@
           daysInWholeMonth.push({ date: '', inactive: true, isToday: false })
         }
   
-        if (this.firstSelectedDate !== null) {
-          for (let i = 0; i < daysInWholeMonth.length; i++) {
-            if (daysInWholeMonth[i].date === this.firstSelectedDate.date) {
-              daysInWholeMonth[i].selected = true
-            }
-          }
-        }
-  
         this.daysInMonth = daysInWholeMonth
+        this.applySelectedClass();
       },
       onClickToRight() {
         this.calendarDate = this.calendarDate.add(1, 'month')
@@ -139,18 +132,14 @@
         return this.calendarDate.format('YYYY')
       },
       selectDate(date: date) {
-        if (this.firstSelectedDate === null) {
-          console.log(date)
-          this.firstSelectedDate = date
-          this.firstSelectedDate.selected = true
-        } else {
-          this.firstSelectedDate.selected = false
-          this.firstSelectedDate = date
-          console.log(date)
-          this.firstSelectedDate.selected = true
-        }
-  
-        this.$emit('dateSelected', this.firstSelectedDate.date)
+        this.firstSelectedDate = date.date
+        this.$emit('dateSelected', date.date)
+        this.applySelectedClass();
+      },
+      applySelectedClass() {
+        this.daysInMonth.forEach(day => {
+          day.selected = day.date === this.firstSelectedDate;
+        });
       }
     },
     computed: {
@@ -170,7 +159,6 @@
   
   .ui-date-picker-c {
     align-self: center;
-      
     .ui-date-picker-wrapper {
       background: #ffffff;
       box-shadow: 2px 2px 6px #5c75991a;
@@ -182,31 +170,28 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: relative; 
-
+      position: relative;
       &::before {
         content: '';
-         position: absolute;
-          top: -10px; 
-           left: 15px; 
-            width: 0;
-             height: 0;
-             border-left: 10px solid transparent; 
-              border-right: 10px solid transparent; 
-               border-bottom: 10px solid #ffffff; 
-  }
+        position: absolute;
+        top: -10px;
+        left: 15px;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #ffffff;
+      }
       .calendar {
         padding-top: 1.2rem;
         width: 100%;
         justify-content: space-around;
-  
         .header {
           position: relative;
           display: flex;
           justify-content: space-between;
           align-items: center;
           width: 100%;
-  
           .nav-button {
             position: absolute;
             top: 50%;
@@ -236,7 +221,6 @@
           }
         }
       }
-  
       .weekdays,
       .days {
         list-style: none;
@@ -248,7 +232,6 @@
         text-align: center;
         font-size: 10px;
       }
-  
       .weekdays {
         padding-top: 20px;
         font-weight: 700;
@@ -257,7 +240,6 @@
       }
       .days {
         padding-top: 6px;
-  
         .isToday {
           background: #e7e7e7;
           border-radius: 16px;
@@ -275,13 +257,11 @@
         pointer-events: none;
         cursor: not-allowed;
       }
-  
       .days li.inactive {
         visibility: hidden;
         pointer-events: none;
         cursor: not-allowed;
       }
-  
       .days li.selected {
         background-color: $accent-primary-color;
         border-radius: 4px;
@@ -290,5 +270,3 @@
     }
   }
   </style>
-  
-  
