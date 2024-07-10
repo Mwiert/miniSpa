@@ -184,6 +184,8 @@ export default {
                     border: none;
                     font-size: 1rem;
                     cursor: pointer;
+                    width: 30px;
+                    height: 30px;
                     img{
                         width: 15px;
                         height: 15px;
