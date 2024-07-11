@@ -25,16 +25,16 @@ export default {
         },
         table: {
           columns: [
-            { name: 'Status',label: 'status', status: true, sortable: true},
-            { name: 'Creation Date',label: 'creationDate', status: true },
-            { name: 'Order Id',label: 'orderId', status: true, sortable: true },
-            { name: 'Market',label: 'market', status: true },
-            { name: 'Provider Name/Surname', label: 'providerNameSurname',status: true },
-            { name: 'Check In', label: 'checkIn',status: true },
-            { name: 'Check Out',label: 'checkOut', status: true },
-            { name: 'Room Type', label: 'roomType',status: true },
-            { name: 'Promo Code', label: 'promoCode',status: true },
-            { name: 'Price', label: 'price',status: true }
+            { name: 'Status', label: 'status', status: true, sortable: true },
+            { name: 'Creation Date', label: 'creationDate', status: true },
+            { name: 'Order Id', label: 'orderId', status: true, sortable: true },
+            { name: 'Market', label: 'market', status: true },
+            { name: 'Provider Name/Surname', label: 'providerNameSurname', status: true },
+            { name: 'Check In', label: 'checkIn', status: true },
+            { name: 'Check Out', label: 'checkOut', status: true },
+            { name: 'Room Type', label: 'roomType', status: true },
+            { name: 'Promo Code', label: 'promoCode', status: true },
+            { name: 'Price', label: 'price', status: true }
           ],
           rows: []
         }
@@ -56,12 +56,12 @@ export default {
         },
         creationDate: {
           text: dummy.creationDate,
-          class: ""
+          class: ''
         },
         orderId: {
           text: dummy.orderId,
           class: '',
-          url: ''
+          url: 'http://www.google.com'
         },
         market: {
           text: dummy.market
@@ -75,7 +75,7 @@ export default {
         },
         promoCode: {
           text: dummy.promoCode,
-          class:"promoCode"
+          class: 'promoCode'
         },
         price: {
           text: dummy.price,
