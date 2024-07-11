@@ -2,11 +2,12 @@
   <div class="smart-table-body-c">
     <div class="smart-table-main-grid">
       <div class="grid-header" v-for="(header, index) in Columns" :key="index">
-      {{ header }}
-      <button v-if="this.sortableColumns.includes(header)" @click="sort(header)" class="sort-button">
-        {{ sortedColumns[index] == true ? "▲" : "▼" }}
-      </button>
-    </div>
+        <span>{{ header }}</span>
+        <button v-if="this.sortableColumns.includes(header)" @click="sort(header)" class="sort-button">
+          <SvgIcon v-if="sortedColumns[index]" :name="'arrow-up'" size="s" />
+          <SvgIcon v-else :name="'arrow-down'" size="s" />
+        </button>
+      </div>
     </div>
     
     <div v-if="noItemsFound" class="grid-row no-items-found"> <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
@@ -27,6 +28,7 @@
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 export default {
@@ -105,72 +107,126 @@ export default {
     //check
     handlerUrl(url) {
       this.window.location(url,"_blank")
+    },
+    getCellClass(cellData: any, columnName: string) {
+      if (typeof cellData === 'string' || typeof cellData === 'number') {
+        return `${columnName}-${cellData}`;
+      }
+      return 'default-class'; // Fallback class name
     }
     
-  },
+  }
  
 }
 </script>
+
 
 <style lang="scss" scoped>
 .smart-table-body-c {
   display: block;
   margin-top: 20px;
   margin-bottom: 20px;
-  gap: 10px;
 
   &.fadeIn {
     animation: fadeIn 1s ease-in-out;
   }
 
+  .smart-table-main-grid {
+    display: grid;
+    grid-template-columns: v-bind('gridTemplateColumns');//computed içerisinde column sayısını dinamik olarak alıp vbind ile css içine geç
+    width: 100%;
+    gap: 10px;
+  }
+
+  .grid-row {
+    display: grid;
+    grid-template-columns: v-bind('gridTemplateColumns');
+    width: 100%;
+    gap: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #CCC;
+    border-radius: 30px;
+
+    &.even-row {
+      background-color: #FFF;
+    }
+
+    &.odd-row {
+      background-color: #F5F7FA;
+    }
+  }
+
   .grid-header {
+    display: flex;
+    align-items: center;
     font-weight: bold;
     color: black;
     padding: 15px;
-    border: 1px solid #ccc;
     text-align: center;
     border-radius: 10px;
-    transition:
-      transform 0.2s,
-      background-color 0.3s;
-
-    &:hover {
-      background-color: #ffffff;
-    }
+    border: none;
+    transition: transform 0.2s, background-color 0.3s;
   }
 
   .grid-item {
     padding: 15px;
     border: 1px solid #ccc;
     text-align: center;
-    border-radius: 10px;
-    transition:
-      transform 0.2s,
-      background-color 0.3s;
-    background-color: #f5f5f5;
-
-  &:hover {
-    background-color: #ff4949;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border-radius: 30px;
+    border: none;
+    transition: transform 0.2s, background-color 0.3s;
   }
-}
-.no-grid-item {
-  padding: 15px;
-  border: 1px solid #ccc;
-  text-align: center;
-  font-weight: bold;
-  border-radius: 10px;
-  transition: transform 0.2s, background-color 0.3s;
-  background-color: #ff0000;
-}
-}
+  .status-Confirmed,
+  .status-Pending,
+  .status-Cancelled {
+    padding: 5px 10px;
+    border-radius: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 40px; 
+    margin: 10px auto; 
+  }
 
-.grid-row {
-  display: contents;
-}
+
+  .status-Confirmed {
+    background-color: #CCFFDD; 
+    color:#1F9947
+  }
+  .status-Pending {
+    background-color: #FFE6CC; 
+    color:#E87807
+  }
+  .status-Cancelled {
+    background-color: #ff6b6b;
+    color:#7e2323
+  }
+
+
+  [class*="price-"] {
+    font-weight: bold;
+  }
+
+  [class*="promoCode-"] {
+    font-weight: bold;
+  }
+
+  .no-grid-item {
+    padding: 15px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 30px;
+    transition: transform 0.2s, background-color 0.3s;
+    background-color: #ff00009d;
+  }
 
   .sort-button {
-    float: right;
     cursor: pointer;
     background: none;
     border: none;
@@ -184,5 +240,6 @@ export default {
       opacity: 1;
     }
   }
-
+}
 </style>
+
