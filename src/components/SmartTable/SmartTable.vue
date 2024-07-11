@@ -6,7 +6,6 @@
     <SmartTableBody
       :tableData="filteredData"
       :options="options"
-      @cell-click="handleCellClick"
       :noItemsFound="filteredData.length === 0" />   <!--noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz-->
 
     <SmartTableFooter />
@@ -56,13 +55,7 @@ export default {
   methods: {
     handleSearchInput(value: string) {
       this.searchTerm = value
-    },
-    handleCellClick(payload) {
-      this.$emit('cell-click', payload)
-    },
-    wFilterData(){
-      
-    }
+    },    
   }
 }
 </script>
