@@ -14,9 +14,10 @@
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container" >
-        
-          <img v-if="searchQuery" @click="clearSearch" class="clear-search" :src="photo">
-          
+          <span class="clear-search" > 
+          <img v-if="searchQuery" @click="clearSearch" class="clear-search-img" :src="photo">
+          </span>
+                
         <input
           v-if="searchable"
           type="text"
@@ -24,7 +25,13 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-  
+
+        <div class="dropdown-content">
+      <div v-for="(item,index) in items" :key="index" @click="selectItem" >
+        <div>{{ item.name }}</div>
+      </div>
+      </div>
+
       </div>
         <div
           v-for="item in filteredItems"
@@ -49,7 +56,36 @@ export default {
       selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
       isOpen: false,      // checks if our dropdown open or not.
       searchQuery: '',    // when we search for an item this will fill up.
-      photo:pp,
+      photo:pp,           
+      items:           //items that we will show in our options.
+    [            
+      {
+        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+        name: 'Turkish Airlines',
+        detail:''
+      },  
+      {
+        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+        name: 'Anadolu Jet',
+        detail:''
+      },
+      {
+        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+        name: 'Sun Express',
+        detail:''
+      },    
+      {
+        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+        name: 'Pegasus Europe',
+        detail:''
+      },
+      {
+        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+        name: 'Corendon EU',
+        detail:''
+      }
+    ],
+      
     }
   },
   props: {
@@ -217,7 +253,7 @@ export default {
       .clear-search {
         position: absolute;
         right: 15px;
-        top: 21px;
+        top: 24px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
         font-size: 20px;
