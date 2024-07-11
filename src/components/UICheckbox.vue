@@ -55,8 +55,10 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/css/main.scss";
 $flight-color: #5CB7F9;
+$flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) brightness(99%) contrast(94%);
 
 .resitech-checkbox-c {
+    justify-content: center;
     display: flex;
     align-items: center;
     user-select: none;
@@ -102,7 +104,10 @@ $flight-color: #5CB7F9;
 
             &.flight {
                 border: 2px solid $flight-color;
-                filter: invert(65%) sepia(91%) saturate(3419%) hue-rotate(185deg) brightness(96%) contrast(97%);
+
+                .icon {
+                    filter: $flight-color-filter;
+                }
             }
 
             .icon {

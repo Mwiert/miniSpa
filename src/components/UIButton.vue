@@ -2,24 +2,15 @@
   <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active the icon and the text will be shown-->
   <div class="ui-button-c">
-    <button
-      class="reisetech-btn"
-      :class="[`reisetech-btn__${btnClassName}`, size]"
-      :disabled="isDisabled"
-      v-if="!btnIsRouter"
-    >
+    <button class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" :disabled="isDisabled"
+      v-if="!btnIsRouter">
       <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
       <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
       <span v-else>{{ btnText }}</span>
     </button>
-    <router-link
-      :to="routerUrl"
-      class="reisetech-btn"
-      :class="[`reisetech-btn__${btnClassName}`, size]"
-      replace="button"
-      v-else
-    >
+    <router-link :to="routerUrl" class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]"
+      replace="button" v-else>
       <!-- Icon's name should be the name of the .svg file-->
       <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
@@ -74,6 +65,8 @@ export default {
 $small: 12px;
 $medium: 24px;
 $large: 48px;
+$flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) brightness(99%) contrast(94%);
+
 
 // router-link takes tag 'a' and its default css should be overwritten
 
@@ -124,6 +117,10 @@ $large: 48px;
         background: $accent-primary-color;
         border: 2px solid $accent-primary-color;
         color: white;
+
+        .icon {
+          filter: brightness(100) invert(1)
+        }
       }
     }
 
@@ -131,6 +128,10 @@ $large: 48px;
       background-color: $primary-color;
       border: none;
       color: white;
+
+      .icon {
+        filter: brightness(100) invert(1)
+      }
 
       &:hover {
         background: $accent-primary-color;
@@ -143,10 +144,18 @@ $large: 48px;
         color: $primary-color;
         border: 2px solid $primary-color;
 
+        .icon {
+          filter: brightness(100)
+        }
+
         &:hover {
           background: $accent-primary-color;
           border: 2px solid $accent-primary-color;
           color: white;
+
+          .icon {
+            filter: brightness(100) invert(1)
+          }
         }
       }
     }
@@ -155,6 +164,10 @@ $large: 48px;
       background-color: $secondary-color;
       border: none;
       color: white;
+
+      .icon {
+        filter: brightness(100) invert(1)
+      }
 
       &:hover {
         background: $accent-primary-color;
@@ -167,10 +180,18 @@ $large: 48px;
         color: $secondary-color;
         border: 2px solid $secondary-color;
 
+        .icon {
+          filter: brightness(100)
+        }
+
         &:hover {
           background: $accent-primary-color;
           border: 2px solid $accent-primary-color;
           color: white;
+
+          .icon {
+            filter: brightness(100) invert(1)
+          }
         }
       }
     }
