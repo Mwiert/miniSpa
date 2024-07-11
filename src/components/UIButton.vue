@@ -76,13 +76,15 @@ $medium: 24px;
 $large: 48px;
 
 // router-link takes tag 'a' and its default css should be overwritten
-a.reisetech-btn {
-  padding: 0px;
-}
 
 .ui-button-c {
-  max-width: 200px;
+  max-width: 400px;
   width: fit-content;
+  min-width: 100px;
+
+  a.reisetech-btn {
+    padding: 0px 10px !important;
+  }
 
   .reisetech-btn {
     display: flex;
