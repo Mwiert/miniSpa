@@ -11,8 +11,9 @@
       </span>
         <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
       </button>
-      <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize }">
+      <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container" >
+          <span v-if="searchQuery" class="clear-search" @click="clearSearch" > × </span>
         <input
           v-if="searchable"
           type="text"
@@ -20,7 +21,7 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
+        
       </div>
         <div
           v-for="item in filteredItems"
@@ -48,13 +49,12 @@ export default {
     }
   },
   props: {
-    dataSize: {       
-      type: Number,  // how many data will shown in the dropdown.
-      default:5
-    },
+    // dataSize: {       
+    //   type: Number,  // how many data will shown in the dropdown.
+    // },
     fontSize: {           // defined fontsize shown in the dropdown.
-      type:String,
-      default:"12px",
+      type: Number,
+      default: 12,
       required:false
    },
     label: {              // label on the dropdown to understand what the dropdown contents are.
@@ -97,6 +97,8 @@ export default {
     },
     handleClickOutside(event: MouseEvent) {            // if user clicks anywhere but the dropdown , dropdown closes.
       const target = event.target as HTMLElement
+      console.log("target:" + target);
+      console.log("contains:" +!this.$el.contains(target));
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
@@ -104,6 +106,7 @@ export default {
     },
     clearSearch() {
       this.searchQuery = ""
+      event.stopPropagation(); // Prevent dropdown from closing
     }
   },
   mounted() {
@@ -111,7 +114,11 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside)
-    }
+    },
+    
+    // created() {
+    //   this.dataSize = this.items.length
+    // }
   }
 </script>
 
@@ -189,23 +196,21 @@ export default {
 
       .clear-search {
         position: absolute;
-        right: 12px;
-        top: 13px;
+        right: 18px;
+        top: 15px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
-        font-size: 25px;
-        color: #ccc;
-        width: 25px;
-        height: 25px;
-        background-color: #f0f0f0;
+        font-size: 20px;
+        color: #cecaca;
+        width: 20px;
+        height: 20px;
+        background-color: #000000;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
 
-        &:hover {
-          color: #000;
-        }
+    
       }
     }
 

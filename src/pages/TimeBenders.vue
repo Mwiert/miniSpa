@@ -1,17 +1,20 @@
 <template>
     <div class="time-benders-c">
-      <UIDatePicker :yearRange="4" :initialDate="selectedDate" @dateSelected="handleDateSelected"/>
+        <!-- We connect UIDatePicker with TimeBenders here with sending yearRange and initialDate as props to UIDatePicker -->
+        <!-- dateSelected comes from UIDatePicker where we handle the selected date from handleDateSelected -->
+        <UIDateRangePicker :isSingleDatePicker="true" :isMultiDatePicker="false"/>
    
     </div>
   </template>
 
   <script lang="ts">
-  import UIDatePicker from '../components/UIDatePicker.vue';
+  import UIDateRangePicker from '../components/UIDateRangePicker.vue';
   import dayjs from 'dayjs';
+
   export default {
     name: 'TimeBenders',
     components: {
-      UIDatePicker,
+      UIDateRangePicker
     },
     data() {
       return {
@@ -20,6 +23,7 @@
     },
     methods: {
       handleDateSelected(firstDate: string) {
+        // We get the selected date from UIDatePicker and set it to selectedDate
         this.selectedDate = firstDate;
       },
     }

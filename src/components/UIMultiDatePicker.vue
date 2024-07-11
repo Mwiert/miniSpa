@@ -51,32 +51,32 @@
     data() {
       return {
         weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-        calendarDate: dayjs(),
+        calendarDate: dayjs(this.initialDate),
         daysInMonth: [] as date[],
-        firstSelectedDate: {} ,
-        currentDate: dayjs().format('YYYY-MM-DD'),
+        firstSelectedDate: dayjs(this.initialDate).format('DD-MMMM-YYYY'),
+        currentDate: this.initialDate,
         presentDate: dayjs().format('YYYY-MM-DD'),
         minDate: dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD'),
         maxDate: dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD'),
-        saveDateHistory: this.saveDate, 
         openCalendar: false
       }
     },
     props: {
       yearRange: { type: Number, default: 1 },
-      saveDate: { type: String, default: ''}
+      initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     },
     methods: {
       //Update firtSelectedDate by the date we give as emit in UIDateRangePicker
       updateSelectedDate(date) {
         this.firstSelectedDate = date;
+        this.applySelectedClass();
       },
       //Update openCalendar by the boolean state we give as emit in UIDateRangePicker
       toggleCalendar(state) {
         this.openCalendar = state;
       },
       totalDaysInMonth() {
-        const daysInWholeMonth = []
+        let daysInWholeMonth = []
         const startOfMonth = this.calendarDate.startOf('month')
         const endOfMonth = this.calendarDate.endOf('month')
         const offsetValue = (startOfMonth.day() + 6) % 7
@@ -111,8 +111,7 @@
         }
   
         this.daysInMonth = daysInWholeMonth
-        this.checkDateHistory();
-
+        this.applySelectedClass();
       },
       onClickToRight() {
         this.calendarDate = this.calendarDate.add(1, 'month')
@@ -131,31 +130,25 @@
         return this.calendarDate.format('YYYY')
       },
       selectDate(date: date) {
-        this.firstSelectedDate.selected = false
-        this.firstSelectedDate = date
-        this.firstSelectedDate.selected = true
-        this.saveDateHistory = this.firstSelectedDate.date
-        this.checkDateHistory()
+        this.firstSelectedDate = date.date
         this.$emit('dateSelected', date.date)
+        this.applySelectedClass();
       },
-      checkDateHistory(){
-       for(let i = 0; i < this.daysInMonth.length; i++){
-         if(this.daysInMonth[i].date === this.saveDateHistory){
-           this.daysInMonth[i].selected = true
-           this.firstSelectedDate = this.daysInMonth[i]
-         }
-       }
+      applySelectedClass() {
+        // Iterates through daysInMonth and sets selected to true for the day that matches firstSelectedDate.
+        this.daysInMonth.forEach(day => {
+          day.selected = day.date === this.firstSelectedDate;
+        });
       }
     },
     computed: {
       dateHolder() {
         return this.currentMonth() + ' ' + this.currentYear()
-      },
+      }
     },
     created() {
       this.totalDaysInMonth()
-      this.checkDateHistory();
-    },
+    }
   }
   </script>
   
