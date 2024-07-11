@@ -11,8 +11,9 @@
       </span>
         <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
       </button>
-      <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize }">
+      <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container" >
+          <span v-if="searchQuery" class="clear-search" @click="clearSearch" > × </span>
         <input
           v-if="searchable"
           type="text"
@@ -20,7 +21,7 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
+        
       </div>
         <div
           v-for="item in filteredItems"
@@ -48,13 +49,12 @@ export default {
     }
   },
   props: {
-    dataSize: {       
-      type: Number,  // how many data will shown in the dropdown.
-      default:5
-    },
+    // dataSize: {       
+    //   type: Number,  // how many data will shown in the dropdown.
+    // },
     fontSize: {           // defined fontsize shown in the dropdown.
-      type:String,
-      default:"12px",
+      type: Number,
+      default: 12,
       required:false
    },
     label: {              // label on the dropdown to understand what the dropdown contents are.
@@ -97,6 +97,8 @@ export default {
     },
     handleClickOutside(event: MouseEvent) {            // if user clicks anywhere but the dropdown , dropdown closes.
       const target = event.target as HTMLElement
+      console.log("target:" + target);
+      console.log("contains:" +!this.$el.contains(target));
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
@@ -104,6 +106,7 @@ export default {
     },
     clearSearch() {
       this.searchQuery = ""
+      event.stopPropagation(); // Prevent dropdown from closing
     }
   },
   mounted() {
@@ -111,7 +114,11 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside)
-    }
+    },
+    
+    // created() {
+    //   this.dataSize = this.items.length
+    // }
   }
 </script>
 
