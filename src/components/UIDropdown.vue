@@ -9,13 +9,15 @@
       <span :class="{ 'placeholder-text-active': !selectedItem[displayField] }" class="placeholder-text">
         {{ selectedItem[displayField] || placeHolder }}
       </span>
-      <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
+
+      <SvgIcon class="arrow" :class="{ 'up': isOpen  }" :name="'arrow-down'"  :size="'s'"  />  
+      
     </button>
     <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
       <div class="search-container">
 
           <span class="clear-search" > 
-          <img v-if="searchQuery" @click="clearSearch" class="clear-search-img" :src="photo">
+          <SvgIcon v-if="searchQuery" @click="clearSearch" class="clear-search-img" :name="'x'"/>  
           </span>
                
         <input
@@ -27,8 +29,8 @@
         />
 
         </div>
-      <div class="ui-dropdown-content" :style="{fontSize: fontSize + 'px' , maxHeight: dropdownListMaxHeight}"  >
-        <div v-for="item in filteredItems" :key="item[idField]" class="ui-dropdown-item" @click="selectItem(item)">
+      <div class="ui-dropdown-content"  :style="{fontSize: fontSize + 'px' , maxHeight: dropdownListMaxHeight}"  >
+        <div v-for="item in filteredItems" :key="item[idField]" class="ui-dropdown-item" @click="selectItem(item)" :class="{ 'selected': selectedItem == item }" >
           <!-- <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" /> -->
           <span>{{ item[displayField] }}</span>
         </div>
@@ -38,10 +40,14 @@
 </template>
 
 <script lang="ts">
-import pp from '../assets/icons/x.svg'
+import SvgIcon from './SvgIcon.vue';
+
 
 export default {
   name: 'UIDropdown',
+  components:{
+    SvgIcon
+  },
   props: {
     items: {
       type: Array,
@@ -90,7 +96,6 @@ export default {
       isOpen: false,
       searchQuery: '',
       selectedItem: this.value,
-      photo:pp
     };
   },
   computed: {
@@ -105,7 +110,7 @@ export default {
       const searchBoxHeight = this.searchable ? 30 : 0
       const maxHeight = itemHeight * this.computedDataSize + searchBoxHeight
       return `${maxHeight}px`
-    }
+    },
   },
   methods: {
     toggleDropdown() {
@@ -161,7 +166,6 @@ export default {
      
   }
   .ui-dropdown-button {
-    min-width: 200px; // smaller width 
     padding: 10px; // smaller padding 
     background-color: #fff;
     border: 1px solid #ccc;
@@ -170,6 +174,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-top: 5px;
+    display: flex;
 
     &-active {
       border: 2px solid #60acfe;
@@ -188,17 +193,10 @@ export default {
     }
 
     .arrow {
-      position: absolute;
-      top: 63%;
-      right: 15px;
       padding: 5px;
-      border: solid black;
-      border-width: 0 2px 2px 0;
-      display: inline-block;
-      transform: rotate(45deg);
 
-      &-up {
-        transform: rotate(-135deg);
+      &.up{
+        transform: rotate(180deg);
       }
     }
   }
@@ -261,20 +259,17 @@ export default {
       cursor: pointer;
 
       &:hover {
-        font-weight: bold;
         background-color: #f3f3f3;
+      }
+      &.selected{
+        font-weight: bold;
       }
     }
   }
 
   .ui-dropdown-search {
    width: 90%;
-   padding: 10px;
-   box-sizing: border-box;
-   margin: 7px;
-   border-radius: 10px;
-   border: 2px solid #ccc;
-    outline: none;
+   border: 1px solid #ccc;
   }
   .ui-dropdown-c-label{
     margin-bottom: 10px; //Adds space below the label 
