@@ -1,22 +1,24 @@
 <template>
   <div class="smart-table-body-c">
     <div class="smart-table-main-grid">
-      <div class="grid-header" v-for="(header, index) in Columns" :key="index">
-        <span>{{ header }}</span>
-        <button v-if="this.sortableColumns.includes(header)" @click="sort(header)" class="sort-button">
-          <SvgIcon v-if="sortedColumns[index]" :name="'arrow-up'" size="s" />
-          <SvgIcon v-else :name="'arrow-down'" size="s" />
-        </button>
+      <div class="grid-header" v-for="(header, index) in Columns" :key="index"
+      @click="header.sortable ? sort(header.label) : null">
+        <span>{{ header.name }}</span>
+        <span v-if="header.sortable">
+          <SvgIcon :name="'arrow-up'" size="s" />
+          <SvgIcon :name="'arrow-down'" size="s" />
+
+        </span>
       </div>
     </div>
     
     <div v-if="noItemsFound" class="grid-row no-items-found"> <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
-      <div :colspan="headers.length" class="no-grid-item">
+      <div :colspan="Columns.length" class="no-grid-item">
         No Item Found
       </div>
     </div>
     <div class="smart-table-row-grid">
-    <div :class="['grid-row', rowClass(rowIndex)]" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
+    <div :class="['grid-row', rowClass(rowIndex)]" v-for="(tableRow, rowIndex) in tableRowData" :key="rowIndex">
       <div v-for="(cell, cellIndex) in tableRow" :key="cellIndex" :class="[getCellClass(cell, tableRow[cellIndex]), 'grid-item']" 
       
       @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])" >
@@ -38,7 +40,6 @@ export default {
   props: {
     tableData: Array,
     options: Object,
-    sortableColumns: Array,
     noItemsFound: {
       type: Boolean,
       required: true
@@ -46,55 +47,49 @@ export default {
   },
   data() {
     return {
-      sortedTableData: [] as Array<Record<string, any>>,
-      // To keep track of the sorting status of columns
-      sortedColumns: [] as Array<boolean>
+      tableRowData: this.tableData,
+      lastSortedColumn: null, 
+      lastSortOrder: null 
     }
   },
   computed: {
-    headers() {
-      return this.tableData.length ? Object.keys(this.tableData[0]) : []
-    },
     gridTemplateColumns() {
       return `repeat(${this.Columns.length}, 1fr)`
     },
     Columns(){
-      const labels = [];
-      
-      this.options.table.columns.forEach(element => {
-        if( element.status ){
-          labels.push(element.label)
-        }
-      });
-      return labels
+      return this.options.table.columns
     },
   },
-  created() {
-    this.sortedTableData = this.tableData
-    this.sortedColumns = this.headers.map(() => false)
-  },
+  
   methods: {
     sort(header: string) {
-      console.log('Sort: ', header)
-      // Get the index of the column and change its previous sort state
-      const index = this.headers.indexOf(header)
-      this.sortedColumns[index] = !this.sortedColumns[index]
-      // Sort by column data type
-      if (typeof this.sortedTableData[0][header] === 'string') {
-        this.sortedTableData.sort((a, b) => {
-          return this.sortedColumns[index]
-            ? a[header].localeCompare(b[header])
-            : b[header].localeCompare(a[header])
-        })
-      } else {
-        this.sortedTableData.sort((a, b) => {
-          return this.sortedColumns[index] ? a[header] - b[header] : b[header] - a[header]
-        })
+
+      let sortedRows = [...this.tableData]
+      
+      let sortOrder = 'desc'
+
+      if(this.lastSortedColumn === header) {
+        sortOrder = this.lastSortOrder === 'desc' ? 'asc' : 'desc';
       }
+
+      const multiplier = sortOrder === 'asc' ? 1 : -1;
+
+      sortedRows.sort((a,b) => {
+        if (a[header].text.toString() < b[header].text.toString()) return -1 * multiplier;
+        if (a[header].text.toString() > b[header].text.toString()) return 1 * multiplier;
+        return 0;
+      })
+
+      this.tableRowData = sortedRows;
+
+      this.lastSortedColumn = header;
+      this.lastSortOrder = sortOrder;
+
+
     },
     handleClick(cell, rowIndex, cellIndex, cellData) {
       const columnName = this.headers[cellIndex];
-      console.log(columnName)
+      
       const clickableColumns = this.options.clickableColumns;
       if(clickableColumns.includes(columnName)){
         //gerekli yönlendirme işlemleri burada yapılabilir.
@@ -114,9 +109,7 @@ export default {
     },
 
     //daha iyi class ismi vermemiz için class ismi almaya yarayan method 
-    getCellClass(cellData: any, columnName: string) {
-      console.log(cellData.text)
-      console.log(columnName)
+    getCellClass(cellData: any) {
       if (typeof cellData.text === 'string' || typeof cellData.text === 'number') {
         return `${cellData.class}-${cellData.text}`;
       }
