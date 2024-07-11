@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import UIDropdown from '../components/UIDropdown.vue'
-
 export default {
   name: 'SummerLovers',
   components: {

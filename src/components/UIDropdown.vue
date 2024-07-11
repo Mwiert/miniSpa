@@ -20,9 +20,7 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        <span v-if="searchQuery" class="clear-search" @click="clearSearch" ref="clearSearchBtn"
-          >×</span
-        >
+        <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
       </div>
       <div
         v-for="item in limitedItems"
@@ -40,12 +38,21 @@
 <script lang="ts">
 export default {
   name: 'UIDropdown',
+
+  data() {
+    return {
+      selectedItem: this.initialSelectedItem as string | null,
+      isOpen: false,
+      searchQuery: ''
+    }
+  },
   props: {
     dataSize: {
       type: Number,
       default: 10
     },
     label: {
+      // label on the dropdown to understand what the dropdown contents are.
       type: String,
       default: ''
     },
@@ -70,13 +77,6 @@ export default {
       default: '12px'
     }
   },
-  data() {
-    return {
-      selectedItem: this.initialSelectedItem as string | null,
-      isOpen: false,
-      searchQuery: ''
-    }
-  },
   computed: {
     filteredItems(): string[] {
       return this.items.filter((item: string) =>
@@ -98,17 +98,13 @@ export default {
     },
     handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement
-      if (this.$refs.clearSearchBtn && this.$refs.clearSearchBtn.contains(target)) {
-        return
-      }
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
     },
     clearSearch(event: Event) {
-      event.stopPropagation()
       this.searchQuery = ''
-      this.$refs.searchInput.focus()
+      event.stopPropagation() // Prevent dropdown from closing
     }
   },
   mounted() {
