@@ -197,13 +197,13 @@ export default {
       .clear-search {
         position: absolute;
         right: 18px;
-        top: 15px;
+        top: 17px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
-        font-size: 20px;
+        font-size: 18px;
         color: #cecaca;
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         background-color: #000000;
         border-radius: 50%;
         display: flex;
