@@ -1,23 +1,29 @@
 <template>
   <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active the icon and the text will be shown-->
-  <button class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" :disabled="isDisabled"
-    v-if="!btnIsRouter">
+  <button
+    class="reisetech-btn"
+    :class="[`reisetech-btn__${btnClassName}`, size]"
+    :disabled="isDisabled"
+    v-if="!btnIsRouter"
+  >
     <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
     <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
-
   </button>
-  <router-link :to="routerUrl" class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" replace="button"
-    v-else>
+  <router-link
+    :to="routerUrl"
+    class="reisetech-btn"
+    :class="[`reisetech-btn__${btnClassName}`, size]"
+    replace="button"
+    v-else
+  >
     <!-- Icon's name should be the name of the .svg file-->
     <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
     <span v-if="isSpinnerActive" class="spinner"></span>
     <span v-else>{{ btnText }}</span>
   </router-link>
-
-
 </template>
 
 <script lang="ts">
@@ -26,7 +32,10 @@ export default {
   props: {
     // Classes such as hotel and flight are derived from the .reisetech-btn class.
     // .reisetech-btn class has the default css style, but the appearance of the button changes depending on the incoming flight and hotel class.
-    className: String,
+    className: {
+      type: String,
+      default: 'default'
+    },
     // Text is the label of button
     text: String,
     // isRouter is checking the button is routing or not
@@ -54,9 +63,7 @@ export default {
       btnIconSize: this.iconSize
     }
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 
@@ -100,15 +107,39 @@ a.reisetech-btn {
     height: $large;
   }
 
+  &__default {
+    background-color: white;
+    border: 2px solid black;
+    color: black;
+
+    &:hover {
+      background: $accent-primary-color;
+      border: 2px solid $accent-primary-color;
+      color: white;
+    }
+  }
+
   &__flight {
     background-color: $primary-color;
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid $primary-color;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
@@ -117,12 +148,23 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $secondary-color;
       border: 2px solid $secondary-color;
-    }
 
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
+    }
   }
 
   &__powerpuff-girls {
@@ -130,22 +172,46 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid #98029b;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
   &__pink-panthers {
-    background-color: #F39FB1;
+    background-color: #f39fb1;
     border: none;
     color: white;
+
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
 
     &.outline {
       background-color: white;
       color: $primary-color;
-      border: 2px solid #F39FB1;
+      border: 2px solid #f39fb1;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
@@ -154,10 +220,22 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid #83d9e5;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
@@ -166,16 +244,28 @@ a.reisetech-btn {
     border: none;
     color: white;
 
+    &:hover {
+      background: $accent-primary-color;
+      border: none !important;
+      color: white;
+    }
+
     &.outline {
       background-color: white;
       color: $primary-color;
       border: 2px solid #8fbd8d;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
     }
   }
 
   &:hover {
     background: $accent-primary-color;
-    border: none;
+    border: 2px solid $accent-primary-color;
     color: white;
   }
 

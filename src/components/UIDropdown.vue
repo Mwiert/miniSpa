@@ -6,13 +6,14 @@
         :class="{ 'ui-dropdown-button-active': isOpen }"
         class="ui-dropdown-button"
       >
-    <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text">
+    <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text"   >
         {{ selectedItem || placeHolder }}
       </span>
         <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
       </button>
-      <div v-if="isOpen" class="ui-dropdown-menu">
+      <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container" >
+          <span v-if="searchQuery" class="clear-search" @click="clearSearch" > × </span>
         <input
           v-if="searchable"
           type="text"
@@ -20,7 +21,7 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
+        
       </div>
         <div
           v-for="item in filteredItems"
@@ -48,9 +49,14 @@ export default {
     }
   },
   props: {
-    dataSize: {           // how many data will shown in the dropdown.
-
-    },
+    // dataSize: {       
+    //   type: Number,  // how many data will shown in the dropdown.
+    // },
+    fontSize: {           // defined fontsize shown in the dropdown.
+      type: Number,
+      default: 12,
+      required:false
+   },
     label: {              // label on the dropdown to understand what the dropdown contents are.
       type:String,
       default:""
@@ -69,6 +75,7 @@ export default {
     },
     items: {                           // items in the database.
         type: Array as () => string[]
+
       },
 
   },
@@ -90,13 +97,16 @@ export default {
     },
     handleClickOutside(event: MouseEvent) {            // if user clicks anywhere but the dropdown , dropdown closes.
       const target = event.target as HTMLElement
+      console.log("target:" + target);
+      console.log("contains:" +!this.$el.contains(target));
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
       
     },
     clearSearch() {
-      this.searchQuery = ''
+      this.searchQuery = ""
+      event.stopPropagation(); // Prevent dropdown from closing
     }
   },
   mounted() {
@@ -104,7 +114,11 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside)
-    }
+    },
+    
+    // created() {
+    //   this.dataSize = this.items.length
+    // }
   }
 </script>
 
@@ -175,7 +189,7 @@ export default {
         padding: 10px;
         box-sizing: border-box;
         margin: 7px;
-        border-radius: 10px;
+        border-radius: 20px;
         border: 2px solid #ccc;
         outline: none;
       }
@@ -224,6 +238,11 @@ export default {
   }
   .ui-dropdown-c-label{
     margin-bottom: 10px; /* Adds space below the label */
+  }
+  .label{
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 }
