@@ -6,10 +6,12 @@
         :class="{ 'ui-dropdown-button-active': isOpen }"
         class="ui-dropdown-button"
       >
+      
     <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text"   >
         {{ selectedItem || placeHolder }}
       </span>
-        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>   
+        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>  
+
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container" >
@@ -21,8 +23,15 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        
       </div>
+      
+      <div class="dropdown-content">
+      <div v-for="(item,index) in items" :key="index" @click="selectItem(item.name)">
+        <div class="img-flag" ><img src="https://cdn.dev.reisetech.io/airline_34x34/TK.svg"> </div>
+        <div>{{ item["name"] }}</div> v-model
+      </div>
+      </div> 
+
         <div
           v-for="item in filteredItems"
           :key="item"
@@ -74,7 +83,7 @@ export default {
       default: true
     },
     items: {                           // items in the database.
-        type: Array as () => string[]
+        type: Object
 
       },
 
@@ -104,7 +113,7 @@ export default {
       }
       
     },
-    clearSearch() {
+    clearSearch(event) {
       this.searchQuery = ""
       event.stopPropagation(); // Prevent dropdown from closing
     }
@@ -130,6 +139,13 @@ export default {
   display: flex;
   flex-direction: column;
   max-width: fit-content;
+
+  .flag-img {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
   .ui-dropdown-button {
     min-width: 150px;
@@ -243,6 +259,10 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .dropdown-content{
+    display: flex;
+    flex-direction: column;
   }
 
 }
