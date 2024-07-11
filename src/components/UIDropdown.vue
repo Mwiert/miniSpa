@@ -136,26 +136,27 @@ export default {
   flex-direction: column;
   max-width: fit-content;
   
-.label{
-    font-size: large;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif; /* Font family */
-  font-size: 16px;                /* Font size */
-  font-weight: bold;             /* Font weight */
-  color: #333;                   /* Font color */
+  .label {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 100;
+    color: #333;
+    margin-bottom: 5px;
+    text-align: left; /* Left aligned */
+    align-self: flex-start; /* Align label to the start */
+    
+     // adds space below the label 
   }
   .ui-dropdown-button {
-    min-width: 230px;
-    padding: 15px;
+    min-width: 200px; // smaller width 
+    padding: 10px; // smaller padding 
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 10px;
+    border-radius: 10px; // smaller border-radius 
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 5px;
 
     &-active {
       border: 2px solid #60acfe;
@@ -198,7 +199,7 @@ export default {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 12px;
-    max-height: 300px;
+    max-height: 200px;
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1000;
@@ -259,7 +260,7 @@ export default {
     outline: none;
   }
   .ui-dropdown-c-label{
-    margin-bottom: 10px; /* Adds space below the label */
+    margin-bottom: 10px; //Adds space below the label 
   }
   .label{
     display: flex;
