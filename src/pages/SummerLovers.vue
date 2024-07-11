@@ -1,6 +1,6 @@
 <template>
     <div>
-      <UIDropdown :items="items" :label="label" :fontSize="fontSize"  />
+      <UIDropdown :items="items" :label="label" :fontSize="fontSize"  @selectItem ="handlerSelectedItem"  />
     </div>
   </template>
   
@@ -11,21 +11,49 @@
     components: {
       UIDropdown
     },
+    
     data() {
       return {
       items:                            //items that we will show in our options.
-      [                    
-        'Turkish Airlines',
-        'Anadolu Jet',
-        'Sun Express',
-        'Pegasus Europe',
-        'Corendon EU'
+      [            
+        {
+          url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+          name: 'Turkish Airlines',
+          detail:''
+        },  
+        {
+          url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+          name: 'Anadolu Jet',
+          detail:''
+        },
+        {
+          url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+          name: 'Sun Express',
+          detail:''
+        },    
+        {
+          url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+          name: 'Pegasus Europe',
+          detail:''
+        },
+        {
+          url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
+          name: 'Corendon EU',
+          detail:''
+        }
       ],
       label: "Please select an airline:",
       fontSize:12,
       // dataSize:5
   }
-}
+},
+methods:{
+        handlerSelectedMovie(items){
+            this.selectedCard= items
+            console.log(items)
+        }
+    }
+
 }
 </script>
 
