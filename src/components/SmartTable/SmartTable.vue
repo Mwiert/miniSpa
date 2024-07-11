@@ -41,18 +41,19 @@ export default {
   computed: {
     filteredData() {
       if (!this.searchTerm) {
-        return this.dummies //search yoksa direk bütün verileri göster
-      } //stirngfy yapılabilir ??
-      return this.dummies.filter(
-        (
-          item //data içinde dönüyoruz ve tüm data verilerimizi alıyoruz
-        ) =>
-          Object.values(item).some(
-            (
-              value // some eğer search içinde uyuşan bazı terimler varsa bunları true olarak bize döndürüyor örnek olarak pandora live yazmak yerine live yazarsak bize true döner
-            ) => value && value.toString().toLowerCase().includes(this.searchTerm.toLowerCase()) //include kullanmak için ve yazılan sonuçlar doğru gelsin diye ek bir filtreleme yapıyoruz search ve data karşılaştırması yapıp sonucu getiriyoruz
-          )
-      )
+        return this.options.table.rows //search yoksa direk bütün verileri göster
+      } 
+      const searchInObject = (obj, searchTerm) => {
+        return Object.values(obj).some(value => {
+          if (value && typeof value === 'object') {
+            return searchInObject(value, searchTerm);
+          } else if (value !== null && value !== undefined) {
+            return value.toString().toLowerCase().includes(searchTerm.toLowerCase());
+          }
+          return false;
+        });
+      };
+      return this.options.table.rows.filter(item => searchInObject(item, this.searchTerm));
     },
   },
   methods: {
@@ -61,6 +62,9 @@ export default {
     },
     handleCellClick(payload) {
       this.$emit('cell-click', payload)
+    },
+    wFilterData(){
+      
     }
   }
 }
