@@ -26,8 +26,21 @@
           class="ui-dropdown-search"
         />
         
-      </div>
-      <div class="dropdown-content" :style="{ fontSize: fontSize + 'px' }"  >
+        <!-- <div class="dropdown-list" :style="{ maxHeight: dropdownListMaxHeight }">
+        <div
+          v-for="item in filteredItems"
+          :key="item"
+          @click="selectItem(item)"
+          class="ui-dropdown-item"
+          :style="{ fontSize: fontSize }"
+        >
+          {{ item }}
+        </div>
+        </div>
+         -->
+
+        </div>
+      <div class="ui-dropdown-content" :style="{fontSize: fontSize + 'px' , maxHeight: dropdownListMaxHeight}"  >
         <div v-for="item in filteredItems" :key="item[idField]" class="ui-dropdown-item" @click="selectItem(item)">
           <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" />
           <span>{{ item[displayField] }}</span>
@@ -79,6 +92,12 @@ export default {
       type: String,
       default: 'url'
     },
+    dataSize:{
+      type: Number,
+      default(){
+        return this.items.length
+      }
+    }
 
   },
   data() {
@@ -92,7 +111,14 @@ export default {
   computed: {
     filteredItems() {
       return this.items.filter(item => item[this.displayField].toLowerCase().includes(this.searchQuery.toLowerCase()));
+    },
+    dropdownListMaxHeight() {
+      const itemHeight = 30;
+      const searchBoxHeight = this.searchable ? 10 : 0;
+      const maxHeight = itemHeight * this.dataSize + searchBoxHeight;
+      return `${maxHeight}`
     }
+    
   },
   methods: {
     toggleDropdown() {

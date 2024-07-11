@@ -9,6 +9,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :dataSize="dataSize"
     />
     <UIDropdown
       v-model="selectedFood"
@@ -19,6 +20,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :dataSize="dataSize"
     />
     <UIDropdown
       v-model="selectedToy"
@@ -29,6 +31,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :dataSize="dataSize"
     /> 
     <UIDropdown
       v-model="selectedItem"
@@ -39,6 +42,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :dataSize="dataSize"
     />
   </div>
 </template>
@@ -85,7 +89,8 @@ export default {
       selectedPet: {},
       selectedFood: {},
       selectedToy: {},
-      selectedItem: {}
+      selectedItem: {},
+      dataSize: 1
     };
   }
 };
