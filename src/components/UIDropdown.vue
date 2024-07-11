@@ -12,9 +12,8 @@
       <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
     </button>
     <div v-if="isOpen" class="ui-dropdown-menu">
-      <div class="search-container">
+      <div class="search-container" v-if="searchable">
         <input
-          v-if="searchable"
           type="text"
           v-model="searchQuery"
           placeholder="Search..."
@@ -22,14 +21,16 @@
         />
         <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
       </div>
-      <div
-        v-for="item in limitedItems"
-        :key="item"
-        @click="selectItem(item)"
-        class="ui-dropdown-item"
-        :style="{ fontSize: fontSize }"
-      >
-        {{ item }}
+      <div class="dropdown-list" :style="{ maxHeight: dropdownListMaxHeight }">
+        <div
+          v-for="item in filteredItems"
+          :key="item"
+          @click="selectItem(item)"
+          class="ui-dropdown-item"
+          :style="{ fontSize: fontSize }"
+        >
+          {{ item }}
+        </div>
       </div>
     </div>
   </div>
@@ -38,18 +39,20 @@
 <script lang="ts">
 export default {
   name: 'UIDropdown',
-
   data() {
     return {
-      selectedItem: this.initialSelectedItem as string | null,
-      isOpen: false,
-      searchQuery: ''
+      //selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
+      isOpen: false, // checks if our dropdown open or not.
+      searchQuery: '' // when we search for an item this will fill up.
     }
   },
   props: {
     dataSize: {
-      type: Number,
-      default: 10
+      type: Number, // how many data will shown in the dropdown
+      default() {
+        return this.items.length
+      },
+      required: false
     },
     label: {
       // label on the dropdown to understand what the dropdown contents are.
@@ -57,14 +60,17 @@ export default {
       default: ''
     },
     initialSelectedItem: {
+      // represents the currently selected item.
       type: String,
       default: null
     },
     placeHolder: {
+      // placeHolder before the selection.
       type: String,
       default: 'Select an option'
     },
     searchable: {
+      // in many results user can find what he/she looks for.
       type: Boolean,
       default: true
     },
@@ -73,18 +79,23 @@ export default {
       required: true
     },
     fontSize: {
+      // defined fontsize shown in the dropdown.
       type: String,
       default: '12px'
     }
   },
   computed: {
     filteredItems(): string[] {
-      return this.items.filter((item: string) =>
+      return this.items.filter((item) =>
         item.toLowerCase().includes(this.searchQuery.toLowerCase())
       )
     },
-    limitedItems(): string[] {
-      return this.filteredItems.slice(0, this.dataSize)
+    dropdownListMaxHeight() {
+      const itemHeight = 30
+      const searchBoxHeight = this.searchable ? 10 : 0
+      //const maxHeight = itemHeight * (this.dataSize || this.items.length) + searchBoxHeight
+      const maxHeight = itemHeight * this.dataSize + searchBoxHeight
+      return `${maxHeight}px`
     }
   },
   methods: {
@@ -104,7 +115,7 @@ export default {
     },
     clearSearch(event: Event) {
       this.searchQuery = ''
-      event.stopPropagation() // Prevent dropdown from closing
+      event.stopPropagation()
     }
   },
   mounted() {
@@ -120,8 +131,6 @@ export default {
 .ui-dropdown-c {
   position: relative;
   display: inline-block;
-  margin-top: 320px;
-  margin-left: 400px;
   display: flex;
   flex-direction: column;
   max-width: fit-content;
@@ -145,7 +154,6 @@ export default {
     .placeholder-text {
       display: flex;
       font-size: 17px;
-      // font-weight: bold;
 
       &-active {
         color: grey;
@@ -174,57 +182,60 @@ export default {
     top: 100%;
     left: 0;
     right: 0;
-    padding-bottom: 17px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 12px;
-    max-height: 300px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     z-index: 1000;
     box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
+  }
 
-    .search-container {
-      position: relative;
+  .search-container {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 10;
 
-      .ui-dropdown-search {
-        width: 90%;
-        padding: 12px;
-        box-sizing: border-box;
-        margin: 14px;
-        border-radius: 18px;
-        border: 1px solid #ccc;
-        outline: none;
-      }
-
-      .clear-search {
-        position: absolute;
-        right: 15px;
-        top: 21px;
-        transform: translateY(-50%, -50%);
-        cursor: pointer;
-        font-size: 25px;
-        color: #ccc;
-        width: 25px;
-        height: 25px;
-        background-color: #585858;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+    .ui-dropdown-search {
+      width: 90%;
+      padding: 12px;
+      box-sizing: border-box;
+      margin: 14px;
+      border-radius: 18px;
+      border: 1px solid #ccc;
+      outline: none;
     }
 
-    .ui-dropdown-item {
-      padding: 8px;
-      padding-left: 15px;
-      //font-size: 15px;
+    .clear-search {
+      position: absolute;
+      right: 15px;
+      top: 21px;
+      transform: translateY(-50%, -50%);
       cursor: pointer;
+      font-size: 25px;
+      color: #ccc;
+      width: 25px;
+      height: 25px;
+      background-color: #585858;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 
-      &:hover {
-        font-weight: bold;
-        background-color: #f3f3f3;
-      }
+  .dropdown-list {
+    overflow-y: auto;
+  }
+
+  .ui-dropdown-item {
+    padding: 8px;
+    padding-left: 15px;
+    cursor: pointer;
+
+    &:hover {
+      font-weight: bold;
+      background-color: #f3f3f3;
     }
   }
 }
