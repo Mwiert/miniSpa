@@ -16,6 +16,7 @@
         <div class="search-container" >
           <span class="clear-search" > 
           <img v-if="searchQuery" @click="clearSearch" class="clear-search-img" :src="photo">
+          
           </span>
                 
         <input
@@ -56,36 +57,7 @@ export default {
       selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
       isOpen: false,      // checks if our dropdown open or not.
       searchQuery: '',    // when we search for an item this will fill up.
-      photo:pp,           
-      items:           //items that we will show in our options.
-    [            
-      {
-        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
-        name: 'Turkish Airlines',
-        detail:''
-      },  
-      {
-        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
-        name: 'Anadolu Jet',
-        detail:''
-      },
-      {
-        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
-        name: 'Sun Express',
-        detail:''
-      },    
-      {
-        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
-        name: 'Pegasus Europe',
-        detail:''
-      },
-      {
-        url: "https://cdn.dev.reisetech.io/airline_34x34/TK.svg",
-        name: 'Corendon EU',
-        detail:''
-      }
-    ],
-      
+      photo:pp          
     }
   },
   props: {
