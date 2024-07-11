@@ -1,18 +1,14 @@
 <template>
     <div class="ui-date-range-picker-c"> 
-      
-       
-
-        <!-- This is for opening and closing the calendar -->
+          <!-- This is for opening and closing the calendar -->
         <div class="button" @click="closeDatePicker">
-           <div v-if="!isSingleDatePickerEnable && !isMultiDatePickerEnable" class="button-items">Aç</div>
-           
-              <div v-else class="prompted-date">
-                <div v-show="isSingleDatePickerEnable" class="is-single-date">
+           <div class="button-items">
+            <div class="is-single-date">
                     <div class="single-date-box">
                     <span class="day">
                     <!-- This is where we are getting the day -->
-                    {{ singleSelectedDate.split('-')[0] }}
+                    {{ singleSelectedDate.split('-')[0] }} 
+                    <!-- createdda bugunun takvimi gönderilip ekranda default gösterilecek -->
                 </span>
                 <div class='month-year'>
                     <span class="month">
@@ -25,13 +21,11 @@
                     </span>
                 </div>
                 </div>
-                </div> 
-                <div v-show="isMultiDatePickerEnable" class="is-multi-date">
-            
-                    <div class="single-date-box">
+                <div class="single-date-box divider" v-if="isMultiDatePicker">
                     <span class="day">
                     <!-- This is where we are getting the day -->
-                    {{ singleSelectedDate.split('-')[0] }}
+                    {{ singleSelectedDate.split('-')[0] }} 
+                    <!-- createdda bugunun takvimi gönderilip ekranda default gösterilecek -->
                 </span>
                 <div class='month-year'>
                     <span class="month">
@@ -44,28 +38,9 @@
                     </span>
                 </div>
                 </div>
-                
-                    <div class="multi-date-box">
-                
-                <span class="day">
-                    <!-- This is where we are getting the day -->
-                    {{ singleSelectedDate.split('-')[0] }}
-                </span>
-                <div class='month-year'>
-                    <span class="month">
-                    <!-- This is where we are getting the month -->                
-                        {{ formatMonth(singleSelectedDate.split('-')[1]) }}
-                    </span>
-                    <span class="year"> 
-                    <!-- This is where we are getting the year -->                
-                        {{ singleSelectedDate.split('-')[2] }}
-                    </span>
-                    </div>
-                    </div>
-                </div>
-            
             </div>
         
+            </div> 
         </div>
     <div class="date-picker">
             <UIDatePicker v-if="isSingleDatePickerEnable" :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
@@ -168,11 +143,7 @@ export default {
     align-self: center;
     text-align: center;
     padding: 1rem;
-
-   
-    .date-picker{
-        margin-top: 1.5rem;
-    }
+    gap: 0.75rem;
 
     .button {
       background: #F8F8F8;
@@ -200,20 +171,13 @@ export default {
             text-align: center;
             width: 100%;
             align-items: center;
-            font-size: 16px;
+            font-size: 12px;
             color: #2b2b2b;
             opacity: 0.9;
-        }
-
-        .prompted-date{
-            display: flex;
-            flex-direction: row;
-            text-align: center;
-            justify-content: center;
-            width: 100%;
-            height: auto;            
+        
             .is-single-date{
                 width: 100%;
+                display: flex;
 
             .single-date-box{
 
@@ -240,6 +204,7 @@ export default {
                 justify-content: space-around;
                 align-items: start;
                 font-size: 10px;
+                    
                     .month{
                     color:#5D5660
                     }
@@ -247,87 +212,14 @@ export default {
                     color:#7F7F7F
                     }
                 }
+                &.divider{
+                    border-left: 1px solid #b6b6b6;
+                }
             }
         }
-         .is-multi-date{   
-            width: 100%;
-            display: flex;
-            flex-direction: row;
 
-
-            .single-date-box{
-
-                display: flex;
-                justify-content: center !important;
-                flex-direction: row;
-                width: 100%;
-
-
-
-                .day{
-                font-size: 20px;
-                font-weight: bold;
-                color: #2b2b2b;
-                opacity: 0.9;
-                padding: 0 5px;
-
-
-                }
-
-                .month-year{
-                display: flex;
-                flex-direction: column;
-                justify-content: space-around;
-                align-items: start;
-                font-size: 10px;
-                    .month{
-                    color:#5D5660
-                    }
-                    .year{
-                    color:#7F7F7F
-                    }
-                }
-                }
-
-            .multi-date-box{
-                display: flex;
-                flex-direction: row;
-                justify-content: center !important;
-                width: 100%;
-                border-left: #D3D4D5 1px solid;
-
-
-
-                .day{
-                font-size: 20px;
-                font-weight: bold;
-                color: #363636;
-                opacity: 0.9;
-                padding: 0 5px;
-             
-
-                }
-
-                .month-year{
-                display: flex;
-                flex-direction: column;
-                justify-content: space-around;
-                align-items: start;
-                .month{
-                    color:#5D5660;
-                    font-size: 10px;
-                    }
-                    .year{
-                    color:#5e5e5e;
-                    font-size: 8px;
-                    }
-                }
-                
-            }
-
-        }
+        }    
     }
     }
-    
-}
+
 </style>
