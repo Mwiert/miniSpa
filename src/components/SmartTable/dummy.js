@@ -9,7 +9,7 @@ const dummy = [
       checkOut: "10.07.2024",
       roomType: "King Room",
       promoCode: "4154545",
-      price: 30000,
+      price: "3.500 €",
    },
    {
       status:"Pending",
@@ -21,7 +21,7 @@ const dummy = [
       checkOut: "19.07.2024",
       roomType: "King Room",
       promoCode: "4541545",
-      price: 3010,
+      price: "3.000 €",
    },
    {
       status:"Cancelled",
@@ -33,7 +33,7 @@ const dummy = [
       checkOut: "15.07.2024",
       roomType: "King Room",
       promoCode: "45452345",
-      price: 3100,
+      price: "2.000 €",
    },
    {
       status:"Pending",
@@ -45,7 +45,7 @@ const dummy = [
       checkOut: "13.07.2024",
       roomType: "King Room",
       promoCode: "45454325",
-      price: 2000,
+      price: "2.500 €",
    },
 ];
 
