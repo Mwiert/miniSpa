@@ -20,13 +20,16 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        <span v-if="searchQuery" class="clear-search" @click="clearSearch">×</span>
+        <span v-if="searchQuery" class="clear-search" @click="clearSearch" ref="clearSearchBtn"
+          >×</span
+        >
       </div>
       <div
         v-for="item in limitedItems"
         :key="item"
         @click="selectItem(item)"
         class="ui-dropdown-item"
+        :style="{ fontSize: fontSize }"
       >
         {{ item }}
       </div>
@@ -40,7 +43,7 @@ export default {
   props: {
     dataSize: {
       type: Number,
-      default: 5
+      default: 10
     },
     label: {
       type: String,
@@ -61,6 +64,10 @@ export default {
     items: {
       type: Array as () => string[],
       required: true
+    },
+    fontSize: {
+      type: String,
+      default: '12px'
     }
   },
   data() {
@@ -91,12 +98,17 @@ export default {
     },
     handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement
+      if (this.$refs.clearSearchBtn && this.$refs.clearSearchBtn.contains(target)) {
+        return
+      }
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
     },
-    clearSearch() {
+    clearSearch(event: Event) {
+      event.stopPropagation()
       this.searchQuery = ''
+      this.$refs.searchInput.focus()
     }
   },
   mounted() {
@@ -112,39 +124,47 @@ export default {
 .ui-dropdown-c {
   position: relative;
   display: inline-block;
-  margin: 10px;
+  margin-top: 320px;
+  margin-left: 400px;
   display: flex;
   flex-direction: column;
   max-width: fit-content;
 
   .ui-dropdown-button {
-    min-width: 150px;
+    min-width: 230px;
     padding: 15px;
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
 
     &-active {
-      border: 1px solid #60acfe;
+      border: 2px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .placeholder-text {
+      display: flex;
+      font-size: 17px;
+      font-weight: bold;
+
       &-active {
         color: grey;
+        font-weight: normal;
       }
     }
 
     .arrow {
-      margin-left: 22px;
-      border: solid black;
-      border-width: 0 1px 1px 0;
-      display: inline-block;
+      position: absolute;
+      top: 63%;
+      right: 15px;
       padding: 5px;
+      border: solid black;
+      border-width: 0 2px 2px 0;
+      display: inline-block;
       transform: rotate(45deg);
 
       &-up {
@@ -158,55 +178,55 @@ export default {
     top: 100%;
     left: 0;
     right: 0;
+    padding-bottom: 17px;
     background-color: #fff;
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
     border-radius: 12px;
     max-height: 300px;
+    overflow-x: hidden;
     overflow-y: auto;
     z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
 
     .search-container {
       position: relative;
 
       .ui-dropdown-search {
         width: 90%;
-        padding: 10px;
+        padding: 12px;
         box-sizing: border-box;
-        margin: 7px;
-        border-radius: 10px;
-        border: 2px solid #ccc;
+        margin: 14px;
+        border-radius: 18px;
+        border: 1px solid #ccc;
         outline: none;
       }
 
       .clear-search {
         position: absolute;
-        right: 12px;
-        top: 13px;
+        right: 15px;
+        top: 21px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
         font-size: 25px;
         color: #ccc;
         width: 25px;
         height: 25px;
-        background-color: #f0f0f0;
+        background-color: #585858;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-
-        &:hover {
-          color: #000;
-        }
       }
     }
 
     .ui-dropdown-item {
-      padding: 10px;
+      padding: 8px;
+      padding-left: 15px;
+      //font-size: 15px;
       cursor: pointer;
-      border-bottom: 1px solid #f0f0f0;
 
       &:hover {
+        font-weight: bold;
         background-color: #f3f3f3;
       }
     }
