@@ -15,7 +15,7 @@
         No Item Found
       </div>
     </div>
-    <div class="grid-row" v-for="(tableRow, rowIndex) in Rows" :key="rowIndex">
+    <div class="grid-row" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
       <div v-for="(cell, cellIndex) in tableRow" :key="cellIndex" class="grid-item" :class="{clickable : options.clickable}" 
       
       @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])" >
@@ -66,9 +66,6 @@ export default {
       });
       return labels
     },
-    Rows() {
-      return this.options.table.rows;
-    }
   },
   created() {
     this.sortedTableData = this.tableData
