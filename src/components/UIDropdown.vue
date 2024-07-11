@@ -15,7 +15,8 @@
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container" >
-          <span v-if="searchQuery" class="clear-search" @click="clearSearch" > × </span>
+          <img v-if="searchQuery" @click="clearSearch" class="clear-search" :src="photo">
+          
         <input
           v-if="searchable"
           type="text"
@@ -23,12 +24,13 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
+  
       </div>
       
       <div class="dropdown-content">
-      <div v-for="(item,index) in items" :key="index" @click="selectItem(item.name)">
-        <div class="img-flag" ><img src="https://cdn.dev.reisetech.io/airline_34x34/TK.svg"> </div>
-        <div>{{ item["name"] }}</div> v-model
+      <div v-for="(item,index) in items" :key="index" @click="selectItem(item)"  >
+        <div>{{ item.name }}</div>
+        <!-- <input type="text" v-model="item[index].showedItem" >   -->
       </div>
       </div> 
 
@@ -47,6 +49,8 @@
 
 <script lang="ts">
 
+import pp from '../assets/icons/x.svg'
+
 export default {
   name: 'DropdownComponent',
   
@@ -54,13 +58,17 @@ export default {
     return {
       selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
       isOpen: false,      // checks if our dropdown open or not.
-      searchQuery: ''     // when we search for an item this will fill up.
+      searchQuery: '',    // when we search for an item this will fill up.
+      photo:pp,
     }
   },
   props: {
     // dataSize: {       
     //   type: Number,  // how many data will shown in the dropdown.
     // },
+    showedItem:{
+      type: Object
+    },
     fontSize: {           // defined fontsize shown in the dropdown.
       type: Number,
       default: 12,
@@ -139,14 +147,17 @@ export default {
   display: flex;
   flex-direction: column;
   max-width: fit-content;
-
-  .flag-img {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
+  
+.label{
+    font-size: large;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif; /* Font family */
+  font-size: 16px;                /* Font size */
+  font-weight: bold;             /* Font weight */
+  color: #333;                   /* Font color */
+  }
   .ui-dropdown-button {
     min-width: 150px;
     padding: 15px;
@@ -220,7 +231,6 @@ export default {
         color: #cecaca;
         width: 20px;
         height: 20px;
-        background-color: #000000;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -252,11 +262,6 @@ export default {
   }
   .ui-dropdown-c-label{
     margin-bottom: 10px; /* Adds space below the label */
-  }
-  .label{
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
   .dropdown-content{
     display: flex;
