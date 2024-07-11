@@ -1,30 +1,51 @@
 <template>
     <div class="ui-date-range-picker-c"> 
-        <!-- This is for opening and closing the calendar -->
+          <!-- This is for opening and closing the calendar -->
         <div class="button" @click="closeDatePicker">
-           <div v-if="!isSingleDatePickerEnable" class="open">Aç</div>
-              <div v-else class="prompted-date">
-                <div class="day">
+           <div class="button-items">
+            <div class="is-single-date">
+                    <div class="single-date-box">
+                    <span class="day">
                     <!-- This is where we are getting the day -->
-                    {{ singleSelectedDate.split('-')[0] }}
-                </div>
+                    {{ singleSelectedDate.split('-')[0] }} 
+                    <!-- createdda bugunun takvimi gönderilip ekranda default gösterilecek -->
+                </span>
                 <div class='month-year'>
-                    <div class="month">
+                    <span class="month">
                     <!-- This is where we are getting the month -->                
                         {{ formatMonth(singleSelectedDate.split('-')[1]) }}
-                    </div>
-                    <div class="year"> 
+                    </span>
+                    <span class="year"> 
                     <!-- This is where we are getting the year -->                
                         {{ singleSelectedDate.split('-')[2] }}
-                    </div>
+                    </span>
+                </div>
+                </div>
+                <div class="single-date-box divider" v-if="isMultiDatePicker">
+                    <span class="day">
+                    <!-- This is where we are getting the day -->
+                    {{ singleSelectedDate.split('-')[0] }} 
+                    <!-- createdda bugunun takvimi gönderilip ekranda default gösterilecek -->
+                </span>
+                <div class='month-year'>
+                    <span class="month">
+                    <!-- This is where we are getting the month -->                
+                        {{ formatMonth(singleSelectedDate.split('-')[1]) }}
+                    </span>
+                    <span class="year"> 
+                    <!-- This is where we are getting the year -->                
+                        {{ singleSelectedDate.split('-')[2] }}
+                    </span>
+                </div>
                 </div>
             </div>
+        
+            </div> 
         </div>
-        <div class="date-picker">
+    <div class="date-picker">
             <UIDatePicker v-if="isSingleDatePickerEnable" :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
-            <UIMultiDatePicker v-if="isMultiDatePickerEnable"  :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
+            <UIMultiDatePicker v-if="isMultiDatePickerEnable" :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
         </div>
-
     </div>
 </template>
 
@@ -37,6 +58,7 @@ export default {
     components: {
         UIDatePicker,
         UIMultiDatePicker
+        
     },
     props: {
         isMultiDatePicker: { type: Boolean, default: false },
@@ -53,7 +75,8 @@ export default {
     methods: {
         toggleCalendar() {
             this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable;
-            this.$emit('closeCalendar', this.isSingleDatePickerEnable);
+            this.isMultiDatePickerEnable = !this.isMultiDatePickerEnable;
+            this.$emit('closeCalendar', this.isSingleDatePickerEnable, this.isMultiDatePickerEnable);
         },
         sendDateToParent(){
             this.$emit('dateSelected', this.singleSelectedDate);
@@ -80,30 +103,32 @@ export default {
         handleDateSelected(firstDate: string) {
         // We get the selected date from UIDatePicker and set it to selectedDate
         this.singleSelectedDate = firstDate;
-      },
+        },
         sendToTimeBenders(){
             this.$emit('dateSelected', this.singleSelectedDate);
         },
         closeDatePicker(){
-            
-        if(this.isSingleDatePicker === true){
-            if(this.isSingleDatePickerEnable === false){
-            this.isSingleDatePickerEnable = true;
-            }else{
-                this.isSingleDatePickerEnable = false;
+            console.log(this.isSingleDatePicker)
+            if(this.isSingleDatePicker === true){
+                if(this.isSingleDatePickerEnable === false){
+                    this.isSingleDatePickerEnable = true;
+                }
+                else{
+                    this.isSingleDatePickerEnable = false;
+                    }
             }
-        }
-       
-        if(this.isMultiDatePicker === true){
-            if(this.isMultiDatePickerEnable === false){
-            this.isMultiDatePickerEnable = true;
-            }else{
+            console.log(this.isMultiDatePicker)
+            if(this.isMultiDatePicker === true){
+                if(this.isMultiDatePickerEnable === false){
+                    this.isMultiDatePickerEnable = true;
+            }
+            else{
+                this.isSingleDatePickerEnable = false;
                 this.isMultiDatePickerEnable = false;
             }
-        }  
-
     }
     }
+}
 };
 </script>
 
@@ -115,24 +140,20 @@ export default {
 .ui-date-range-picker-c {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-self: center;
     text-align: center;
     padding: 1rem;
+    gap: 0.75rem;
 
-   
-    .date-picker{
-        margin-top: 0.75rem;
-    }
     .button {
-      background: #ffffff;
+      background: #F8F8F8;
       box-shadow: 2px 2px 6px #5858581a;
       border: 1px solid #b6b6b6;
       border-radius: $border-radius-medium;
       opacity: 1;
-      width: 120px;
-      height: 30px;
-        justify-content: center;
+      width: 175px;
+      height: 24px;
+        justify-content: space-between;
         align-items: center;
         justify-items: center;
         text-align: center;
@@ -143,48 +164,62 @@ export default {
         cursor: pointer;
         border-radius: 12px;
         
-        .open{
+        .button-items{
             display: flex;
             flex-direction: row;
-            justify-content: center;
+            justify-content: space-around;
             text-align: center;
-            gap: 5px;
+            width: 100%;
             align-items: center;
-            font-size: 25px;
+            font-size: 12px;
             color: #2b2b2b;
             opacity: 0.9;
-        }
-        .prompted-date{
-            display: flex;
-            flex-direction: row;
-            text-align: center;
-            justify-content: center;
-            width: 100%;
-            
+        
+            .is-single-date{
+                width: 100%;
+                display: flex;
 
+            .single-date-box{
 
-            .day{
-                font-size: 25px;
+                display: flex;
+                justify-content: center !important;
+                flex-direction: row;
+                width: 100%;
+
+                
+
+                .day{
+                font-size: 20px;
                 font-weight: bold;
                 color: #2b2b2b;
                 opacity: 0.9;
-                padding: 0 10px;
+                padding: 0 5px;
              
 
-            }
-            .month-year{
+                }
+
+                .month-year{
                 display: flex;
                 flex-direction: column;
                 justify-content: space-around;
                 align-items: start;
                 font-size: 10px;
-              
-                .year{
-                    color:#5e5e5e
+                    
+                    .month{
+                    color:#5D5660
+                    }
+                    .year{
+                    color:#7F7F7F
+                    }
+                }
+                &.divider{
+                    border-left: 1px solid #b6b6b6;
                 }
             }
         }
+
+        }    
     }
-    
-}
+    }
+
 </style>
