@@ -1,12 +1,16 @@
 <template>
     <div class="ui-date-range-picker-c"> 
+      
+       
+
         <!-- This is for opening and closing the calendar -->
         <div class="button" @click="closeDatePicker">
-           <div v-if="!isSingleDatePickerEnable" class="button-items">Aç</div>
+           <div v-if="!isSingleDatePickerEnable && !isMultiDatePickerEnable" class="button-items">Aç</div>
+           
               <div v-else class="prompted-date">
                 <div v-show="isSingleDatePickerEnable" class="is-single-date">
                     <div class="single-date-box">
-                <span class="day">
+                    <span class="day">
                     <!-- This is where we are getting the day -->
                     {{ singleSelectedDate.split('-')[0] }}
                 </span>
@@ -22,10 +26,10 @@
                 </div>
                 </div>
                 </div> 
-                <div v-show="isMultiDatePicker" class="is-multi-date">
+                <div v-show="isMultiDatePickerEnable" class="is-multi-date">
             
-                <div class="multi-date-box">
-                <span class="day">
+                    <div class="single-date-box">
+                    <span class="day">
                     <!-- This is where we are getting the day -->
                     {{ singleSelectedDate.split('-')[0] }}
                 </span>
@@ -40,13 +44,33 @@
                     </span>
                 </div>
                 </div>
+                
+                    <div class="multi-date-box">
+                
+                <span class="day">
+                    <!-- This is where we are getting the day -->
+                    {{ singleSelectedDate.split('-')[0] }}
+                </span>
+                <div class='month-year'>
+                    <span class="month">
+                    <!-- This is where we are getting the month -->                
+                        {{ formatMonth(singleSelectedDate.split('-')[1]) }}
+                    </span>
+                    <span class="year"> 
+                    <!-- This is where we are getting the year -->                
+                        {{ singleSelectedDate.split('-')[2] }}
+                    </span>
+                    </div>
+                    </div>
+                </div>
+            
             </div>
+        
         </div>
-        <div class="date-picker">
+    <div class="date-picker">
             <UIDatePicker v-if="isSingleDatePickerEnable" :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
-            <UIMultiDatePicker v-if="false" :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
+            <UIMultiDatePicker v-if="isMultiDatePickerEnable" :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
         </div>
-    </div>
     </div>
 </template>
 
@@ -76,7 +100,8 @@ export default {
     methods: {
         toggleCalendar() {
             this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable;
-            this.$emit('closeCalendar', this.isSingleDatePickerEnable);
+            this.isMultiDatePickerEnable = !this.isMultiDatePickerEnable;
+            this.$emit('closeCalendar', this.isSingleDatePickerEnable, this.isMultiDatePickerEnable);
         },
         sendDateToParent(){
             this.$emit('dateSelected', this.singleSelectedDate);
@@ -103,30 +128,32 @@ export default {
         handleDateSelected(firstDate: string) {
         // We get the selected date from UIDatePicker and set it to selectedDate
         this.singleSelectedDate = firstDate;
-      },
+        },
         sendToTimeBenders(){
             this.$emit('dateSelected', this.singleSelectedDate);
         },
         closeDatePicker(){
-            
-        if(this.isSingleDatePicker === true){
-            if(this.isSingleDatePickerEnable === false){
-            this.isSingleDatePickerEnable = true;
-            }else{
-                this.isSingleDatePickerEnable = false;
+            console.log(this.isSingleDatePicker)
+            if(this.isSingleDatePicker === true){
+                if(this.isSingleDatePickerEnable === false){
+                    this.isSingleDatePickerEnable = true;
+                }
+                else{
+                    this.isSingleDatePickerEnable = false;
+                    }
             }
-        }
-       
-        if(this.isMultiDatePicker === true){
-            if(this.isMultiDatePickerEnable === false){
-            this.isMultiDatePickerEnable = true;
-            }else{
+            console.log(this.isMultiDatePicker)
+            if(this.isMultiDatePicker === true){
+                if(this.isMultiDatePickerEnable === false){
+                    this.isMultiDatePickerEnable = true;
+            }
+            else{
+                this.isSingleDatePickerEnable = false;
                 this.isMultiDatePickerEnable = false;
             }
-        }  
-
     }
     }
+}
 };
 </script>
 
@@ -224,6 +251,43 @@ export default {
         }
          .is-multi-date{   
             width: 100%;
+            display: flex;
+            flex-direction: row;
+
+
+            .single-date-box{
+
+                display: flex;
+                justify-content: center !important;
+                flex-direction: row;
+                width: 100%;
+
+
+
+                .day{
+                font-size: 20px;
+                font-weight: bold;
+                color: #2b2b2b;
+                opacity: 0.9;
+                padding: 0 5px;
+
+
+                }
+
+                .month-year{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: start;
+                font-size: 10px;
+                    .month{
+                    color:#5D5660
+                    }
+                    .year{
+                    color:#7F7F7F
+                    }
+                }
+                }
 
             .multi-date-box{
                 display: flex;
