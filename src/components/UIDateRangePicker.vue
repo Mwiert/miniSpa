@@ -1,40 +1,42 @@
 <template>
     <div class="ui-date-range-picker-c"> 
-          <!-- This is for opening and closing the calendar -->
+
+        <!-- This is for opening and closing the calendar -->
         <div class="button" @click="closeDatePicker">
+        
            <div class="button-items">
             <div class="is-single-date">
                     <div class="single-date-box">
                     <span class="day">
                     <!-- This is where we are getting the day -->
-                    {{ singleSelectedDate.split('-')[0] }} 
+                    {{ singleSelectedDate.number }} 
                     <!-- createdda bugunun takvimi gönderilip ekranda default gösterilecek -->
                 </span>
                 <div class='month-year'>
                     <span class="month">
                     <!-- This is where we are getting the month -->                
-                        {{ formatMonth(singleSelectedDate.split('-')[1]) }}
+                        {{ formatMonth(singleSelectedDate.month) }}
                     </span>
                     <span class="year"> 
                     <!-- This is where we are getting the year -->                
-                        {{ singleSelectedDate.split('-')[2] }}
+                        {{ singleSelectedDate.year }}
                     </span>
                 </div>
                 </div>
                 <div class="single-date-box divider" v-if="isMultiDatePicker">
                     <span class="day">
                     <!-- This is where we are getting the day -->
-                    {{ singleSelectedDate.split('-')[0] }} 
+                    {{ singleSelectedDate.number }} 
                     <!-- createdda bugunun takvimi gönderilip ekranda default gösterilecek -->
                 </span>
                 <div class='month-year'>
                     <span class="month">
                     <!-- This is where we are getting the month -->                
-                        {{ formatMonth(singleSelectedDate.split('-')[1]) }}
+                        {{ formatMonth(singleSelectedDate.month) }}
                     </span>
                     <span class="year"> 
                     <!-- This is where we are getting the year -->                
-                        {{ singleSelectedDate.split('-')[2] }}
+                        {{ singleSelectedDate.year }}
                     </span>
                 </div>
                 </div>
@@ -43,16 +45,17 @@
             </div> 
         </div>
     <div class="date-picker">
-            <UIDatePicker v-if="isSingleDatePickerEnable" :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
-            <UIMultiDatePicker v-if="isMultiDatePickerEnable" :yearRange="4" :saveDate="singleSelectedDate" @dateSelected="handleDateSelected"/>
+            <UIDatePicker v-if="isSingleDatePickerEnable" :yearRange="1"  :saveDate="singleSelectedDate.date" @sendDateToParent="setCurrentDate" @dateSelected="handleDateSelected"/>
+            <UIMultiDatePicker v-if="isMultiDatePickerEnable" :yearRange="1" :saveDate="singleSelectedDate.date" @sendDateToParent="setCurrentDate" @dateSelected="handleDateSelected"/>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import dayjs from 'dayjs';
 import UIDatePicker from '../components/UIDatePicker.vue';
 import UIMultiDatePicker from '../components/UIMultiDatePicker.vue';
+import date from '../interface/IUIDatePicker';
+import dayjs from 'dayjs';
 export default {
     name: 'UIDateRangePicker',
     components: {
@@ -66,7 +69,7 @@ export default {
     },
     data() {
         return {
-            singleSelectedDate: dayjs().format('DD-MM-YYYY'),
+            singleSelectedDate: {} as date,
             isSingleDatePickerEnable: false,
             isMultiDatePickerEnable: false,
 
@@ -100,9 +103,12 @@ export default {
             //We are returning the month name if not available just return
             return months[month] || month;
         },
-        handleDateSelected(firstDate: string) {
+        handleDateSelected(firstDate: date) {
         // We get the selected date from UIDatePicker and set it to selectedDate
         this.singleSelectedDate = firstDate;
+        },
+        setCurrentDate(presentDate: date){
+            this.presentDate = presentDate;
         },
         sendToTimeBenders(){
             this.$emit('dateSelected', this.singleSelectedDate);
@@ -127,9 +133,21 @@ export default {
                 this.isMultiDatePickerEnable = false;
             }
     }
+    },
+    fillInitialDate(){
+        this.singleSelectedDate = {
+            number: dayjs().format('DD'),
+            month: dayjs().format('MM'),
+            year: dayjs().format('YYYY'),
+            date: dayjs().format('YYYY-MM-DD'),
+        };
     }
+    },
+created() {
+    this.fillInitialDate();
+},
 }
-};
+;
 </script>
 
 <style lang="scss" scoped>

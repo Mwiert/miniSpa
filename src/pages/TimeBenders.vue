@@ -2,7 +2,7 @@
     <div class="time-benders-c">
         <!-- We connect UIDatePicker with TimeBenders here with sending yearRange and initialDate as props to UIDatePicker -->
         <!-- dateSelected comes from UIDatePicker where we handle the selected date from handleDateSelected -->
-        <UIDateRangePicker :isSingleDatePicker="false" :isMultiDatePicker="true"/>
+        <UIDateRangePicker :isSingleDatePicker="true" :isMultiDatePicker="false"/>
    
     </div>
   </template>

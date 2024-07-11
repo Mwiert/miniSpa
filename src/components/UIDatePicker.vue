@@ -56,17 +56,30 @@
         firstSelectedDate: {} ,
         currentDate: dayjs().format('YYYY-MM-DD'),
         presentDate: dayjs().format('YYYY-MM-DD'),
-        minDate: dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD'),
-        maxDate: dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD'),
+        minDate: dayjs(),
+        maxDate: dayjs(),
         saveDateHistory: this.saveDate, 
         openCalendar: false
       }
     },
     props: {
-      yearRange: { type: Number, default: 1 },
-      saveDate: { type: String, default: ''}
+      yearRange: { type: Number, default: 9999 },
+      saveDate: { type: String, default: ''},
+      monthRange: { type: Number, default: 9999 },
     },
     methods: {
+      checkRange(){
+
+           if (this.yearRange !== 9999){
+              this.minDate = dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD')
+              this.maxDate = dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD')
+           }
+           if (this.monthRange !== 9999){
+              this.minDate = dayjs().subtract(this.monthRange, 'month').format('YYYY-MM-DD')
+              this.maxDate = dayjs().add(this.monthRange, 'month').format('YYYY-MM-DD')
+           }
+           
+      },
       //Update firtSelectedDate by the date we give as emit in UIDateRangePicker
       updateSelectedDate(date) {
         this.firstSelectedDate = date;
@@ -101,10 +114,11 @@
               Number(today) === i + 1 &&
               this.currentMonth() === dayjs().format('MMMM') &&
               this.currentYear() === dayjs().format('YYYY'),
-            number: String(i + 1)
+            number: String(i + 1),
+            month: dayjs(dateSender).format('MM'),
+            year: dayjs(dateSender).format('YYYY'),
           })
-        }
-  
+        }  
         // Create the empty values at the end of the month
         for (let i = 1; i <= endOffsetValue; i++) {
           daysInWholeMonth.push({ date: '', inactive: true, isToday: false })
@@ -136,7 +150,7 @@
         this.firstSelectedDate.selected = true
         this.saveDateHistory = this.firstSelectedDate.date
         this.checkDateHistory()
-        this.$emit('dateSelected', date.date)
+        this.$emit('dateSelected', date)
       },
       checkDateHistory(){
        for(let i = 0; i < this.daysInMonth.length; i++){
@@ -153,6 +167,7 @@
       },
     },
     created() {
+      this.checkRange();
       this.totalDaysInMonth()
       this.checkDateHistory();
     },
