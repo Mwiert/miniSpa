@@ -20,10 +20,10 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        <img v-if="searchQuery" @click="clearSearch" class="clear-search-img" src="/src/assets/icons/x.svg" alt="Clear search">
+        <img v-if="searchQuery" @click="clearSearch" class="clear-search-img" :src="photo"  alt="Clear search">
       </div>
       <div class="dropdown-content">
-        <div v-for="item in filteredItems" :key="item[idField]" class="dropdown-item" @click="selectItem(item)">
+        <div v-for="item in filteredItems" :key="item[idField]" class="ui-dropdown-item" @click="selectItem(item)">
           <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" />
           <span>{{ item[displayField] }}</span>
         </div>
@@ -33,6 +33,9 @@
 </template>
 
 <script lang="ts">
+
+import pp from '../assets/icons/x.svg'
+
 export default {
   name: 'UIDropdown',
   props: {
@@ -77,7 +80,8 @@ export default {
     return {
       isOpen: false,
       searchQuery: '',
-      selectedItem: this.value
+      selectedItem: this.value,
+      photo:pp
     };
   },
   computed: {
@@ -132,10 +136,10 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: Arial, sans-serif; /* Font family */
-  font-size: 16px;                /* Font size */
-  font-weight: bold;             /* Font weight */
-  color: #333;                   /* Font color */
+    font-family: Arial, sans-serif; 
+  font-size: 16px;                
+  font-weight: bold;             
+  color: #333;                   
   }
   .ui-dropdown-button {
     min-width: 230px;
@@ -165,8 +169,8 @@ export default {
     }
 
     .arrow {
+      top: 59%;
       position: absolute;
-      top: 63%;
       right: 15px;
       padding: 5px;
       border: solid black;
@@ -194,6 +198,7 @@ export default {
     overflow-y: auto;
     z-index: 1000;
     box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
+  }
 
     .search-container {
       position: relative;
@@ -209,9 +214,9 @@ export default {
         outline: none;
       }
 
-      .clear-search {
+      .clear-search-img {
         position: absolute;
-        right: 15px;
+        right: 20px;
         top: 24px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
@@ -224,21 +229,29 @@ export default {
         align-items: center;
         justify-content: center;
         margin-top: auto;
+
+        &-hover {
+          opacity: 0.7;
+        }
       }
+      .dropdown-content {
+      max-height: 200px;
+      overflow-y: auto;
+    }
     }
 
     .ui-dropdown-item {
+      display: flex;
+      align-items: center;
       padding: 8px;
-      padding-left: 15px;
-      //font-size: 15px;
       cursor: pointer;
+      transition: background-color 0.3s;
 
       &:hover {
         font-weight: bold;
         background-color: #f3f3f3;
       }
     }
-  }
 
   .ui-dropdown-search {
    width: 90%;

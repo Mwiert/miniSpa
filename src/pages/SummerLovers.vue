@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <UIDropdown
+    <UIDropdown
       v-model="selectedPet"
       :items="pets"
       :label="petLabel"
@@ -29,7 +29,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
-    /> -->
+    />
     <UIDropdown
       v-model="selectedItem"
       :items="items"
