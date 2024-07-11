@@ -199,6 +199,7 @@ export default {
 
       .clear-search {
         position: absolute;
+<<<<<<< HEAD
         right: 15px;
         top: 21px;
         transform: translateY(-50%, -50%);
@@ -208,10 +209,26 @@ export default {
         width: 25px;
         height: 25px;
         background-color: #585858;
+=======
+        right: 18px;
+        top: 15px;
+        transform: translateY(-50%, -50%);
+        cursor: pointer;
+        font-size: 20px;
+        color: #cecaca;
+        width: 20px;
+        height: 20px;
+        background-color: #000000;
+>>>>>>> 34351ba06afb29cdcf93d7f2a916ee2cb5a28d05
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
+<<<<<<< HEAD
+=======
+
+    
+>>>>>>> 34351ba06afb29cdcf93d7f2a916ee2cb5a28d05
       }
     }
 
