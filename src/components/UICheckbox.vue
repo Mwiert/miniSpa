@@ -41,11 +41,8 @@ export default {
     },
     methods: {
         handleClick() {
-            if (!this.disabled) {
-                this.checkboxChecked = !this.checkboxChecked
-                this.$emit('takeCheckedInfo', this.checkboxChecked);
-            }
-
+            this.checkboxChecked = !this.checkboxChecked
+            this.$emit('takeCheckedInfo', this.checkboxChecked);
 
         }
     }
@@ -127,7 +124,9 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
 
     &.disabled {
         cursor: not-allowed;
+        pointer-events: none;
         opacity: 0.6;
+
     }
 
 }
