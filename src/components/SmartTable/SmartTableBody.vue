@@ -15,8 +15,9 @@
         No Item Found
       </div>
     </div>
-    <div class="grid-row" v-for="(tableRow, rowIndex) in Rows" :key="rowIndex">
-      <div v-for="(cell, cellIndex) in tableRow" :key="cellIndex" class="grid-item" :class="{clickable : options.clickable}" 
+    <div class="smart-table-row-grid">
+    <div :class="['grid-row', rowClass(rowIndex)]" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
+      <div v-for="(cell, cellIndex) in tableRow" :key="cellIndex" :class="[getCellClass(cell, tableRow[cellIndex]), 'grid-item']" 
       
       @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])" >
         <template v-if="typeof cell == 'object'">
@@ -26,6 +27,7 @@
         <template v-else>{{ cell }}</template>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -66,9 +68,6 @@ export default {
       });
       return labels
     },
-    Rows() {
-      return this.options.table.rows;
-    }
   },
   created() {
     this.sortedTableData = this.tableData
@@ -108,15 +107,22 @@ export default {
     handlerUrl(url) {
       this.window.location(url,"_blank")
     },
+
+    //gri beyaz görünümünü vermek için gerekli method
+    rowClass(rowIndex: number) {
+      return rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
+    },
+
+    //daha iyi class ismi vermemiz için class ismi almaya yarayan method 
     getCellClass(cellData: any, columnName: string) {
-      if (typeof cellData === 'string' || typeof cellData === 'number') {
-        return `${columnName}-${cellData}`;
+      console.log(cellData.text)
+      console.log(columnName)
+      if (typeof cellData.text === 'string' || typeof cellData.text === 'number') {
+        return `${cellData.class}-${cellData.text}`;
       }
-      return 'default-class'; // Fallback class name
-    }
-    
-  }
- 
+      return 'default-class'; 
+    }    
+  } 
 }
 </script>
 
@@ -144,8 +150,10 @@ export default {
     width: 100%;
     gap: 10px;
     margin-bottom: 10px;
-    border: 1px solid #CCC;
-    border-radius: 30px;
+    border: 1px solid #ccc;
+    border-radius: 30px; 
+    padding: 0.5px; 
+    transition: transform 0.2s, background-color 0.3s;
 
     &.even-row {
       background-color: #FFF;
@@ -158,6 +166,8 @@ export default {
 
   .grid-header {
     display: flex;
+    text-align: center;
+    justify-content: center;
     align-items: center;
     font-weight: bold;
     color: black;
@@ -177,13 +187,13 @@ export default {
     display: flex;
     border-radius: 30px;
     border: none;
-    transition: transform 0.2s, background-color 0.3s;
   }
   .status-Confirmed,
   .status-Pending,
   .status-Cancelled {
     padding: 5px 10px;
     border-radius: 30px;
+    border: 3px solid;
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -196,15 +206,18 @@ export default {
 
   .status-Confirmed {
     background-color: #CCFFDD; 
-    color:#1F9947
+    color:#1F9947;
+    border-color: #4deb81;
   }
   .status-Pending {
     background-color: #FFE6CC; 
-    color:#E87807
+    color:#E87807;
+    border-color:#ee9c4b;
   }
   .status-Cancelled {
     background-color: #ff6b6b;
-    color:#7e2323
+    color:#7e2323;
+    border-color:#ee3535;
   }
 
 
@@ -224,6 +237,7 @@ export default {
     border-radius: 30px;
     transition: transform 0.2s, background-color 0.3s;
     background-color: #ff00009d;
+    grid-column: 1 / -1; 
   }
 
   .sort-button {
