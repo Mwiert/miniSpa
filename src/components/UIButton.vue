@@ -1,29 +1,31 @@
 <template>
   <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active the icon and the text will be shown-->
-  <button
-    class="reisetech-btn"
-    :class="[`reisetech-btn__${btnClassName}`, size]"
-    :disabled="isDisabled"
-    v-if="!btnIsRouter"
-  >
-    <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
-    <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
-    <span v-if="isSpinnerActive" class="spinner"></span>
-    <span v-else>{{ btnText }}</span>
-  </button>
-  <router-link
-    :to="routerUrl"
-    class="reisetech-btn"
-    :class="[`reisetech-btn__${btnClassName}`, size]"
-    replace="button"
-    v-else
-  >
-    <!-- Icon's name should be the name of the .svg file-->
-    <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
-    <span v-if="isSpinnerActive" class="spinner"></span>
-    <span v-else>{{ btnText }}</span>
-  </router-link>
+  <div class="ui-button-c">
+    <button
+      class="reisetech-btn"
+      :class="[`reisetech-btn__${btnClassName}`, size]"
+      :disabled="isDisabled"
+      v-if="!btnIsRouter"
+    >
+      <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
+      <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
+      <span v-if="isSpinnerActive" class="spinner"></span>
+      <span v-else>{{ btnText }}</span>
+    </button>
+    <router-link
+      :to="routerUrl"
+      class="reisetech-btn"
+      :class="[`reisetech-btn__${btnClassName}`, size]"
+      replace="button"
+      v-else
+    >
+      <!-- Icon's name should be the name of the .svg file-->
+      <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
+      <span v-if="isSpinnerActive" class="spinner"></span>
+      <span v-else>{{ btnText }}</span>
+    </router-link>
+  </div>
 </template>
 
 <script lang="ts">
@@ -78,208 +80,213 @@ a.reisetech-btn {
   padding: 0px;
 }
 
-.reisetech-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  border-radius: 24px;
-  font-size: 16px;
-  background-color: transparent;
-  border: 2px;
-  color: black;
-  cursor: pointer;
-  padding: $padding-medium;
-  text-align: center;
-  border: 2px solid black;
-  position: relative;
-  text-decoration: none;
+.ui-button-c {
+  max-width: 200px;
+  width: fit-content;
 
-  &.small {
-    height: $small;
-  }
-
-  &.medium {
-    height: $medium;
-  }
-
-  &.large {
-    height: $large;
-  }
-
-  &__default {
-    background-color: white;
-    border: 2px solid black;
+  .reisetech-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 24px;
+    font-size: 16px;
+    background-color: transparent;
+    border: 2px;
     color: black;
+    cursor: pointer;
+    padding: $padding-medium;
+    text-align: center;
+    border: 2px solid black;
+    position: relative;
+    text-decoration: none;
+
+    &.small {
+      height: $small;
+    }
+
+    &.medium {
+      height: $medium;
+    }
+
+    &.large {
+      height: $large;
+    }
+
+    &__default {
+      background-color: white;
+      border: 2px solid black;
+      color: black;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+      }
+    }
+
+    &__flight {
+      background-color: $primary-color;
+      border: none;
+      color: white;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: none !important;
+        color: white;
+      }
+
+      &.outline {
+        background-color: white;
+        color: $primary-color;
+        border: 2px solid $primary-color;
+
+        &:hover {
+          background: $accent-primary-color;
+          border: 2px solid $accent-primary-color;
+          color: white;
+        }
+      }
+    }
+
+    &__hotel {
+      background-color: $secondary-color;
+      border: none;
+      color: white;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: none !important;
+        color: white;
+      }
+
+      &.outline {
+        background-color: white;
+        color: $secondary-color;
+        border: 2px solid $secondary-color;
+
+        &:hover {
+          background: $accent-primary-color;
+          border: 2px solid $accent-primary-color;
+          color: white;
+        }
+      }
+    }
+
+    &__powerpuff-girls {
+      background-color: #98029b;
+      border: none;
+      color: white;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: none !important;
+        color: white;
+      }
+
+      &.outline {
+        background-color: white;
+        color: $primary-color;
+        border: 2px solid #98029b;
+
+        &:hover {
+          background: $accent-primary-color;
+          border: 2px solid $accent-primary-color;
+          color: white;
+        }
+      }
+    }
+
+    &__pink-panthers {
+      background-color: #f39fb1;
+      border: none;
+      color: white;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: none !important;
+        color: white;
+      }
+
+      &.outline {
+        background-color: white;
+        color: $primary-color;
+        border: 2px solid #f39fb1;
+
+        &:hover {
+          background: $accent-primary-color;
+          border: 2px solid $accent-primary-color;
+          color: white;
+        }
+      }
+    }
+
+    &__summer-lovers {
+      background-color: #83d9e5;
+      border: none;
+      color: white;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: none !important;
+        color: white;
+      }
+
+      &.outline {
+        background-color: white;
+        color: $primary-color;
+        border: 2px solid #83d9e5;
+
+        &:hover {
+          background: $accent-primary-color;
+          border: 2px solid $accent-primary-color;
+          color: white;
+        }
+      }
+    }
+
+    &__time-benders {
+      background-color: #8fbd8d;
+      border: none;
+      color: white;
+
+      &:hover {
+        background: $accent-primary-color;
+        border: none !important;
+        color: white;
+      }
+
+      &.outline {
+        background-color: white;
+        color: $primary-color;
+        border: 2px solid #8fbd8d;
+
+        &:hover {
+          background: $accent-primary-color;
+          border: 2px solid $accent-primary-color;
+          color: white;
+        }
+      }
+    }
 
     &:hover {
       background: $accent-primary-color;
       border: 2px solid $accent-primary-color;
       color: white;
     }
-  }
 
-  &__flight {
-    background-color: $primary-color;
-    border: none;
-    color: white;
-
-    &:hover {
-      background: $accent-primary-color;
-      border: none !important;
-      color: white;
-    }
-
-    &.outline {
-      background-color: white;
-      color: $primary-color;
-      border: 2px solid $primary-color;
-
-      &:hover {
-        background: $accent-primary-color;
-        border: 2px solid $accent-primary-color;
-        color: white;
-      }
-    }
-  }
-
-  &__hotel {
-    background-color: $secondary-color;
-    border: none;
-    color: white;
-
-    &:hover {
-      background: $accent-primary-color;
-      border: none !important;
-      color: white;
-    }
-
-    &.outline {
-      background-color: white;
-      color: $secondary-color;
-      border: 2px solid $secondary-color;
-
-      &:hover {
-        background: $accent-primary-color;
-        border: 2px solid $accent-primary-color;
-        color: white;
-      }
-    }
-  }
-
-  &__powerpuff-girls {
-    background-color: #98029b;
-    border: none;
-    color: white;
-
-    &:hover {
-      background: $accent-primary-color;
-      border: none !important;
-      color: white;
-    }
-
-    &.outline {
-      background-color: white;
-      color: $primary-color;
-      border: 2px solid #98029b;
-
-      &:hover {
-        background: $accent-primary-color;
-        border: 2px solid $accent-primary-color;
-        color: white;
-      }
-    }
-  }
-
-  &__pink-panthers {
-    background-color: #f39fb1;
-    border: none;
-    color: white;
-
-    &:hover {
-      background: $accent-primary-color;
-      border: none !important;
-      color: white;
-    }
-
-    &.outline {
-      background-color: white;
-      color: $primary-color;
-      border: 2px solid #f39fb1;
-
-      &:hover {
-        background: $accent-primary-color;
-        border: 2px solid $accent-primary-color;
-        color: white;
-      }
-    }
-  }
-
-  &__summer-lovers {
-    background-color: #83d9e5;
-    border: none;
-    color: white;
-
-    &:hover {
-      background: $accent-primary-color;
-      border: none !important;
-      color: white;
-    }
-
-    &.outline {
-      background-color: white;
-      color: $primary-color;
-      border: 2px solid #83d9e5;
-
-      &:hover {
-        background: $accent-primary-color;
-        border: 2px solid $accent-primary-color;
-        color: white;
-      }
-    }
-  }
-
-  &__time-benders {
-    background-color: #8fbd8d;
-    border: none;
-    color: white;
-
-    &:hover {
-      background: $accent-primary-color;
-      border: none !important;
-      color: white;
-    }
-
-    &.outline {
-      background-color: white;
-      color: $primary-color;
-      border: 2px solid #8fbd8d;
-
-      &:hover {
-        background: $accent-primary-color;
-        border: 2px solid $accent-primary-color;
-        color: white;
-      }
-    }
-  }
-
-  &:hover {
-    background: $accent-primary-color;
-    border: 2px solid $accent-primary-color;
-    color: white;
-  }
-
-  &__disabled {
-    background: #e0e0e0;
-    border: 2px solid #bdbdbd;
-    color: #9e9e9e;
-    cursor: not-allowed;
-    opacity: 0.6;
-
-    &:hover {
+    &__disabled {
       background: #e0e0e0;
       border: 2px solid #bdbdbd;
       color: #9e9e9e;
+      cursor: not-allowed;
+      opacity: 0.6;
+
+      &:hover {
+        background: #e0e0e0;
+        border: 2px solid #bdbdbd;
+        color: #9e9e9e;
+      }
     }
   }
 }
