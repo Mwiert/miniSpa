@@ -139,13 +139,13 @@ export default {
   .label {
     margin-top: 15px;
     font-size: 16px;
-    font-weight: 100;
+    font-weight: 70;
     color: #333;
     margin-bottom: 5px;
-    text-align: left; /* Left aligned */
-    align-self: flex-start; /* Align label to the start */
+    text-align: left; //Left aligned 
+    align-self: flex-start; // Align label to the start 
     
-     // adds space below the label 
+     
   }
   .ui-dropdown-button {
     min-width: 200px; // smaller width 
