@@ -152,7 +152,8 @@ export default {
   display: inline-block;
   display: flex;
   flex-direction: column;
-  max-width: fit-content;
+  max-width: max-content;
+  min-width: 150px;
   
   .label {
     margin-top: 15px;
