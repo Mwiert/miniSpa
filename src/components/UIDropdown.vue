@@ -149,7 +149,7 @@ export default {
     .placeholder-text {
       display: flex;
       font-size: 17px;
-      font-weight: bold;
+      // font-weight: bold;
 
       &-active {
         color: grey;
