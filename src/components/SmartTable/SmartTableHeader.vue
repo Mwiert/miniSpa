@@ -20,16 +20,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search-bar {
-  display: flex;
-  float: right;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-}
-
 .smart-table-header-container {
     height: 80px;
     border-bottom: 2px solid #E0E1E7;
+    .search-bar {
+        display: flex;
+        float: right;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+}
 }
 </style>
