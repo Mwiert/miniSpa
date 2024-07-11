@@ -66,4 +66,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.smart-table-c {
+  background-color: white;
+  padding: 24px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px #F5F7FA;
+}
+</style>
