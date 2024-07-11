@@ -2,11 +2,12 @@
   <div class="smart-table-body-c">
     <div class="smart-table-main-grid">
       <div class="grid-header" v-for="(header, index) in Columns" :key="index">
-      {{ header }}
-      <button v-if="this.sortableColumns.includes(header)" @click="sort(header)" class="sort-button">
-        {{ sortedColumns[index] == true ? "▲" : "▼" }}
-      </button>
-    </div>
+        <span>{{ header }}</span>
+        <button v-if="this.sortableColumns.includes(header)" @click="sort(header)" class="sort-button">
+          <SvgIcon v-if="sortedColumns[index]" :name="'arrow-up'" size="s" />
+          <SvgIcon v-else :name="'arrow-down'" size="s" />
+        </button>
+      </div>
     </div>
     
     <div v-if="noItemsFound" class="grid-row no-items-found"> <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
@@ -125,7 +126,6 @@ export default {
   display: block;
   margin-top: 20px;
   margin-bottom: 20px;
-  gap: 10px;
 
   &.fadeIn {
     animation: fadeIn 1s ease-in-out;
@@ -136,12 +136,6 @@ export default {
     grid-template-columns: v-bind('gridTemplateColumns');//computed içerisinde column sayısını dinamik olarak alıp vbind ile css içine geç
     width: 100%;
     gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .smart-table-row-grid {
-    width: 100%;
-    gap: 10px;
   }
 
   .grid-row {
@@ -150,23 +144,24 @@ export default {
     width: 100%;
     gap: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #CCC;
     border-radius: 30px;
 
     &.even-row {
-      background-color: #f9f9f9;
+      background-color: #FFF;
     }
 
     &.odd-row {
-      background-color: #e0e0e0;
+      background-color: #F5F7FA;
     }
   }
 
   .grid-header {
+    display: flex;
+    align-items: center;
     font-weight: bold;
     color: black;
     padding: 15px;
-    border: 1px solid #ccc;
     text-align: center;
     border-radius: 10px;
     border: none;
@@ -232,7 +227,6 @@ export default {
   }
 
   .sort-button {
-    float: right;
     cursor: pointer;
     background: none;
     border: none;
