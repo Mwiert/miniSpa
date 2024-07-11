@@ -200,11 +200,11 @@ export default {
         top: 15px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
-        font-size: 25px;
-        color: #ccc;
+        font-size: 20px;
+        color: #cecaca;
         width: 20px;
         height: 20px;
-        background-color: #f0f0f0;
+        background-color: #000000;
         border-radius: 50%;
         display: flex;
         align-items: center;
