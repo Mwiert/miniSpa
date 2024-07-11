@@ -52,7 +52,7 @@ export default {
       const rowObj = {
         status: {
           text: dummy.status,
-          class: ``
+          class: `status`
         },
         creationDate: {
           text: dummy.creationDate,
@@ -74,11 +74,12 @@ export default {
           class: ''
         },
         promoCode: {
-          text: dummy.promoCode
+          text: dummy.promoCode,
+          class:"promoCode"
         },
         price: {
           text: dummy.price,
-          class: ''
+          class: 'price'
         }
       }
       this.tableOptions.table.rows.push(rowObj)
