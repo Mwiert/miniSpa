@@ -15,8 +15,10 @@
     </div>
     <div class="smart-table-row-grid">
       <div :class="['grid-row', rowClass(rowIndex)]" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
-        <div v-for="(cell, cellIndex) in headers" :key="cellIndex" class="grid-item" :class="{ clickable: options.clickable }" 
-          @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])">
+        <div v-for="(cell, cellIndex) in headers" :key="cellIndex"
+             :class="tableRow[cell]"
+             class="grid-item"
+             @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])">
           {{ tableRow[cell] }}
         </div>
       </div>
@@ -162,6 +164,16 @@ export default {
     }
   }
 
+  .Confirmed {
+    background-color: greenyellow; 
+  }
+  .Pending {
+    background-color: yellow; 
+  }
+  .Cancelled {
+    background-color: red;
+  }
+
   .no-grid-item {
     padding: 15px;
     border: 1px solid #ccc;
@@ -189,3 +201,4 @@ export default {
   }
 }
 </style>
+
