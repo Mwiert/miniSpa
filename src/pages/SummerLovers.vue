@@ -10,6 +10,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :dataSize="dataSize"
     />
     <UIDropdown
       v-model="selectedFood"
@@ -20,6 +21,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :dataSize="dataSize"
     />
     <UIDropdown
       v-model="selectedToy"
@@ -30,6 +32,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :dataSize="dataSize"
     /> 
     <UIDropdown
       v-model="selectedItem"
@@ -40,6 +43,7 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :dataSize="dataSize"
     />
   </div>
 </template>
@@ -58,7 +62,10 @@ export default {
         { id: 1, imageUrl: "", name: 'Dog', detail: 'a' },
         { id: 2, imageUrl: "", name: 'Cat', detail: 'b' },
         { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' }
+        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
+        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
+        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
+        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
       ],
       foods: [
         { id: 1, imageUrl: "", name: 'Dog Food', detail: 'e' },
@@ -86,7 +93,8 @@ export default {
       selectedPet: {},
       selectedFood: {},
       selectedToy: {},
-      selectedItem: {}
+      selectedItem: {},
+      dataSize: 1
     };
   }
 };
