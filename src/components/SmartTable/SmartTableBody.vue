@@ -19,8 +19,7 @@
     <div class="smart-table-row-grid">
     <div :class="['grid-row', rowClass(rowIndex)]" v-for="(tableRow, rowIndex) in tableRowData" :key="rowIndex">
       <div v-for="(cell, cellIndex) in tableRow" :key="cellIndex" :class="[getCellClass(cell, tableRow[cellIndex]), 'grid-item']" 
-      
-      @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])" >
+       >
         <template v-if="typeof cell == 'object'">
           <span :class="cell?.class" @click="cell?.url ? handlerUrl(cell.url):undefined">
             {{ cell?.text == "null" ? "" : cell?.text }}</span>
@@ -94,15 +93,6 @@ export default {
 
       this.lastSortedColumn = header;
       this.lastSortOrder = sortOrder;
-    },
-    handleClick(cell, rowIndex, cellIndex, cellData) {
-      const columnName = this.headers[cellIndex];
-      
-      const clickableColumns = this.options.clickableColumns;
-      if(clickableColumns.includes(columnName)){
-        window.location.href=`https://www.google.com/search?q=${cellData}`;
-        this.$emit('cell-click', { cell, rowIndex, cellIndex })
-      }
     },
     handlerUrl(url) {
       this.window.location(url,"_blank")
