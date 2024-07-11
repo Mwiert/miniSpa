@@ -5,7 +5,7 @@
 
     <SmartTableBody
       :sortableColumns="sortableColumns" :tableData="filteredData"
-      :options="options.body"
+      :options="options"
       @cell-click="handleCellClick"
       :noItemsFound="filteredData.length === 0" />   <!--noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz-->
 
@@ -53,7 +53,7 @@ export default {
             ) => value && value.toString().toLowerCase().includes(this.searchTerm.toLowerCase()) //include kullanmak için ve yazılan sonuçlar doğru gelsin diye ek bir filtreleme yapıyoruz search ve data karşılaştırması yapıp sonucu getiriyoruz
           )
       )
-    }
+    },
   },
   methods: {
     handleSearchInput(value: string) {
@@ -66,4 +66,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.smart-table-c {
+  background-color: white;
+  padding: 24px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px #F5F7FA;
+}
+</style>

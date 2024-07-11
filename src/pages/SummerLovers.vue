@@ -44,7 +44,7 @@ export default {
     ],
     label: "Please select an airline:",
     fontSize:12,
-    // dataSize:5
+    dataSize:5
 }
 }
 

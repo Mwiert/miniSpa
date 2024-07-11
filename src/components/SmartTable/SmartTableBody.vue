@@ -1,30 +1,34 @@
 <template>
   <div class="smart-table-body-c">
     <div class="smart-table-main-grid">
-      <div class="grid-header" v-for="(header, index) in headers" :key="index">
-        {{ header }}
+      <div class="grid-header" v-for="(header, index) in Columns" :key="index">
+        <span>{{ header }}</span>
         <button v-if="this.sortableColumns.includes(header)" @click="sort(header)" class="sort-button">
-          {{ sortedColumns[index] == true ? "▲" : "▼" }}
+          <SvgIcon v-if="sortedColumns[index]" :name="'arrow-up'" size="s" />
+          <SvgIcon v-else :name="'arrow-down'" size="s" />
         </button>
       </div>
     </div>
-    <div v-if="noItemsFound" class="grid-row no-items-found"><!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
+    
+    <div v-if="noItemsFound" class="grid-row no-items-found"> <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
       <div :colspan="headers.length" class="no-grid-item">
         No Item Found
       </div>
     </div>
-    <div class="smart-table-row-grid">
-      <div :class="['grid-row', rowClass(rowIndex)]" v-for="(tableRow, rowIndex) in tableData" :key="rowIndex">
-        <div v-for="(cell, cellIndex) in headers" :key="cellIndex"
-             :class="tableRow[cell]"
-             class="grid-item"
-             @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])">
-          {{ tableRow[cell] }}
-        </div>
+    <div class="grid-row" v-for="(tableRow, rowIndex) in Rows" :key="rowIndex">
+      <div v-for="(cell, cellIndex) in tableRow" :key="cellIndex" class="grid-item" :class="{clickable : options.clickable}" 
+      
+      @click="handleClick(cell, rowIndex, cellIndex, tableRow[cell])" >
+        <template v-if="typeof cell == 'object'">
+          <span :class="cell?.class" @click="cell?.url ? handlerUrl(cell.url):undefined">
+            {{ cell?.text == "null" ? "" : cell?.text }}</span>
+        </template>
+        <template v-else>{{ cell }}</template>
       </div>
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 export default {
@@ -37,7 +41,7 @@ export default {
       type: Boolean,
       required: true
     }
-  },  
+  },
   data() {
     return {
       sortedTableData: [] as Array<Record<string, any>>,
@@ -50,7 +54,20 @@ export default {
       return this.tableData.length ? Object.keys(this.tableData[0]) : []
     },
     gridTemplateColumns() {
-      return `repeat(${this.headers.length}, 1fr)`
+      return `repeat(${this.Columns.length}, 1fr)`
+    },
+    Columns(){
+      const labels = [];
+      
+      this.options.table.columns.forEach(element => {
+        if( element.status ){
+          labels.push(element.label)
+        }
+      });
+      return labels
+    },
+    Rows() {
+      return this.options.table.rows;
     }
   },
   created() {
@@ -76,29 +93,39 @@ export default {
         })
       }
     },
-    handleClick(cell: string, rowIndex: number, cellIndex: number, cellData: any) {
+    handleClick(cell, rowIndex, cellIndex, cellData) {
       const columnName = this.headers[cellIndex];
       console.log(columnName)
       const clickableColumns = this.options.clickableColumns;
-      if (clickableColumns.includes(columnName)) {
+      if(clickableColumns.includes(columnName)){
         //gerekli yönlendirme işlemleri burada yapılabilir.
-        window.location.href = `https://www.google.com/search?q=${cellData}`;
+        window.location.href=`https://www.google.com/search?q=${cellData}`;
         this.$emit('cell-click', { cell, rowIndex, cellIndex })
       }
+      
     },
-    rowClass(rowIndex: number) {
-      return rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
+    //check
+    handlerUrl(url) {
+      this.window.location(url,"_blank")
+    },
+    getCellClass(cellData: any, columnName: string) {
+      if (typeof cellData === 'string' || typeof cellData === 'number') {
+        return `${columnName}-${cellData}`;
+      }
+      return 'default-class'; // Fallback class name
     }
-  },
+    
+  }
+ 
 }
 </script>
+
 
 <style lang="scss" scoped>
 .smart-table-body-c {
   display: block;
   margin-top: 20px;
   margin-bottom: 20px;
-  gap: 10px;
 
   &.fadeIn {
     animation: fadeIn 1s ease-in-out;
@@ -109,12 +136,6 @@ export default {
     grid-template-columns: v-bind('gridTemplateColumns');//computed içerisinde column sayısını dinamik olarak alıp vbind ile css içine geç
     width: 100%;
     gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .smart-table-row-grid {
-    width: 100%;
-    gap: 10px;
   }
 
   .grid-row {
@@ -123,55 +144,76 @@ export default {
     width: 100%;
     gap: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #CCC;
     border-radius: 30px;
 
     &.even-row {
-      background-color: #f9f9f9;
+      background-color: #FFF;
     }
 
     &.odd-row {
-      background-color: #e0e0e0;
+      background-color: #F5F7FA;
     }
   }
 
   .grid-header {
+    display: flex;
+    align-items: center;
     font-weight: bold;
     color: black;
     padding: 15px;
-    border: 1px solid #ccc;
     text-align: center;
     border-radius: 10px;
     border: none;
     transition: transform 0.2s, background-color 0.3s;
-
-    &:hover {
-      background-color: #ffffff;
-    }
   }
 
   .grid-item {
     padding: 15px;
     border: 1px solid #ccc;
     text-align: center;
-    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border-radius: 30px;
     border: none;
     transition: transform 0.2s, background-color 0.3s;
-
-    &:hover {
-      background-color: #ff4949;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+  }
+  .status-Confirmed,
+  .status-Pending,
+  .status-Cancelled {
+    padding: 5px 10px;
+    border-radius: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 40px; 
+    margin: 10px auto; 
   }
 
-  .Confirmed {
-    background-color: greenyellow; 
+
+  .status-Confirmed {
+    background-color: #CCFFDD; 
+    color:#1F9947
   }
-  .Pending {
-    background-color: yellow; 
+  .status-Pending {
+    background-color: #FFE6CC; 
+    color:#E87807
   }
-  .Cancelled {
-    background-color: red;
+  .status-Cancelled {
+    background-color: #ff6b6b;
+    color:#7e2323
+  }
+
+
+  [class*="price-"] {
+    font-weight: bold;
+  }
+
+  [class*="promoCode-"] {
+    font-weight: bold;
   }
 
   .no-grid-item {
@@ -179,13 +221,12 @@ export default {
     border: 1px solid #ccc;
     text-align: center;
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: 30px;
     transition: transform 0.2s, background-color 0.3s;
-    background-color: #ff0000;
+    background-color: #ff00009d;
   }
 
   .sort-button {
-    float: right;
     cursor: pointer;
     background: none;
     border: none;
