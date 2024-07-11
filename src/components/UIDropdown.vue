@@ -14,6 +14,7 @@
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container" >
+        
           <img v-if="searchQuery" @click="clearSearch" class="clear-search" :src="photo">
           
         <input
@@ -52,19 +53,19 @@ export default {
     }
   },
   props: {
-    // dataSize: {       
-    //   type: Number,  // how many data will shown in the dropdown.
-    // },
+     dataSize: {       
+       type: Number,  // how many data will shown in the dropdown.
+       default:5
+     },
     showedItem:{
       type: Object
     },
-    fontSize: {           // defined fontsize shown in the dropdown.
+    fontSize: {     // defined fontsize shown in the dropdown.
       type: Number,
       default: 10
     },
     label: {
-      // label on the dropdown to understand what the dropdown contents are.
-      type: String,
+      type: String, // label on the dropdown to understand what the dropdown contents are.
       default: ''
     },
     initialSelectedItem: {
@@ -227,6 +228,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: auto;
       }
     }
 
