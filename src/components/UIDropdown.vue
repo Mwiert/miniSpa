@@ -9,10 +9,17 @@
       <span :class="{ 'placeholder-text-active': !selectedItem[displayField] }" class="placeholder-text">
         {{ selectedItem[displayField] || placeHolder }}
       </span>
-      <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
+
+      <SvgIcon class="arrow" :class="{ 'up': isOpen  }" :name="'arrow-down'"  :size="'s'"  />  
+      
     </button>
     <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
       <div class="search-container">
+
+          <span class="clear-search" > 
+          <SvgIcon v-if="searchQuery" @click="clearSearch" class="clear-search-img" :name="'x'"/>  
+          </span>
+               
         <input
           v-if="searchable"
           type="text"
@@ -20,11 +27,11 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        <img v-if="searchQuery" @click="clearSearch" class="clear-search-img" :src="photo"  alt="Clear search">
-      </div>
-      <div class="dropdown-content">
-        <div v-for="item in filteredItems" :key="item[idField]" class="ui-dropdown-item" @click="selectItem(item)">
-          <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" />
+
+        </div>
+      <div class="ui-dropdown-content"  :style="{fontSize: fontSize + 'px' , maxHeight: dropdownListMaxHeight}"  >
+        <div v-for="item in filteredItems" :key="item[idField]" class="ui-dropdown-item" @click="selectItem(item)" :class="{ 'selected': selectedItem == item }" >
+          <!-- <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" /> -->
           <span>{{ item[displayField] }}</span>
         </div>
       </div>
@@ -33,11 +40,14 @@
 </template>
 
 <script lang="ts">
+import SvgIcon from './SvgIcon.vue';
 
-import pp from '../assets/icons/x.svg'
 
 export default {
   name: 'UIDropdown',
+  components:{
+    SvgIcon
+  },
   props: {
     items: {
       type: Array,
@@ -74,20 +84,33 @@ export default {
     urlField: {
       type: String,
       default: 'url'
+    },
+    dataSize:{
+      type: Number,
+      required: true
     }
+
   },
   data() {
     return {
       isOpen: false,
       searchQuery: '',
       selectedItem: this.value,
-      photo:pp
     };
   },
   computed: {
     filteredItems() {
       return this.items.filter(item => item[this.displayField].toLowerCase().includes(this.searchQuery.toLowerCase()));
-    }
+    },
+    computedDataSize(): number {
+      return this.dataSize !== null ? this.dataSize : this.items.length
+    },
+    dropdownListMaxHeight() {
+      const itemHeight = 30
+      const searchBoxHeight = this.searchable ? 30 : 0
+      const maxHeight = itemHeight * this.computedDataSize + searchBoxHeight
+      return `${maxHeight}px`
+    },
   },
   methods: {
     toggleDropdown() {
@@ -131,26 +154,27 @@ export default {
   flex-direction: column;
   max-width: fit-content;
   
-.label{
-    font-size: large;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif; 
-  font-size: 16px;                
-  font-weight: bold;             
-  color: #333;                   
+  .label {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 70;
+    color: #333;
+    margin-bottom: 5px;
+    text-align: left; //Left aligned 
+    align-self: flex-start; // Align label to the start 
+    
+     
   }
   .ui-dropdown-button {
-    min-width: 230px;
-    padding: 15px;
+    padding: 10px; // smaller padding 
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 10px;
+    border-radius: 10px; // smaller border-radius 
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 5px;
+    display: flex;
 
     &-active {
       border: 2px solid #60acfe;
@@ -159,7 +183,7 @@ export default {
 
     .placeholder-text {
       display: flex;
-      font-size: 17px;
+      font-size: 15px;
       // font-weight: bold;
 
       &-active {
@@ -169,17 +193,10 @@ export default {
     }
 
     .arrow {
-      top: 59%;
-      position: absolute;
-      right: 15px;
       padding: 5px;
-      border: solid black;
-      border-width: 0 2px 2px 0;
-      display: inline-block;
-      transform: rotate(45deg);
 
-      &-up {
-        transform: rotate(-135deg);
+      &.up{
+        transform: rotate(180deg);
       }
     }
   }
@@ -193,7 +210,7 @@ export default {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 12px;
-    max-height: 300px;
+    max-height: 200px;
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1000;
@@ -203,6 +220,10 @@ export default {
     .search-container {
       position: relative;
       display: flex;
+      position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 10;
 
       .ui-dropdown-search {
         width: 90%;
@@ -216,7 +237,7 @@ export default {
 
       .clear-search-img {
         position: absolute;
-        right: 20px;
+        right: 24px;
         top: 24px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
@@ -248,22 +269,20 @@ export default {
       transition: background-color 0.3s;
 
       &:hover {
-        font-weight: bold;
         background-color: #f3f3f3;
       }
+      &.selected{
+        font-weight: bold;
+      }
     }
+  }
 
   .ui-dropdown-search {
    width: 90%;
-   padding: 10px;
-   box-sizing: border-box;
-   margin: 7px;
-   border-radius: 10px;
-   border: 2px solid #ccc;
-    outline: none;
+   border: 1px solid #ccc;
   }
   .ui-dropdown-c-label{
-    margin-bottom: 10px; /* Adds space below the label */
+    margin-bottom: 10px; //Adds space below the label 
   }
   .label{
     display: flex;

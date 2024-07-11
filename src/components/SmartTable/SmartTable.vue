@@ -4,9 +4,8 @@
     <!-- Header kısmı filters ve searchbar'ı içerir v-on ile emit ettiğimiz değerleri alıyoruz-->
 
     <SmartTableBody
-      :sortableColumns="sortableColumns" :tableData="filteredData"
+      :tableData="filteredData"
       :options="options"
-      @cell-click="handleCellClick"
       :noItemsFound="filteredData.length === 0" />   <!--noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz-->
 
     <SmartTableFooter />
@@ -33,9 +32,6 @@ export default {
     return {
       dummies: dummies,
       searchTerm: '',
-
-           // Columns that will have sorting feature
-           sortableColumns: ['orderId', 'orderUuid'] 
     }
   },
   computed: {
@@ -59,13 +55,7 @@ export default {
   methods: {
     handleSearchInput(value: string) {
       this.searchTerm = value
-    },
-    handleCellClick(payload) {
-      this.$emit('cell-click', payload)
-    },
-    wFilterData(){
-      
-    }
+    },    
   }
 }
 </script>
