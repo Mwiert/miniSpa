@@ -25,16 +25,16 @@ export default {
         },
         table: {
           columns: [
-            { label: 'Status', status: true },
-            { label: 'Creation Date', status: true },
-            { label: 'Order Id', status: true },
-            { label: 'Market', status: true },
-            { label: 'Provider Name/Surname', status: true },
-            { label: 'Check In', status: true },
-            { label: 'Check Out', status: true },
-            { label: 'Room Type', status: true },
-            { label: 'Promo Code', status: true },
-            { label: 'Price', status: true }
+            { name: 'Status',label: 'status', status: true, sortable: true},
+            { name: 'Creation Date',label: 'creationDate', status: true },
+            { name: 'Order Id',label: 'orderId', status: true, sortable: true },
+            { name: 'Market',label: 'market', status: true },
+            { name: 'Provider Name/Surname', label: 'providerNameSurname',status: true },
+            { name: 'Check In', label: 'checkIn',status: true },
+            { name: 'Check Out',label: 'checkOut', status: true },
+            { name: 'Room Type', label: 'roomType',status: true },
+            { name: 'Promo Code', label: 'promoCode',status: true },
+            { name: 'Price', label: 'price',status: true }
           ],
           rows: []
         }
@@ -52,7 +52,7 @@ export default {
       const rowObj = {
         status: {
           text: dummy.status,
-          class: ``
+          class: `status`
         },
         creationDate: {
           text: dummy.creationDate,
@@ -74,11 +74,12 @@ export default {
           class: ''
         },
         promoCode: {
-          text: dummy.promoCode
+          text: dummy.promoCode,
+          class:"promoCode"
         },
         price: {
           text: dummy.price,
-          class: ''
+          class: 'price'
         }
       }
       this.tableOptions.table.rows.push(rowObj)

@@ -1,8 +1,11 @@
 <template>
     <form class="search-bar-c">
-        <div>
-            <input type="text" v-model="searchInput" @input="handleSearch" placeholder="Search">  
-            <button type="button" class="clear-button" @click="clearSearch" v-if="searchInput">✕</button>  <!-- V-if ile arama yerimiz boşken clear butonumuzu gizliyoruz eğer herhangi bir yazı yazılırsa boş olmadığı için false döner ve butonumuz gözükür.-->
+        <div class="input-wrapper">
+            <SvgIcon :name="'search'" size="s" />
+            <input type="text" v-model="searchInput" @input="handleSearch" placeholder="Search a reservation...">  
+            <button type="button" class="clear-button" @click="clearSearch" v-if="searchInput">
+                <SvgIcon :name="'x'" size="s" />
+            </button>
         </div>
     </form>
 </template>
@@ -30,38 +33,51 @@ export default {
 
 <style lang="scss">
 .search-bar-c {
-    margin: 5px;
     display: flex;
     align-items: center;
 
+    .input-wrapper {
+        height: 40px;
+    width: 280px;
+    background-color: #F7F8FA;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 2px solid #DFE0E6;
+    border-radius: 4px;
+    background-color: white;
+    border: none;
+    }
+
     input[type="text"] {
-        padding: 5px;
+        padding: 5px 15px 5px 20px; 
         font-size: 16px;
         border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-left: 10px;
+        border-radius: 30px;
     }
 
     input[type="text"]:focus {
         outline: none;
         border-color: #007bff;
     }
-}
 
-.clear-button {
-    position: relative;
-    right: 25px; 
-    padding: 5px; 
-    background: none;
-    border: none;
-    font-size: 15px;
-    cursor: pointer;
-    color: #007bff;
-    align-self: center;
-  
-    &:hover {
-        color: #ff0000;
+    .clear-button {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        font-size: 15px;
+        cursor: pointer;
+        color: #007bff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+      
+
     }
+    
 }
 </style>
-
