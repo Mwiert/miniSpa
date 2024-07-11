@@ -28,7 +28,7 @@
       <div class="dropdown-content">
       <div v-for="(item,index) in items" :key="index" @click="selectItem(item.name)">
         <div class="img-flag" ><img src="https://cdn.dev.reisetech.io/airline_34x34/TK.svg"> </div>
-        <div>{{ item["name"] }}</div> v-model
+        <div>{{ item["name"] }}</div>
       </div>
       </div> 
 
