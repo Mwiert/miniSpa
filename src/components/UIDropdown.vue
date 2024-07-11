@@ -1,24 +1,23 @@
 <template>
   <div class="ui-dropdown-c">
-  <label class="label">{{ label }}</label>
-      <button
-        @click="toggleDropdown"
-        :class="{ 'ui-dropdown-button-active': isOpen }"
-        class="ui-dropdown-button"
-      >
-    <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text"   >
-        {{ selectedItem || placeHolder }}
+    <label class="label">{{ label }}</label>
+    <button
+      @click="toggleDropdown"
+      :class="{ 'ui-dropdown-button-active': isOpen }"
+      class="ui-dropdown-button"
+    >
+      <span :class="{ 'placeholder-text-active': !selectedItem[displayField] }" class="placeholder-text">
+        {{ selectedItem[displayField] || placeHolder }}
       </span>
-        <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>  
+      <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>
+    </button>
+    <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
+      <div class="search-container">
 
-      </button>
-      <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
-        <div class="search-container" >
           <span class="clear-search" > 
           <img v-if="searchQuery" @click="clearSearch" class="clear-search-img" :src="photo">
-          
           </span>
-                
+               
         <input
           v-if="searchable"
           type="text"
@@ -26,102 +25,93 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-
-        <div class="dropdown-content">
-      <div v-for="(item,index) in items" :key="index" @click="selectItem" >
-        <div>{{ item.name }}</div>
+        
       </div>
-      </div>
-
-      </div>
-        <div
-          v-for="item in filteredItems"
-          :key="item"
-          @click="selectItem(item)"
-          class="ui-dropdown-item"
-        >
-          {{ item }}
+      <div class="dropdown-content" :style="{ fontSize: fontSize + 'px' }"  >
+        <div v-for="item in filteredItems" :key="item[idField]" class="ui-dropdown-item" @click="selectItem(item)">
+          <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" />
+          <span>{{ item[displayField] }}</span>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-
 import pp from '../assets/icons/x.svg'
+
 export default {
   name: 'UIDropdown',
-
-  data() {
-    return {
-      selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
-      isOpen: false,      // checks if our dropdown open or not.
-      searchQuery: '',    // when we search for an item this will fill up.
-      photo:pp          
-    }
-  },
   props: {
-     dataSize: {       
-       type: Number,  // how many data will shown in the dropdown.
-       default:5
-     },
-    showedItem:{
-      type: Object
-    },
-    fontSize: {     // defined fontsize shown in the dropdown.
-      type: Number,
-      default: 10
+    items: {
+      type: Array,
+      required: true
     },
     label: {
-      type: String, // label on the dropdown to understand what the dropdown contents are.
-      default: ''
-    },
-    initialSelectedItem: {
       type: String,
-      default: null
+      required: true
+    },
+    fontSize: {
+      type: Number,
+      default: 14
     },
     placeHolder: {
       type: String,
-      default: 'Select an option'
+      default: 'Select an item'
     },
     searchable: {
       type: Boolean,
-      default: true
+      default: false
     },
-    items: {                           // items in the database.
-        type: Object
-
-      },
+    value: {
+      type: Object,
+      default: () => ({})
+    },
+    idField: {
+      type: String,
+      default: 'id'
+    },
+    displayField: {
+      type: String,
+      default: 'name'
+    },
+    urlField: {
+      type: String,
+      default: 'url'
+    },
 
   },
+  data() {
+    return {
+      isOpen: false,
+      searchQuery: '',
+      selectedItem: this.value,
+      photo:pp
+    };
+  },
   computed: {
-    filteredItems(): string[] {
-      return this.items.filter((item: string) =>
-        item.toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
-    },
-    limitedItems(): string[] {
-      return this.filteredItems.slice(0, this.dataSize)
+    filteredItems() {
+      return this.items.filter(item => item[this.displayField].toLowerCase().includes(this.searchQuery.toLowerCase()));
     }
   },
   methods: {
     toggleDropdown() {
-      this.isOpen = !this.isOpen
+      this.isOpen = !this.isOpen;
     },
-    selectItem(item: string) {
-      this.selectedItem = item
-      this.isOpen = false
-      this.$emit('update:selectedItem', item)
+    clearSearch(event: Event) {
+      this.searchQuery = '';
+      event.stopPropagation() // Prevent dropdown from closing
+    },
+    selectItem(item) {
+      this.selectedItem = item;
+      this.$emit('input', item);
+      this.isOpen = false;
     },
     handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
-    },
-    clearSearch(event: Event) {
-      this.searchQuery = ''
-      event.stopPropagation() // Prevent dropdown from closing
     }
   },
   mounted() {
@@ -129,8 +119,13 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside)
+  },
+  watch: {
+    value(newVal) {
+      this.selectedItem = newVal;
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -211,6 +206,7 @@ export default {
 
     .search-container {
       position: relative;
+      display: flex;
 
       .ui-dropdown-search {
         width: 90%;
@@ -224,7 +220,7 @@ export default {
 
       .clear-search {
         position: absolute;
-        right: 15px;
+        right: 24px;
         top: 24px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
