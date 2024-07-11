@@ -1,40 +1,40 @@
 <template>
+  
   <div class="ui-dropdown-c">
+
   <label class="label">{{ label }}</label>
+
       <button
         @click="toggleDropdown"
         :class="{ 'ui-dropdown-button-active': isOpen }"
-        class="ui-dropdown-button"
-      >
-      
-    <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text"   >
-        {{ selectedItem || placeHolder }}
-      </span>
+        class="ui-dropdown-button">
+        <span :class="{ 'placeholder-text-active': !selectedItem }" class= "placeholder-text"  >
+           {{ selectedItem || placeHolder }}
+        </span>
         <span class="arrow" :class="{ 'arrow-up': isOpen }"></span>  
-
       </button>
+
       <div v-if="isOpen" class="ui-dropdown-menu"  :style="{ fontSize: fontSize + 'px' }">
-        <div class="search-container" >
-        <input
+          <span class="ui-search" > 
+            <input
           v-if="searchable"
           type="text"
           v-model="searchQuery"
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-      </div>
-      
-      <div class="dropdown-content">
-      <div v-for="(item,index) in items" :key="index" @click="selectItem(item.name)">
-        <div class="img-flag" ><img src="https://cdn.dev.reisetech.io/airline_34x34/TK.svg"> </div>
-        <div>{{ item["name"] }}</div>
-      </div>
-      </div> 
+          <img v-if="searchQuery" @click="clearSearch" class="clear-search-img" :src="photo">
+          </span>
 
+        <div class="dropdown-content">
+      <div v-for="(item,index) in items" :key="index" @click="selectItem" >
+        <div>{{ item.name }}</div>
+      </div>
+      </div>
         <div
           v-for="item in filteredItems"
           :key="item"
-          @click="selectItem(item.name)"
+          @click="selectItem(item)"
           class="ui-dropdown-item"
         >
           {{ item }}
@@ -46,6 +46,8 @@
 
 <script lang="ts">
 
+import x from '../assets/icons/x.svg'
+
 export default {
   name: 'DropdownComponent',
   
@@ -53,7 +55,8 @@ export default {
     return {
       selectedItem: this.initialSelectedItem as string | null,  // represents the currently selected item.
       isOpen: false,      // checks if our dropdown open or not.
-      searchQuery: ''     // when we search for an item this will fill up.
+      searchQuery: '',     // when we search for an item this will fill up.
+      photo: x
     }
   },
   props: {
@@ -195,12 +198,7 @@ export default {
     overflow-y: auto;
     z-index: 1000;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-    .search-container {
-      position: relative;
-      justify-content: space-between;
-
-      .ui-dropdown-search {
+    .ui-search {
         width: 90%;
         padding: 10px;
         box-sizing: border-box;
@@ -208,10 +206,13 @@ export default {
         border-radius: 20px;
         border: 2px solid #ccc;
         outline: none;
-        .clear-search {
+        
+        .ui-dropdown-search {
         position: absolute;
         right: 18px;
         top: 15px;
+        right: 15px;
+        top: 24px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
         font-size: 20px;
@@ -220,11 +221,10 @@ export default {
         height: 20px;
         background-color: #000000;
         border-radius: 50%;
-
-    
-       }
       }
-    }
+
+       }
+
 
     .ui-dropdown-item {
       padding: 10px;
@@ -235,16 +235,6 @@ export default {
         background-color: #f3f3f3;
       }
     }
-  }
-
-  .ui-dropdown-search {
-   width: 90%;
-   padding: 10px;
-   box-sizing: border-box;
-   margin: 7px;
-   border-radius: 10px;
-   border: 2px solid #ccc;
-    outline: none;
   }
   .ui-dropdown-c-label{
     margin-bottom: 10px; /* Adds space below the label */
