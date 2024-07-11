@@ -196,23 +196,21 @@ export default {
 
       .clear-search {
         position: absolute;
-        right: 12px;
-        top: 13px;
+        right: 18px;
+        top: 15px;
         transform: translateY(-50%, -50%);
         cursor: pointer;
-        font-size: 25px;
-        color: #ccc;
-        width: 25px;
-        height: 25px;
-        background-color: #f0f0f0;
+        font-size: 20px;
+        color: #cecaca;
+        width: 20px;
+        height: 20px;
+        background-color: #000000;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
 
-        &:hover {
-          color: #000;
-        }
+    
       }
     }
 
