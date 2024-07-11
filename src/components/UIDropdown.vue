@@ -25,24 +25,11 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
-        
-        <!-- <div class="dropdown-list" :style="{ maxHeight: dropdownListMaxHeight }">
-        <div
-          v-for="item in filteredItems"
-          :key="item"
-          @click="selectItem(item)"
-          class="ui-dropdown-item"
-          :style="{ fontSize: fontSize }"
-        >
-          {{ item }}
-        </div>
-        </div>
-         -->
 
         </div>
       <div class="ui-dropdown-content" :style="{fontSize: fontSize + 'px' , maxHeight: dropdownListMaxHeight}"  >
         <div v-for="item in filteredItems" :key="item[idField]" class="ui-dropdown-item" @click="selectItem(item)">
-          <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" />
+          <!-- <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" /> -->
           <span>{{ item[displayField] }}</span>
         </div>
       </div>
@@ -94,9 +81,7 @@ export default {
     },
     dataSize:{
       type: Number,
-      default(){
-        return this.items.length
-      }
+      required: true
     }
 
   },
@@ -112,13 +97,15 @@ export default {
     filteredItems() {
       return this.items.filter(item => item[this.displayField].toLowerCase().includes(this.searchQuery.toLowerCase()));
     },
+    computedDataSize(): number {
+      return this.dataSize !== null ? this.dataSize : this.items.length
+    },
     dropdownListMaxHeight() {
-      const itemHeight = 30;
-      const searchBoxHeight = this.searchable ? 10 : 0;
-      const maxHeight = itemHeight * this.dataSize + searchBoxHeight;
-      return `${maxHeight}`
+      const itemHeight = 30
+      const searchBoxHeight = this.searchable ? 30 : 0
+      const maxHeight = itemHeight * this.computedDataSize + searchBoxHeight
+      return `${maxHeight}px`
     }
-    
   },
   methods: {
     toggleDropdown() {
@@ -190,7 +177,7 @@ export default {
 
     .placeholder-text {
       display: flex;
-      font-size: 17px;
+      font-size: 15px;
       // font-weight: bold;
 
       &-active {
@@ -233,6 +220,10 @@ export default {
     .search-container {
       position: relative;
       display: flex;
+      position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 10;
 
       .ui-dropdown-search {
         width: 90%;

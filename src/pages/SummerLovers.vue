@@ -61,7 +61,10 @@ export default {
         { id: 1, imageUrl: "", name: 'Dog', detail: 'a' },
         { id: 2, imageUrl: "", name: 'Cat', detail: 'b' },
         { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' }
+        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
+        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
+        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
+        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
       ],
       foods: [
         { id: 1, imageUrl: "", name: 'Dog Food', detail: 'e' },
