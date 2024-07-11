@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 <template>
   <div>
     <UIDropdown
@@ -95,4 +94,4 @@ export default {
 
 
 <style lang="scss" scoped></style>
->>>>>>> 02d41af6f1b18ba1656c03bd3e43d9ca073dc8b8
+
