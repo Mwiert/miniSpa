@@ -294,4 +294,16 @@ export default {
   justify-content: center;
   flex-direction: row;
 }
+
+.hotel-checkbox {
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.flight-checkbox {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
 </style>
