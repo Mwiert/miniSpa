@@ -2,15 +2,23 @@
   <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active the icon and the text will be shown-->
   <div class="ui-button-c">
-    <button class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" :disabled="isDisabled"
-      v-if="!btnIsRouter">
+    <button
+      class="reisetech-btn"
+      :class="[`reisetech-btn__${btnClassName}`, size]"
+      :disabled="isDisabled"
+      v-if="!btnIsRouter"
+    >
       <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
       <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
       <span v-else>{{ btnText }}</span>
     </button>
-    <router-link :to="routerUrl" class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]"
-      replace="button" v-else>
+    <router-link
+      :to="routerUrl"
+      class="reisetech-btn"
+      :class="[`reisetech-btn__${btnClassName}`, size]"
+      v-else
+    >
       <!-- Icon's name should be the name of the .svg file-->
       <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
@@ -30,18 +38,39 @@ export default {
       default: 'default'
     },
     // Text is the label of button
-    text: String,
+    text: {
+      type: String,
+      default: 'Powerpuff Girls'
+    },
     // isRouter is checking the button is routing or not
-    isRouter: Boolean,
+    isRouter: {
+      type: Boolean,
+      default: false
+    },
     // routeUrl is the routing Url
-    routerUrl: { type: String, Object },
+    routerUrl: {
+      type: [String, Object],
+      default: ''
+    },
     // icon is the icons on the button if button has one
-    icon: String,
-    iconSize: String,
+    icon: {
+      type: String,
+      default: ''
+    },
+    iconSize: {
+      type: String,
+      default: '16px'
+    },
     // isSpinner is checking loading animation for button exist or not
-    isSpinnerActive: Boolean,
+    isSpinnerActive: {
+      type: Boolean,
+      default: false
+    },
     // isDisabled is checking button is active or disabled
-    isDisabled: Boolean,
+    isDisabled: {
+      type: Boolean,
+      default: false
+    },
     size: {
       type: String,
       default: 'large'
@@ -65,18 +94,18 @@ export default {
 $small: 12px;
 $medium: 24px;
 $large: 48px;
-$flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) brightness(99%) contrast(94%);
-
+$flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) brightness(99%)
+  contrast(94%);
 
 // router-link takes tag 'a' and its default css should be overwritten
 
 .ui-button-c {
   max-width: 400px;
   width: fit-content;
-  min-width: 100px;
+  min-width: 150px;
 
   a.reisetech-btn {
-    padding: 0px 10px !important;
+    padding: 0px 10px !important; // Padding for router-link buttons
   }
 
   .reisetech-btn {
@@ -94,8 +123,9 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
     text-align: center;
     border: 2px solid black;
     position: relative;
-    text-decoration: none;
+    text-decoration: none; // Removes underline from text
 
+    // Styles for different button sizes
     &.small {
       height: $small;
     }
@@ -119,7 +149,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         color: white;
 
         .icon {
-          filter: brightness(100) invert(1)
+          filter: brightness(100) invert(1); // Icon color filter on hover
         }
       }
     }
@@ -130,7 +160,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
       color: white;
 
       .icon {
-        filter: brightness(100) invert(1)
+        filter: brightness(100) invert(1);
       }
 
       &:hover {
@@ -145,7 +175,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         border: 2px solid $primary-color;
 
         .icon {
-          filter: brightness(100)
+          filter: brightness(100);
         }
 
         &:hover {
@@ -154,7 +184,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
           color: white;
 
           .icon {
-            filter: brightness(100) invert(1)
+            filter: brightness(100) invert(1);
           }
         }
       }
@@ -166,7 +196,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
       color: white;
 
       .icon {
-        filter: brightness(100) invert(1)
+        filter: brightness(100) invert(1);
       }
 
       &:hover {
@@ -181,7 +211,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         border: 2px solid $secondary-color;
 
         .icon {
-          filter: brightness(100)
+          filter: brightness(100);
         }
 
         &:hover {
@@ -190,7 +220,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
           color: white;
 
           .icon {
-            filter: brightness(100) invert(1)
+            filter: brightness(100) invert(1);
           }
         }
       }
@@ -320,10 +350,11 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
   border-top: 4px solid rgb(219, 219, 219);
   width: 24px;
   height: 24px;
-  animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite; // Spinner animation
   position: absolute;
 }
 
+// Keyframes for spinner animation
 @keyframes spin {
   0% {
     transform: rotate(0deg);

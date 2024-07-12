@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SmartTable :options="tableOptions" @cell-click="handleCellClick" />
+    <SmartTable :options="tableOptions" />
   </div>
 </template>
 
@@ -18,23 +18,21 @@ export default {
         options: {
           header: {},
           body: {
-            clickable: true,
-            clickableColumns: ['orderId', 'providerName']
           },
           footer: {}
         },
         table: {
           columns: [
-            { name: 'Status',label: 'status', status: true, sortable: true},
-            { name: 'Creation Date',label: 'creationDate', status: true },
-            { name: 'Order Id',label: 'orderId', status: true, sortable: true },
-            { name: 'Market',label: 'market', status: true },
-            { name: 'Provider Name/Surname', label: 'providerNameSurname',status: true },
-            { name: 'Check In', label: 'checkIn',status: true },
-            { name: 'Check Out',label: 'checkOut', status: true },
-            { name: 'Room Type', label: 'roomType',status: true },
-            { name: 'Promo Code', label: 'promoCode',status: true },
-            { name: 'Price', label: 'price',status: true }
+            { name: 'Status',label: 'status',  sortable: true},
+            { name: 'Creation Date',label: 'creationDate', },
+            { name: 'Order Id',label: 'orderId', sortable: true },
+            { name: 'Market',label: 'market' },
+            { name: 'Provider Name/Surname', label: 'providerNameSurname'},
+            { name: 'Check In', label: 'checkIn', sortable: true },
+            { name: 'Check Out',label: 'checkOut', sortable: true },
+            { name: 'Room Type', label: 'roomType' },
+            { name: 'Promo Code', label: 'promoCode' },
+            { name: 'Price', label: 'price', sortable: true }
           ],
           rows: []
         }
@@ -43,9 +41,7 @@ export default {
     }
   },
   methods: {
-    handleCellClick({ cell, rowIndex, cellIndex }) {
-      console.log('Cell clicked:', cell, 'row:', rowIndex, 'cell:', cellIndex)
-    }
+    
   },
   mounted() {
     this.dummies.map((dummy: any) => {
@@ -61,7 +57,7 @@ export default {
         orderId: {
           text: dummy.orderId,
           class: '',
-          url: ''
+          url: `https://google.com/search?q=${dummy.orderId}`
         },
         market: {
           text: dummy.market
