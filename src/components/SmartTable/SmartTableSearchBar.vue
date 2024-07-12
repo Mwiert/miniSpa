@@ -47,39 +47,40 @@ export default {
         border-radius: 5px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-            input[type="text"] {
-                padding: 10px 15px 10px 40px; 
-                font-size: 14px;
-                border: none;
-                border-radius: 5px;
-                flex: 1;
-                background-color: #F7F8FA;
-            }
+        input[type="text"] {
+            padding: 10px 15px 10px 40px; 
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            flex: 1;
+            background-color: #F7F8FA;
 
-            input[type="text"]:focus {
-                outline: none;
+            &:focus {
+                 outline: none;
             }
+        }
 
-            .clear-button {
-                position: absolute;
-                right: 0px;
-                top: 50%;
-                transform: translateY(-50%);
-                background: none;
-                font-size: 15px;
-                cursor: pointer;
-                color: #007bff;
-                border: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0;
-            }
 
-            .search {
-                position: absolute;
-                left: 0px;
-            }
+        .clear-button {
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            font-size: 15px;
+            cursor: pointer;
+            color: #007bff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .search {
+            position: absolute;
+            left: 0px;
+        }
     } 
 }
 </style>
