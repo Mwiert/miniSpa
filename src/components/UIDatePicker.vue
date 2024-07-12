@@ -68,9 +68,11 @@ export default {
     }
   },
   props: {
-    yearRange: { type: Number, default: 9999 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    yearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
     saveDate: { type: String, default: '' }, //This is for saving the date history
-    monthRange: { type: Number, default: 9999 } //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    isPastValidation: { type: Boolean, default: false },
+    isFutureValidation: { type: Boolean, default: false }
   },
   methods: {
     checkRange() {
@@ -81,13 +83,43 @@ export default {
 
           */
 
-      if (this.yearRange !== 9999) {
-        this.minDate = dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD')
-        this.maxDate = dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD')
-      }
-      if (this.monthRange !== 9999) {
-        this.minDate = dayjs().subtract(this.monthRange, 'month').format('YYYY-MM-DD')
-        this.maxDate = dayjs().add(this.monthRange, 'month').format('YYYY-MM-DD')
+      if (this.isPastValidation) {
+        if (this.yearRange !== 99) {
+          let day = this.yearRange * 365
+          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs().format('YYYY-MM-DD')
+        }
+
+        if (this.monthRange !== 99) {
+          let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
+          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs().format('YYYY-MM-DD')
+        }
+      } else if (this.isFutureValidation) {
+        if (this.yearRange !== 99) {
+          let day = this.yearRange * 365
+          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          this.minDate = dayjs().format('YYYY-MM-DD')
+        }
+        if (this.monthRange !== 99) {
+          let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
+          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          this.minDate = dayjs().format('YYYY-MM-DD')
+        }
+      } else {
+        if (this.yearRange !== 99) {
+          let day = this.yearRange * 365
+          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+        } else if (this.monthRange !== 99) {
+          let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
+          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+        } else {
+          let day = this.yearRange * 365
+          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+        }
       }
     },
     //This is where we create the calendar for a month
@@ -147,6 +179,7 @@ export default {
       }
 
       this.daysInMonth = daysInWholeMonth //Filling the days in month with daysInWholeMonth
+      this.linedThroughDate() //Lining through the date
       this.checkDateHistory() //Checking the date history
     },
 
@@ -181,6 +214,7 @@ export default {
       this.firstSelectedDate = date //First selected date is the date we clicked
       this.firstSelectedDate.selected = true //First selected date is true after we clicked
       this.saveDateHistory = this.firstSelectedDate.date //Saving the date history
+      this.linedThroughDate() //Lining through the date
       this.checkDateHistory() //Checking the date history
       this.$emit('dateSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
     },
@@ -192,6 +226,29 @@ export default {
         if (this.daysInMonth[i].date === this.saveDateHistory) {
           this.daysInMonth[i].selected = true
           this.firstSelectedDate = this.daysInMonth[i]
+        }
+      }
+    },
+    linedThroughDate() {
+      if (this.isPastValidation) {
+        for (let i = 0; i < this.daysInMonth.length; i++) {
+          if (
+            this.daysInMonth[i].date > dayjs(this.presentDate).format('DD-MM-YYYY') &&
+            this.daysInMonth[i].month === dayjs(this.presentDate).format('MM') &&
+            this.daysInMonth[i].year === dayjs(this.presentDate).format('YYYY')
+          ) {
+            this.daysInMonth[i].textDecoration = true
+          }
+        }
+      } else if (this.isFutureValidation) {
+        for (let i = 0; i < this.daysInMonth.length; i++) {
+          if (
+            this.daysInMonth[i].date < dayjs(this.presentDate).format('DD-MM-YYYY') &&
+            this.daysInMonth[i].month === dayjs(this.presentDate).format('MM') &&
+            this.daysInMonth[i].year === dayjs(this.presentDate).format('YYYY')
+          ) {
+            this.daysInMonth[i].textDecoration = true
+          }
         }
       }
     }
@@ -207,6 +264,7 @@ export default {
     this.checkRange()
     this.totalDaysInMonth()
     this.checkDateHistory()
+    this.linedThroughDate()
   }
 }
 </script>
@@ -325,6 +383,12 @@ export default {
       font-weight: 500;
       line-height: 5px;
       cursor: pointer;
+    }
+    .days li.textDecoration {
+      color: grey;
+      text-decoration: line-through;
+      pointer-events: none;
+      cursor: not-allowed;
     }
     //If the dates that are selected are inactive they are invisible
     .days li.inactive {
