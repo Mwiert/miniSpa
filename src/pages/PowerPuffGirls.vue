@@ -1,7 +1,6 @@
 <template>
   <div class="button-c">
-    <!-- UIButton instances as previously defined -->
-
+    <!-- UIButton component instances -->
     <UIButton
       className=""
       text="Home"
@@ -64,7 +63,7 @@
       @click="setLoadingState('disabledButton')"
     />
 
-    <!-- Add UIToggle component -->
+    <!-- UIToggle component instances -->
     <div>
       <UIToggle
         :id="'powerpuffGirls'"
@@ -104,6 +103,8 @@
         @switchToggle="toggleChange4"
       />
     </div>
+
+    <!-- UIRadioButton component instances -->
     <!--Radio Buttons for hotel-->
     <div class="hotel-radio-buttons">
       <UIRadioButton
@@ -130,6 +131,7 @@
       />
     </div>
 
+    <!-- UICheckBox component instances -->
     <!-- Checkboxes for hotel -->
     <div class="hotel-checkbox">
       <UICheckbox
@@ -193,7 +195,8 @@ export default {
         hotelOutline: { isLoading: false, isDisabled: false },
         disabledButton: { isLoading: false, isDisabled: true } // This button is disabled so its isDisabled property is initially true
       },
-      // Initial states for toggle switch
+
+      // Initial states for toggle switches
       powerpuffGirls: {
         checked: false,
         disabled: false
@@ -210,7 +213,8 @@ export default {
         checked: false,
         disabled: true
       },
-      // Value of selected radio button
+
+      // Initial states for radio buttons
       pickedRadioHotel: '',
       pickedRadioFlight: '',
       // Hotel radio button list
@@ -225,6 +229,8 @@ export default {
         { label: 'Radio 2', value: 'radio2', disabled: false },
         { label: 'Radio 3', value: 'radio3', disabled: false }
       ],
+
+      // Initial states for checkboxes
       checkboxHotel: [
         { label: 'Hotel 1', id: 'id1', disabled: false },
         { label: 'Hotel 2', id: 'id2', disabled: false },
@@ -247,9 +253,12 @@ export default {
         this.loadingStates[buttonName].isLoading = false
       }, 2000)
     },
-    // Method to handle toggle state change
+
+    // Methods to handle toggle state change
     toggleChange1(newChecked) {
+      // Changes the checked state of the first toggle switch (powerpuffGirls)
       this.powerpuffGirls.checked = newChecked
+      //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
     toggleChange2(newChecked) {
@@ -263,6 +272,7 @@ export default {
     toggleChange4(newChecked) {
       this.pinkPanthers.checked = newChecked
     },
+
     handlerSelectRadioButton(checked) {
       this.selectedId = checked
       console.log('oldu')

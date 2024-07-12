@@ -81,10 +81,10 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
 .ui-button-c {
   max-width: 400px;
   width: fit-content;
-  min-width: 200px;
+  min-width: 150px;
 
   a.reisetech-btn {
-    padding: 0px 10px !important;
+    padding: 0px 10px !important; // Padding for router-link buttons
   }
 
   .reisetech-btn {
@@ -102,8 +102,9 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
     text-align: center;
     border: 2px solid black;
     position: relative;
-    text-decoration: none;
+    text-decoration: none; // Removes underline from text
 
+    // Styles for different button sizes
     &.small {
       height: $small;
     }
@@ -127,7 +128,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         color: white;
 
         .icon {
-          filter: brightness(100) invert(1);
+          filter: brightness(100) invert(1); // Icon color filter on hover
         }
       }
     }
@@ -328,10 +329,11 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
   border-top: 4px solid rgb(219, 219, 219);
   width: 24px;
   height: 24px;
-  animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite; // Spinner animation
   position: absolute;
 }
 
+// Keyframes for spinner animation
 @keyframes spin {
   0% {
     transform: rotate(0deg);

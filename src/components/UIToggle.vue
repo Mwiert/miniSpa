@@ -1,6 +1,6 @@
 <template>
   <div class="ui-toggle-c" :class="{ labelAfter: after, disabled: disabled }" @click="toggle">
-    <div :id="id" class="toggle-label">
+    <div class="toggle-label">
       {{ label }}
     </div>
     <div class="toggle-switch" :class="{ checked: checked }">
@@ -13,27 +13,33 @@
 export default {
   name: 'UIToggle',
   props: {
+    //ID for the toggle element
     id: {
       type: String
     },
+    //The text displayed next to the toggle switch
     label: {
       type: String,
       default: 'PowerPuffGirls'
     },
+    // Determines if the label is positioned after the switch
     after: {
       type: Boolean,
       default: false
     },
+    // Determines if the toggle switch is in the checked state
     checked: {
       type: Boolean,
       default: false
     },
+    // Determines if the toggle switch is disabled
     disabled: {
       type: Boolean,
       default: false
     }
   },
   methods: {
+    // Method to toggle the switch state, emitting an event if not disabled
     toggle() {
       if (!this.disabled) {
         this.$emit('switchToggle', !this.checked)
@@ -49,14 +55,12 @@ export default {
 .ui-toggle-c {
   display: flex;
   align-items: center;
-  width: fit-content;
-  border-radius: 30px;
+  width: fit-content; // Width adjusts to the content
   padding: 10px 15px;
-  user-select: none;
-  pointer-events: none;
+  pointer-events: none; // Disables pointer events on the container
 
   &.labelAfter {
-    flex-direction: row-reverse;
+    flex-direction: row-reverse; // Reverses the order of children elements
   }
   &.disabled {
     opacity: 0.5;
@@ -83,11 +87,11 @@ export default {
   background-color: #ccc;
   border-radius: 20px;
   transition: background-color 0.4s;
-  pointer-events: all;
-  cursor: pointer;
+  pointer-events: all; // Enables pointer events
+  cursor: pointer; // Changes cursor to pointer
 
   &.checked {
-    background-color: $accent-primary-color;
+    background-color: $accent-secondary-color;
   }
 }
 
@@ -104,8 +108,8 @@ export default {
     background-color 0.4s;
 
   &.checked {
-    background-color: $primary-color;
-    transform: translateX(20px);
+    background-color: $accent-primary-color;
+    transform: translateX(20px); // Moves the slider to the right when checked
   }
 }
 </style>
