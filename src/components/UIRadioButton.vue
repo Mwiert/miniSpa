@@ -1,12 +1,11 @@
 <template>
-  <div
-    class="radio-button-container-c"
-    @click="selectRadioButton"
-    :class="[disabled ? 'disabled' : '', after ? 'after' : '']"
-  >
+  <!--First div checks radio button is disabled and after or not-->
+  <div class="radio-button-container-c" :class="[disabled ? 'disabled' : '', after ? 'after' : '']">
     <div class="radio-label">{{ IsRadioLabel }}</div>
+    <!--Here we check radio button is checked or not with computed radioButtonChecked-->
     <div
       class="radio-button"
+      @click="selectRadioButton"
       :class="[radioButtonClassName, radioButtonChecked ? 'checked' : '']"
     ></div>
   </div>
@@ -16,14 +15,18 @@
 export default {
   name: 'UIRadioButton',
   props: {
-    id: String,
-    label: String,
+    id: {
+      type: String
+    },
+    label: {
+      type: String
+    },
     after: Boolean,
-    className: String,
+    className: { type: String },
     checked: Boolean,
     disabled: Boolean,
-    value: String,
-    modelValue: String
+    value: { type: String },
+    modelValue: { type: String }
   },
   data() {
     return {
@@ -32,11 +35,14 @@ export default {
     }
   },
   computed: {
+    // Check every radio button for checked prop
     radioButtonChecked() {
       return this.modelValue === this.value
     }
   },
   methods: {
+    // On click method has 2 emits. First emit makes sure v-model updated
+    // Second emit use for user interaction in main page
     selectRadioButton() {
       if (this.disabled) return
       this.$emit('update:modelValue', this.value)
@@ -55,15 +61,16 @@ export default {
   flex-direction: row;
   align-items: center;
   cursor: pointer;
-  padding: $padding-small;
+  padding-right: $padding-large;
 
   .radio-label {
+    height: 21px;
     margin-right: 8px;
   }
 
   .radio-button {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border: 2px solid black;
     border-radius: 50%;
     position: relative;
@@ -81,16 +88,16 @@ export default {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 10px;
-          height: 10px;
+          width: 8px;
+          height: 8px;
           background-color: white;
           border-radius: 50%;
         }
       }
 
       &.flight {
-        background-color: $primary-color;
-        border: 2px solid $primary-color;
+        background-color: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
 
         &::after {
           content: '';
@@ -98,8 +105,8 @@ export default {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 10px;
-          height: 10px;
+          width: 8px;
+          height: 8px;
           background-color: white;
           border-radius: 50%;
         }
@@ -111,8 +118,8 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         background-color: white;
         border-radius: 50%;
       }
@@ -123,12 +130,13 @@ export default {
     flex-direction: row-reverse;
 
     .radio-label {
+      height: 21px;
       margin-left: 8px;
     }
 
     .radio-button {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border: 2px solid black;
       border-radius: 50%;
       position: relative;
@@ -139,8 +147,8 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         background-color: white;
         border-radius: 50%;
       }
