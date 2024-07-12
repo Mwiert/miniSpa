@@ -45,6 +45,8 @@
       searchable
       :dataSize="dataSize"
     />
+    {{ selectedItem }}  
+    {{ selectedPet }}
   </div>
 </template>
 
