@@ -10,7 +10,7 @@
       :isSpinnerActive="loadingStates.hotel.isLoading" :isDisabled="loadingStates.hotel.isDisabled"
       @click="setLoadingState('hotel')" />
 
-    <!--Since the class name is not added, the default class will be used.-->
+    <!-- Since the class name is not added, the default class will be used. -->
     <UIButton text="PowerPuffGirls" :icon="'refresh'" :iconSize="'l'" :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled" @click="setLoadingState('default')" />
 
@@ -30,19 +30,30 @@
         @update:checked="toggleChange" />
     </div>
 
-    <UIRadioButton className="" :label="'Radio 1'" :disabled="false" @selectRadioButton="handlerSelectRadioButton()" />
-    <UIRadioButton className="radio-button" :label="'Radio 2'" :disabled="false" :after="true"
-      @selectRadioButton="handlerSelectRadioButton()" />
+    <div class="hotel-radio-buttons">
+      <UIRadioButton v-for="radio in radioButtonsHotel" :key="radio.label" :className="'hotel'" :label="radio.label"
+        :value="radio.value" v-model="pickedRadioHotel" />
+    </div>
+    <div class="flight-radio-buttons">
+      <UIRadioButton v-for="radio in radioButtonsFlight" :key="radio.label" :className="'flight'" :label="radio.label"
+        :value="radio.value" :after="true" v-model="pickedRadioFlight" />
+    </div>
 
+    <!-- Checkboxes for hotel -->
+    <div class="hotel-checkbox">
+      <UICheckbox v-for="checkbox in checkboxHotel" :key="checkbox.id" :className="'hotel'" :label="checkbox.label"
+        @takeCheckedInfo="takeCheckedInfo" />
+    </div>
+
+    <!-- Checkboxes for flight -->
+    <div class="flight-checkbox">
+      <UICheckbox v-for="checkbox in checkboxFlight" :key="checkbox.id" :className="'flight'" :label="checkbox.label"
+        :after="true" @takeCheckedInfo="takeCheckedInfo" />
+    </div>
+
+    <!-- Example of a disabled checkbox -->
     <UICheckbox :label="'Disabled'" :className="'hotel'" :after="false" :disabled="true" :name="'disabled'"
       :id="'deneme'" />
-    <UICheckbox :label="'Disabled After'" :className="'hotel'" :after="true" :disabled="true" :name="'disabled'"
-      :id="'deneme2'" />
-    <UICheckbox :label="'Hotel'" :className="'hotel'" :after="true" :name="'hotel'" :id="'hotel_1'"
-      @takeCheckedInfo="takeCheckedInfo" />
-    <UICheckbox :label="'Flight'" :className="'flight'" :name="'flight'" :id="'flight_1'"
-      @takeCheckedInfo="takeCheckedInfo" />
-
   </div>
 </template>
 
@@ -76,7 +87,29 @@ export default {
       toggleState: {
         checked: false,
         disabled: false
-      }
+      },
+      pickedRadioHotel: '',
+      pickedRadioFlight: '',
+      radioButtonsHotel: [
+        { label: 'Radio 1', value: 'radio1' },
+        { label: 'Radio 2', value: 'radio2' },
+        { label: 'Radio 3', value: 'radio3' }
+      ],
+      radioButtonsFlight: [
+        { label: 'Radio 1', value: 'radio1' },
+        { label: 'Radio 2', value: 'radio2' },
+        { label: 'Radio 3', value: 'radio3' }
+      ],
+      checkboxHotel: [
+        { label: 'Hotel 1', id: 'id1' },
+        { label: 'Hotel 2', id: 'id2' },
+        { label: 'Hotel 3', id: 'id3' }
+      ],
+      checkboxFlight: [
+        { label: 'Flight 1', id: 'id1' },
+        { label: 'Flight 2', id: 'id2' },
+        { label: 'Flight 3', id: 'id3' }
+      ]
     }
   },
   methods: {
@@ -93,10 +126,8 @@ export default {
     toggleChange(newChecked) {
       this.toggleState.checked = newChecked
     },
-
-    handlerSelectRadioButton(checked) {
-      this.selectedId = checked
-      console.log('oldu')
+    takeCheckedInfo(info) {
+      console.log(info)
     }
   }
 }
@@ -108,5 +139,17 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.hotel-radio-buttons {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.flight-radio-buttons {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
 }
 </style>

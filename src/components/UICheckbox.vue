@@ -3,7 +3,7 @@
         :name="name" @click="handleClick">
         <div v-if="!checkboxChecked" class="checkbox" :class="checkboxClassName"></div>
         <div v-else class="checkbox--checked" :class="checkboxClassName">
-            <SvgIcon :size="'s'" class="icon" />
+            <SvgIcon :name="'tick'" :size="'s'" class="icon" />
         </div>
         <div class="label">{{ checkboxLabel }}</div>
     </div>
@@ -13,7 +13,10 @@
 export default {
     name: 'UICheckBox',
     props: {
-        className: String,
+        className: {
+            type: String,
+            default: ''
+        },
         id: String,
         label: String,
         after: {
@@ -53,6 +56,7 @@ export default {
 @import "../assets/css/main.scss";
 $flight-color: #5CB7F9;
 $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) brightness(99%) contrast(94%);
+$hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) brightness(101%) contrast(106%);
 
 .resitech-checkbox-c {
     justify-content: center;
@@ -97,6 +101,10 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
 
             &.hotel {
                 border: 2px solid $secondary-color;
+
+                .icon {
+                    filter: $hotel-color-filter;
+                }
             }
 
             &.flight {
