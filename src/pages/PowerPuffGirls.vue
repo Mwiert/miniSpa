@@ -2,58 +2,163 @@
   <div class="button-c">
     <!-- UIButton instances as previously defined -->
 
-    <UIButton className="" text="Home" :isSpinnerActive="loadingStates.home.isLoading"
-      :isDisabled="loadingStates.home.isDisabled" @click="setLoadingState('home')" :isRouter="true" routerUrl="/" />
-    <UIButton className="flight" text="Flight" :icon="'refresh'" :isSpinnerActive="loadingStates.flight.isLoading"
-      :isDisabled="loadingStates.flight.isDisabled" @click="setLoadingState('flight')" />
-    <UIButton className="hotel" text="Hotel" :icon="'refresh'" :iconSize="'s'"
-      :isSpinnerActive="loadingStates.hotel.isLoading" :isDisabled="loadingStates.hotel.isDisabled"
-      @click="setLoadingState('hotel')" />
+    <UIButton
+      className=""
+      text="Home"
+      :isSpinnerActive="loadingStates.home.isLoading"
+      :isDisabled="loadingStates.home.isDisabled"
+      @click="setLoadingState('home')"
+      :isRouter="true"
+      routerUrl="/"
+    />
+    <UIButton
+      className="flight"
+      text="Flight"
+      :icon="'refresh'"
+      :isSpinnerActive="loadingStates.flight.isLoading"
+      :isDisabled="loadingStates.flight.isDisabled"
+      @click="setLoadingState('flight')"
+    />
+    <UIButton
+      className="hotel"
+      text="Hotel"
+      :icon="'refresh'"
+      :iconSize="'s'"
+      :isSpinnerActive="loadingStates.hotel.isLoading"
+      :isDisabled="loadingStates.hotel.isDisabled"
+      @click="setLoadingState('hotel')"
+    />
 
     <!-- Since the class name is not added, the default class will be used. -->
-    <UIButton text="PowerPuffGirls" :icon="'refresh'" :iconSize="'l'" :isSpinnerActive="loadingStates.default.isLoading"
-      :isDisabled="loadingStates.default.isDisabled" @click="setLoadingState('default')" />
+    <UIButton
+      text="PowerPuffGirls"
+      :icon="'refresh'"
+      :iconSize="'l'"
+      :isSpinnerActive="loadingStates.default.isLoading"
+      :isDisabled="loadingStates.default.isDisabled"
+      @click="setLoadingState('default')"
+    />
 
-    <UIButton className="flight outline" text="Flight" :isSpinnerActive="loadingStates.flightOutline.isLoading"
-      :icon="'refresh'" :isDisabled="loadingStates.flightOutline.isDisabled"
-      @click="setLoadingState('flightOutline')" />
+    <UIButton
+      className="flight outline"
+      text="Flight"
+      :isSpinnerActive="loadingStates.flightOutline.isLoading"
+      :icon="'refresh'"
+      :isDisabled="loadingStates.flightOutline.isDisabled"
+      @click="setLoadingState('flightOutline')"
+    />
 
-    <UIButton className="hotel outline" text="Hotel" :isSpinnerActive="loadingStates.hotelOutline.isLoading"
-      :isDisabled="loadingStates.hotelOutline.isDisabled" @click="setLoadingState('hotelOutline')" />
+    <UIButton
+      className="hotel outline"
+      text="Hotel"
+      :isSpinnerActive="loadingStates.hotelOutline.isLoading"
+      :isDisabled="loadingStates.hotelOutline.isDisabled"
+      @click="setLoadingState('hotelOutline')"
+    />
 
-    <UIButton className="disabled" text="Disabled" :isSpinnerActive="loadingStates.disabledButton.isLoading"
-      :isDisabled="loadingStates.disabledButton.isDisabled" @click="setLoadingState('disabledButton')" />
+    <UIButton
+      className="disabled"
+      text="Disabled"
+      :isSpinnerActive="loadingStates.disabledButton.isLoading"
+      :isDisabled="loadingStates.disabledButton.isDisabled"
+      @click="setLoadingState('disabledButton')"
+    />
 
     <!-- Add UIToggle component -->
     <div>
-      <UIToggle :id="'toggle1'" :label="'Toggle'" :checked="toggleState.checked" :disabled="toggleState.disabled"
-        @update:checked="toggleChange" />
+      <UIToggle
+        :id="'powerpuffGirls'"
+        :label="'Powerpuff Girls'"
+        :checked="powerpuffGirls.checked"
+        :disabled="powerpuffGirls.disabled"
+        @switchToggle="toggleChange1"
+      />
+    </div>
+
+    <div>
+      <UIToggle
+        :id="'timeBenders'"
+        :label="'Time Benders'"
+        :checked="timeBenders.checked"
+        :disabled="timeBenders.disabled"
+        @switchToggle="toggleChange2"
+      />
+    </div>
+
+    <div>
+      <UIToggle
+        :id="'summerLovers'"
+        :label="'Summer Lovers'"
+        :checked="summerLovers.checked"
+        :disabled="summerLovers.disabled"
+        @switchToggle="toggleChange3"
+      />
+    </div>
+
+    <div>
+      <UIToggle
+        :id="'pinkPanthers'"
+        :label="'Pink Panthers'"
+        :checked="pinkPanthers.checked"
+        :disabled="pinkPanthers.disabled"
+        @switchToggle="toggleChange4"
+      />
     </div>
 
     <div class="hotel-radio-buttons">
-      <UIRadioButton v-for="radio in radioButtonsHotel" :key="radio.label" :className="'hotel'" :label="radio.label"
-        :value="radio.value" v-model="pickedRadioHotel" />
+      <UIRadioButton
+        v-for="radio in radioButtonsHotel"
+        :key="radio.label"
+        :className="'hotel'"
+        :label="radio.label"
+        :value="radio.value"
+        v-model="pickedRadioHotel"
+      />
     </div>
     <div class="flight-radio-buttons">
-      <UIRadioButton v-for="radio in radioButtonsFlight" :key="radio.label" :className="'flight'" :label="radio.label"
-        :value="radio.value" :after="true" v-model="pickedRadioFlight" />
+      <UIRadioButton
+        v-for="radio in radioButtonsFlight"
+        :key="radio.label"
+        :className="'flight'"
+        :label="radio.label"
+        :value="radio.value"
+        :after="true"
+        v-model="pickedRadioFlight"
+      />
     </div>
 
     <!-- Checkboxes for hotel -->
     <div class="hotel-checkbox">
-      <UICheckbox v-for="checkbox in checkboxHotel" :key="checkbox.id" :className="'hotel'" :label="checkbox.label"
-        @takeCheckedInfo="takeCheckedInfo" />
+      <UICheckbox
+        v-for="checkbox in checkboxHotel"
+        :key="checkbox.id"
+        :className="'hotel'"
+        :label="checkbox.label"
+        @takeCheckedInfo="takeCheckedInfo"
+      />
     </div>
 
     <!-- Checkboxes for flight -->
     <div class="flight-checkbox">
-      <UICheckbox v-for="checkbox in checkboxFlight" :key="checkbox.id" :className="'flight'" :label="checkbox.label"
-        :after="true" @takeCheckedInfo="takeCheckedInfo" />
+      <UICheckbox
+        v-for="checkbox in checkboxFlight"
+        :key="checkbox.id"
+        :className="'flight'"
+        :label="checkbox.label"
+        :after="true"
+        @takeCheckedInfo="takeCheckedInfo"
+      />
     </div>
 
     <!-- Example of a disabled checkbox -->
-    <UICheckbox :label="'Disabled'" :className="'hotel'" :after="false" :disabled="true" :name="'disabled'"
-      :id="'deneme'" />
+    <UICheckbox
+      :label="'Disabled'"
+      :className="'hotel'"
+      :after="false"
+      :disabled="true"
+      :name="'disabled'"
+      :id="'deneme'"
+    />
   </div>
 </template>
 
@@ -83,11 +188,24 @@ export default {
         hotelOutline: { isLoading: false, isDisabled: false },
         disabledButton: { isLoading: false, isDisabled: true } // This button is disabled so its isDisabled property is initially true
       },
-      // Initial state for toggle switch
-      toggleState: {
+      // Initial states for toggle switch
+      powerpuffGirls: {
         checked: false,
         disabled: false
       },
+      timeBenders: {
+        checked: false,
+        disabled: true
+      },
+      summerLovers: {
+        checked: false,
+        disabled: true
+      },
+      pinkPanthers: {
+        checked: false,
+        disabled: true
+      },
+
       pickedRadioHotel: '',
       pickedRadioFlight: '',
       radioButtonsHotel: [
@@ -123,9 +241,26 @@ export default {
       }, 2000)
     },
     // Method to handle toggle state change
-    toggleChange(newChecked) {
-      this.toggleState.checked = newChecked
+    toggleChange1(newChecked) {
+      this.powerpuffGirls.checked = newChecked
+      this.timeBenders.disabled = false
     },
+    toggleChange2(newChecked) {
+      this.timeBenders.checked = newChecked
+      this.summerLovers.disabled = false
+    },
+    toggleChange3(newChecked) {
+      this.summerLovers.checked = newChecked
+      this.pinkPanthers.disabled = false
+    },
+    toggleChange4(newChecked) {
+      this.pinkPanthers.checked = newChecked
+    },
+    handlerSelectRadioButton(checked) {
+      this.selectedId = checked
+      console.log('oldu')
+    },
+
     takeCheckedInfo(info) {
       console.log(info)
     }

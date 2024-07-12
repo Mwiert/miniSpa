@@ -2,14 +2,23 @@
   <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active the icon and the text will be shown-->
   <div class="ui-button-c">
-    <button class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" :disabled="isDisabled"
-      v-if="!btnIsRouter">
+    <button
+      class="reisetech-btn"
+      :class="[`reisetech-btn__${btnClassName}`, size]"
+      :disabled="isDisabled"
+      v-if="!btnIsRouter"
+    >
       <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
       <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
       <span v-else>{{ btnText }}</span>
     </button>
-    <router-link :to="routerUrl" class="reisetech-btn" :class="[`reisetech-btn__${btnClassName}`, size]" v-else>
+    <router-link
+      :to="routerUrl"
+      class="reisetech-btn"
+      :class="[`reisetech-btn__${btnClassName}`, size]"
+      v-else
+    >
       <!-- Icon's name should be the name of the .svg file-->
       <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
@@ -64,7 +73,8 @@ export default {
 $small: 12px;
 $medium: 24px;
 $large: 48px;
-$flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) brightness(99%) contrast(94%);
+$flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) brightness(99%)
+  contrast(94%);
 
 // router-link takes tag 'a' and its default css should be overwritten
 

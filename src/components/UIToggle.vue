@@ -1,14 +1,15 @@
 <template>
-  <div class="ui-toggle-c" :class="{ labelAfter: after }" @click="toggle">
-    <div :for="id" class="toggle-label">{{ label }}</div>
-    <div class="toggle-switch">
-      <div :class="['toggle-slider', { checked }]"></div>
+  <div class="ui-toggle-c" :class="{ labelAfter: after, disabled: disabled }" @click="toggle">
+    <div :id="id" class="toggle-label">
+      {{ label }}
     </div>
-    <span v-if="after">{{ after }}</span>
+    <div class="toggle-switch" :class="{ checked: checked }">
+      <div class="toggle-slider" :class="{ checked: checked }"></div>
+    </div>
   </div>
 </template>
 
-<script script lang="ts">
+<script lang="ts">
 export default {
   name: 'UIToggle',
   props: {
@@ -23,10 +24,6 @@ export default {
       type: Boolean,
       default: false
     },
-    name: {
-      type: String,
-      default: ''
-    },
     checked: {
       type: Boolean,
       default: false
@@ -36,11 +33,10 @@ export default {
       default: false
     }
   },
-
   methods: {
     toggle() {
       if (!this.disabled) {
-        this.$emit('update:checked', !this.checked)
+        this.$emit('switchToggle', !this.checked)
       }
     }
   }
@@ -49,17 +45,29 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
+
 .ui-toggle-c {
   display: flex;
-
   align-items: center;
-  border: 2px solid black;
   width: fit-content;
   border-radius: 30px;
   padding: 10px 15px;
+  user-select: none;
+  pointer-events: none;
 
   &.labelAfter {
     flex-direction: row-reverse;
+  }
+  &.disabled {
+    opacity: 0.5;
+
+    .toggle-switch {
+      cursor: not-allowed !important;
+      background-color: #ccc;
+    }
+    .toggle-slider {
+      background-color: #fff;
+    }
   }
 }
 
@@ -74,8 +82,13 @@ export default {
   height: 20px;
   background-color: #ccc;
   border-radius: 20px;
-  transition: 0.4s;
+  transition: background-color 0.4s;
+  pointer-events: all;
   cursor: pointer;
+
+  &.checked {
+    background-color: $accent-primary-color;
+  }
 }
 
 .toggle-slider {
@@ -86,15 +99,13 @@ export default {
   height: 14px;
   background-color: white;
   border-radius: 50%;
-  transition: 0.4s;
+  transition:
+    transform 0.4s,
+    background-color 0.4s;
 
   &.checked {
     background-color: $primary-color;
     transform: translateX(20px);
-
-    &.checked .label-after {
-      background-color: aqua;
-    }
   }
 }
 </style>
