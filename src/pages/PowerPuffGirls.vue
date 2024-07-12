@@ -14,6 +14,7 @@
       className="flight"
       text="Flight"
       :icon="'refresh'"
+      :size="'small'"
       :isSpinnerActive="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
       @click="setLoadingState('flight')"
@@ -104,7 +105,7 @@
       />
     </div>
 
-    <!-- UIRadioButton component instances -->
+    <!-- UIRadioButton component instances  -->
     <!--Radio Buttons for hotel-->
     <div class="hotel-radio-buttons">
       <UIRadioButton

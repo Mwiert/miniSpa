@@ -16,17 +16,37 @@ export default {
   name: 'UIRadioButton',
   props: {
     id: {
-      type: String
+      type: String,
+      default: ''
     },
     label: {
-      type: String
+      type: String,
+      default: 'powerpuff girls'
     },
-    after: Boolean,
-    className: { type: String },
-    checked: Boolean,
-    disabled: Boolean,
-    value: { type: String },
-    modelValue: { type: String }
+    after: {
+      type: Boolean,
+      default: false
+    },
+    className: {
+      type: String,
+      default: ''
+    },
+    checked: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: String,
+      default: ''
+    },
+    modelValue: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
