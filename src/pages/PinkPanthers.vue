@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SmartTable :options="tableOptions" @cell-click="handleCellClick" />
+    <SmartTable :options="tableOptions" />
   </div>
 </template>
 
@@ -43,9 +43,7 @@ export default {
     }
   },
   methods: {
-    handleCellClick({ cell, rowIndex, cellIndex }) {
-      console.log('Cell clicked:', cell, 'row:', rowIndex, 'cell:', cellIndex)
-    }
+    
   },
   mounted() {
     this.dummies.map((dummy: any) => {
