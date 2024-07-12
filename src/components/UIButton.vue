@@ -38,18 +38,39 @@ export default {
       default: 'default'
     },
     // Text is the label of button
-    text: String,
+    text: {
+      type: String,
+      default: 'Powerpuff Girls'
+    },
     // isRouter is checking the button is routing or not
-    isRouter: Boolean,
+    isRouter: {
+      type: Boolean,
+      default: false
+    },
     // routeUrl is the routing Url
-    routerUrl: { type: String, Object },
+    routerUrl: {
+      type: [String, Object],
+      default: ''
+    },
     // icon is the icons on the button if button has one
-    icon: String,
-    iconSize: String,
+    icon: {
+      type: String,
+      default: ''
+    },
+    iconSize: {
+      type: String,
+      default: '16px'
+    },
     // isSpinner is checking loading animation for button exist or not
-    isSpinnerActive: Boolean,
+    isSpinnerActive: {
+      type: Boolean,
+      default: false
+    },
     // isDisabled is checking button is active or disabled
-    isDisabled: Boolean,
+    isDisabled: {
+      type: Boolean,
+      default: false
+    },
     size: {
       type: String,
       default: 'large'
