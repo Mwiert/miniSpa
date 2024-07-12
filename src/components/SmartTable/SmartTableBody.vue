@@ -141,8 +141,7 @@ export default {
 <style lang="scss" scoped>
 .smart-table-body-c {
   display: block;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 
   .smart-table-main-grid {
     display: grid;
@@ -152,18 +151,15 @@ export default {
     width: 100%;
     gap: 10px;
 
-    .grid-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      color: black;
-      padding: 15px;
-      border-radius: 10px;
-      border: none;
-      transition:
-        transform 0.2s,
-        background-color 0.3s;
+        .grid-header {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-weight: bold;
+          color: black;
+          padding: 15px;
+          border-radius: 10px;
+          border: none;
 
       .sort-button {
         cursor: pointer;
@@ -173,51 +169,54 @@ export default {
     }
   }
 
-  .grid-row {
-    display: grid;
-    grid-template-columns: v-bind('gridTemplateColumns');
-    width: 100%;
-    gap: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 40px;
-    padding: 0.5px;
-
-    .no-grid-item {
-      padding: 28px;
+    .grid-row {
+      display: grid;
+      grid-template-columns: v-bind('gridTemplateColumns');
+      width: 100%;
+      gap: 5px;
+      margin-bottom: 10px;
       border: 1px solid #ccc;
-      text-align: center;
-      font-weight: bold;
-      border-radius: 40px;
-      background-color: #ffffff;
-      border: none;
-      grid-column: 1 / -1;
-    }
+      border-radius: 40px; 
+      padding: 0.5px; 
+      animation: fadeIn 0.5s ease-in-out;
 
-    .grid-item {
-      padding: 15px;
-      border: 1px solid #ccc;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      border-radius: 30px;
-      border: none;
-    }
-    .status-Confirmed,
-    .status-Pending,
-    .status-Cancelled {
-      padding: 5px 10px;
-      border-radius: 30px;
-      border: 3px solid;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 50%;
-      height: 40px;
-      margin: 10px auto;
-    }
+        .no-grid-item {
+          padding: 28px;
+          border: 1px solid #ccc;
+          text-align: center;
+          font-weight: bold;
+          border-radius: 40px;
+          background-color: #ffffff;
+          border: none;
+          grid-column: 1 / -1; 
+          animation: fadeIn 0.1s ease-in-out;
+        }
+
+        .grid-item {
+          padding: 15px;
+          border: 1px solid #ccc;
+          text-align: center;
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          border-radius: 30px;
+          border: none;
+          animation: fadeIn 0.3s ease-in-out;
+        }
+        .status-Confirmed,
+        .status-Pending,
+        .status-Cancelled {
+          padding: 5px 10px;
+          border-radius: 30px;
+          border: 3px solid;
+          font-weight: bold;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 50%;
+          height: 40px; 
+          margin: 10px auto; 
+        }
 
     .status-Confirmed {
       background-color: #ccffdd;
@@ -237,14 +236,11 @@ export default {
       border-color: #ee3535;
     }
 
-    [class*='price-'] {
-      font-weight: bold;
-    }
 
-    [class*='promoCode-'] {
-      font-weight: bold;
+        [class*="price-"],[class*="promoCode-"] {
+        font-weight: bold;
+        }
     }
-  }
 
   @keyframes fadeIn {
     from {
