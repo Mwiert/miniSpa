@@ -15,11 +15,7 @@
     </button>
     <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
       <div class="search-container">
-
-          <span class="clear-search" > 
-          <SvgIcon v-if="searchQuery" @click="clearSearch" class="clear-search-img" :name="'x'"/>  
-          </span>
-               
+ 
         <input
           v-if="searchable"
           type="text"
@@ -27,6 +23,10 @@
           placeholder="Search..."
           class="ui-dropdown-search"
         />
+        <span class="clear-search" > 
+          <SvgIcon v-if="searchQuery" @click="clearSearch" class="clear-search-img" :name="'x' " :size="'s'"/>  
+          </span>
+               
 
         </div>
       <div class="ui-dropdown-content"  :style="{fontSize: fontSize + 'px' , maxHeight: dropdownListMaxHeight}"  >
@@ -152,9 +152,8 @@ export default {
   display: inline-block;
   display: flex;
   flex-direction: column;
-  max-width: max-content;
-  min-width: 150px;
-  
+  max-width: fit-content;
+
   .label {
     margin-top: 15px;
     font-size: 16px;
@@ -222,36 +221,26 @@ export default {
       position: relative;
       display: flex;
       position: sticky;
-    top: 0;
-    background-color: #fff;
-    z-index: 10;
+      top: 0;
+      background-color: #fff;
+      z-index: 10;
 
       .ui-dropdown-search {
         width: 90%;
-        padding: 12px;
+        padding: 10px;
         box-sizing: border-box;
-        margin: 14px;
-        border-radius: 18px;
+        margin: 10px;
+        border-radius: 10px;
         border: 1px solid #ccc;
         outline: none;
       }
 
       .clear-search-img {
         position: absolute;
-        right: 24px;
-        top: 24px;
-        transform: translateY(-50%, -50%);
+        right: 10px;
+        top: 8px;
         cursor: pointer;
-        font-size: 20px;
-        color: #cecaca;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: auto;
-
+        
         &-hover {
           opacity: 0.7;
         }
@@ -277,7 +266,6 @@ export default {
       }
     }
   }
-
   .ui-dropdown-search {
    width: 90%;
    border: 1px solid #ccc;
