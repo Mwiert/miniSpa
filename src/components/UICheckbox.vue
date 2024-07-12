@@ -22,14 +22,20 @@ export default {
         //id is for each checkbox item to be marked with
         id: String,
         //label is the text of the checkboxes
-        label: String,
+        label: {
+            type: String,
+            default: ''
+        },
         //If after state is true, checkbox takes 'after' which means the label will take place before the checkbox's box, otherwise and default it will take 'before' which means the box will take place before the label
         after: {
             type: Boolean,
             default: false
         },
         //name is name of the checkbox
-        name: String,
+        name: {
+            type: String,
+            default: ''
+        },
         //if checkbox is checked the 'checked' prop will be true, otherwise and default is false
         checked: {
             type: Boolean,

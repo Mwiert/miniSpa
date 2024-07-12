@@ -1,171 +1,78 @@
 <template>
   <div class="button-c">
     <!-- UIButton component instances -->
-    <UIButton
-      className=""
-      text="Home"
-      :isSpinnerActive="loadingStates.home.isLoading"
-      :isDisabled="loadingStates.home.isDisabled"
-      @click="setLoadingState('home')"
-      :isRouter="true"
-      routerUrl="/"
-    />
-    <UIButton
-      className="flight"
-      text="Flight"
-      :icon="'refresh'"
-      :isSpinnerActive="loadingStates.flight.isLoading"
-      :isDisabled="loadingStates.flight.isDisabled"
-      @click="setLoadingState('flight')"
-    />
-    <UIButton
-      className="hotel"
-      text="Hotel"
-      :icon="'refresh'"
-      :iconSize="'s'"
-      :isSpinnerActive="loadingStates.hotel.isLoading"
-      :isDisabled="loadingStates.hotel.isDisabled"
-      @click="setLoadingState('hotel')"
-    />
+    <UIButton className="" text="Home" :isSpinnerActive="loadingStates.home.isLoading"
+      :isDisabled="loadingStates.home.isDisabled" @click="setLoadingState('home')" :isRouter="true" routerUrl="/" />
+    <UIButton className="flight" text="Flight" :icon="'refresh'" :size="'small'"
+      :isSpinnerActive="loadingStates.flight.isLoading" :isDisabled="loadingStates.flight.isDisabled"
+      @click="setLoadingState('flight')" />
+    <UIButton className="hotel" text="Hotel" :icon="'refresh'" :iconSize="'s'"
+      :isSpinnerActive="loadingStates.hotel.isLoading" :isDisabled="loadingStates.hotel.isDisabled"
+      @click="setLoadingState('hotel')" />
 
     <!-- Since the class name is not added, the default class will be used. -->
-    <UIButton
-      text="PowerPuffGirls"
-      :icon="'refresh'"
-      :iconSize="'l'"
-      :isSpinnerActive="loadingStates.default.isLoading"
-      :isDisabled="loadingStates.default.isDisabled"
-      @click="setLoadingState('default')"
-    />
+    <UIButton text="PowerPuffGirls" :icon="'refresh'" :iconSize="'l'" :isSpinnerActive="loadingStates.default.isLoading"
+      :isDisabled="loadingStates.default.isDisabled" @click="setLoadingState('default')" />
 
-    <UIButton
-      className="flight outline"
-      text="Flight"
-      :isSpinnerActive="loadingStates.flightOutline.isLoading"
-      :icon="'refresh'"
-      :isDisabled="loadingStates.flightOutline.isDisabled"
-      @click="setLoadingState('flightOutline')"
-    />
+    <UIButton className="flight outline" text="Flight" :isSpinnerActive="loadingStates.flightOutline.isLoading"
+      :icon="'refresh'" :isDisabled="loadingStates.flightOutline.isDisabled"
+      @click="setLoadingState('flightOutline')" />
 
-    <UIButton
-      className="hotel outline"
-      text="Hotel"
-      :isSpinnerActive="loadingStates.hotelOutline.isLoading"
-      :isDisabled="loadingStates.hotelOutline.isDisabled"
-      @click="setLoadingState('hotelOutline')"
-    />
+    <UIButton className="hotel outline" text="Hotel" :isSpinnerActive="loadingStates.hotelOutline.isLoading"
+      :isDisabled="loadingStates.hotelOutline.isDisabled" @click="setLoadingState('hotelOutline')" />
 
-    <UIButton
-      className="disabled"
-      text="Disabled"
-      :isSpinnerActive="loadingStates.disabledButton.isLoading"
-      :isDisabled="loadingStates.disabledButton.isDisabled"
-      @click="setLoadingState('disabledButton')"
-    />
+    <UIButton className="disabled" text="Disabled" :isSpinnerActive="loadingStates.disabledButton.isLoading"
+      :isDisabled="loadingStates.disabledButton.isDisabled" @click="setLoadingState('disabledButton')" />
 
     <!-- UIToggle component instances -->
     <div>
-      <UIToggle
-        :id="'powerpuffGirls'"
-        :label="'Powerpuff Girls'"
-        :checked="powerpuffGirls.checked"
-        :disabled="powerpuffGirls.disabled"
-        @switchToggle="toggleChange1"
-      />
+      <UIToggle :id="'powerpuffGirls'" :label="'Powerpuff Girls'" :checked="powerpuffGirls.checked"
+        :disabled="powerpuffGirls.disabled" @switchToggle="toggleChange1" />
     </div>
 
     <div>
-      <UIToggle
-        :id="'timeBenders'"
-        :label="'Time Benders'"
-        :checked="timeBenders.checked"
-        :disabled="timeBenders.disabled"
-        @switchToggle="toggleChange2"
-      />
+      <UIToggle :id="'timeBenders'" :label="'Time Benders'" :checked="timeBenders.checked"
+        :disabled="timeBenders.disabled" @switchToggle="toggleChange2" />
     </div>
 
     <div>
-      <UIToggle
-        :id="'summerLovers'"
-        :label="'Summer Lovers'"
-        :checked="summerLovers.checked"
-        :disabled="summerLovers.disabled"
-        @switchToggle="toggleChange3"
-      />
+      <UIToggle :id="'summerLovers'" :label="'Summer Lovers'" :checked="summerLovers.checked"
+        :disabled="summerLovers.disabled" @switchToggle="toggleChange3" />
     </div>
 
     <div>
-      <UIToggle
-        :id="'pinkPanthers'"
-        :label="'Pink Panthers'"
-        :checked="pinkPanthers.checked"
-        :disabled="pinkPanthers.disabled"
-        @switchToggle="toggleChange4"
-      />
+      <UIToggle :id="'pinkPanthers'" :label="'Pink Panthers'" :checked="pinkPanthers.checked"
+        :disabled="pinkPanthers.disabled" @switchToggle="toggleChange4" />
     </div>
 
     <!-- UIRadioButton component instances -->
     <!--Radio Buttons for hotel-->
     <div class="hotel-radio-buttons">
-      <UIRadioButton
-        v-for="radio in radioButtonsHotel"
-        :key="radio.label"
-        :className="'hotel'"
-        :label="radio.label"
-        :value="radio.value"
-        v-model="pickedRadioHotel"
-        :disabled="radio.disabled"
-      />
+      <UIRadioButton v-for="radio in radioButtonsHotel" :key="radio.label" :className="'hotel'" :label="radio.label"
+        :value="radio.value" v-model="pickedRadioHotel" :disabled="radio.disabled" />
     </div>
     <!--Radio Buttons for flight-->
     <div class="flight-radio-buttons">
-      <UIRadioButton
-        v-for="radio in radioButtonsFlight"
-        :key="radio.label"
-        :className="'flight'"
-        :label="radio.label"
-        :value="radio.value"
-        after
-        :disabled="radio.disabled"
-        v-model="pickedRadioFlight"
-      />
+      <UIRadioButton v-for="radio in radioButtonsFlight" :key="radio.label" :className="'flight'" :label="radio.label"
+        :value="radio.value" after :disabled="radio.disabled" v-model="pickedRadioFlight" />
     </div>
 
     <!-- UICheckBox component instances -->
     <!-- Checkboxes for hotel -->
     <div class="hotel-checkbox">
-      <UICheckbox
-        v-for="checkbox in checkboxHotel"
-        :key="checkbox.id"
-        :className="'hotel'"
-        :label="checkbox.label"
-        :disabled="checkbox.disabled"
-        @takeCheckedInfo="takeCheckedInfo"
-      />
+      <UICheckbox v-for="checkbox in checkboxHotel" :key="checkbox.id" :className="'hotel'" :label="checkbox.label"
+        :disabled="checkbox.disabled" @takeCheckedInfo="takeCheckedInfo" />
     </div>
 
     <!-- Checkboxes for flight -->
     <div class="flight-checkbox">
-      <UICheckbox
-        v-for="checkbox in checkboxFlight"
-        :key="checkbox.id"
-        :className="'flight'"
-        :disabled="checkbox.disabled"
-        :label="checkbox.label"
-        after
-        @takeCheckedInfo="takeCheckedInfo"
-      />
+      <UICheckbox v-for="checkbox in checkboxFlight" :key="checkbox.id" :className="'flight'"
+        :disabled="checkbox.disabled" :label="checkbox.label" after @takeCheckedInfo="takeCheckedInfo" />
     </div>
 
     <!-- Example of a disabled checkbox -->
-    <UICheckbox
-      :label="'Disabled'"
-      :className="'hotel'"
-      :after="false"
-      :disabled="true"
-      :name="'disabled'"
-      :id="'deneme'"
-    />
+    <UICheckbox :label="'Disabled'" :className="'hotel'" :after="false" :disabled="true" :name="'disabled'"
+      :id="'deneme'" />
   </div>
 </template>
 
