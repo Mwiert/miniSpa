@@ -44,6 +44,7 @@
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"
+
     />
     {{ selectedItem }}  
     {{ selectedPet }}
