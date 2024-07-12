@@ -8,7 +8,7 @@
       :options="options"
       :noItemsFound="filteredData.length === 0" />   <!--noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz-->
 
-    <SmartTableFooter />
+      <SmartTableFooter :tableCount="filteredData.length" />
     <!-- Footer kısmı pagination içerir -->
   </div>
 </template>
