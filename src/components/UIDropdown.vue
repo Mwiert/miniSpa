@@ -152,7 +152,8 @@ export default {
   display: inline-block;
   display: flex;
   flex-direction: column;
-  max-width: fit-content;
+  max-width: max-content;
+  min-width: 150px;
   
   .label {
     margin-top: 15px;
@@ -215,6 +216,7 @@ export default {
     overflow-y: auto;
     z-index: 1000;
     box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
+  }
 
     .search-container {
       position: relative;
@@ -234,7 +236,7 @@ export default {
         outline: none;
       }
 
-      .clear-search {
+      .clear-search-img {
         position: absolute;
         right: 24px;
         top: 24px;
@@ -249,14 +251,23 @@ export default {
         align-items: center;
         justify-content: center;
         margin-top: auto;
+
+        &-hover {
+          opacity: 0.7;
+        }
       }
+      .dropdown-content {
+      max-height: 200px;
+      overflow-y: auto;
+    }
     }
 
     .ui-dropdown-item {
+      display: flex;
+      align-items: center;
       padding: 8px;
-      padding-left: 15px;
-      //font-size: 15px;
       cursor: pointer;
+      transition: background-color 0.3s;
 
       &:hover {
         background-color: #f3f3f3;
@@ -279,6 +290,4 @@ export default {
     justify-content: center;
     align-items: center;
   }
-
-}
 </style>
