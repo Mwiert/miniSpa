@@ -105,7 +105,7 @@
       />
     </div>
 
-    <!-- UIRadioButton component instances -->
+    <!-- UIRadioButton component instances  -->
     <!--Radio Buttons for hotel-->
     <div class="hotel-radio-buttons">
       <UIRadioButton
