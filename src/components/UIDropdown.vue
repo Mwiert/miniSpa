@@ -49,43 +49,43 @@ export default {
     SvgIcon
   },
   props: {
-    items: {
+    items: {                    // items in the database.
       type: Array,
       required: true
     },
-    label: {
+    label: {                    // label on the dropdown to understand what the dropdown contents are.
       type: String,
       required: true
     },
-    fontSize: {
+    fontSize: {                   // defined fontsize shown in the dropdown.
       type: Number,
       default: 14
     },
-    placeHolder: {
+    placeHolder: {              // placeHolder before the selection.
       type: String,
       default: 'Select an item'
     },
-    searchable: {
+    searchable: {                // in many results user can find what he/she looks for.
       type: Boolean,
       default: false
     },
-    value: {
+    value: {                    // chosen object becomes the value.
       type: Object,
       default: () => ({})
     },
-    idField: {
+    idField: {                   //takes the id according to the value
       type: String,
       default: 'id'
     },
-    displayField: {
+    displayField: {              // takes the name of the chosen id
       type: String,
       default: 'name'
     },
-    urlField: {
+    urlField: {                  // picture of the object taken here
       type: String,
       default: 'url'
     },
-    dataSize:{
+    dataSize:{              // how many data will shown in the dropdown.
       type: Number,
       required: true
     }
@@ -93,16 +93,16 @@ export default {
   },
   data() {
     return {
-      isOpen: false,
-      searchQuery: '',
-      selectedItem: this.value,
+      isOpen: false,               // checks that if drowdown is open or not.
+      searchQuery: '',             // when the user input text, it comes to the searchQuery.
+      selectedItem: this.value,    // represents the currently selected item.
     };
   },
   computed: {
-    filteredItems() {
+    filteredItems() {                                                                                               // Filtered items according to the search query
       return this.items.filter(item => item[this.displayField].toLowerCase().includes(this.searchQuery.toLowerCase()));
     },
-    computedDataSize(): number {
+    computedDataSize(): number {                                              //if it is defined 'dataSize' if not 'itemLength'
       return this.dataSize !== null ? this.dataSize : this.items.length
     },
     dropdownListMaxHeight() {
@@ -113,32 +113,32 @@ export default {
     },
   },
   methods: {
-    toggleDropdown() {
+    toggleDropdown() {                  //opens and closes the dropdown
       this.isOpen = !this.isOpen;
     },
-    clearSearch(event: Event) {
+    clearSearch(event: Event) {         // clears the searchQuery
       this.searchQuery = '';
       event.stopPropagation() // Prevent dropdown from closing
     },
-    selectItem(item) {
+    selectItem(item) {               // takes the clicked item and starts the emit.
       this.selectedItem = item;
       this.$emit('input', item);
       this.isOpen = false;
     },
-    handleClickOutside(event: MouseEvent) {
+    handleClickOutside(event: MouseEvent) {         // when clicked out of the dropdown, dropdownMenu closes.
       const target = event.target as HTMLElement
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
     }
   },
-  mounted() {
-    document.addEventListener('click', this.handleClickOutside)
+  mounted() {                                                     
+    document.addEventListener('click', this.handleClickOutside)      // When is clicked , event occurs anywhere on the document. this.handleClickOutside is invoked.
   },
   beforeUnmount() {
-    document.removeEventListener('click', this.handleClickOutside)
+    document.removeEventListener('click', this.handleClickOutside)   // Ensures that the clickEventListener added in mounted is removed.
   },
-  watch: {
+  watch: {                             // watches the changes and updates the selectedItem.
     value(newVal) {
       this.selectedItem = newVal;
     }
