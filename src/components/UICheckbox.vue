@@ -1,9 +1,9 @@
 <template>
     <div class="resitech-checkbox-c" :class="[after ? 'after' : 'before', disabled ? 'disabled' : '']" :id="checkboxId"
-        :name="name" @click="handleClick">
-        <div v-if="!checkboxChecked" class="checkbox" :class="checkboxClassName"></div>
-        <div v-else class="checkbox--checked" :class="checkboxClassName">
-            <SvgIcon :name="'tick'" :size="'s'" class="icon" />
+        :name="name">
+        <div v-if="!checkboxChecked" class="checkbox" :class="checkboxClassName" @click="handleClick"></div>
+        <div v-else class="checkbox--checked" :class="checkboxClassName" @click="handleClick">
+            <SvgIcon :name="'tick'" class="icon" />
         </div>
         <div class="label">{{ checkboxLabel }}</div>
     </div>
@@ -46,7 +46,6 @@ export default {
         handleClick() {
             this.checkboxChecked = !this.checkboxChecked
             this.$emit('takeCheckedInfo', this.checkboxChecked);
-
         }
     }
 };
@@ -64,7 +63,6 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
     align-items: center;
     user-select: none;
     margin-bottom: 8px;
-    cursor: pointer;
 
     &.before {
         flex-direction: row;
@@ -74,6 +72,7 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
         flex-direction: row-reverse;
 
         .checkbox {
+            cursor: pointer;
             margin-right: 0;
             margin-left: 8px;
 
@@ -85,16 +84,18 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
     }
 
     .checkbox {
-        width: 20px;
-        height: 20px;
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
         border: 2px solid #CACACA;
         margin-right: 8px;
         transition: background-color 0.2s;
 
 
         &--checked {
-            width: 20px;
-            height: 20px;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
             margin-right: 8px;
             transition: background-color 0.2s;
             position: relative;
@@ -116,6 +117,8 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
             }
 
             .icon {
+                width: 9px;
+                height: 8px;
                 position: absolute;
                 top: 50%;
                 left: 50%;
