@@ -44,6 +44,7 @@
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"
+
     />
   </div>
 </template>
