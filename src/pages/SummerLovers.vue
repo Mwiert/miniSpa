@@ -2,8 +2,9 @@
 <template>
   <div>
     <UIDropdown
-      v-model="selectedPet"
-      :items="pets"
+      :value="selectedPet"                       
+      @input="selectedPet = $event"
+      :items="pets"                                               
       :label="petLabel"
       :fontSize="fontSize"
       idField="id"
@@ -13,7 +14,8 @@
       :dataSize="dataSize"
     />
     <UIDropdown
-      v-model="selectedFood"
+      :value="selectedFood" 
+      @input="selectedFood = $event"
       :items="foods"
       :label="foodLabel"
       :fontSize="fontSize"
@@ -24,7 +26,8 @@
       :dataSize="dataSize"
     />
     <UIDropdown
-      v-model="selectedToy"
+      :value="selectedToy" 
+      @input="selectedToy = $event"
       :items="toys"
       :label="toyLabel"
       :fontSize="fontSize"
@@ -35,7 +38,8 @@
       :dataSize="dataSize"
     /> 
     <UIDropdown
-      v-model="selectedItem"
+      :value="selectedItem" 
+      @input="selectedItem = $event"
       :items="items"
       :label="itemLabel"
       :fontSize="fontSize"
@@ -44,7 +48,6 @@
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"
-
     />
   </div>
 </template>
@@ -60,7 +63,7 @@ export default {
   data() {
     return {
       pets: [
-        { id: 1, imageUrl: "", name: 'Dog', detail: 'a' },
+        { id: 1, imageUrl: "https://example.com/dog.png", name: 'Dog', detail: 'a' },
         { id: 2, imageUrl: "", name: 'Cat', detail: 'b' },
         { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
         { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
@@ -69,7 +72,7 @@ export default {
         { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
       ],
       foods: [
-        { id: 1, imageUrl: "", name: 'Dog Food', detail: 'e' },
+        { id: 1, imageUrl: "https://example.com/dog.png", name: 'Dog Food', detail: 'e' },
         { id: 2, imageUrl: "", name: 'Cat Food', detail: 'f' },
         { id: 3, imageUrl: "", name: 'Fish Food', detail: 'g' },
         { id: 4, imageUrl: "", name: 'Bird Food', detail: 'h' }
