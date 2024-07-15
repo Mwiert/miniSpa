@@ -2,7 +2,6 @@
   <div class="button-c">
     <!-- UIButton component instances -->
     <UIButton
-      className=""
       text="Home"
       :isSpinnerActive="loadingStates.home.isLoading"
       :isDisabled="loadingStates.home.isDisabled"

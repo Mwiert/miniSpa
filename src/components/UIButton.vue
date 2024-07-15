@@ -1,5 +1,4 @@
 <template>
-  <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active the icon and the text will be shown-->
   <div class="ui-button-c">
     <button
@@ -33,15 +32,14 @@ export default {
   name: 'UIButton',
   props: {
     // Classes such as hotel and flight are derived from the .reisetech-btn class.
-    // .reisetech-btn class has the default css style, but the appearance of the button changes depending on the incoming flight and hotel class.
     className: {
       type: String,
-      default: 'reisetech-btn '
+      default: 'default'
     },
     // Text is the label of button
     text: {
       type: String,
-      default: 'Powerpuff Girls'
+      default: 'Button'
     },
     // routeUrl is the routing Url
     routerUrl: {
@@ -130,6 +128,29 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
       height: $large;
     }
 
+    &__default {
+      border: 2px solid black;
+      &:hover {
+        background: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
+        color: white;
+        .icon {
+          filter: brightness(100) invert(1); // Icon color filter on hover
+        }
+      }
+      &.disabled {
+        background: #e0e0e0;
+        border: 2px solid #bdbdbd;
+        color: #9e9e9e;
+        cursor: not-allowed !important;
+        opacity: 0.6;
+
+        .icon {
+          filter: brightness(100) invert(1);
+        }
+      }
+    }
+
     &__flight {
       background-color: $primary-color;
       border: none;
@@ -176,6 +197,10 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
           color: #9e9e9e;
           cursor: not-allowed;
           opacity: 0.6;
+
+          .icon {
+            filter: brightness(100) invert(1);
+          }
         }
       }
     }
@@ -389,28 +414,6 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
             filter: brightness(100) invert(1);
           }
         }
-      }
-    }
-
-    &:hover {
-      background: $accent-primary-color;
-      border: 2px solid $accent-primary-color;
-      color: white;
-
-      .icon {
-        filter: brightness(100) invert(1); // Icon color filter on hover
-      }
-    }
-
-    &.disabled {
-      background: #e0e0e0;
-      border: 2px solid #bdbdbd;
-      color: #9e9e9e;
-      cursor: not-allowed !important;
-      opacity: 0.6;
-
-      .icon {
-        filter: brightness(100) invert(1);
       }
     }
   }
