@@ -24,7 +24,7 @@ export default {
     //The text displayed next to the toggle switch
     label: {
       type: String,
-      default: 'PowerPuffGirls'
+      default: 'Toggle'
     },
     // Determines if the label is positioned after the switch
     after: {
