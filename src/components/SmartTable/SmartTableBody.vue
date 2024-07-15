@@ -5,11 +5,10 @@
         class="grid-header"
         v-for="(header, index) in Columns"
         :key="index"
-        @click="header.sortable ? sort(header.label) : null"
       >
         <span>{{ header.name }}</span>
         <span v-if="header.sortable">
-          <SvgIcon class="sort-button" :name="'arrow-selector-v'" size="s" />
+          <SvgIcon class="sort-button" :name="'arrow-selector-v'" size="s" @click="header.sortable ? sort(header.label) : null" />
         </span>
       </div>
     </div>
@@ -129,8 +128,10 @@ export default {
     },
 
     getCellClass(cellData: any) {
-      if (typeof cellData.text === 'string' || typeof cellData.text === 'number') {
+      if (cellData.class === 'status') {
         return `${cellData.class}-${cellData.text}`
+      }else if(cellData.class === 'price'  || cellData.class === 'promoCode'){        
+        return `${cellData.class}`
       }
       return 'default-class'
     }
@@ -139,7 +140,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.smart-table-body-c {
+  .smart-table-body-c {
   display: block;
   margin: 20px 0;
 
@@ -237,7 +238,7 @@ export default {
     }
 
 
-        [class*="price-"],[class*="promoCode-"] {
+        .price,.promoCode {
         font-weight: bold;
         }
     }
@@ -257,9 +258,8 @@ export default {
   .grid-row.odd-row {
     background-color: #f5f7fa;
   }
-}
 
-@media (max-width: 1000px) {
+  @media (max-width: 1000px) {
   .smart-table-body-c {
     overflow-x: auto;
   }
@@ -268,5 +268,6 @@ export default {
   .grid-row {
     overflow-x: auto;
   }
+}
 }
 </style>
