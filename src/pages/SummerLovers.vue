@@ -7,12 +7,14 @@
       displayField="name"
       urlField="imageUrl"
       searchable
+      :label="petLabel"
       :dataSize="dataSize"
     />
     <UIDropdown
       v-model="selectedFood"
       :items="foods"
       :fontSize="fontSize"
+      :label="foodLabel"
       displayField="name"
       urlField="imageUrl"
       searchable
@@ -23,6 +25,7 @@
       :items="toys"
       :fontSize="fontSize"
       displayField="name"
+      :label="toyLabel"
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"

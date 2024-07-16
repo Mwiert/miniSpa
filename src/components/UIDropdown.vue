@@ -1,12 +1,7 @@
 <template>
   <div class="ui-dropdown-c">
-    {{ selectedItem }}
     <label class="label">{{ label }}</label>
-    <button
-      @click="toggleDropdown"
-      :class="{ 'ui-dropdown-button-active': isOpen }"
-      class="ui-dropdown-button"
-    >
+    <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
       <span
         :class="{ 'placeholder-text-active': !selectedItem[displayField] }"
         class="placeholder-text"
@@ -43,7 +38,7 @@
         :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }"
       >
         <div
-          v-for="(item,index) in filteredItems()"
+          v-for="(item, index) in filteredItems()"
           :key="index"
           class="ui-dropdown-item"
           @click="selectItem(item)"
@@ -118,7 +113,7 @@ export default {
       isOpen: false, // checks that if drowdown is open or not.
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItem: this.modelValue, // represents the currently selected item.
-      dropdownItems: this.items,
+      dropdownItems: this.items
     }
   },
   computed: {
@@ -176,7 +171,7 @@ export default {
     value(newVal) {
       this.selectedItem = newVal
     }
-  },
+  }
 }
 </script>
 
@@ -186,8 +181,6 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-
   .label {
     display: flex;
     justify-content: center;
@@ -211,7 +204,7 @@ export default {
     align-items: center;
     display: flex;
 
-    &:active {
+    &.active {
       border: 1px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -237,26 +230,28 @@ export default {
 
   .ui-dropdown-menu {
     position: absolute;
-    max-width: fit-content;
+    width: 10rem;
     top: 100%;
     left: 0;
     right: 0;
     margin-top: 0.2rem;
-    padding-bottom: 17px;
+    padding-bottom: 1rem;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 12px;
-    max-height: 200px;
+    max-height: 12rem;
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1000;
     box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
     .search-container {
-      display: flex;
       background-color: #fff;
       align-items: center;
+      min-width: fit-content;
 
       .search-content-wrapper {
+        display: flex;
+        flex-direction: row;
         position: relative;
         box-sizing: border-box;
         margin: 10px;
@@ -266,7 +261,7 @@ export default {
 
         .ui-dropdown-search {
           max-width: fit-content;
-          width: 70%;
+          width: 100%;
           padding: 10px;
           border-radius: 10px;
           border: none;
@@ -274,20 +269,21 @@ export default {
             outline: none;
           }
         }
-        
 
         .clear-search {
+          display: flex;
+          align-items: center;
           padding-right: 1.25rem;
           height: 100%;
-          width: 100%;
-      
+          width: 15%;
+
           .clear-search-img {
             position: absolute;
             cursor: pointer;
-            width: 1.2rem;
-            height: 1.2rem;
+            width: 1rem;
+            height: 1rem;
             &:hover {
-              filter:opacity(0.5);
+              filter: opacity(0.5);
             }
           }
         }
@@ -297,6 +293,7 @@ export default {
     .ui-dropdown-content {
       max-height: 200px;
       overflow-y: auto;
+
       .ui-dropdown-item {
         display: flex;
         align-items: center;
