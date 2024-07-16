@@ -114,23 +114,25 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
 
   .checkbox {
     cursor: pointer;
-    width: 24px;
-    height: 24px;
-    border: 2px solid #cacaca;
+    width: 22px;
+    height: 22px;
+    border: 3px solid #cacaca;
     margin-right: 8px;
     transition: background-color 0.2s;
+    border-radius: 20%;
 
     &--checked {
       cursor: pointer;
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       margin-right: 8px;
       transition: background-color 0.2s;
       position: relative;
-      border: 2px solid black;
+      border: 3px solid black;
+      border-radius: 20%;
 
       &.hotel {
-        border: 2px solid $secondary-color;
+        border: 3px solid $secondary-color;
 
         .icon {
           filter: $hotel-color-filter;
@@ -138,7 +140,7 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
       }
 
       &.flight {
-        border: 2px solid $flight-color;
+        border: 3px solid $flight-color;
 
         .icon {
           filter: $flight-color-filter;
