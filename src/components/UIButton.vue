@@ -90,6 +90,7 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
   contrast(94%);
 
 .ui-button-c {
+  user-select: none;
   max-width: 400px;
   width: fit-content;
   min-width: 150px;

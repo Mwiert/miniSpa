@@ -75,6 +75,7 @@ export default {
 @import '../assets/css/main.scss';
 
 .reisetech-radio-button-c {
+  user-select: none;
   justify-content: center;
   display: flex;
   flex-direction: row;
