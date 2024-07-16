@@ -61,7 +61,8 @@ export default {
   align-items: center;
   width: fit-content; // Width adjusts to the content
   padding: 10px 15px;
-  pointer-events: none; // Disables pointer events on the container
+  cursor: pointer;
+  pointer-events: all; // Disables pointer events on the container
 
   &.labelAfter {
     flex-direction: row-reverse; // Reverses the order of children elements

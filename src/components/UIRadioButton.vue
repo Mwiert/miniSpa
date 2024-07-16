@@ -1,11 +1,10 @@
 <template>
   <!--First div checks radio button is disabled and after or not-->
-  <div class="reisetech-radio-button-c" :class="[disabled ? 'disabled' : '', after ? 'after' : '']">
+  <div class="reisetech-radio-button-c" :class="[disabled ? 'disabled' : '', after ? 'after' : '']" @click="selectRadioButton">
     <div class="radio-label">{{ IsRadioLabel }}</div>
     <!--Here we check radio button is checked or not with computed radioButtonChecked-->
     <div
       class="radio-button"
-      @click="selectRadioButton"
       :class="[radioButtonClassName, radioButtonChecked ? 'checked' : '']"
     ></div>
   </div>
@@ -81,6 +80,7 @@ export default {
   flex-direction: row;
   align-items: center;
   padding-right: $padding-large;
+  cursor: pointer;
 
   .radio-label {
     height: 21px;
@@ -93,7 +93,6 @@ export default {
     border: 2px solid black;
     border-radius: 50%;
     position: relative;
-    cursor: pointer;
 
     &.checked {
       background-color: black;
