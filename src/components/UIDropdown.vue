@@ -1,9 +1,5 @@
 <template>
   <div class="ui-dropdown-c">
-
-
-    {{ dropdownItems }}
-
     <label class="label">{{ label }}</label>
     <button
       @click="toggleDropdown"
@@ -21,7 +17,7 @@
     </button>
     <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
       <div class="search-container">
-        <div class="search-borders">
+        <div class="search-content-wrapper">
           <input
             v-if="searchable"
             type="text"
@@ -29,6 +25,7 @@
             placeholder="Search..."
             class="ui-dropdown-search"
             @input="filteredItems()"
+
           />
           <span class="clear-search">
             <SvgIcon
@@ -146,7 +143,7 @@ export default {
       return this.selectedItem.id === item.id
     },
     selectItem(item) {
-      this.selectedItem = item
+      this.selectedItem = this.isSelected(item) ? {} : item
       this.$emit('update:modelValue', item)
       this.isOpen = false
       this.dropdownItems = this.items
@@ -193,7 +190,8 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
-  max-width: fit-content;
+  width: 100%;
+  height: 100%;
 
   .label {
     display: flex;
@@ -203,24 +201,23 @@ export default {
     font-size: 16px;
     font-weight: 70;
     color: #333;
-    margin-bottom: 5px;
     text-align: left; //Left aligned
     align-self: flex-start; // Align label to the start
   }
 
   .ui-dropdown-button {
-    padding: 10px; // smaller padding
+    max-width: fit-content;
+    padding: 8px; // smaller padding
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 10px; // smaller border-radius
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
-    margin-top: 5px;
     display: flex;
 
     &-active {
-      border: 2px solid #60acfe;
+      border: 1px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -245,9 +242,11 @@ export default {
 
   .ui-dropdown-menu {
     position: absolute;
+    max-width: fit-content;
     top: 100%;
     left: 0;
     right: 0;
+    margin-top: 0.2rem;
     padding-bottom: 17px;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -258,31 +257,30 @@ export default {
     z-index: 1000;
     box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
     .search-container {
-      position: relative;
       display: flex;
-      top: 0;
       background-color: #fff;
-      width: 100%;
-      height: 10%;
-      .search-borders {
+      align-items: center;
+
+      .search-content-wrapper {
         position: relative;
+        box-sizing: border-box;
+        margin: 10px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        align-items: center;
 
         .ui-dropdown-search {
-          width: 90%;
+          max-width: fit-content;
+          width: 70%;
           padding: 10px;
-          box-sizing: border-box;
-          margin: 10px;
-          border-radius: 10px;
-          border: 1px solid #ccc;
-          outline: none;
+          
         }
+        
         .clear-search {
+          padding-right: 1.25rem;
           .clear-search-img {
             position: absolute;
-            right: 10px;
-            top: 8px;
             cursor: pointer;
-
             &-hover {
               opacity: 0.7;
             }
@@ -290,6 +288,7 @@ export default {
         }
       }
     }
+
     .ui-dropdown-content {
       max-height: 200px;
       overflow-y: auto;
