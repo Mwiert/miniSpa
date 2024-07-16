@@ -69,7 +69,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between; // Ensures label and switch are on the same line
-  width: 12%; // Adjusts to the full width of the container
+  width: 100%; // Adjusts to the full width of the container
+  max-width: 165px;
   padding: 10px 15px;
   pointer-events: all; // Disables pointer events on the container
   cursor: pointer;
