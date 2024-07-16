@@ -1,20 +1,13 @@
 <template>
   <div class="time-benders-c">
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
-    <UIDateRangePicker
-      :isSingleDatePicker="true"
-      :isMultiDatePicker="false"
-      :validateMonth="1"
-      v-model="selectedDate"
-    />
+    <UIDateRangePicker v-model="selectedDate" />
   </div>
 </template>
 
 <script lang="ts">
 //Imports the needed components and interfaces
 import UIDateRangePicker from '../components/UIDateRangePicker.vue'
-import dayjs from 'dayjs'
-
 export default {
   name: 'TimeBenders',
   components: {
@@ -23,7 +16,7 @@ export default {
   data() {
     return {
       //Creating initial date
-      selectedDate: dayjs().format('YYYY-MM-DD')
+      selectedDate: ' '
     }
   },
   methods: {},

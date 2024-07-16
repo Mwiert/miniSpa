@@ -1,12 +1,11 @@
 <template>
-  <div
-    class="radio-button-container-c"
-    @click="selectRadioButton"
-    :class="[disabled ? 'disabled' : '', after ? 'after' : '']"
-  >
+  <!--First div checks radio button is disabled and after or not-->
+  <div class="reisetech-radio-button-c" :class="[disabled ? 'disabled' : '', after ? 'after' : '']">
     <div class="radio-label">{{ IsRadioLabel }}</div>
+    <!--Here we check radio button is checked or not with computed radioButtonChecked-->
     <div
       class="radio-button"
+      @click="selectRadioButton"
       :class="[radioButtonClassName, radioButtonChecked ? 'checked' : '']"
     ></div>
   </div>
@@ -16,14 +15,38 @@
 export default {
   name: 'UIRadioButton',
   props: {
-    id: String,
-    label: String,
-    after: Boolean,
-    className: String,
-    checked: Boolean,
-    disabled: Boolean,
-    value: String,
-    modelValue: String
+    id: {
+      type: String,
+      default: ''
+    },
+    label: {
+      type: String,
+      default: 'powerpuff girls'
+    },
+    after: {
+      type: Boolean,
+      default: false
+    },
+    className: {
+      type: String,
+      default: ''
+    },
+    checked: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: String,
+      default: ''
+    },
+    modelValue: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
@@ -32,11 +55,14 @@ export default {
     }
   },
   computed: {
+    // Check every radio button for checked prop
     radioButtonChecked() {
       return this.modelValue === this.value
     }
   },
   methods: {
+    // On click method has 2 emits. First emit makes sure v-model updated
+    // Second emit use for user interaction in main page
     selectRadioButton() {
       if (this.disabled) return
       this.$emit('update:modelValue', this.value)
@@ -49,24 +75,25 @@ export default {
 <style lang="scss" scoped>
 @import '../assets/css/main.scss';
 
-.radio-button-container-c {
+.reisetech-radio-button-c {
   justify-content: center;
   display: flex;
   flex-direction: row;
   align-items: center;
-  cursor: pointer;
-  padding: $padding-small;
+  padding-right: $padding-large;
 
   .radio-label {
+    height: 21px;
     margin-right: 8px;
   }
 
   .radio-button {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border: 2px solid black;
     border-radius: 50%;
     position: relative;
+    cursor: pointer;
 
     &.checked {
       background-color: black;
@@ -81,16 +108,16 @@ export default {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 10px;
-          height: 10px;
+          width: 8px;
+          height: 8px;
           background-color: white;
           border-radius: 50%;
         }
       }
 
       &.flight {
-        background-color: $primary-color;
-        border: 2px solid $primary-color;
+        background-color: $accent-primary-color;
+        border: 2px solid $accent-primary-color;
 
         &::after {
           content: '';
@@ -98,8 +125,8 @@ export default {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 10px;
-          height: 10px;
+          width: 8px;
+          height: 8px;
           background-color: white;
           border-radius: 50%;
         }
@@ -111,8 +138,8 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         background-color: white;
         border-radius: 50%;
       }
@@ -123,12 +150,13 @@ export default {
     flex-direction: row-reverse;
 
     .radio-label {
+      height: 21px;
       margin-left: 8px;
     }
 
     .radio-button {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border: 2px solid black;
       border-radius: 50%;
       position: relative;
@@ -139,8 +167,8 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         background-color: white;
         border-radius: 50%;
       }
@@ -150,7 +178,7 @@ export default {
   &.disabled {
     cursor: not-allowed;
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.3;
   }
 }
 </style>

@@ -47,6 +47,8 @@
         :yearRange="validateYear"
         :monthRange="validateMonth"
         :saveDate="singleSelectedDate.date"
+        :isFutureValidation="isFuture"
+        :isPastValidation="isPast"
         @sendDateToParent="setCurrentDate"
         @dateSelected="handleDateSelected"
         @click="sendDateToParent()"
@@ -56,8 +58,11 @@
         :yearRange="validateYear"
         :monthRange="validateMonth"
         :saveDate="singleSelectedDate.date"
+        :isFutureValidation="isFuture"
+        :isPastValidation="isPast"
         @sendDateToParent="setCurrentDate"
         @dateSelected="handleDateSelected"
+        @click="sendDateToParent()"
       />
     </div>
   </div>
@@ -78,10 +83,12 @@ export default {
   },
   props: {
     isMultiDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
-    isSingleDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
-    validateMonth: { type: Number, default: 9999 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
-    validateYear: { type: Number, default: 9999 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
-    value: {} //This is for getting the selected date from the parent component TimeBenders
+    isSingleDatePicker: { type: Boolean, default: true }, //This is for asking to parent whether should the single date picker available in this implementation
+    validateMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    validateYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    value: {}, //This is for getting the selected date from the parent component TimeBenders
+    isPast: { type: Boolean, default: false },
+    isFuture: { type: Boolean, default: false }
   },
   data() {
     return {
@@ -135,10 +142,10 @@ export default {
 
       //If the multi date picker is enabled on TimeBenders, we are toggling the multi date picker with related single date picker logic
       if (this.isMultiDatePicker === true) {
+        this.isSingleDatePickerEnable = false
         if (this.isMultiDatePickerEnable === false) {
           this.isMultiDatePickerEnable = true
         } else {
-          this.isSingleDatePickerEnable = false
           this.isMultiDatePickerEnable = false
         }
       }
@@ -151,7 +158,8 @@ export default {
         year: dayjs().format('YYYY'),
         date: dayjs().format('YYYY-MM-DD')
       }
-    }
+    },
+    checkMultiOrSingleCalendar() {}
   },
   created() {
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.

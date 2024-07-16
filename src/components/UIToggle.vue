@@ -1,46 +1,52 @@
 <template>
-  <div class="ui-toggle-c" :class="{ labelAfter: after }" @click="toggle">
-    <div :for="id" class="toggle-label">{{ label }}</div>
-    <div class="toggle-switch">
-      <div :class="['toggle-slider', { checked }]"></div>
+  <div
+    class="reisetech-toogle-c"
+    :class="{ labelAfter: after, disabled: disabled }"
+    @click="toggle"
+  >
+    <div class="toggle-label">
+      {{ label }}
     </div>
-    <span v-if="after">{{ after }}</span>
+    <div class="toggle-switch" :class="{ checked: checked }">
+      <div class="toggle-slider" :class="{ checked: checked }"></div>
+    </div>
   </div>
 </template>
 
-<script script lang="ts">
+<script lang="ts">
 export default {
   name: 'UIToggle',
   props: {
+    //ID for the toggle element
     id: {
       type: String
     },
+    //The text displayed next to the toggle switch
     label: {
       type: String,
-      default: 'PowerPuffGirls'
+      default: 'Toggle'
     },
+    // Determines if the label is positioned after the switch
     after: {
       type: Boolean,
       default: false
     },
-    name: {
-      type: String,
-      default: ''
-    },
+    // Determines if the toggle switch is in the checked state
     checked: {
       type: Boolean,
       default: false
     },
+    // Determines if the toggle switch is disabled
     disabled: {
       type: Boolean,
       default: false
     }
   },
-
   methods: {
+    // Method to toggle the switch state, emitting an event if not disabled
     toggle() {
       if (!this.disabled) {
-        this.$emit('update:checked', !this.checked)
+        this.$emit('switchToggle', !this.checked)
       }
     }
   }
@@ -49,51 +55,64 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
-.ui-toggle-c {
-  display: flex;
 
+.reisetech-toogle-c {
+  display: flex;
   align-items: center;
-  border: 2px solid black;
-  width: fit-content;
-  border-radius: 30px;
+  width: fit-content; // Width adjusts to the content
   padding: 10px 15px;
+  pointer-events: none; // Disables pointer events on the container
 
   &.labelAfter {
-    flex-direction: row-reverse;
+    flex-direction: row-reverse; // Reverses the order of children elements
   }
-}
+  &.disabled {
+    opacity: 0.5;
 
-.toggle-label {
-  margin-right: 10px;
-}
+    .toggle-switch {
+      cursor: not-allowed !important;
+      background-color: #ccc;
+    }
+    .toggle-slider {
+      background-color: #fff;
+    }
+  }
 
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 20px;
-  background-color: #ccc;
-  border-radius: 20px;
-  transition: 0.4s;
-  cursor: pointer;
-}
+  .toggle-label {
+    margin-right: 10px;
+  }
 
-.toggle-slider {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
-  background-color: white;
-  border-radius: 50%;
-  transition: 0.4s;
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 20px;
+    transition: background-color 0.4s;
+    pointer-events: all; // Enables pointer events
+    cursor: pointer; // Changes cursor to pointer
 
-  &.checked {
-    background-color: $primary-color;
-    transform: translateX(20px);
+    &.checked {
+      background-color: $accent-secondary-color;
+    }
 
-    &.checked .label-after {
-      background-color: aqua;
+    .toggle-slider {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      background-color: white;
+      border-radius: 50%;
+      transition:
+        transform 0.4s,
+        background-color 0.4s;
+
+      &.checked {
+        background-color: $accent-primary-color;
+        transform: translateX(20px); // Moves the slider to the right when checked
+      }
     }
   }
 }
