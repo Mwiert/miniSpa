@@ -133,6 +133,7 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
 
       &.hotel {
         border: 3px solid $secondary-color;
+        box-shadow: 0 0 4px $secondary-color;
 
         .icon {
           filter: $hotel-color-filter;
@@ -141,6 +142,7 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
 
       &.flight {
         border: 3px solid $flight-color;
+        box-shadow: 0 0 4px $flight-color;
 
         .icon {
           filter: $flight-color-filter;

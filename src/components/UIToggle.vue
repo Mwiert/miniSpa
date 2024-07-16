@@ -64,12 +64,14 @@ export default {
 }
 
 .reisetech-toggle-c {
+
   display: flex;
   align-items: center;
   justify-content: space-between; // Ensures label and switch are on the same line
-  width: 30%; // Adjusts to the full width of the container
+  width: 12%; // Adjusts to the full width of the container
   padding: 10px 15px;
-  pointer-events: none; // Disables pointer events on the container
+  pointer-events: all; // Disables pointer events on the container
+  cursor: pointer;
   margin-bottom: 10px; // Adds space between toggle items
 
   &.labelAfter {
