@@ -101,11 +101,13 @@ export default {
       &.flight {
         background-color: $accent-primary-color;
         border: 2px solid $accent-primary-color;
+        box-shadow: 0 0 4px $accent-primary-color;
       }
 
       &.hotel {
         background-color: $secondary-color;
         border: 2px solid $secondary-color;
+        box-shadow: 0 0 4px $secondary-color;
       }
 
       &::after {
