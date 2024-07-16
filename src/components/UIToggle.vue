@@ -1,14 +1,16 @@
 <template>
-  <div
-    class="reisetech-toogle-c"
-    :class="{ labelAfter: after, disabled: disabled }"
-    @click="toggle"
-  >
-    <div class="toggle-label">
-      {{ label }}
-    </div>
-    <div class="toggle-switch" :class="{ checked: checked }">
-      <div class="toggle-slider" :class="{ checked: checked }"></div>
+  <div class="toggle-container">
+    <div
+      class="reisetech-toggle-c"
+      :class="{ labelAfter: after, disabled: disabled }"
+      @click="toggle"
+    >
+      <div class="toggle-label">
+        {{ label }}
+      </div>
+      <div class="toggle-switch" :class="{ checked: checked }">
+        <div class="toggle-slider" :class="{ checked: checked }"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -56,12 +58,19 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
 
-.reisetech-toogle-c {
+.toggle-container {
+  display: flex;
+  flex-direction: column; // Makes all toggles stack vertically
+}
+
+.reisetech-toggle-c {
   display: flex;
   align-items: center;
-  width: fit-content; // Width adjusts to the content
+  justify-content: space-between; // Ensures label and switch are on the same line
+  width: 30%; // Adjusts to the full width of the container
   padding: 10px 15px;
   pointer-events: none; // Disables pointer events on the container
+  margin-bottom: 10px; // Adds space between toggle items
 
   &.labelAfter {
     flex-direction: row-reverse; // Reverses the order of children elements
