@@ -5,7 +5,7 @@
     <UIDropdown
       :value="selectedPet"                       
       @input="selectedPet = $event"
-      :items="pets"                                               
+      v-model:items="pets"                                               
       :label="petLabel"
       :fontSize="fontSize"
       idField="id"
@@ -17,7 +17,7 @@
     <UIDropdown
       :value="selectedFood" 
       @input="selectedFood = $event"
-      :items="foods"
+      v-model:items="foods"
       :label="foodLabel"
       :fontSize="fontSize"
       idField="id"
@@ -29,7 +29,7 @@
     <UIDropdown
       :value="selectedToy" 
       @input="selectedToy = $event"
-      :items="toys"
+      v-model:items="toys"
       :label="toyLabel"
       :fontSize="fontSize"
       idField="id"
@@ -41,7 +41,7 @@
     <UIDropdown
       :value="selectedItem" 
       @input="selectedItem = $event"
-      :items="items"
+      v-model:items="items"
       :label="itemLabel"
       :fontSize="fontSize"
       idField="id"
@@ -68,10 +68,10 @@ export default {
         { id: 2, imageUrl: "", name: 'Cat', detail: 'b' },
         { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
         { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
-        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
-        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 1, imageUrl: "", name: 'Dog', detail: 'a' }
+        { id: 5, imageUrl: "", name: 'Fish', detail: 'c' },
+        { id: 6, imageUrl: "", name: 'Bird', detail: 'd' },
+        { id: 7, imageUrl: "", name: 'Fish', detail: 'c' },
+        { id: 8, imageUrl: "", name: 'Dog', detail: 'a' }
       ],
       foods: [
         { id: 1, imageUrl: "https://example.com/dog.png", name: 'Dog Food', detail: 'e' },
