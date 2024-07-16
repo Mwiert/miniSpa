@@ -5,11 +5,10 @@
         class="grid-header"
         v-for="(header, index) in Columns"
         :key="index"
-        @click="header.sortable ? sort(header.label) : null"
       >
         <span>{{ header.name }}</span>
         <span v-if="header.sortable">
-          <SvgIcon class="sort-button" :name="'arrow-selector-v'" size="s" />
+          <SvgIcon class="sort-button" :name="'arrow-selector-v'" size="s" @click="header.sortable ? sort(header.label) : null" />
         </span>
       </div>
     </div>
@@ -129,8 +128,10 @@ export default {
     },
 
     getCellClass(cellData: any) {
-      if (typeof cellData.text === 'string' || typeof cellData.text === 'number') {
+      if (cellData.class === 'status') {
         return `${cellData.class}-${cellData.text}`
+      }else if(cellData.class === 'price'  || cellData.class === 'promoCode'){        
+        return `${cellData.class}`
       }
       return 'default-class'
     }
@@ -139,10 +140,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.smart-table-body-c {
+  .smart-table-body-c {
   display: block;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 
   .smart-table-main-grid {
     display: grid;
@@ -152,18 +152,15 @@ export default {
     width: 100%;
     gap: 10px;
 
-    .grid-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      color: black;
-      padding: 15px;
-      border-radius: 10px;
-      border: none;
-      transition:
-        transform 0.2s,
-        background-color 0.3s;
+        .grid-header {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-weight: bold;
+          color: black;
+          padding: 15px;
+          border-radius: 10px;
+          border: none;
 
       .sort-button {
         cursor: pointer;
@@ -173,51 +170,54 @@ export default {
     }
   }
 
-  .grid-row {
-    display: grid;
-    grid-template-columns: v-bind('gridTemplateColumns');
-    width: 100%;
-    gap: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 40px;
-    padding: 0.5px;
-
-    .no-grid-item {
-      padding: 28px;
+    .grid-row {
+      display: grid;
+      grid-template-columns: v-bind('gridTemplateColumns');
+      width: 100%;
+      gap: 5px;
+      margin-bottom: 10px;
       border: 1px solid #ccc;
-      text-align: center;
-      font-weight: bold;
-      border-radius: 40px;
-      background-color: #ffffff;
-      border: none;
-      grid-column: 1 / -1;
-    }
+      border-radius: 40px; 
+      padding: 0.5px; 
+      animation: fadeIn 0.5s ease-in-out;
 
-    .grid-item {
-      padding: 15px;
-      border: 1px solid #ccc;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      border-radius: 30px;
-      border: none;
-    }
-    .status-Confirmed,
-    .status-Pending,
-    .status-Cancelled {
-      padding: 5px 10px;
-      border-radius: 30px;
-      border: 3px solid;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 50%;
-      height: 40px;
-      margin: 10px auto;
-    }
+        .no-grid-item {
+          padding: 28px;
+          border: 1px solid #ccc;
+          text-align: center;
+          font-weight: bold;
+          border-radius: 40px;
+          background-color: #ffffff;
+          border: none;
+          grid-column: 1 / -1; 
+          animation: fadeIn 0.1s ease-in-out;
+        }
+
+        .grid-item {
+          padding: 15px;
+          border: 1px solid #ccc;
+          text-align: center;
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          border-radius: 30px;
+          border: none;
+          animation: fadeIn 0.3s ease-in-out;
+        }
+        .status-Confirmed,
+        .status-Pending,
+        .status-Cancelled {
+          padding: 5px 10px;
+          border-radius: 30px;
+          border: 3px solid;
+          font-weight: bold;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 50%;
+          height: 40px; 
+          margin: 10px auto; 
+        }
 
     .status-Confirmed {
       background-color: #ccffdd;
@@ -237,14 +237,11 @@ export default {
       border-color: #ee3535;
     }
 
-    [class*='price-'] {
-      font-weight: bold;
-    }
 
-    [class*='promoCode-'] {
-      font-weight: bold;
+        .price,.promoCode {
+        font-weight: bold;
+        }
     }
-  }
 
   @keyframes fadeIn {
     from {
@@ -261,9 +258,8 @@ export default {
   .grid-row.odd-row {
     background-color: #f5f7fa;
   }
-}
 
-@media (max-width: 1000px) {
+  @media (max-width: 1000px) {
   .smart-table-body-c {
     overflow-x: auto;
   }
@@ -272,5 +268,6 @@ export default {
   .grid-row {
     overflow-x: auto;
   }
+}
 }
 </style>

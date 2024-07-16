@@ -2,12 +2,10 @@
   <div class="button-c">
     <!-- UIButton component instances -->
     <UIButton
-      className=""
       text="Home"
       :isSpinnerActive="loadingStates.home.isLoading"
       :isDisabled="loadingStates.home.isDisabled"
       @click="setLoadingState('home')"
-      :isRouter="true"
       routerUrl="/"
     />
     <UIButton
@@ -57,7 +55,6 @@
     />
 
     <UIButton
-      className="disabled"
       text="Disabled"
       :isSpinnerActive="loadingStates.disabledButton.isLoading"
       :isDisabled="loadingStates.disabledButton.isDisabled"
@@ -292,29 +289,29 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
 
-.hotel-radio-buttons {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-}
+  .hotel-radio-buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
 
-.flight-radio-buttons {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-}
+  .flight-radio-buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
 
-.hotel-checkbox {
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-}
+  .hotel-checkbox {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+  }
 
-.flight-checkbox {
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
+  .flight-checkbox {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>

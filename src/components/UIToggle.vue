@@ -1,5 +1,9 @@
 <template>
-  <div class="ui-toggle-c" :class="{ labelAfter: after, disabled: disabled }" @click="toggle">
+  <div
+    class="reisetech-toogle-c"
+    :class="{ labelAfter: after, disabled: disabled }"
+    @click="toggle"
+  >
     <div class="toggle-label">
       {{ label }}
     </div>
@@ -20,7 +24,7 @@ export default {
     //The text displayed next to the toggle switch
     label: {
       type: String,
-      default: 'PowerPuffGirls'
+      default: 'Toggle'
     },
     // Determines if the label is positioned after the switch
     after: {
@@ -52,7 +56,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/css/main.scss';
 
-.ui-toggle-c {
+.reisetech-toogle-c {
   display: flex;
   align-items: center;
   width: fit-content; // Width adjusts to the content
@@ -73,43 +77,43 @@ export default {
       background-color: #fff;
     }
   }
-}
 
-.toggle-label {
-  margin-right: 10px;
-}
-
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 20px;
-  background-color: #ccc;
-  border-radius: 20px;
-  transition: background-color 0.4s;
-  pointer-events: all; // Enables pointer events
-  cursor: pointer; // Changes cursor to pointer
-
-  &.checked {
-    background-color: $accent-secondary-color;
+  .toggle-label {
+    margin-right: 10px;
   }
-}
 
-.toggle-slider {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
-  background-color: white;
-  border-radius: 50%;
-  transition:
-    transform 0.4s,
-    background-color 0.4s;
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 20px;
+    transition: background-color 0.4s;
+    pointer-events: all; // Enables pointer events
+    cursor: pointer; // Changes cursor to pointer
 
-  &.checked {
-    background-color: $accent-primary-color;
-    transform: translateX(20px); // Moves the slider to the right when checked
+    &.checked {
+      background-color: $accent-secondary-color;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      background-color: white;
+      border-radius: 50%;
+      transition:
+        transform 0.4s,
+        background-color 0.4s;
+
+      &.checked {
+        background-color: $accent-primary-color;
+        transform: translateX(20px); // Moves the slider to the right when checked
+      }
+    }
   }
 }
 </style>

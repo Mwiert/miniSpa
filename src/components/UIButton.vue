@@ -1,29 +1,29 @@
 <template>
-  <!-- btnIsRouter is checking for button has routing function-->
   <!-- If spinner is not active the icon and the text will be shown-->
   <div class="ui-button-c">
     <button
       class="reisetech-btn"
-      :class="[`reisetech-btn__${btnClassName}`, size]"
+      :class="[`reisetech-btn__${className}`, size, isDisabled ? 'disabled' : '']"
       :disabled="isDisabled"
-      v-if="!btnIsRouter"
+      v-if="routerUrl == ''"
     >
       <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
-      <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="btnIcon" class="icon" />
+      <SvgIcon v-if="icon && !isSpinnerActive" :size="iconSize" :name="icon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
-      <span v-else>{{ btnText }}</span>
+      <span v-else>{{ text }}</span>
     </button>
-    <router-link
-      :to="routerUrl"
+    <button
       class="reisetech-btn"
-      :class="[`reisetech-btn__${btnClassName}`, size]"
+      :class="[`reisetech-btn__${className}`, size, isDisabled ? 'disabled' : '']"
+      :disabled="isDisabled"
+      @click="handlerUrl(routerUrl)"
       v-else
     >
       <!-- Icon's name should be the name of the .svg file-->
-      <SvgIcon v-if="icon && !isSpinnerActive" :size="btnIconSize" :name="icon" class="icon" />
+      <SvgIcon v-if="icon && !isSpinnerActive" :size="iconSize" :name="icon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
-      <span v-else>{{ btnText }}</span>
-    </router-link>
+      <span v-else>{{ text }}</span>
+    </button>
   </div>
 </template>
 
@@ -32,7 +32,6 @@ export default {
   name: 'UIButton',
   props: {
     // Classes such as hotel and flight are derived from the .reisetech-btn class.
-    // .reisetech-btn class has the default css style, but the appearance of the button changes depending on the incoming flight and hotel class.
     className: {
       type: String,
       default: 'default'
@@ -40,12 +39,7 @@ export default {
     // Text is the label of button
     text: {
       type: String,
-      default: 'Powerpuff Girls'
-    },
-    // isRouter is checking the button is routing or not
-    isRouter: {
-      type: Boolean,
-      default: false
+      default: 'Button'
     },
     // routeUrl is the routing Url
     routerUrl: {
@@ -77,15 +71,13 @@ export default {
     }
   },
   data() {
-    return {
-      btnClassName: this.className,
-      btnText: this.text,
-      btnIcon: this.icon,
-      btnIsRouter: this.isRouter,
-      btnIconSize: this.iconSize
-    }
+    return {}
   },
-  methods: {}
+  methods: {
+    handlerUrl(url) {
+      window.open(url, '_self')
+    }
+  }
 }
 </script>
 
@@ -96,8 +88,6 @@ $medium: 24px;
 $large: 48px;
 $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) brightness(99%)
   contrast(94%);
-
-// router-link takes tag 'a' and its default css should be overwritten
 
 .ui-button-c {
   max-width: 400px;
@@ -139,17 +129,24 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
     }
 
     &__default {
-      background-color: white;
       border: 2px solid black;
-      color: black;
-
       &:hover {
         background: $accent-primary-color;
         border: 2px solid $accent-primary-color;
         color: white;
-
         .icon {
           filter: brightness(100) invert(1); // Icon color filter on hover
+        }
+      }
+      &.disabled {
+        background: #e0e0e0;
+        border: 2px solid #bdbdbd;
+        color: #9e9e9e;
+        cursor: not-allowed !important;
+        opacity: 0.6;
+
+        .icon {
+          filter: brightness(100) invert(1);
         }
       }
     }
@@ -168,6 +165,13 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         border: none !important;
         color: white;
       }
+      &.disabled {
+        background: #e0e0e0;
+        color: #9e9e9e;
+        cursor: not-allowed;
+        opacity: 0.6;
+        border: none !important;
+      }
 
       &.outline {
         background-color: white;
@@ -182,6 +186,17 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
           background: $accent-primary-color;
           border: 2px solid $accent-primary-color;
           color: white;
+
+          .icon {
+            filter: brightness(100) invert(1);
+          }
+        }
+        &.disabled {
+          background: #e0e0e0;
+          border: 2px solid #bdbdbd !important;
+          color: #9e9e9e;
+          cursor: not-allowed;
+          opacity: 0.6;
 
           .icon {
             filter: brightness(100) invert(1);
@@ -204,7 +219,13 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         border: none !important;
         color: white;
       }
-
+      &.disabled {
+        background: #e0e0e0;
+        color: #9e9e9e;
+        cursor: not-allowed;
+        opacity: 0.6;
+        border: none !important;
+      }
       &.outline {
         background-color: white;
         color: $secondary-color;
@@ -223,6 +244,13 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
             filter: brightness(100) invert(1);
           }
         }
+        &.disabled {
+          background: #e0e0e0;
+          border: 2px solid #bdbdbd !important;
+          color: #9e9e9e;
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
       }
     }
 
@@ -236,6 +264,12 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         border: none !important;
         color: white;
       }
+      &.disabled {
+        background: #e0e0e0;
+        color: #9e9e9e;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
 
       &.outline {
         background-color: white;
@@ -246,6 +280,17 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
           background: $accent-primary-color;
           border: 2px solid $accent-primary-color;
           color: white;
+        }
+        &.disabled {
+          background: #e0e0e0;
+          border: 2px solid #bdbdbd !important;
+          color: #9e9e9e;
+          cursor: not-allowed;
+          opacity: 0.6;
+
+          .icon {
+            filter: brightness(100) invert(1);
+          }
         }
       }
     }
@@ -260,7 +305,12 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         border: none !important;
         color: white;
       }
-
+      &.disabled {
+        background: #e0e0e0;
+        color: #9e9e9e;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
       &.outline {
         background-color: white;
         color: $primary-color;
@@ -270,6 +320,17 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
           background: $accent-primary-color;
           border: 2px solid $accent-primary-color;
           color: white;
+        }
+        &.disabled {
+          background: #e0e0e0;
+          border: 2px solid #bdbdbd !important;
+          color: #9e9e9e;
+          cursor: not-allowed;
+          opacity: 0.6;
+
+          .icon {
+            filter: brightness(100) invert(1);
+          }
         }
       }
     }
@@ -284,6 +345,12 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         border: none !important;
         color: white;
       }
+      &.disabled {
+        background: #e0e0e0;
+        color: #9e9e9e;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
 
       &.outline {
         background-color: white;
@@ -294,6 +361,17 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
           background: $accent-primary-color;
           border: 2px solid $accent-primary-color;
           color: white;
+        }
+        &.disabled {
+          background: #e0e0e0;
+          border: 2px solid #bdbdbd !important;
+          color: #9e9e9e;
+          cursor: not-allowed;
+          opacity: 0.6;
+
+          .icon {
+            filter: brightness(100) invert(1);
+          }
         }
       }
     }
@@ -308,6 +386,12 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
         border: none !important;
         color: white;
       }
+      &.disabled {
+        background: #e0e0e0;
+        color: #9e9e9e;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
 
       &.outline {
         background-color: white;
@@ -319,49 +403,40 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
           border: 2px solid $accent-primary-color;
           color: white;
         }
-      }
-    }
+        &.disabled {
+          background: #e0e0e0;
+          border: 2px solid #bdbdbd !important;
+          color: #9e9e9e;
+          cursor: not-allowed;
+          opacity: 0.6;
 
-    &:hover {
-      background: $accent-primary-color;
-      border: 2px solid $accent-primary-color;
-      color: white;
-    }
-
-    &__disabled {
-      background: #e0e0e0;
-      border: 2px solid #bdbdbd;
-      color: #9e9e9e;
-      cursor: not-allowed;
-      opacity: 0.6;
-
-      &:hover {
-        background: #e0e0e0;
-        border: 2px solid #bdbdbd;
-        color: #9e9e9e;
+          .icon {
+            filter: brightness(100) invert(1);
+          }
+        }
       }
     }
   }
-}
 
-.spinner {
-  border: 4px solid rgba(58, 57, 57, 0.3);
-  border-radius: 50%;
-  border-top: 4px solid rgb(219, 219, 219);
-  width: 24px;
-  height: 24px;
-  animation: spin 2s linear infinite; // Spinner animation
-  position: absolute;
-}
-
-// Keyframes for spinner animation
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+  .spinner {
+    border: 4px solid rgba(58, 57, 57, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid rgb(219, 219, 219);
+    width: 24px;
+    height: 24px;
+    animation: spin 2s linear infinite; // Spinner animation
+    position: absolute;
   }
 
-  100% {
-    transform: rotate(360deg);
+  // Keyframes for spinner animation
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
 </style>
