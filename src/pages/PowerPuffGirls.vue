@@ -128,7 +128,7 @@
         v-model="pickedRadioFlight"
       />
     </div>
-
+    
     <!-- UICheckBox component instances -->
     <!-- Checkboxes for hotel -->
     <div class="hotel-checkbox">
