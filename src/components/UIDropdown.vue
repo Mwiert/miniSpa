@@ -99,10 +99,10 @@ export default {
     };
   },
   computed: {
-    filteredItems() {                                                                                               // Filtered items according to the search query
+    filteredItems() {                        // Filtered items according to the search query
       return this.items.filter(item => item[this.displayField].toLowerCase().includes(this.searchQuery.toLowerCase()));
     },
-    computedDataSize(): number {                                              //if it is defined 'dataSize' if not 'itemLength'
+    computedDataSize(): number {               //if it is defined 'dataSize' if not 'itemLength'
       return this.dataSize !== null ? this.dataSize : this.items.length
     },
     dropdownListMaxHeight() {
