@@ -1,6 +1,7 @@
 
 <template>
   <div>
+  
     <UIDropdown
       :value="selectedPet"                       
       @input="selectedPet = $event"
@@ -70,6 +71,7 @@ export default {
         { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
         { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
         { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
+        { id: 1, imageUrl: "", name: 'Dog', detail: 'a' }
       ],
       foods: [
         { id: 1, imageUrl: "https://example.com/dog.png", name: 'Dog Food', detail: 'e' },
