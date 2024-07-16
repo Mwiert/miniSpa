@@ -119,6 +119,7 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
     border: 2px solid #cacaca;
     margin-right: 8px;
     transition: background-color 0.2s;
+    border-radius: 20%;
 
     &--checked {
       cursor: pointer;
@@ -128,6 +129,7 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
       transition: background-color 0.2s;
       position: relative;
       border: 2px solid black;
+      border-radius: 20%;
 
       &.hotel {
         border: 2px solid $secondary-color;
