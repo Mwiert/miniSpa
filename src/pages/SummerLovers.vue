@@ -8,7 +8,6 @@
       v-model:items="pets"                                               
       :label="petLabel"
       :fontSize="fontSize"
-      idField="id"
       displayField="name"
       urlField="imageUrl"
       searchable
@@ -20,7 +19,6 @@
       v-model:items="foods"
       :label="foodLabel"
       :fontSize="fontSize"
-      idField="id"
       displayField="name"
       urlField="imageUrl"
       searchable
@@ -32,7 +30,6 @@
       v-model:items="toys"
       :label="toyLabel"
       :fontSize="fontSize"
-      idField="id"
       displayField="name"
       urlField="imageUrl"
       searchable
@@ -44,7 +41,6 @@
       v-model:items="items"
       :label="itemLabel"
       :fontSize="fontSize"
-      idField="id"
       displayField="name"
       urlField="imageUrl"
       searchable
@@ -64,32 +60,32 @@ export default {
   data() {
     return {
       pets: [
-        { id: 1, imageUrl: "https://example.com/dog.png", name: 'Dog', detail: 'a' },
-        { id: 2, imageUrl: "", name: 'Cat', detail: 'b' },
-        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
-        { id: 5, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 6, imageUrl: "", name: 'Bird', detail: 'd' },
-        { id: 7, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 8, imageUrl: "", name: 'Dog', detail: 'a' }
+        {imageUrl: "https://example.com/dog.png", name: 'Dog', detail: 'a' },
+        {imageUrl: "", name: 'Cat', detail: 'b' },
+        {imageUrl: "", name: 'Fish', detail: 'c' },
+        {imageUrl: "", name: 'Bird', detail: 'd' },
+        {imageUrl: "", name: 'Fish', detail: 'c' },
+        {imageUrl: "", name: 'Bird', detail: 'd' },
+        {imageUrl: "", name: 'Fish', detail: 'c' },
+        {imageUrl: "", name: 'Dog', detail: 'a' }
       ],
       foods: [
-        { id: 1, imageUrl: "https://example.com/dog.png", name: 'Dog Food', detail: 'e' },
-        { id: 2, imageUrl: "", name: 'Cat Food', detail: 'f' },
-        { id: 3, imageUrl: "", name: 'Fish Food', detail: 'g' },
-        { id: 4, imageUrl: "", name: 'Bird Food', detail: 'h' }
+        { imageUrl: "https://example.com/dog.png", name: 'Dog Food', detail: 'e' },
+        { imageUrl: "", name: 'Cat Food', detail: 'f' },
+        { imageUrl: "", name: 'Fish Food', detail: 'g' },
+        { imageUrl: "", name: 'Bird Food', detail: 'h' }
       ],
       toys: [
-        { id: 1, imageUrl: "", name: 'Dog Toy', detail: 'k' },
-        { id: 2, imageUrl: "", name: 'Cat Toy', detail: 'l' },
-        { id: 3, imageUrl: "", name: 'Fish Toy', detail: 'm' },
-        { id: 4, imageUrl: "", name: 'Bird Toy', detail: 'n' }
+        { imageUrl: "", name: 'Dog Toy', detail: 'k' },
+        { imageUrl: "", name: 'Cat Toy', detail: 'l' },
+        { imageUrl: "", name: 'Fish Toy', detail: 'm' },
+        { imageUrl: "", name: 'Bird Toy', detail: 'n' }
       ],
       items: [
-        { id: 1, imageUrl: "", name: 'Türk Hava Yollari', detail: 'o' },
-        { id: 2, imageUrl: "", name: 'Pegasus', detail: 'p' },
-        { id: 3, imageUrl: "", name: 'Sun Express', detail: 'r' },
-        { id: 4, imageUrl: "", name: 'Corelon', detail: 's' }
+        { imageUrl: "", name: 'Türk Hava Yollari', detail: 'o' },
+        { imageUrl: "", name: 'Pegasus', detail: 'p' },
+        { imageUrl: "", name: 'Sun Express', detail: 'r' },
+        { imageUrl: "", name: 'Corelon', detail: 's' }
       ],
       petLabel: 'Select a Pet',
       foodLabel: 'Select a Food',

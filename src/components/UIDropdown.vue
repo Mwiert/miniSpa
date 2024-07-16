@@ -1,8 +1,8 @@
 <template>
   <div class="ui-dropdown-c">
-    {{ filteredItems() }}
+
+
     {{ dropdownItems }}
-    {{ searchQuery }}
 
     <label class="label">{{ label }}</label>
     <button
@@ -21,23 +21,25 @@
     </button>
     <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
       <div class="search-container">
-        <input
-          v-if="searchable"
-          type="text"
-          v-model="searchQuery"
-          placeholder="Search..."
-          class="ui-dropdown-search"
-          @change="filteredItems()"
-        />
-        <span class="clear-search">
-          <SvgIcon
-            v-if="searchQuery"
-            @click="clearSearch"
-            class="clear-search-img"
-            :name="'x'"
-            :size="'s'"
+        <div class="search-borders">
+          <input
+            v-if="searchable"
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search..."
+            class="ui-dropdown-search"
+            @input="filteredItems()"
           />
-        </span>
+          <span class="clear-search">
+            <SvgIcon
+              v-if="searchQuery"
+              @click="clearSearch"
+              class="clear-search-img"
+              :name="'x'"
+              :size="'s'"
+            />
+          </span>
+        </div>
       </div>
       <div
         class="ui-dropdown-content"
@@ -45,10 +47,10 @@
       >
         <div
           v-for="item in filteredItems()"
-          :key="item[idField]"
+          :key="item.id"
           class="ui-dropdown-item"
-          @click="toggleItem(item)"
-          :class="{ selected: selectedItem == item }"
+          @click="selectItem(item)"
+          :class="{ selected: isSelected(item) }"
         >
           <!-- <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" /> -->
           <span>{{ item[displayField] }}</span>
@@ -67,6 +69,10 @@ export default {
     SvgIcon
   },
   props: {
+    modelValue: {
+      type: Object,
+      default: () => ({})
+    },
     items: {
       // items in the database.
       type: Array,
@@ -93,16 +99,7 @@ export default {
       type: Boolean,
       default: false
     },
-    value: {
-      // chosen object becomes the value.
-      type: Object,
-      default: () => ({})
-    },
-    idField: {
-      //takes the id according to the value
-      type: String,
-      default: 'id'
-    },
+
     displayField: {
       // takes the name of the chosen id
       type: String,
@@ -123,7 +120,7 @@ export default {
     return {
       isOpen: false, // checks that if drowdown is open or not.
       searchQuery: '', // when the user input text, it comes to the searchQuery.
-      selectedItem: this.value, // represents the currently selected item.
+      selectedItem: this.modelValue, // represents the currently selected item.
       dropdownItems: this.items
     }
   },
@@ -145,6 +142,15 @@ export default {
         item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
     },
+    isSelected(item) {
+      return this.selectedItem.id === item.id
+    },
+    selectItem(item) {
+      this.selectedItem = item
+      this.$emit('update:modelValue', item)
+      this.isOpen = false
+      this.dropdownItems = this.items
+    },
     toggleDropdown() {
       //opens and closes the dropdown
       this.isOpen = !this.isOpen
@@ -153,13 +159,6 @@ export default {
       // clears the searchQuery
       this.searchQuery = ''
       event.stopPropagation() // Prevent dropdown from closing
-    },
-    toggleItem(item) {
-      // takes the clicked item and starts the emit.
-      this.selectedItem = !this.selectedItem
-      this.$emit('input', item)
-      this.isOpen = !this.isOpen
-      this.dropdownItems = this.items
     },
     handleClickOutside(event: MouseEvent) {
       // when clicked out of the dropdown, dropdownMenu closes.
@@ -174,6 +173,11 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside) // Ensures that the clickEventListener added in mounted is removed.
+  },
+  created() {
+    for (let i = 0; i < this.dropdownItems.length; i++) {
+      this.dropdownItems[i].id = i + 1
+    }
   },
   watch: {
     // watches the changes and updates the selectedItem.
@@ -256,29 +260,32 @@ export default {
     .search-container {
       position: relative;
       display: flex;
-      position: sticky;
       top: 0;
       background-color: #fff;
-      z-index: 10;
+      width: 100%;
+      height: 10%;
+      .search-borders {
+        position: relative;
 
-      .ui-dropdown-search {
-        width: 90%;
-        padding: 10px;
-        box-sizing: border-box;
-        margin: 10px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        outline: none;
-      }
-      .clear-search {
-        .clear-search-img {
-          position: absolute;
-          right: 10px;
-          top: 8px;
-          cursor: pointer;
+        .ui-dropdown-search {
+          width: 90%;
+          padding: 10px;
+          box-sizing: border-box;
+          margin: 10px;
+          border-radius: 10px;
+          border: 1px solid #ccc;
+          outline: none;
+        }
+        .clear-search {
+          .clear-search-img {
+            position: absolute;
+            right: 10px;
+            top: 8px;
+            cursor: pointer;
 
-          &-hover {
-            opacity: 0.7;
+            &-hover {
+              opacity: 0.7;
+            }
           }
         }
       }
