@@ -98,38 +98,14 @@ export default {
     &.checked {
       background-color: black;
 
-      &.hotel {
-        background-color: $secondary-color;
-        border: 2px solid $secondary-color;
-
-        &::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 8px;
-          height: 8px;
-          background-color: white;
-          border-radius: 50%;
-        }
-      }
-
       &.flight {
         background-color: $accent-primary-color;
         border: 2px solid $accent-primary-color;
+      }
 
-        &::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 8px;
-          height: 8px;
-          background-color: white;
-          border-radius: 50%;
-        }
+      &.hotel {
+        background-color: $secondary-color;
+        border: 2px solid $secondary-color;
       }
 
       &::after {
@@ -160,18 +136,6 @@ export default {
       border: 2px solid black;
       border-radius: 50%;
       position: relative;
-
-      &.checked::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 8px;
-        height: 8px;
-        background-color: white;
-        border-radius: 50%;
-      }
     }
   }
 
