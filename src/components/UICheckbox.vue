@@ -4,17 +4,17 @@
     :class="[after ? 'after' : 'before', disabled ? 'disabled' : '']"
     :id="checkboxId"
     :name="name"
+    @click="handleClick"
   >
     <div
       v-if="!checkboxChecked"
       class="checkbox"
       :class="checkboxClassName"
-      @click="handleClick"
     ></div>
-    <div v-else class="checkbox--checked" :class="checkboxClassName" @click="handleClick">
+    <div v-else class="checkbox--checked" :class="checkboxClassName" >
       <SvgIcon :name="'tick'" class="icon" />
     </div>
-    <div class="label">{{ checkboxLabel }}</div>
+    <div class="label" >{{ checkboxLabel }}</div>
   </div>
 </template>
 
@@ -91,6 +91,7 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
   user-select: none;
   margin-bottom: 8px;
   margin-right: 24px;
+  cursor: pointer;
 
   &.before {
     flex-direction: row;
