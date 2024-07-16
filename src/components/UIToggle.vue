@@ -59,6 +59,7 @@ export default {
 @import '@/assets/css/main.scss';
 
 .toggle-container {
+  user-select: none;
   display: flex;
   flex-direction: column; // Makes all toggles stack vertically
 }
