@@ -1,5 +1,6 @@
 <template>
   <div class="ui-dropdown-c">
+    {{ selectedItem }}
     <label class="label">{{ label }}</label>
     <button
       @click="toggleDropdown"
@@ -25,7 +26,6 @@
             placeholder="Search..."
             class="ui-dropdown-search"
             @input="filteredItems()"
-
           />
           <span class="clear-search">
             <SvgIcon
@@ -43,8 +43,8 @@
         :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }"
       >
         <div
-          v-for="item in filteredItems()"
-          :key="item.id"
+          v-for="(item,index) in filteredItems()"
+          :key="index"
           class="ui-dropdown-item"
           @click="selectItem(item)"
           :class="{ selected: isSelected(item) }"
@@ -118,7 +118,7 @@ export default {
       isOpen: false, // checks that if drowdown is open or not.
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItem: this.modelValue, // represents the currently selected item.
-      dropdownItems: this.items
+      dropdownItems: this.items,
     }
   },
   computed: {
@@ -140,10 +140,10 @@ export default {
       )
     },
     isSelected(item) {
-      return this.selectedItem.id === item.id
+      return this.selectedItem === item
     },
     selectItem(item) {
-      this.selectedItem = this.isSelected(item) ? {} : item
+      this.selectedItem = item ? item : {}
       this.$emit('update:modelValue', item)
       this.isOpen = false
       this.dropdownItems = this.items
@@ -171,17 +171,12 @@ export default {
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside) // Ensures that the clickEventListener added in mounted is removed.
   },
-  created() {
-    for (let i = 0; i < this.dropdownItems.length; i++) {
-      this.dropdownItems[i].id = i + 1
-    }
-  },
   watch: {
     // watches the changes and updates the selectedItem.
     value(newVal) {
       this.selectedItem = newVal
     }
-  }
+  },
 }
 </script>
 
@@ -216,7 +211,7 @@ export default {
     align-items: center;
     display: flex;
 
-    &-active {
+    &:active {
       border: 1px solid #60acfe;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -226,7 +221,7 @@ export default {
       font-size: 15px;
       // font-weight: bold;
 
-      &-active {
+      &:active {
         color: grey;
         font-weight: normal;
       }
@@ -273,16 +268,26 @@ export default {
           max-width: fit-content;
           width: 70%;
           padding: 10px;
-          
+          border-radius: 10px;
+          border: none;
+          &:focus {
+            outline: none;
+          }
         }
         
+
         .clear-search {
           padding-right: 1.25rem;
+          height: 100%;
+          width: 100%;
+      
           .clear-search-img {
             position: absolute;
             cursor: pointer;
-            &-hover {
-              opacity: 0.7;
+            width: 1.2rem;
+            height: 1.2rem;
+            &:hover {
+              filter:opacity(0.5);
             }
           }
         }
