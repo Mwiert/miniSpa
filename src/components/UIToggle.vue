@@ -108,6 +108,7 @@ export default {
 
     &.checked {
       background-color: $accent-primary-color;
+      box-shadow: 0 0 4px $accent-primary-color;
     }
 
     .toggle-slider {
