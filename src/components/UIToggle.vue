@@ -107,7 +107,8 @@ export default {
     cursor: pointer; // Changes cursor to pointer
 
     &.checked {
-      background-color: $accent-secondary-color;
+      background-color: $accent-primary-color;
+      box-shadow: 0 0 4px $accent-primary-color;
     }
 
     .toggle-slider {
@@ -119,12 +120,13 @@ export default {
       background-color: white;
       border-radius: 50%;
       transition:
-        transform 0.4s,
-        background-color 0.4s;
+        transform 0.7s,
+        background-color 0.7s;
 
       &.checked {
-        background-color: $accent-primary-color;
+        background-color: white;
         transform: translateX(20px); // Moves the slider to the right when checked
+        box-shadow: 0 1px 2px gray;
       }
     }
   }

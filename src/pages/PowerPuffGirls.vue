@@ -286,6 +286,7 @@ export default {
 <style lang="scss" scoped>
 //Style to add gap between buttons
 .button-c {
+  background-color: #ffff;
   display: flex;
   flex-direction: column;
   gap: 10px;
