@@ -8,32 +8,32 @@
           <div class="single-date-box">
             <span class="day">
               <!-- This is where we are getting the day -->
-              {{ singleSelectedDate.number }}
+              {{ firstSelectedDate.number }}
             </span>
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                {{ formatMonth(singleSelectedDate.month) }}
+                {{ formatMonth(firstSelectedDate.month) }}
               </span>
               <span class="year">
                 <!-- This is where we are getting the year -->
-                {{ singleSelectedDate.year }}
+                {{ firstSelectedDate.year }}
               </span>
             </div>
           </div>
           <div class="single-date-box divider" v-if="isMultiDatePicker">
             <span class="day">
               <!-- This is where we are getting the day -->
-              {{ singleSelectedDate.number }}
+              {{ secondSelectedDate.number }}
             </span>
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                {{ formatMonth(singleSelectedDate.month) }}
+                {{ formatMonth(secondSelectedDate.month) }}
               </span>
               <span class="year">
                 <!-- This is where we are getting the year -->
-                {{ singleSelectedDate.year }}
+                {{ secondSelectedDate.year }}
               </span>
             </div>
           </div>
@@ -47,7 +47,7 @@
           v-show="isSingleDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
-          :saveDate="singleSelectedDate.date"
+          :saveDate="firstSelectedDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           @sendDateToParent="setCurrentDate"
@@ -60,11 +60,13 @@
           v-show="isMultiDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
-          :saveDate="singleSelectedDate.date"
+          :saveFirstDate="firstSelectedDate.date"
+          :saveSecondDate="secondSelectedDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           @sendDateToParent="setCurrentDate"
-          @dateSelected="handleDateSelected"
+          @dateFirstSelected="handleFirstDateSelected"
+          @dateSecondSelected="handleSecondDateSelected"
           @click="sendDateToParent()"
         />
       </div>
@@ -97,7 +99,8 @@ export default {
   },
   data() {
     return {
-      singleSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
+      firstSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
+      secondSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
       isSingleDatePickerEnable: false, //This is for enabling the single date picker as default false
       isMultiDatePickerEnable: false //This is for enabling the multi date picker as default false
     }
@@ -105,7 +108,7 @@ export default {
   methods: {
     sendDateToParent() {
       //We are sending the selected date to the parent component with v-model implementation.
-      this.$emit('update:modelValue', this.singleSelectedDate.date)
+      this.$emit('update:modelValue', this.firstSelectedDate.date)
     },
     formatMonth(month) {
       //We are converting the month number to month name
@@ -126,9 +129,13 @@ export default {
       //We are returning the month name if not available just return the month's number like on top.
       return months[month] || month
     },
-    handleDateSelected(firstDate: date) {
+    handleFirstDateSelected(firstDate: date) {
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
-      this.singleSelectedDate = firstDate
+      this.firstSelectedDate = firstDate
+    },
+    handleSecondDateSelected(firstDate: date) {
+      // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
+      this.secondSelectedDate = firstDate
     },
     setCurrentDate(presentDate: date) {
       //We are setting the current date to the present date (Handling the emit from UIDatePicker to UIDateRangePicker)
@@ -175,14 +182,14 @@ export default {
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
       if (this.initialDate) {
-        this.singleSelectedDate = {
+        this.firstSelectedDate = {
           number: dayjs(this.initialDate).format('DD'),
           month: dayjs(this.initialDate).format('MM'),
           year: dayjs(this.initialDate).format('YYYY'),
           date: dayjs(this.initialDate).format('YYYY-MM-DD')
         }
       } else {
-        this.singleSelectedDate = {
+        this.firstSelectedDate = {
           number: dayjs().format('DD'),
           month: dayjs().format('MM'),
           year: dayjs().format('YYYY'),
