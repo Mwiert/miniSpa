@@ -1,4 +1,13 @@
 <template>
+  <div class="input-box">
+    <UIInput
+      :id="'username'"
+      :label="'UserName:'"
+      :placeholder="'Enter your username'"
+      :maxLength="70"
+      :minLength="3"
+    />
+  </div>
   <div class="button-c">
     <!-- UIButton component instances -->
     <UIButton
@@ -31,7 +40,6 @@
     <UIButton
       text="PowerPuffGirls"
       :icon="'refresh'"
-      :iconSize="'l'"
       :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
       @click="setLoadingState('default')"
@@ -128,7 +136,7 @@
         v-model="pickedRadioFlight"
       />
     </div>
-    
+
     <!-- UICheckBox component instances -->
     <!-- Checkboxes for hotel -->
     <div class="hotel-checkbox">
@@ -165,6 +173,7 @@
       :id="'deneme'"
     />
   </div>
+  
 </template>
 
 <script lang="ts">
@@ -172,6 +181,7 @@ import UIButton from '../components/UIButton.vue'
 import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
+import UIInput from '../components/UIInput.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -179,10 +189,14 @@ export default {
     UIButton,
     UIToggle,
     UIRadioButton,
-    UICheckbox
+    UICheckbox,
+    UIInput
   },
   data() {
     return {
+
+      inputValue:this.value,
+      
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
         home: { isLoading: false, isDisabled: false }, // Initial state for home button
@@ -313,6 +327,12 @@ export default {
     justify-content: center;
     display: flex;
     flex-direction: column;
+  }
+
+  .input-box {
+    display: flex;
+    justify-content: center;
+    background-color: white;
   }
 }
 </style>
