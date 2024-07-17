@@ -1,59 +1,50 @@
-
 <template>
   <div>
     <UIDropdown
-      :value="selectedPet"                       
-      @input="selectedPet = $event"
-      :items="pets"                                               
+      v-model="selectedPet"
+      :items="pets"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
       :label="petLabel"
-      :fontSize="fontSize"
-      idField="id"
-      displayField="name"
-      urlField="imageUrl"
-      searchable
       :dataSize="dataSize"
+      searchable
     />
     <UIDropdown
-      :value="selectedFood" 
-      @input="selectedFood = $event"
+      v-model="selectedFood"
       :items="foods"
+      :fontSize="fontSize"
       :label="foodLabel"
-      :fontSize="fontSize"
-      idField="id"
-      displayField="name"
-      urlField="imageUrl"
-      searchable
-      :dataSize="dataSize"
-    />
-    <UIDropdown
-      :value="selectedToy" 
-      @input="selectedToy = $event"
-      :items="toys"
-      :label="toyLabel"
-      :fontSize="fontSize"
-      idField="id"
-      displayField="name"
-      urlField="imageUrl"
-      searchable
-      :dataSize="dataSize"
-    /> 
-    <UIDropdown
-      :value="selectedItem" 
-      @input="selectedItem = $event"
-      :items="items"
-      :label="itemLabel"
-      :fontSize="fontSize"
-      idField="id"
       displayField="name"
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"
     />
   </div>
+    <UIDropdown
+      v-model="selectedToy"
+      :items="toys"
+      :fontSize="fontSize"
+      displayField="name"
+      :label="toyLabel"
+      urlField="imageUrl"
+      searchable
+      :dataSize="dataSize"
+    />
+    <UIDropdown
+      v-model="selectedItem"
+      :items="items"
+      :label="itemLabel"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      searchable
+      :dataSize="dataSize"
+    />
 </template>
 
 <script lang="ts">
-import UIDropdown from '../components/UIDropdown.vue';
+import UIDropdown from '../components/UIDropdown.vue'
 
 export default {
   name: 'SummerLovers',
@@ -63,47 +54,56 @@ export default {
   data() {
     return {
       pets: [
-        { id: 1, imageUrl: "https://example.com/dog.png", name: 'Dog', detail: 'a' },
-        { id: 2, imageUrl: "", name: 'Cat', detail: 'b' },
-        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
-        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
-        { id: 4, imageUrl: "", name: 'Bird', detail: 'd' },
-        { id: 3, imageUrl: "", name: 'Fish', detail: 'c' },
+        { id: 2, imageUrl: 'https://example.com/dog.png', name: 'Dog', detail: 'a' },
+        { imageUrl: '', name: 'Cat', detail: 'b' },
+        { imageUrl: '', name: 'Fish', detail: 'c' },
+        { imageUrl: '', name: 'Bird', detail: 'd' },
+        { imageUrl: '', name: 'Mouse', detail: 'c' },
+        { imageUrl: '', name: 'Elephant', detail: 'd' },
+        { imageUrl: '', name: 'Hawk', detail: 'c' },
+        { imageUrl: '', name: 'Monkey', detail: 'a' }
       ],
       foods: [
-        { id: 1, imageUrl: "https://example.com/dog.png", name: 'Dog Food', detail: 'e' },
-        { id: 2, imageUrl: "", name: 'Cat Food', detail: 'f' },
-        { id: 3, imageUrl: "", name: 'Fish Food', detail: 'g' },
-        { id: 4, imageUrl: "", name: 'Bird Food', detail: 'h' }
+        { imageUrl: 'https://example.com/dog.png', name: 'Dog Food', detail: 'e' },
+        { imageUrl: '', name: 'Cat Food', detail: 'f' },
+        { imageUrl: '', name: 'Fish Food', detail: 'g' },
+        { imageUrl: '', name: 'Bird Food', detail: 'h' }
       ],
       toys: [
-        { id: 1, imageUrl: "", name: 'Dog Toy', detail: 'k' },
-        { id: 2, imageUrl: "", name: 'Cat Toy', detail: 'l' },
-        { id: 3, imageUrl: "", name: 'Fish Toy', detail: 'm' },
-        { id: 4, imageUrl: "", name: 'Bird Toy', detail: 'n' }
+        { imageUrl: '', name: 'Dog Toy', detail: 'k' },
+        { imageUrl: '', name: 'Cat Toy', detail: 'l' },
+        { imageUrl: '', name: 'Fish Toy', detail: 'm' },
+        { imageUrl: '', name: 'Bird Toy', detail: 'n' }
       ],
       items: [
-        { id: 1, imageUrl: "", name: 'Türk Hava Yollari', detail: 'o' },
-        { id: 2, imageUrl: "", name: 'Pegasus', detail: 'p' },
-        { id: 3, imageUrl: "", name: 'Sun Express', detail: 'r' },
-        { id: 4, imageUrl: "", name: 'Corelon', detail: 's' }
+        { imageUrl: '', name: 'Türk Hava Yollari', detail: 'o' },
+        { imageUrl: '', name: 'Pegasus', detail: 'p' },
+        { imageUrl: '', name: 'Sun Express', detail: 'r' },
+        { imageUrl: '', name: 'Corelon', detail: 's' }
       ],
       petLabel: 'Select a Pet',
       foodLabel: 'Select a Food',
       toyLabel: 'Select a Toy',
       itemLabel: 'Select an Airline',
       fontSize: 12,
-      selectedPet: {},
-      selectedFood: {},
-      selectedToy: {},
-      selectedItem: {},
-      dataSize: 1
-    };
+      dataSize: 3
+    }
+  },
+  computed: {
+    selectedPet() {
+      return this.pets[0]
+    },
+    selectedFood() {
+      return this.foods[0]
+    },
+    selectedToy() {
+      return this.toys[0]
+    },
+    selectedItem() {
+      return this.items[0]
+    }
   }
-};
+}
 </script>
 
-
 <style lang="scss" scoped></style>
-
