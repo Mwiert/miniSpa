@@ -115,7 +115,7 @@ export default {
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItem: this.modelValue, // represents the currently selected item.
       dropdownItems: this.items,
-      scrollPosition: 0
+      scrollPosition: 0,
     }
   },
   computed: {
@@ -140,30 +140,34 @@ export default {
       return this.selectedItem === item
     },
     selectItem(item) {
+      const dropDownContent = this.$el.querySelector('.ui-dropdown-content')
       if (this.selectedItem === item) {
         this.selectedItem = {}
         this.$emit('update:modelValue', {})
+        dropDownContent.scrollTop = 0
       } else {
         this.selectedItem = item
         this.$emit('update:modelValue', item)
       }
-      this.scrollPosition = this.$el.querySelector(".ui-dropdown-content").scrollTop
+      if(this.searchQuery === ""){
+      this.scrollPosition = dropDownContent.scrollTop
+      }
       this.isOpen = false
       this.dropdownItems = this.items
     },
     toggleDropdown() {
       //Opens and closes the dropdown
       this.isOpen = !this.isOpen
-      //If dropdown is open we are getting the scrollTop location of the content 
-      if(this.isOpen){
+      //If dropdown is open we are getting the scrollTop location
+      if (this.isOpen) {
+       
         this.$nextTick(() => {
-          const dropDownContent = this.$el.querySelector(".ui-dropdown-content")
+          const dropDownContent = this.$el.querySelector('.ui-dropdown-content')
           dropDownContent.scrollTop = this.scrollPosition
-        }) 
+        })
       }
 
       this.clearSearch()
-      
     },
     clearSearch() {
       // clears the searchQuery
@@ -175,8 +179,7 @@ export default {
       if (!this.$el.contains(target)) {
         this.isOpen = false
       }
-    },
-    
+    }
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside) // When is clicked , event occurs anywhere on the document. this.handleClickOutside is invoked.
@@ -189,9 +192,7 @@ export default {
     value(newVal) {
       this.selectedItem = newVal
     }
-  },
-
-  
+  }
 }
 </script>
 
