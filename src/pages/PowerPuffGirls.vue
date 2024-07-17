@@ -4,7 +4,7 @@
       :id="'username'"
       :label="'UserName:'"
       :placeholder="'Enter your username'"
-      :maxLength="20"
+      :maxLength="70"
       :minLength="3"
     />
   </div>
@@ -40,7 +40,6 @@
     <UIButton
       text="PowerPuffGirls"
       :icon="'refresh'"
-      :iconSize="'l'"
       :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
       @click="setLoadingState('default')"
@@ -174,6 +173,7 @@
       :id="'deneme'"
     />
   </div>
+  
 </template>
 
 <script lang="ts">
@@ -194,6 +194,9 @@ export default {
   },
   data() {
     return {
+
+      inputValue:this.value,
+      
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
         home: { isLoading: false, isDisabled: false }, // Initial state for home button
@@ -329,6 +332,7 @@ export default {
   .input-box {
     display: flex;
     justify-content: center;
+    background-color: white;
   }
 }
 </style>
