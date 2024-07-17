@@ -1,7 +1,7 @@
 <template>
   <div class="ui-date-range-picker-c">
     <!-- This is for opening and closing the calendar -->
-    <div class="button" @click="toggleDatePicker()">
+    <div class="button" @click="toggleDatePicker()" ref="dateRangePicker">
       <div class="button-items">
         <!-- This is where we are checking if it is single calendar or multi calendar -->
         <div class="is-single-date">
@@ -40,30 +40,34 @@
         </div>
       </div>
     </div>
-    <div class="date-picker">
+    <div class="date-picker" ref="datePicker">
       <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
-      <UIDatePicker
-        v-if="isSingleDatePickerEnable"
-        :yearRange="validateYear"
-        :monthRange="validateMonth"
-        :saveDate="singleSelectedDate.date"
-        :isFutureValidation="isFuture"
-        :isPastValidation="isPast"
-        @sendDateToParent="setCurrentDate"
-        @dateSelected="handleDateSelected"
-        @click="sendDateToParent()"
-      />
-      <UIMultiDatePicker
-        v-if="isMultiDatePickerEnable"
-        :yearRange="validateYear"
-        :monthRange="validateMonth"
-        :saveDate="singleSelectedDate.date"
-        :isFutureValidation="isFuture"
-        :isPastValidation="isPast"
-        @sendDateToParent="setCurrentDate"
-        @dateSelected="handleDateSelected"
-        @click="sendDateToParent()"
-      />
+      <div v-if="isSingleDatePicker">
+        <UIDatePicker
+          v-show="isSingleDatePickerEnable"
+          :yearRange="validateYear"
+          :monthRange="validateMonth"
+          :saveDate="singleSelectedDate.date"
+          :isFutureValidation="isFuture"
+          :isPastValidation="isPast"
+          @sendDateToParent="setCurrentDate"
+          @dateSelected="handleDateSelected"
+          @click="sendDateToParent()"
+        />
+      </div>
+      <div v-if="isMultiDatePicker">
+        <UIMultiDatePicker
+          v-show="isMultiDatePickerEnable"
+          :yearRange="validateYear"
+          :monthRange="validateMonth"
+          :saveDate="singleSelectedDate.date"
+          :isFutureValidation="isFuture"
+          :isPastValidation="isPast"
+          @sendDateToParent="setCurrentDate"
+          @dateSelected="handleDateSelected"
+          @click="sendDateToParent()"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -83,12 +87,13 @@ export default {
   },
   props: {
     isMultiDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
-    isSingleDatePicker: { type: Boolean, default: true }, //This is for asking to parent whether should the single date picker available in this implementation
+    isSingleDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
     validateMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
     value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
-    isFuture: { type: Boolean, default: false }
+    isFuture: { type: Boolean, default: false },
+    initialDate: { type: String, default: '' }
   },
   data() {
     return {
@@ -149,16 +154,43 @@ export default {
           this.isMultiDatePickerEnable = false
         }
       }
+      if (this.isSingleDatePickerEnable || this.isMultiDatePickerEnable) {
+        document.addEventListener('click', this.handleClickOutside)
+      } else {
+        document.removeEventListener('click', this.handleClickOutside)
+      }
+    },
+    handleClickOutside(event: MouseEvent) {
+      const dateRangePicker = this.$refs.dateRangePicker as HTMLElement
+      const datePicker = this.$refs.datePicker as HTMLElement
+      if (
+        !dateRangePicker.contains(event.target as Node) &&
+        !datePicker.contains(event.target as Node)
+      ) {
+        this.isSingleDatePickerEnable = false
+        this.isMultiDatePickerEnable = false
+        document.removeEventListener('click', this.handleClickOutside)
+      }
     },
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
-      this.singleSelectedDate = {
-        number: dayjs().format('DD'),
-        month: dayjs().format('MM'),
-        year: dayjs().format('YYYY'),
-        date: dayjs().format('YYYY-MM-DD')
+      if (this.initialDate) {
+        this.singleSelectedDate = {
+          number: dayjs(this.initialDate).format('DD'),
+          month: dayjs(this.initialDate).format('MM'),
+          year: dayjs(this.initialDate).format('YYYY'),
+          date: dayjs(this.initialDate).format('YYYY-MM-DD')
+        }
+      } else {
+        this.singleSelectedDate = {
+          number: dayjs().format('DD'),
+          month: dayjs().format('MM'),
+          year: dayjs().format('YYYY'),
+          date: dayjs().format('YYYY-MM-DD')
+        }
       }
     },
+
     checkMultiOrSingleCalendar() {}
   },
   created() {
