@@ -1,4 +1,13 @@
 <template>
+  <div class="input-box">
+    <UIInput
+      :id="'username'"
+      :label="'UserName:'"
+      :placeholder="'Enter your username'"
+      :maxLength="20"
+      :minLength="3"
+    />
+  </div>
   <div class="button-c">
     <!-- UIButton component instances -->
     <UIButton
@@ -128,7 +137,7 @@
         v-model="pickedRadioFlight"
       />
     </div>
-    
+
     <!-- UICheckBox component instances -->
     <!-- Checkboxes for hotel -->
     <div class="hotel-checkbox">
@@ -164,17 +173,6 @@
       :name="'disabled'"
       :id="'deneme'"
     />
-
-    <div class ="input-box">
-      <UIInput 
-        :id="'username'"
-        :label="'user Name'"
-        :placeholder="'Enter your username'"
-        :maxLength="20"
-        :minLength="3"
-    />
-
-    </div>
   </div>
 </template>
 
@@ -328,11 +326,9 @@ export default {
     flex-direction: column;
   }
 
-  .input-box{
+  .input-box {
     display: flex;
     justify-content: center;
-
-
   }
 }
 </style>
