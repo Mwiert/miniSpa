@@ -31,7 +31,6 @@
     <UIButton
       text="PowerPuffGirls"
       :icon="'refresh'"
-      :iconSize="'l'"
       :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
       @click="setLoadingState('default')"
@@ -164,7 +163,18 @@
       :name="'disabled'"
       :id="'deneme'"
     />
+    <UIInput
+      :type="type"
+      :placeholder="placeholder"
+      :id="id"
+      :label="label"
+      :maxlength="maxLength"
+      :minlength="minLength"
+      :disabled="disabled"
+    />
+
   </div>
+  
 </template>
 
 <script lang="ts">
@@ -172,6 +182,7 @@ import UIButton from '../components/UIButton.vue'
 import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
+import UIInput from '../components/UIInput.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -179,7 +190,8 @@ export default {
     UIButton,
     UIToggle,
     UIRadioButton,
-    UICheckbox
+    UICheckbox,
+    UIInput
   },
   data() {
     return {
@@ -238,7 +250,16 @@ export default {
         { label: 'Flight 1', id: 'id1', disabled: false },
         { label: 'Flight 2', id: 'id2', disabled: false },
         { label: 'Flight 3', id: 'id3', disabled: false }
-      ]
+      ],
+      inputs: {
+        type: String,
+        placeholder: 'doldur',
+        id: '1',
+        label:"Input",
+        maxlength: 50,
+        minlength: 8,
+        disabled: false
+      }
     }
   },
   methods: {
