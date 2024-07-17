@@ -99,7 +99,7 @@ export default {
     display: flex;
     align-items: center;
     position: relative;
-    
+    bottom: 8px;
     .clear-btn {
       position: absolute;
       right: 10px;
