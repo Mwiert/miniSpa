@@ -17,19 +17,18 @@ export default {
       tableOptions: {
         options: {
           header: {},
-          body: {
-          },
+          body: {},
           footer: {}
         },
         table: {
           columns: [
-            { name: 'Status',label: 'status',  sortable: true},
-            { name: 'Creation Date',label: 'creationDate', },
-            { name: 'Order Id',label: 'orderId', sortable: true },
-            { name: 'Market',label: 'market' },
-            { name: 'Provider Name/Surname', label: 'providerNameSurname'},
+            { name: 'Status', label: 'status', sortable: true },
+            { name: 'Creation Date', label: 'creationDate' },
+            { name: 'Order Id', label: 'orderId', sortable: true },
+            { name: 'Market', label: 'market' },
+            { name: 'Provider Name/Surname', label: 'providerNameSurname' },
             { name: 'Check In', label: 'checkIn', sortable: true },
-            { name: 'Check Out',label: 'checkOut', sortable: true },
+            { name: 'Check Out', label: 'checkOut', sortable: true },
             { name: 'Room Type', label: 'roomType' },
             { name: 'Promo Code', label: 'promoCode' },
             { name: 'Price', label: 'price', sortable: true }
@@ -40,19 +39,17 @@ export default {
       dummies: dummy
     }
   },
-  methods: {
-    
-  },
+  methods: {},
   mounted() {
     this.tableOptions.table.rows = this.dummies.map((dummy: any) => {
-    return {
+      return {
         status: {
           text: dummy.status,
-          class: `status`
+          class: `status ${dummy.status.toLowerCase()}`
         },
         creationDate: {
           text: dummy.creationDate,
-          class: ""
+          class: ''
         },
         orderId: {
           text: dummy.orderId,
@@ -71,7 +68,7 @@ export default {
         },
         promoCode: {
           text: dummy.promoCode,
-          class:"promoCode"
+          class: 'promoCode'
         },
         price: {
           text: dummy.price,
