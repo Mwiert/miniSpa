@@ -197,7 +197,7 @@ export default {
 
 <style lang="scss" scoped>
 .ui-dropdown-c {
-  user-select: none;
+  
   display: inline-block;
   justify-content: space-around;
   width: fit-content;

@@ -1,4 +1,5 @@
 <template>
+  {{ selectedPets }}
   <UIMultiDropdown
       v-model="selectedPets"
       :items="pets"
@@ -8,7 +9,6 @@
       :label="petLabel"
       :dataSize="dataSize"
       searchable
-      className="hotel"
       maxVisibleItems=2
   />
   <div>
@@ -117,9 +117,9 @@ export default {
       return this.items[0]
     },
     selectedPets(){
-      return [this.pets[0],this.pets[1]]
+      return [this.pets[4],this.pets[1]]
     }
-  }
+  },
 }
 </script>
 

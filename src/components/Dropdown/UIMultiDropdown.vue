@@ -19,7 +19,6 @@
             >
               <span>
                 {{ item[displayField] }}
-                
               </span>
             </span>
           </div>
@@ -60,7 +59,7 @@
             v-for="(item, index) in filteredItems()"
             :key="index"
             class="ui-dropdown-item"
-            @click="selectItem(item)"
+            @click.stop="selectItem(item)"
             :class="{ selected: isSelected(item) }"
           >
             <!-- <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" /> -->
@@ -187,7 +186,6 @@ export default {
       const dropDownContent = this.$el.querySelector('.ui-dropdown-content')
       if (this.selectedItems.includes(item)) {
         this.selectedItems = this.selectedItems.filter((selected) => selected !== item)
-        this.$emit('update:modelValue', this.selectedItems)
         dropDownContent.scrollTop = 0
       } else {
         this.selectedItems.push(item)
@@ -248,6 +246,7 @@ export default {
   display: inline-block;
   justify-content: space-around;
   width: fit-content;
+  height: fit-content;
   padding: 10px;
   .ui-dropdown-c-wrapper {
     position: relative;
@@ -387,14 +386,20 @@ export default {
           display: flex;
           align-items: center;
           padding: 8px;
+          font-size: 12px;
           cursor: pointer;
           transition: background-color 0.3s;
+          justify-content: space-between;
+          height: 1rem;
 
           &:hover {
             background-color: #f3f3f3;
           }
           &.selected {
             font-weight: bold;
+          }
+          .item-text {
+            flex-grow: 1;
           }
           .item-container {
             display: flex;
