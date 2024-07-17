@@ -1,5 +1,6 @@
 <template>
   <div class="ui-dropdown-c">
+    <div class="ui-dropdown-c-wrapper">
     <label class="label">{{ label }}</label>
     <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
       <span
@@ -13,7 +14,7 @@
     </button>
     <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
       <div class="search-container">
-        <div class="search-content-wrapper">
+        <div v-if="searchable" class="search-content-wrapper">
           <input
             v-if="searchable"
             type="text"
@@ -50,6 +51,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -146,6 +148,7 @@ export default {
     toggleDropdown() {
       //opens and closes the dropdown
       this.isOpen = !this.isOpen
+      this.clearSearch()
     },
     clearSearch(event: Event) {
       // clears the searchQuery
@@ -177,10 +180,13 @@ export default {
 
 <style lang="scss" scoped>
 .ui-dropdown-c {
-  position: relative;
+  display: inline-block;
+  width: fit-content;
+  .ui-dropdown-c-wrapper{
+    position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: fit-content;
   .label {
     display: flex;
     justify-content: center;
@@ -239,7 +245,6 @@ export default {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 12px;
-    max-height: 12rem;
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1000;
@@ -291,8 +296,8 @@ export default {
     }
 
     .ui-dropdown-content {
-      max-height: 200px;
-      overflow-y: auto;
+      overflow-y:auto;
+
 
       .ui-dropdown-item {
         display: flex;
@@ -310,5 +315,6 @@ export default {
       }
     }
   }
+}
 }
 </style>
