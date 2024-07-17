@@ -163,16 +163,17 @@
       :name="'disabled'"
       :id="'deneme'"
     />
-    <UIInput
-      :type="type"
-      :placeholder="placeholder"
-      :id="id"
-      :label="label"
-      :maxlength="maxLength"
-      :minlength="minLength"
-      :disabled="disabled"
+
+    <div class ="input-box">
+      <UIInput 
+        :id="'username'"
+        :label="'user Name'"
+        :placeholder="'Enter your username'"
+        :maxLength="20"
+        :minLength="3"
     />
 
+    </div>
   </div>
   
 </template>
@@ -334,6 +335,13 @@ export default {
     justify-content: center;
     display: flex;
     flex-direction: column;
+  }
+
+  .input-box{
+    display: flex;
+    justify-content: center;
+
+
   }
 }
 </style>
