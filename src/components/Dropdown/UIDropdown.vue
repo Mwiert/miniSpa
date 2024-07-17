@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import SvgIcon from './SvgIcon.vue'
+import SvgIcon from '../SvgIcon.vue'
 
 export default {
   name: 'UIDropdown',
@@ -115,7 +115,7 @@ export default {
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItem: this.modelValue, // represents the currently selected item.
       dropdownItems: this.items,
-      scrollPosition: 0,
+      scrollPosition: 0
     }
   },
   computed: {
@@ -149,8 +149,8 @@ export default {
         this.selectedItem = item
         this.$emit('update:modelValue', item)
       }
-      if(this.searchQuery === ""){
-      this.scrollPosition = dropDownContent.scrollTop
+      if (this.searchQuery === '') {
+        this.scrollPosition = dropDownContent.scrollTop
       }
       this.isOpen = false
       this.dropdownItems = this.items
@@ -160,7 +160,6 @@ export default {
       this.isOpen = !this.isOpen
       //If dropdown is open we are getting the scrollTop location
       if (this.isOpen) {
-       
         this.$nextTick(() => {
           const dropDownContent = this.$el.querySelector('.ui-dropdown-content')
           dropDownContent.scrollTop = this.scrollPosition
@@ -198,6 +197,7 @@ export default {
 
 <style lang="scss" scoped>
 .ui-dropdown-c {
+  user-select: none;
   display: inline-block;
   justify-content: space-around;
   width: fit-content;

@@ -1,4 +1,16 @@
 <template>
+  <UIMultiDropdown
+      v-model="selectedPets"
+      :items="pets"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      :label="petLabel"
+      :dataSize="dataSize"
+      searchable
+      className="hotel"
+      maxVisibleItems=2
+  />
   <div>
     <UIDropdown
       v-model="selectedPet"
@@ -44,12 +56,14 @@
 </template>
 
 <script lang="ts">
-import UIDropdown from '../components/UIDropdown.vue'
+import UIDropdown from '../components/Dropdown/UIDropdown.vue'
+import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
 
 export default {
   name: 'SummerLovers',
   components: {
-    UIDropdown
+    UIDropdown,
+    UIMultiDropdown
   },
   data() {
     return {
@@ -101,6 +115,9 @@ export default {
     },
     selectedItem() {
       return this.items[0]
+    },
+    selectedPets(){
+      return [this.pets[0],this.pets[1]]
     }
   }
 }
