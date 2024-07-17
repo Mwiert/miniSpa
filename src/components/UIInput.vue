@@ -2,14 +2,15 @@
 
     <div class = "ui-input-c">
         <input
-        type
-        placeholder
-        id
-        label
-        maxlength
-        minlength
+        type="type"
+        placeholder="placeholder"
+        id="id"
+        label="label"
+        maxlength="maxLength"
+        minlength="minLength"
         :value="value"
         />
+
     </div>
 
 </template>
