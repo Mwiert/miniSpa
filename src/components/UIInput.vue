@@ -1,7 +1,6 @@
 <template>
     <div class="input-box-c">
         <span class="label"> {{ label }} </span>
-
         <div class="input-wrapper">
             <input 
                 :type="type" 
@@ -14,11 +13,9 @@
                 v-model="inputValue"
                 @input="handleInput"
                 />
-
-            <button v-if="inputValue" class="clear-btn" @click="clearInput">
-                
-                <SvgIcon class="clear-btn" :icon="'x'" />
-            </button>
+                <span class= clear-btn @click="clearInput">
+                    <SvgIcon class="clear-btn-img" :icon="'x'" />
+                </span>
         </div>
     </div>
 </template>
@@ -103,8 +100,6 @@ export default {
 display:flex;
 flex-direction: column;
 
-
-
 .label{
     font-size: 0.5rem;
     font-weight: 200;
@@ -120,16 +115,24 @@ flex-direction: column;
 
     .clear-btn{
        
-    position : absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor:pointer;
-    width: 12px;
-    height: 12px;
-    padding: 0;
+        display: flex;
+        align-items: center;
+        padding-right: 1.25rem;
+        height: 100%;
+        width: 15%;
+
+        .clear-btn-img {
+            position: absolute;
+            cursor: pointer;
+            width: 1rem;
+            height: 1rem;
+            &:hover {
+              filter: opacity(0.5);
+            }
+          }
+
+
+
     // transition: transform 0.3s ease, background 0.3s ease;
 
     // &:hover {
@@ -149,13 +152,8 @@ flex-direction: column;
     
 
      
-}
-}
-
-
-
-
-
+        }
+    }
 }
 
 </style>

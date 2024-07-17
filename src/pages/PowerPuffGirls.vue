@@ -196,6 +196,9 @@ export default {
   },
   data() {
     return {
+
+      inputValue:this.value,
+      
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
         home: { isLoading: false, isDisabled: false }, // Initial state for home button
@@ -251,16 +254,7 @@ export default {
         { label: 'Flight 1', id: 'id1', disabled: false },
         { label: 'Flight 2', id: 'id2', disabled: false },
         { label: 'Flight 3', id: 'id3', disabled: false }
-      ],
-      inputs: {
-        type: String,
-        placeholder: 'doldur',
-        id: '1',
-        label:"Input",
-        maxlength: 50,
-        minlength: 8,
-        disabled: false
-      }
+      ]
     }
   },
   methods: {
