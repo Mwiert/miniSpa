@@ -6,9 +6,9 @@
       :fontSize="fontSize"
       displayField="name"
       urlField="imageUrl"
-      searchable
       :label="petLabel"
       :dataSize="dataSize"
+      searchable
     />
     <UIDropdown
       v-model="selectedFood"
@@ -20,6 +20,7 @@
       searchable
       :dataSize="dataSize"
     />
+  </div>
     <UIDropdown
       v-model="selectedToy"
       :items="toys"
@@ -40,7 +41,6 @@
       searchable
       :dataSize="dataSize"
     />
-  </div>
 </template>
 
 <script lang="ts">
@@ -86,7 +86,7 @@ export default {
       toyLabel: 'Select a Toy',
       itemLabel: 'Select an Airline',
       fontSize: 12,
-      dataSize: 1
+      dataSize: 3
     }
   },
   computed: {
