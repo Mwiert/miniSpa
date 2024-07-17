@@ -34,8 +34,7 @@
                 textDecoration: day.textDecoration,
                 blink: day.blink,
                 between: day.between,
-                isToday: day.isToday,
-                isİnitial: day.selected
+                isToday: day.isToday
               }"
               @click="selectDate(day)"
             >
