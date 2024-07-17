@@ -4,7 +4,7 @@
       :id="'username'"
       :label="'UserName:'"
       :placeholder="'Enter your username'"
-      :maxLength="20"
+      :maxLength="70"
       :minLength="3"
     />
   </div>
@@ -332,6 +332,7 @@ export default {
   .input-box {
     display: flex;
     justify-content: center;
+    background-color: white;
   }
 }
 </style>
