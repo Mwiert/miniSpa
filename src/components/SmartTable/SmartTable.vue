@@ -1,16 +1,20 @@
 <template>
   <div class="smart-table-c">
-    <SmartTableHeader v-on:search-input="handleSearchInput" />
+    <SmartTableHeader @search-input="handleSearchInput" />
     <!-- Header kısmı filters ve searchbar'ı içerir v-on ile emit ettiğimiz değerleri alıyoruz-->
 
     <SmartTableBody
       :tableData="filteredData"
       :options="options"
-      :noItemsFound="filteredData.length === 0" />   <!--noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz-->
+      />   
+      <!-- noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz -->
 
-      <SmartTableFooter :tableCount="filteredData.length" />
+      <SmartTableFooter/>
     <!-- Footer kısmı pagination içerir -->
   </div>
+
+  
+
 </template>
 
 <script lang="ts">

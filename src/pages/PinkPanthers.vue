@@ -44,8 +44,8 @@ export default {
     
   },
   mounted() {
-    this.dummies.map((dummy: any) => {
-      const rowObj = {
+    this.tableOptions.table.rows = this.dummies.map((dummy: any) => {
+    return {
         status: {
           text: dummy.status,
           class: `status`
@@ -78,7 +78,6 @@ export default {
           class: 'price'
         }
       }
-      this.tableOptions.table.rows.push(rowObj)
     })
   }
 }

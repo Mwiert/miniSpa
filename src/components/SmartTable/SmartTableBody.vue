@@ -13,24 +13,28 @@
       </div>
     </div>
 
-    <div v-if="noItemsFound" class="grid-row no-items-found">
+    <div v-if=" $parent.filteredData.length === 0 " class="grid-row no-items-found">
       <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
       <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
-    </div>
+
+    </div> 
     <div
-      :class="['grid-row', rowClass(rowIndex)]"
-      v-for="(tableRow, rowIndex) in tableRowData"
-      :key="rowIndex"
+      class='grid-row'
+      :class="{rowIndex}"
+      v-for="(tableRow, rowIndex) in tableRowData" 
+      :key="rowIndex" 
     >
+    
       <div
         v-for="(cell, cellIndex) in tableRow"
-        :key="cellIndex"
+        :key="cellIndex" 
         :class="[getCellClass(cell, tableRow[cellIndex]), 'grid-item']"
       >
         <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
         <template v-if="typeof cell == 'object'">
-          <span :class="cell?.class" @click="cell?.url ? handlerUrl(cell.url) : undefined">
-            {{ cell?.text == 'null' ? '' : cell?.text }}</span
+          <span :class="cell?.class" @click="handlerUrl(cell?.url)">
+            {{ cell?.text ?? '' }}  
+            </span
           >
         </template>
         <template v-else>{{ cell }}</template>
@@ -72,7 +76,7 @@ export default {
       handler(newData) {
         this.tableRowData = newData
         if (this.lastSortedColumn) {
-          this.sort(this.lastSortedColumn)
+          this.sort(this.lastSortedColumn)   
         }
       },
       deep: true
@@ -118,13 +122,10 @@ export default {
       }
     },
 
-
     handlerUrl(url) {
-      window.open(url, '_blank')
-    },
-
-    rowClass(rowIndex: number) {
-      return rowIndex % 2 === 0 ? 'even-row' : 'odd-row'
+      if (url == null) {
+         window.open(url, '_blank')
+      } 
     },
 
     getCellClass(cellData: any) {
@@ -180,6 +181,13 @@ export default {
       border-radius: 40px; 
       padding: 0.5px; 
       animation: fadeIn 0.5s ease-in-out;
+
+      &:nth-child(even){
+        background-color: white
+      }
+      &:nth-child(odd){
+        background-color: #F5F7FA
+      }
 
         .no-grid-item {
           padding: 28px;
@@ -251,14 +259,6 @@ export default {
       opacity: 1;
     }
   }
-  .grid-row.even-row {
-    background-color: #fff;
-  }
-
-  .grid-row.odd-row {
-    background-color: #f5f7fa;
-  }
-
   @media (max-width: 1000px) {
   .smart-table-body-c {
     overflow-x: auto;
