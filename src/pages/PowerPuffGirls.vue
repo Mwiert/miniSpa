@@ -164,6 +164,17 @@
       :name="'disabled'"
       :id="'deneme'"
     />
+
+    <div class ="input-box">
+      <UIInput 
+        :id="'username'"
+        :label="'user Name'"
+        :placeholder="'Enter your username'"
+        :maxLength="20"
+        :minLength="3"
+    />
+
+    </div>
   </div>
 </template>
 
@@ -172,6 +183,7 @@ import UIButton from '../components/UIButton.vue'
 import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
+import UIInput from '../components/UIInput.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -179,7 +191,8 @@ export default {
     UIButton,
     UIToggle,
     UIRadioButton,
-    UICheckbox
+    UICheckbox,
+    UIInput
   },
   data() {
     return {
@@ -313,6 +326,13 @@ export default {
     justify-content: center;
     display: flex;
     flex-direction: column;
+  }
+
+  .input-box{
+    display: flex;
+    justify-content: center;
+
+
   }
 }
 </style>
