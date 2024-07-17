@@ -34,7 +34,8 @@
                 textDecoration: day.textDecoration,
                 blink: day.blink,
                 between: day.between,
-                isToday: day.isToday
+                isToday: day.isToday,
+                isİnitial: day.selected
               }"
               @click="selectDate(day)"
             >
@@ -57,7 +58,7 @@ export default {
   data() {
     return {
       weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], //Static weekdays
-      calendarDate: dayjs(), //Creating the calendar date
+      calendarDate: dayjs(this.initialDate), //Creating the calendar date
       daysInMonth: [] as date[], //Creating the days in month as date interface object
       firstSelectedDate: {}, //Getting first selected date as type of date interface object
       currentDate: dayjs().format('YYYY-MM-DD'), //Manipulated date
@@ -72,7 +73,8 @@ export default {
     saveDate: { type: String, default: '' }, //This is for saving the date history
     monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     isPastValidation: { type: Boolean, default: false },
-    isFutureValidation: { type: Boolean, default: false }
+    isFutureValidation: { type: Boolean, default: false },
+    initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') }
   },
   methods: {
     checkRange() {
@@ -373,6 +375,10 @@ export default {
       padding-top: 6px;
       //Styling of depending on if it is today (coloring gray)
       .isToday {
+        background: #e7e7e7;
+        border-radius: 16px;
+      }
+      .initialDate {
         background: #e7e7e7;
         border-radius: 16px;
       }
