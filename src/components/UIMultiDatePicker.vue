@@ -12,9 +12,6 @@
               <img src="../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{ dateHolder }}</span>
-            <button class="nav-button" @click="onClickToRight" v-if="currentDate < maxDate">
-              <img src="../assets/icons/arrow-right.svg" alt="" />
-            </button>
           </div>
           <!-- This is the weekdays section -->
           <ul class="weekdays">
@@ -46,9 +43,6 @@
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <button class="nav-button" @click="onClickToLeft" v-if="minDate < currentDate">
-              <img src="../assets/icons/arrow-left.svg" alt="" />
-            </button>
             <span class="current-date">{{ secondDateHolder }}</span>
             <button class="nav-button" @click="onClickToRight" v-if="currentDate < maxDate">
               <img src="../assets/icons/arrow-right.svg" alt="" />
@@ -63,7 +57,7 @@
           <!-- This is the days section -->
           <ul class="days">
             <li
-              v-for="(day, index) in daysInMonth"
+              v-for="(day, index) in nextMonthDays"
               :key="index"
               :class="{
                 inactive: day.inactive,
@@ -89,6 +83,7 @@
 //Imports the needed components and interfaces
 import dayjs from 'dayjs'
 import date from '../interface/IUIDatePicker'
+
 export default {
   name: 'UIMultiDatePicker',
   components: {},
@@ -97,6 +92,7 @@ export default {
       weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], //Static weekdays
       calendarDate: dayjs(this.initialDate), //Creating the calendar date
       daysInMonth: [] as date[], //Creating the days in month as date interface object
+      nextMonthDays: [] as date[], //Creating the next month's days
       firstSelectedDate: {}, //Getting first selected date as type of date interface object
       secondSelectedDate: {},
       currentDate: dayjs().format('YYYY-MM-DD'), //Manipulated date
@@ -164,11 +160,17 @@ export default {
         }
       }
     },
+    generateCurrentMonth() {
+      this.daysInMonth = this.totalDaysInMonth(0)
+    },
+    generateNextMonth() {
+      this.nextMonthDays = this.totalDaysInMonth(1)
+    },
     //This is where we create the calendar for a month
-    totalDaysInMonth() {
-      const daysInWholeMonth = [] //Empty days array to fill with days
-      const startOfMonth = this.calendarDate.startOf('month') //Start of the month
-      const endOfMonth = this.calendarDate.endOf('month') //End of the month
+    totalDaysInMonth(offset: number) {
+      const daysInWholeMonth = [] as date[] //Empty days array to fill with days
+      const startOfMonth = this.calendarDate.add(offset, 'month').startOf('month') //Start of the month
+      const endOfMonth = this.calendarDate.add(offset, 'month').endOf('month') //End of the month
 
       /*
         Purpose of the below comments is to explain the logic of 
@@ -190,7 +192,7 @@ export default {
       const endOffsetValue = (7 - ((offsetValue + endOfMonth.date()) % 7)) % 7
 
       let today = dayjs().format('D') //Today's date but with manipulated format in loops
-      const date = dayjs(this.currentDate) //Manipulated date's in loop manipulation
+      const date = dayjs(this.currentDate).add(offset, 'month') //Manipulated date's in loop manipulation
 
       // Create the empty values at the beginning of the month
       for (let i = 0; i < offsetValue; i++) {
@@ -209,20 +211,21 @@ export default {
           isToday:
             Number(today) === i + 1 &&
             this.currentMonth() === dayjs().format('MMMM') &&
-            this.currentYear() === dayjs().format('YYYY'),
+            this.currentYear() === dayjs().format('YYYY') &&
+            offset == 0,
           number: String(i + 1),
           month: dayjs(dateSender).format('MM'),
           year: dayjs(dateSender).format('YYYY')
         })
       }
+
       // Create the empty values at the end of the month
       for (let i = 1; i <= endOffsetValue; i++) {
         daysInWholeMonth.push({ date: '', inactive: true, isToday: false })
       }
-
-      this.daysInMonth = daysInWholeMonth //Filling the days in month with daysInWholeMonth
       this.linedThroughDate() //Lining through the date
       this.checkDateHistory() //Checking the date history
+      return daysInWholeMonth
     },
 
     //This is for the right button to go to the next month
@@ -230,7 +233,8 @@ export default {
       this.calendarDate = this.calendarDate.add(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the next month with manipulated date
-      this.totalDaysInMonth()
+      this.generateCurrentMonth()
+      this.generateNextMonth()
     },
 
     //This is for the left button to go to the next month
@@ -238,7 +242,8 @@ export default {
       this.calendarDate = this.calendarDate.subtract(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the previous month with manipulated date
-      this.totalDaysInMonth()
+      this.generateCurrentMonth()
+      this.generateNextMonth()
     },
 
     //This is for getting the current month
@@ -262,7 +267,7 @@ export default {
         this.saveFirstDateHistory = this.firstSelectedDate.date //Saving the date history
         this.linedThroughDate() //Lining through the date
         this.checkDateHistory() //Checking the date history
-        this.$emit('dateFirstSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
+        this.emitDate('dateFirstSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
       } else if (this.secondSelectedDate.date == null) {
         this.secondSelectedDate.selected = false
         this.secondSelectedDate = date
@@ -270,7 +275,7 @@ export default {
         this.saveSecondDateHistory = this.secondSelectedDate.date
         this.linedThroughDate() //Lining through the date
         this.checkDateHistory() //Checking the date history
-        this.$emit('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
+        this.emitDate('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
       } else if (this.secondSelectedDate.date <= date) {
         this.secondSelectedDate.selected = false
         this.secondSelectedDate = date
@@ -278,7 +283,7 @@ export default {
         this.saveSecondDateHistory = this.secondSelectedDate.date
         this.linedThroughDate() //Lining through the date
         this.checkDateHistory() //Checking the date history
-        this.$emit('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
+        this.emitDate('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
       } else if (this.secondSelectedDate.date > date) {
         if (this.firstSelectedDate.date < date) {
           this.secondSelectedDate.selected = false
@@ -287,7 +292,7 @@ export default {
           this.saveSecondDateHistory = this.secondSelectedDate.date
           this.linedThroughDate() //Lining through the date
           this.checkDateHistory() //Checking the date history
-          this.$emit('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
+          this.emitDate('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
         } else {
           this.firstSelectedDate.selected = false //First selected date is false at beginning because we are changing it
           this.firstSelectedDate = date //First selected date is the date we clicked
@@ -295,11 +300,13 @@ export default {
           this.saveFirstDateHistory = this.firstSelectedDate.date //Saving the date history
           this.linedThroughDate() //Lining through the date
           this.checkDateHistory() //Checking the date history
-          this.$emit('dateFirstSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
+          this.emitDate('dateFirstSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
         }
       }
     },
-
+    emitDate(event, date) {
+      this.$emit(event, date)
+    },
     checkDateHistory() {
       //Checking the date history and setting the selected date
       for (let i = 0; i < this.daysInMonth.length; i++) {
@@ -346,7 +353,8 @@ export default {
   created() {
     //When the component is created, we are checking the range, creating the days in month and checking the date history
     this.checkRange()
-    this.totalDaysInMonth()
+    this.generateCurrentMonth()
+    this.generateNextMonth()
     this.checkDateHistory()
     this.linedThroughDate()
   }
@@ -375,7 +383,7 @@ export default {
       display: flex;
       align-items: center;
       border-radius: 30px;
-      width: 650px;
+      width: 500px;
       height: 300px;
       flex-direction: row;
     }
@@ -385,9 +393,6 @@ export default {
       width: 300px;
       height: 240px;
       background: #ffffff;
-      box-shadow: 2px 2px 6px #5c75991a;
-      border: 1px solid #e6e6e6;
-      border-radius: $border-radius-medium;
       margin: 0 10px;
 
       // This is the header section
