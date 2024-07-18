@@ -395,6 +395,7 @@ export default {
 // This is the main container
 .ui-date-picker-c {
   align-self: center;
+
   // This is the main calendar wrapper
   .ui-date-picker-wrapper {
     background: white;
@@ -406,6 +407,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
+
     > div {
       display: flex;
       align-items: center;
@@ -413,7 +415,6 @@ export default {
       width: 600px;
       height: 250px;
       flex-direction: row;
-      
     }
     &::before {
       content: '';
@@ -434,9 +435,6 @@ export default {
       background: #ffffff;
       margin: 0 10px;
       border-radius: 30px;
-      
-
-
 
       // This is the header section
       .header {
@@ -522,11 +520,13 @@ export default {
         background: #e7e7e7;
         border-radius: 16px;
       }
+      .between {
+        background-color: aqua;
+      }
     }
 
     // Styling of days generally
     .days li {
-      
       padding: 10px 10px;
       font-weight: 500;
       line-height: 7px;
