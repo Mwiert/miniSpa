@@ -90,9 +90,10 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
   contrast(94%);
 
 .ui-button-c {
+  user-select: none;
   max-width: 400px;
-  width: fit-content;
-  min-width: 150px;
+  width: min-content;
+  min-width: 200px;
 
   a.reisetech-btn {
     padding: 0px 10px !important; // Padding for router-link buttons

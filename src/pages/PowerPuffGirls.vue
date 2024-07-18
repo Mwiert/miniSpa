@@ -128,7 +128,7 @@
         v-model="pickedRadioFlight"
       />
     </div>
-
+    
     <!-- UICheckBox component instances -->
     <!-- Checkboxes for hotel -->
     <div class="hotel-checkbox">
@@ -286,6 +286,7 @@ export default {
 <style lang="scss" scoped>
 //Style to add gap between buttons
 .button-c {
+  background-color: #ffff;
   display: flex;
   flex-direction: column;
   gap: 10px;

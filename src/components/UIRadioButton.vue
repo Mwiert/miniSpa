@@ -1,11 +1,10 @@
 <template>
   <!--First div checks radio button is disabled and after or not-->
-  <div class="reisetech-radio-button-c" :class="[disabled ? 'disabled' : '', after ? 'after' : '']">
+  <div class="reisetech-radio-button-c" :class="[disabled ? 'disabled' : '', after ? 'after' : '']" @click="selectRadioButton">
     <div class="radio-label">{{ IsRadioLabel }}</div>
     <!--Here we check radio button is checked or not with computed radioButtonChecked-->
     <div
       class="radio-button"
-      @click="selectRadioButton"
       :class="[radioButtonClassName, radioButtonChecked ? 'checked' : '']"
     ></div>
   </div>
@@ -76,11 +75,13 @@ export default {
 @import '../assets/css/main.scss';
 
 .reisetech-radio-button-c {
+  user-select: none;
   justify-content: center;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding-right: $padding-large;
+  cursor: pointer;
 
   .radio-label {
     height: 21px;
@@ -93,43 +94,20 @@ export default {
     border: 2px solid black;
     border-radius: 50%;
     position: relative;
-    cursor: pointer;
 
     &.checked {
       background-color: black;
 
-      &.hotel {
-        background-color: $secondary-color;
-        border: 2px solid $secondary-color;
-
-        &::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 8px;
-          height: 8px;
-          background-color: white;
-          border-radius: 50%;
-        }
-      }
-
       &.flight {
         background-color: $accent-primary-color;
         border: 2px solid $accent-primary-color;
+        box-shadow: 0 0 4px $accent-primary-color;
+      }
 
-        &::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 8px;
-          height: 8px;
-          background-color: white;
-          border-radius: 50%;
-        }
+      &.hotel {
+        background-color: $secondary-color;
+        border: 2px solid $secondary-color;
+        box-shadow: 0 0 4px $secondary-color;
       }
 
       &::after {
@@ -160,18 +138,6 @@ export default {
       border: 2px solid black;
       border-radius: 50%;
       position: relative;
-
-      &.checked::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 8px;
-        height: 8px;
-        background-color: white;
-        border-radius: 50%;
-      }
     }
   }
 
