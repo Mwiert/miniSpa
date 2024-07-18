@@ -50,8 +50,9 @@
           :saveDate="firstSelectedDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
+          :initialDate="firstSelectedDate.date"
           @sendDateToParent="setCurrentDate"
-          @dateSelected="handleDateSelected"
+          @dateSelected="handleFirstDateSelected"
           @click="sendDateToParent()"
         />
       </div>
@@ -64,6 +65,7 @@
           :saveSecondDate="secondSelectedDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
+          :initialDate="firstSelectedDate.date"
           @sendDateToParent="setCurrentDate"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
@@ -95,6 +97,7 @@ export default {
     value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
+    //presentDate: dayjs().format('YYYY-MM-DD'),
     initialDate: { type: String, default: '' }
   },
   data() {
@@ -102,7 +105,8 @@ export default {
       firstSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
       secondSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
       isSingleDatePickerEnable: false, //This is for enabling the single date picker as default false
-      isMultiDatePickerEnable: false //This is for enabling the multi date picker as default false
+      isMultiDatePickerEnable: false, //This is for enabling the multi date picker as default false
+      presentDate: {} as date
     }
   },
   methods: {
@@ -130,12 +134,14 @@ export default {
       return months[month] || month
     },
     handleFirstDateSelected(firstDate: date) {
+      console.log('first date:', firstDate)
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.firstSelectedDate = firstDate
     },
-    handleSecondDateSelected(firstDate: date) {
+    handleSecondDateSelected(secondDate: date) {
+      console.log('second date:', secondDate)
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
-      this.secondSelectedDate = firstDate
+      this.secondSelectedDate = secondDate
     },
     setCurrentDate(presentDate: date) {
       //We are setting the current date to the present date (Handling the emit from UIDatePicker to UIDateRangePicker)
