@@ -113,6 +113,16 @@ export default {
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') }
   },
   methods: {
+    setDefaultSelectedStyle() {
+  const selectedDays = document.querySelectorAll('.days li.selected');
+  selectedDays.forEach((day, index) => {
+    if (index === 0) {
+      day.classList.add('first');
+    } else {
+      day.classList.add('second');
+    }
+  });
+},
     checkRange() {
       /*
 
@@ -384,6 +394,9 @@ export default {
     this.generateNextMonth()
     this.checkDateHistory()
     this.linedThroughDate()
+  },
+  mounted(){
+    this.setDefaultSelectedStyle();
   }
 }
 </script>
@@ -548,6 +561,15 @@ export default {
     .days li.selected {
       background-color: $accent-primary-color;
       border-radius: 4px;
+      color: white;
+    }
+
+    .days li.first {
+      background-color: orange; 
+    }
+
+    .days li.second {
+      background-color: orange; 
       color: white;
     }
   }
