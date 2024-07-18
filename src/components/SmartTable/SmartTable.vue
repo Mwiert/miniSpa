@@ -3,15 +3,11 @@
     <SmartTableHeader @search-input="handleSearchInput" />
     <!-- Header for filters and search bar -->
 
-    <SmartTableBody :tableData="paginatedData" :columns="options.table.columns" />
-    <!-- Body displaying paginated data -->
+    <SmartTableBody :tableData="filteredData" :options="options" :activePage="activePage" />
+    <!-- noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz -->
 
-    <SmartTableFooter
-      :currentPage="currentPage"
-      :totalPages="totalPages"
-      @update:currentPage="updatePage"
-    />
-    <!-- Footer for pagination controls -->
+    <SmartTableFooter @update:currentPage="handlerSetPage" />
+    <!-- Footer kısmı pagination içerir -->
   </div>
 </template>
 
@@ -20,6 +16,7 @@ import SmartTableHeader from './SmartTableHeader.vue'
 import SmartTableBody from './SmartTableBody.vue'
 import SmartTableFooter from './SmartTableFooter.vue'
 import SmartTablePagination from './SmartTablePagination.vue'
+import dummy from './dummy'
 
 export default {
   name: 'SmartTable',
@@ -36,9 +33,9 @@ export default {
   },
   data() {
     return {
+      dummies: dummy,
       searchTerm: '',
-      currentPage: 1,
-      itemsPerPage: 10
+      activePage: 1
     }
   },
   computed: {
@@ -72,10 +69,9 @@ export default {
   methods: {
     handleSearchInput(value: string) {
       this.searchTerm = value
-      this.currentPage = 1 // Reset to the first page on new search
     },
-    updatePage(page) {
-      this.currentPage = page
+    handlerSetPage(val) {
+      this.activePage = val
     }
   }
 }

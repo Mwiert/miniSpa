@@ -14,20 +14,21 @@
       </div>
     </div>
 
-    <div v-if="NoItemFound" class="grid-row no-items-found">
+    <div v-if="$parent.filteredData.length === 0" class="grid-row no-items-found">
       <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
       <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
     </div>
+
     <div
       class="grid-row"
       :class="{ rowIndex }"
-      v-for="(tableRow, rowIndex) in tableRowData"
+      v-for="(tableRow, rowIndex) in denemeRow"
       :key="rowIndex"
     >
       <div
         v-for="(cell, cellIndex) in tableRow"
         :key="cellIndex"
-        :class="[cell.class, 'grid-item']"
+        :class="[getCellClass(cell, tableRow[cellIndex]), 'grid-item']"
       >
         <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
         <template v-if="typeof cell == 'object'">
@@ -42,13 +43,13 @@
 </template>
 
 <script lang="ts">
-import dayjs from 'dayjs'
-
 export default {
   name: 'SmartTableBody',
   props: {
     tableData: Array,
     options: Object,
+    activePage: Number,
+
     noItemsFound: {
       type: Boolean,
       required: true
@@ -69,16 +70,12 @@ export default {
     Columns() {
       return this.options.table.columns
     },
-    NoItemFound() {
-      return this.$parent.filteredData.length == 0
-    },
-    paginatedData() {
-      const start = (this.currentPage - 1) * this.itemsPerPage
-      const end = start + this.itemsPerPage
-      return this.filteredData.slice(start, end)
-    },
-    totalPages() {
-      return Math.ceil(this.filteredData.length / this.itemsPerPage)
+    denemeRow() {
+      const currentPage = this.activePage
+      const perPage = 5
+      const start = (currentPage - 1) * perPage
+      const end = perPage + start
+      return this.tableRowData.slice(start, end)
     }
   },
 
@@ -128,18 +125,24 @@ export default {
     getValueForSorting(cellData: any) {
       if (typeof cellData === 'object' && 'text' in cellData) {
         return cellData.text
+      } else {
+        return cellData
       }
-      if (typeof cellData === 'string' && dayjs(cellData, 'DD/MM/YYYY').isValid()) {
-        const [day, month, year] = cellData.split('/').map(Number)
-        return new Date(year, month - 1, day)
-      }
-      return cellData
     },
 
     handlerUrl(url) {
       if (url == null) {
         window.open(url, '_blank')
       }
+    },
+
+    getCellClass(cellData: any) {
+      if (cellData.class === 'status') {
+        return `${cellData.class}-${cellData.text}`
+      } else if (cellData.class === 'price' || cellData.class === 'promoCode') {
+        return `${cellData.class}`
+      }
+      return 'default-class'
     }
   }
 }
@@ -216,39 +219,38 @@ export default {
       border-radius: 30px;
       border: none;
       animation: fadeIn 0.3s ease-in-out;
+    }
+    .status-Confirmed,
+    .status-Pending,
+    .status-Cancelled {
+      padding: 5px 10px;
+      border-radius: 30px;
+      border: 3px solid;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50%;
+      height: 40px;
+      margin: 10px auto;
+    }
 
-      &.confirmed,
-      &.pending,
-      &.cancelled {
-        padding: 5px 10px;
-        border-radius: 30px;
-        border: 3px solid;
-        font-weight: bold;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50%;
-        height: 40px;
-        margin: 10px auto;
-      }
+    .status-Confirmed {
+      background-color: #ccffdd;
+      color: #1f9947;
+      border-color: #4deb81;
+    }
 
-      &.confirmed {
-        background-color: #ccffdd;
-        color: #1f9947;
-        border-color: #4deb81;
-      }
+    .status-Pending {
+      background-color: #ffe6cc;
+      color: #e87807;
+      border-color: #ee9c4b;
+    }
 
-      &.pending {
-        background-color: #ffe6cc;
-        color: #e87807;
-        border-color: #ee9c4b;
-      }
-
-      &.cancelled {
-        background-color: #ff6b6b;
-        color: #7e2323;
-        border-color: #ee3535;
-      }
+    .status-Cancelled {
+      background-color: #ff6b6b;
+      color: #7e2323;
+      border-color: #ee3535;
     }
 
     .price,

@@ -1,17 +1,17 @@
 <template>
   <div class="smart-table-pagination-c">
-    <button @click="prevPage" class="prev-page-btn" :disabled="localCurrentPage === 1">
+    <button @click="setPage(localCurrentPage - 1)" class="prev-page-btn">
       <SvgIcon :name="'arrow-left'" size="s" />
     </button>
     <button
-      v-for="page in totalPagesArray"
+      v-for="page in totalPages"
       :key="page"
       @click="setPage(page)"
       :class="['page-btn', { active: page === localCurrentPage }]"
     >
       {{ page }}
     </button>
-    <button @click="nextPage" class="next-page-btn" :disabled="localCurrentPage === totalPages">
+    <button @click="setPage(localCurrentPage + 1)" class="next-page-btn">
       <SvgIcon :name="'arrow-right'" size="s" />
     </button>
   </div>
@@ -26,7 +26,7 @@ export default {
       required: true
     },
     totalPages: {
-      type: Number,
+      type: Array,
       required: true
     }
   },
@@ -35,29 +35,13 @@ export default {
       localCurrentPage: this.currentPage
     }
   },
-  computed: {
-    totalPagesArray() {
-      return Array.from({ length: this.totalPages }, (_, i) => i + 1)
-    }
-  },
   methods: {
-    nextPage() {
-      if (this.localCurrentPage < this.totalPages) {
-        this.localCurrentPage += 1
-        this.$emit('update:currentPage', this.localCurrentPage)
-      }
-    },
-    prevPage() {
-      if (this.localCurrentPage > 1) {
-        this.localCurrentPage -= 1
-        this.$emit('update:currentPage', this.localCurrentPage)
-      }
-    },
     setPage(page) {
       this.localCurrentPage = page
       this.$emit('update:currentPage', this.localCurrentPage)
     }
   },
+  computed: {},
   watch: {
     currentPage(newVal) {
       this.localCurrentPage = newVal
@@ -87,12 +71,7 @@ export default {
     margin: 0 5px;
     cursor: pointer;
 
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    &:hover:not(:disabled) {
+    &:hover {
       background-color: #f0f0f0;
     }
   }
@@ -114,7 +93,7 @@ export default {
       color: #ffffff;
     }
 
-    &:hover:not(.active) {
+    &:hover {
       background-color: #f0f0f0;
     }
   }
