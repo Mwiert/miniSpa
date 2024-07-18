@@ -219,6 +219,10 @@ export default {
 
 //This is main container
 .ui-date-range-picker-c {
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   display: flex;
   flex-direction: column;
   align-self: center;
