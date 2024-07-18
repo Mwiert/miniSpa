@@ -194,12 +194,26 @@ export default {
           year: dayjs(this.initialDate).format('YYYY'),
           date: dayjs(this.initialDate).format('YYYY-MM-DD')
         }
+        this.secondSelectedDate = dayjs(this.initialDate).add(3, 'day').format('YYYY-MM-DD')
+        this.secondSelectedDate = {
+          number: dayjs(this.secondSelectedDate).format('DD'),
+          month: dayjs(this.secondSelectedDate).format('MM'),
+          year: dayjs(this.secondSelectedDate).format('YYYY'),
+          date: dayjs(this.secondSelectedDate).format('YYYY-MM-DD')
+        }
       } else {
         this.firstSelectedDate = {
           number: dayjs().format('DD'),
           month: dayjs().format('MM'),
           year: dayjs().format('YYYY'),
           date: dayjs().format('YYYY-MM-DD')
+        }
+        this.secondSelectedDate = dayjs().add(3, 'day').format('YYYY-MM-DD')
+        this.secondSelectedDate = {
+          number: dayjs(this.secondSelectedDate).format('DD'),
+          month: dayjs(this.secondSelectedDate).format('MM'),
+          year: dayjs(this.secondSelectedDate).format('YYYY'),
+          date: dayjs(this.secondSelectedDate).format('YYYY-MM-DD')
         }
       }
     },
@@ -219,12 +233,19 @@ export default {
 
 //This is main container
 .ui-date-range-picker-c {
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   display: flex;
   flex-direction: column;
   align-self: center;
   text-align: center;
   padding: 1rem;
   gap: 0.75rem;
+  position: relative;
+  width: 175px;
+
   //This is our button container
   .button {
     background: #f8f8f8;
@@ -232,14 +253,12 @@ export default {
     border: 1px solid #b6b6b6;
 
     opacity: 1;
-    width: 175px;
     height: 24px;
 
     justify-items: center;
     text-align: center;
     text-decoration: none;
     font-size: 16px;
-    margin-right: 9rem;
     padding: 10px;
     cursor: pointer;
     border-radius: 12px;
@@ -293,6 +312,12 @@ export default {
         }
       }
     }
+  }
+  .date-picker {
+    position: absolute;
+    top: 75px;
+    left: 15px;
+    z-index: 1000;
   }
 }
 </style>

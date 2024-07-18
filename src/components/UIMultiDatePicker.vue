@@ -113,6 +113,16 @@ export default {
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') }
   },
   methods: {
+    setDefaultSelectedStyle() {
+  const selectedDays = document.querySelectorAll('.days li.selected');
+  selectedDays.forEach((day, index) => {
+    if (index === 0) {
+      day.classList.add('first');
+    } else {
+      day.classList.add('second');
+    }
+  });
+},
     checkRange() {
       /*
 
@@ -384,6 +394,9 @@ export default {
     this.generateNextMonth()
     this.checkDateHistory()
     this.linedThroughDate()
+  },
+  mounted(){
+    this.setDefaultSelectedStyle();
   }
 }
 </script>
@@ -395,9 +408,10 @@ export default {
 // This is the main container
 .ui-date-picker-c {
   align-self: center;
+
   // This is the main calendar wrapper
   .ui-date-picker-wrapper {
-    background: #ffffff;
+    background: white;
     box-shadow: 2px 2px 6px #5c75991a;
     border: 1px solid #e6e6e6;
     border-radius: $border-radius-medium;
@@ -406,21 +420,34 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
+
     > div {
       display: flex;
       align-items: center;
-      border-radius: 30px;
-      width: 500px;
-      height: 300px;
+      border-radius: 50px;
+      width: 600px;
+      height: 250px;
       flex-direction: row;
+    }
+    &::before {
+      content: '';
+      position: absolute; //Position relative to parent
+      top: -10px; //10px above the calendar
+      left: 15px; //15px from the left of the calendar
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent; //This is the left border of the triangle invisible
+      border-right: 10px solid transparent; //This is the right border of the triangle invisible
+      border-bottom: 10px solid #ffffff; //This is the bottom border of the triangle white which is visible
     }
     //This is the main calendar content
     .calendar {
       padding-top: 1.2rem;
       width: 300px;
-      height: 240px;
+      height: 220px;
       background: #ffffff;
       margin: 0 10px;
+      border-radius: 30px;
 
       // This is the header section
       .header {
@@ -485,7 +512,7 @@ export default {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
-      font-size: 10px;
+      font-size: 14px;
     }
 
     .weekdays {
@@ -506,13 +533,16 @@ export default {
         background: #e7e7e7;
         border-radius: 16px;
       }
+      .between {
+        background-color: aqua;
+      }
     }
 
     // Styling of days generally
     .days li {
-      padding: 10px 8px;
+      padding: 10px 10px;
       font-weight: 500;
-      line-height: 5px;
+      line-height: 7px;
       cursor: pointer;
     }
     .days li.textDecoration {
@@ -531,6 +561,15 @@ export default {
     .days li.selected {
       background-color: $accent-primary-color;
       border-radius: 4px;
+      color: white;
+    }
+
+    .days li.first {
+      background-color: orange; 
+    }
+
+    .days li.second {
+      background-color: orange; 
       color: white;
     }
   }
