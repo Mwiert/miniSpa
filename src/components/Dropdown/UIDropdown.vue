@@ -46,7 +46,12 @@
             :class="{ selected: isSelected(item) }"
           >
             <div v-if="checkImage()">
-              <img :src="item[urlField]" alt="" class="dropdown-item-img" />
+              <img
+                :src="item[urlField]"
+                alt=""
+                class="dropdown-item-img"
+                :class="{ invisible: item[urlField] === '' }"
+              />
               <span>{{ item[displayField] }}</span>
             </div>
             <div v-else>
@@ -159,11 +164,10 @@ export default {
     selectItem(item) {
       if (this.selectedItem === item) {
         this.selectedItem = {}
-        this.$emit('update:modelValue', {})
       } else {
         this.selectedItem = item
-        this.$emit('update:modelValue', item)
       }
+      this.$emit('update:modelValue', item)
       this.isOpen = false
       this.dropdownItems = this.items
     },
@@ -348,6 +352,9 @@ export default {
             width: 0.75rem;
             height: 0.75rem;
             padding-right: 10px;
+            &.invisible {
+              visibility: hidden;
+            }
           }
         }
       }
