@@ -95,7 +95,7 @@ export default {
       nextMonthDays: [] as date[], //Creating the next month's days
       firstSelectedDate: {}, //Getting first selected date as type of date interface object
       secondSelectedDate: {},
-      currentDate: dayjs().format('YYYY-MM-DD'), //Manipulated date
+      currentDate: dayjs(this.initialDate).format('YYYY-MM-DD'), //Manipulated date
       presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
@@ -191,7 +191,7 @@ export default {
         */
       const endOffsetValue = (7 - ((offsetValue + endOfMonth.date()) % 7)) % 7
 
-      let today = dayjs().format('D') //Today's date but with manipulated format in loops
+      //let today = dayjs().format('D') //Today's date but with manipulated format in loops
       const date = dayjs(this.currentDate).add(offset, 'month') //Manipulated date's in loop manipulation
 
       // Create the empty values at the beginning of the month
@@ -204,15 +204,11 @@ export default {
         const dateSender = date.startOf('month').add(i, 'day')
 
         daysInWholeMonth.push({
-          date: dayjs(dateSender).format('DD-MM-YYYY'),
+          date: dayjs(dateSender).format('YYYY-MM-DD'),
           inactive: false,
           selected: false,
           textDecoration: false,
-          isToday:
-            Number(today) === i + 1 &&
-            this.currentMonth() === dayjs().format('MMMM') &&
-            this.currentYear() === dayjs().format('YYYY') &&
-            offset == 0,
+          isToday: this.presentDate == dayjs(dateSender).format('YYYY-MM-DD'),
           number: String(i + 1),
           month: dayjs(dateSender).format('MM'),
           year: dayjs(dateSender).format('YYYY')
@@ -225,6 +221,7 @@ export default {
       }
       this.linedThroughDate() //Lining through the date
       this.checkDateHistory() //Checking the date history
+      this.checkSecondDateHistory()
       return daysInWholeMonth
     },
 
@@ -235,6 +232,8 @@ export default {
       //This is for creating the days in the next month with manipulated date
       this.generateCurrentMonth()
       this.generateNextMonth()
+      this.checkDateHistory()
+      this.checkSecondDateHistory()
     },
 
     //This is for the left button to go to the next month
@@ -244,6 +243,8 @@ export default {
       //This is for creating the days in the previous month with manipulated date
       this.generateCurrentMonth()
       this.generateNextMonth()
+      this.checkDateHistory()
+      this.checkSecondDateHistory()
     },
 
     //This is for getting the current month
@@ -251,7 +252,7 @@ export default {
       return this.calendarDate.format('MMMM')
     },
     nextCalender() {
-      let nextDate = this.calendarDate.clone().add(1, 'months')
+      let nextDate = this.calendarDate.add(1, 'months')
       return nextDate.format('MMMM YYYY')
     },
     //This is for getting the current year
@@ -274,24 +275,26 @@ export default {
         this.secondSelectedDate.selected = true
         this.saveSecondDateHistory = this.secondSelectedDate.date
         this.linedThroughDate() //Lining through the date
-        this.checkDateHistory() //Checking the date history
+        this.checkSecondDateHistory() //Checking the date history
         this.emitDate('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
-      } else if (this.secondSelectedDate.date <= date) {
+      } else if (this.secondSelectedDate.date <= date.date) {
+        console.log(this.secondSelectedDate.date + ' ' + date)
+        console.log(this.secondSelectedDate.date + ' ' + date.date)
         this.secondSelectedDate.selected = false
         this.secondSelectedDate = date
         this.secondSelectedDate.selected = true
         this.saveSecondDateHistory = this.secondSelectedDate.date
         this.linedThroughDate() //Lining through the date
-        this.checkDateHistory() //Checking the date history
+        this.checkSecondDateHistory() //Checking the date history
         this.emitDate('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
-      } else if (this.secondSelectedDate.date > date) {
-        if (this.firstSelectedDate.date < date) {
+      } else if (this.secondSelectedDate.date > date.date) {
+        if (this.firstSelectedDate.date < date.date) {
           this.secondSelectedDate.selected = false
           this.secondSelectedDate = date
           this.secondSelectedDate.selected = true
           this.saveSecondDateHistory = this.secondSelectedDate.date
           this.linedThroughDate() //Lining through the date
-          this.checkDateHistory() //Checking the date history
+          this.checkSecondDateHistory() //Checking the date history
           this.emitDate('dateSecondSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
         } else {
           this.firstSelectedDate.selected = false //First selected date is false at beginning because we are changing it
@@ -316,14 +319,38 @@ export default {
           this.firstSelectedDate = this.daysInMonth[i]
         }
       }
+      for (let i = 0; i < this.nextMonthDays.length; i++) {
+        //If the date history is equal to the date in the month, set the selected date to true
+        if (this.nextMonthDays[i].date === this.saveFirstDateHistory) {
+          this.nextMonthDays[i].selected = true
+          this.firstSelectedDate = this.nextMonthDays[i]
+        }
+      }
+    },
+    checkSecondDateHistory() {
+      //Checking the date history and setting the selected date
+      for (let i = 0; i < this.daysInMonth.length; i++) {
+        //If the date history is equal to the date in the month, set the selected date to true
+        if (this.daysInMonth[i].date === this.saveSecondDateHistory) {
+          this.daysInMonth[i].selected = true
+          this.secondSelectedDate = this.daysInMonth[i]
+        }
+      }
+      for (let i = 0; i < this.nextMonthDays.length; i++) {
+        //If the date history is equal to the date in the month, set the selected date to true
+        if (this.nextMonthDays[i].date === this.saveSecondDateHistory) {
+          this.nextMonthDays[i].selected = true
+          this.secondSelectedDate = this.nextMonthDays[i]
+        }
+      }
     },
     linedThroughDate() {
       if (this.isPastValidation) {
         for (let i = 0; i < this.daysInMonth.length; i++) {
           if (
-            this.daysInMonth[i].date > dayjs(this.presentDate).format('DD-MM-YYYY') &&
-            this.daysInMonth[i].month === dayjs(this.presentDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.presentDate).format('YYYY')
+            this.daysInMonth[i].date > dayjs(this.currentDate).format('DD-MM-YYYY') &&
+            this.daysInMonth[i].month === dayjs(this.currentDate).format('MM') &&
+            this.daysInMonth[i].year === dayjs(this.currentDate).format('YYYY')
           ) {
             this.daysInMonth[i].textDecoration = true
           }
@@ -331,9 +358,9 @@ export default {
       } else if (this.isFutureValidation) {
         for (let i = 0; i < this.daysInMonth.length; i++) {
           if (
-            this.daysInMonth[i].date < dayjs(this.presentDate).format('DD-MM-YYYY') &&
-            this.daysInMonth[i].month === dayjs(this.presentDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.presentDate).format('YYYY')
+            this.daysInMonth[i].date < dayjs(this.currentDate).format('DD-MM-YYYY') &&
+            this.daysInMonth[i].month === dayjs(this.currentDate).format('MM') &&
+            this.daysInMonth[i].year === dayjs(this.currentDate).format('YYYY')
           ) {
             this.daysInMonth[i].textDecoration = true
           }
