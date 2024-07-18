@@ -1,21 +1,20 @@
 <template>
-  <div class="smart-table-footer-container"  >
+  <div class="smart-table-footer-container">
     Showing {{ tableCount }} reservations
-    <SmartTablePagination/>
+    <SmartTablePagination />
   </div>
 </template>
 
 <script lang="ts">
-import SmartTablePagination from './SmartTablePagination.vue';
+import SmartTablePagination from './SmartTablePagination.vue'
 export default {
   name: 'SmartTableFooter',
-  props: {
-  },
-  components:{
+  props: {},
+  components: {
     SmartTablePagination
   },
-  computed:{
-    tableCount(){
+  computed: {
+    tableCount() {
       return this.$parent.filteredData.length
     }
   }

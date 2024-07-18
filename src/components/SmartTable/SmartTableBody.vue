@@ -71,6 +71,14 @@ export default {
     },
     NoItemFound() {
       return this.$parent.filteredData.length == 0
+    },
+    paginatedData() {
+      const start = (this.currentPage - 1) * this.itemsPerPage
+      const end = start + this.itemsPerPage
+      return this.filteredData.slice(start, end)
+    },
+    totalPages() {
+      return Math.ceil(this.filteredData.length / this.itemsPerPage)
     }
   },
 
