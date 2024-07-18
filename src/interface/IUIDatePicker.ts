@@ -9,7 +9,7 @@ interface DateModel {
   between?: boolean // For Future Implementation
   isToday?: boolean
   month?: string
-  year?: number
+  year?: string
   day?: string
 }
 export default DateModel

@@ -817,4 +817,4 @@ const dummy = [
    }
 ];
 
-export default dummy;
+export default dummy

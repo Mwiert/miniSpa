@@ -102,7 +102,7 @@ export default {
     bottom: 8px;
     .clear-btn {
       position: absolute;
-      right: 10px;
+      right: 16px;
       background: none;
       border: none;
       cursor: pointer;
@@ -111,7 +111,7 @@ export default {
       padding: 0px;
       border-radius: 50%;
       &:hover {  
-        background-color: aqua;
+        background-color: $accent-primary-color;
         transform: scale(1.2);
         filter: opacity(0.5);
       }
@@ -119,7 +119,7 @@ export default {
     .input-value {
       font-size: 1rem;
       padding: 1rem;
-      padding-right: 2.5rem;
+      padding-right: 3rem;
       border: 1px solid #666666;
       border-radius: 8px;
     }

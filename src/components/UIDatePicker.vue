@@ -60,7 +60,7 @@ export default {
       calendarDate: dayjs(this.initialDate), //Creating the calendar date
       daysInMonth: [] as date[], //Creating the days in month as date interface object
       firstSelectedDate: {}, //Getting first selected date as type of date interface object
-      currentDate: dayjs().format('YYYY-MM-DD'), //Manipulated date
+      currentDate: dayjs(this.initialDate).format('YYYY-MM-DD'), //Manipulated date
       presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
