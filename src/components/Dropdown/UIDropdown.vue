@@ -40,12 +40,23 @@
           <div
             v-for="(item, index) in filteredItems()"
             :key="index"
+            :ref="'item-' + index"
             class="ui-dropdown-item"
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }"
           >
-            <!-- <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" /> -->
-            <span>{{ item[displayField] }}</span>
+            <div v-if="checkImage()">
+              <img
+                :src="item[urlField]"
+                alt=""
+                class="dropdown-item-img"
+                :class="{ invisible: item[urlField] === '' }"
+              />
+              <span>{{ item[displayField] }}</span>
+            </div>
+            <div v-else>
+              <span>{{ item[displayField] }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -74,8 +85,7 @@ export default {
     },
     label: {
       // label on the dropdown to understand what the dropdown contents are.
-      type: String,
-      required: true
+      type: String
     },
     fontSize: {
       // defined fontsize shown in the dropdown.
@@ -98,6 +108,10 @@ export default {
       type: String,
       default: 'name'
     },
+    primaryKey: {
+      type: String,
+      required: true
+    },
     urlField: {
       // picture of the object taken here
       type: String,
@@ -114,8 +128,7 @@ export default {
       isOpen: false, // checks that if drowdown is open or not.
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItem: this.modelValue, // represents the currently selected item.
-      dropdownItems: this.items,
-      scrollPosition: 0
+      dropdownItems: this.items
     }
   },
   computed: {
@@ -136,36 +149,41 @@ export default {
         item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
     },
-    isSelected(item) {
-      return this.selectedItem === item
+    checkImage() {
+      for (let i = 0; i < this.dropdownItems.length; i++) {
+        if (this.dropdownItems[i][this.urlField] !== '') {
+          return true
+        }
+      }
+      return false
     },
+    isSelected(item) {
+      return this.selectedItem[this.primaryKey] === item[this.primaryKey]
+    },
+
     selectItem(item) {
-      const dropDownContent = this.$el.querySelector('.ui-dropdown-content')
       if (this.selectedItem === item) {
         this.selectedItem = {}
-        this.$emit('update:modelValue', {})
-        dropDownContent.scrollTop = 0
       } else {
         this.selectedItem = item
-        this.$emit('update:modelValue', item)
       }
-      if (this.searchQuery === '') {
-        this.scrollPosition = dropDownContent.scrollTop
-      }
+      this.$emit('update:modelValue', item)
       this.isOpen = false
       this.dropdownItems = this.items
     },
     toggleDropdown() {
-      //Opens and closes the dropdown
       this.isOpen = !this.isOpen
-      //If dropdown is open we are getting the scrollTop location
       if (this.isOpen) {
+        this.clearSearch()
+
         this.$nextTick(() => {
-          const dropDownContent = this.$el.querySelector('.ui-dropdown-content')
-          dropDownContent.scrollTop = this.scrollPosition
+          const selectedIndex = this.dropdownItems.indexOf(this.selectedItem)
+          const selectedItemRef = this.$refs['item-' + selectedIndex]
+          if (selectedItemRef && selectedItemRef[0]) {
+            selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+          }
         })
       }
-
       this.clearSearch()
     },
     clearSearch() {
@@ -197,7 +215,6 @@ export default {
 
 <style lang="scss" scoped>
 .ui-dropdown-c {
-  
   display: inline-block;
   justify-content: space-around;
   width: fit-content;
@@ -330,6 +347,14 @@ export default {
           }
           &.selected {
             font-weight: bold;
+          }
+          .dropdown-item-img {
+            width: 0.75rem;
+            height: 0.75rem;
+            padding-right: 10px;
+            &.invisible {
+              visibility: hidden;
+            }
           }
         }
       }
