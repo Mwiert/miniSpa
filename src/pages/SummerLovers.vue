@@ -1,15 +1,15 @@
 <template>
-  {{ selectedPets }}
   <UIMultiDropdown
-      v-model="selectedPets"
-      :items="pets"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      :label="petLabel"
-      :dataSize="dataSize"
-      searchable
-      maxVisibleItems=2
+    v-model="selectedPets"
+    :items="pets"
+    :fontSize="fontSize"
+    displayField="name"
+    urlField="imageUrl"
+    :label="petLabel"
+    :dataSize="dataSize"
+    searchable
+    maxVisibleItems="2"
+    primaryKey="id"
   />
   <div>
     <UIDropdown
@@ -21,6 +21,7 @@
       :label="petLabel"
       :dataSize="dataSize"
       searchable
+      primaryKey="id"
     />
     <UIDropdown
       v-model="selectedFood"
@@ -31,28 +32,31 @@
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"
+      primaryKey="id"
     />
   </div>
-    <UIDropdown
-      v-model="selectedToy"
-      :items="toys"
-      :fontSize="fontSize"
-      displayField="name"
-      :label="toyLabel"
-      urlField="imageUrl"
-      searchable
-      :dataSize="dataSize"
-    />
-    <UIDropdown
-      v-model="selectedItem"
-      :items="items"
-      :label="itemLabel"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      searchable
-      :dataSize="dataSize"
-    />
+  <UIDropdown
+    v-model="selectedToy"
+    :items="toys"
+    :fontSize="fontSize"
+    displayField="name"
+    :label="toyLabel"
+    urlField="imageUrl"
+    searchable
+    :dataSize="dataSize"
+    primaryKey="id"
+  />
+  <UIDropdown
+    v-model="selectedItem"
+    :items="items"
+    :label="itemLabel"
+    :fontSize="fontSize"
+    displayField="name"
+    urlField="imageUrl"
+    searchable
+    :dataSize="dataSize"
+    primaryKey="id"
+  />
 </template>
 
 <script lang="ts">
@@ -68,58 +72,89 @@ export default {
   data() {
     return {
       pets: [
-        { id: 2, imageUrl: 'https://example.com/dog.png', name: 'Dog', detail: 'a' },
-        { imageUrl: '', name: 'Cat', detail: 'b' },
-        { imageUrl: '', name: 'Fish', detail: 'c' },
-        { imageUrl: '', name: 'Bird', detail: 'd' },
-        { imageUrl: '', name: 'Mouse', detail: 'c' },
-        { imageUrl: '', name: 'Elephant', detail: 'd' },
-        { imageUrl: '', name: 'Hawk', detail: 'c' },
-        { imageUrl: '', name: 'Monkey', detail: 'a' }
+        {
+          id: 0,
+          imageUrl:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
+          name: 'Dog',
+          detail: 'a'
+        },
+        {
+          id: 1,
+          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/VAN_CAT.png',
+          name: 'Cat',
+          detail: 'b'
+        },
+        { id: 2, imageUrl: '', name: 'Fish', detail: 'c' },
+        { id: 3, imageUrl: '', name: 'Bird', detail: 'd' },
+        { id: 4, imageUrl: '', name: 'Mouse', detail: 'c' },
+        { id: 5, imageUrl: '', name: 'Elephant', detail: 'd' },
+        { id: 6, imageUrl: '', name: 'Hawk', detail: 'c' },
+        { id: 7, imageUrl: '', name: 'Monkey', detail: 'a' }
       ],
       foods: [
-        { imageUrl: 'https://example.com/dog.png', name: 'Dog Food', detail: 'e' },
-        { imageUrl: '', name: 'Cat Food', detail: 'f' },
-        { imageUrl: '', name: 'Fish Food', detail: 'g' },
-        { imageUrl: '', name: 'Bird Food', detail: 'h' }
+        {
+          id: 0,
+          imageUrl:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
+          name: 'Dog Food',
+          detail: 'e'
+        },
+        { id: 1, imageUrl: '', name: 'Cat Food', detail: 'f' },
+        { id: 2, imageUrl: '', name: 'Fish Food', detail: 'g' },
+        { id: 3, imageUrl: '', name: 'Bird Food', detail: 'h' }
       ],
       toys: [
-        { imageUrl: '', name: 'Dog Toy', detail: 'k' },
-        { imageUrl: '', name: 'Cat Toy', detail: 'l' },
-        { imageUrl: '', name: 'Fish Toy', detail: 'm' },
-        { imageUrl: '', name: 'Bird Toy', detail: 'n' }
+        { id: 0, imageUrl: '', name: 'Dog Toy', detail: 'k' },
+        { id: 1, imageUrl: '', name: 'Cat Toy', detail: 'l' },
+        { id: 2, imageUrl: '', name: 'Fish Toy', detail: 'm' },
+        { id: 3, imageUrl: '', name: 'Bird Toy', detail: 'n' }
       ],
       items: [
-        { imageUrl: '', name: 'Türk Hava Yollari', detail: 'o' },
-        { imageUrl: '', name: 'Pegasus', detail: 'p' },
-        { imageUrl: '', name: 'Sun Express', detail: 'r' },
-        { imageUrl: '', name: 'Corelon', detail: 's' }
+        { id: 0, imageUrl: '', name: 'Türk Hava Yollari', detail: 'o' },
+        { id: 1, imageUrl: '', name: 'Pegasus', detail: 'p' },
+        { id: 2, imageUrl: '', name: 'Sun Express', detail: 'r' },
+        { id: 3, imageUrl: '', name: 'Corelon', detail: 's' }
       ],
       petLabel: 'Select a Pet',
       foodLabel: 'Select a Food',
       toyLabel: 'Select a Toy',
       itemLabel: 'Select an Airline',
       fontSize: 12,
-      dataSize: 3
+      dataSize: 3,
+      selectedPet: {
+        id: 0,
+        imageUrl:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
+        name: 'Dog',
+        detail: 'a'
+      },
+      selectedFood: {
+        id: 0,
+        imageUrl:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
+        name: 'Dog Food',
+        detail: 'e'
+      },
+
+      selectedToy: {
+        id: 0,
+        imageUrl: '',
+        name: 'Dog Toy',
+        detail: 'k'
+      },
+      selectedItem: {
+        id: 0,
+        imageUrl: '',
+        name: 'Türk Hava Yollari',
+        detail: 'o'
+      },
+      selectedPets: [
+        { id: 0, imageUrl: 'https://example.com/dog.png', name: 'Dog', detail: 'a' },
+        { id: 1, imageUrl: '', name: 'Cat', detail: 'b' }
+      ]
     }
-  },
-  computed: {
-    selectedPet() {
-      return this.pets[0]
-    },
-    selectedFood() {
-      return this.foods[0]
-    },
-    selectedToy() {
-      return this.toys[0]
-    },
-    selectedItem() {
-      return this.items[0]
-    },
-    selectedPets(){
-      return [this.pets[4],this.pets[1]]
-    }
-  },
+  }
 }
 </script>
 

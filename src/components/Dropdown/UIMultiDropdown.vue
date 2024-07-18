@@ -3,27 +3,7 @@
     <div class="ui-dropdown-c-wrapper">
       <label class="label">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
-        <div v-if="selectedItems.length === 0" class="placeholder-text">
-          {{ placeHolder.toString() }}
-        </div>
-        <div v-else class="placeholder-text">
-          <div v-if="selectedItems.length > maxVisibleItems" class="placeholder-text">
-            <span> {{ selectedItems.length + ' items have been selected' }}</span>
-          </div>
-          <div v-else class="placeholder-text">
-            <span
-              v-for="(item, index) in selectedItems"
-              :key="index"
-              :class="{ 'placeholder-text-active': item[displayField] }"
-              class="placeholder-text"
-            >
-              <span>
-                {{ item[displayField] }}
-              </span>
-            </span>
-          </div>
-        </div>
-
+        <div class="placeholder-text">{{ labelDisplay }}</div>
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
@@ -62,13 +42,24 @@
             @click.stop="selectItem(item)"
             :class="{ selected: isSelected(item) }"
           >
-            <!-- <img v-if="item[urlField]" :src="item[urlField]" alt="" class="dropdown-item-img" /> -->
-            <div v-if="selectedItems.includes(item)" class="item-container">
-              <span>{{ item[displayField] }}</span>
-              <span :class="['circle', className ? `${className}` : '']"> </span>
+            <div v-if="checkImage()" class="ui-dropdown-item">
+              <img :src="item[urlField]" alt="" class="dropdown-item-img" />
+              <div v-if="selectedItems.includes(item)" class="item-container">
+                <span>{{ item[displayField] }}</span>
+                <span :class="['circle', className ? `${className}` : '']"> </span>
+              </div>
+              <div v-else>
+                <span>{{ item[displayField] }}</span>
+              </div>
             </div>
             <div v-else>
-              <span>{{ item[displayField] }}</span>
+              <div v-if="selectedItems.includes(item)" class="item-container">
+                <span>{{ item[displayField] }}</span>
+                <span :class="['circle', className ? `${className}` : '']"> </span>
+              </div>
+              <div v-else>
+                <span>{{ item[displayField] }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -109,9 +100,9 @@ export default {
     },
     label: {
       // label on the dropdown to understand what the dropdown contents are.
-      type: String,
-      required: true
+      type: String
     },
+
     fontSize: {
       // defined fontsize shown in the dropdown.
       type: Number,
@@ -133,6 +124,10 @@ export default {
       type: String,
       default: 'name'
     },
+    primaryKey: {
+      type: String,
+      required: true
+    },
     urlField: {
       // picture of the object taken here
       type: String,
@@ -150,7 +145,6 @@ export default {
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItems: this.modelValue, // represents the currently selected item.
       dropdownItems: this.items,
-      scrollPosition: 0,
       dropdownClass: this.className
     }
   },
@@ -164,6 +158,23 @@ export default {
       const searchBoxHeight = this.searchable ? 30 : 0
       const maxHeight = itemHeight * this.computedDataSize + searchBoxHeight
       return `${maxHeight}px`
+    },
+    labelDisplay(): String {
+      if (this.selectedItems.length === 0) {
+        return this.placeHolder.toString()
+      } else if (this.selectedItems.length > this.maxVisibleItems) {
+        return this.selectedItems.length + ' items have been selected'
+      } else {
+        let displayLabel = ''
+        for (let i = 0; i < this.selectedItems.length; i++) {
+          if (i == this.selectedItems.length - 1) {
+            displayLabel += this.selectedItems[i][this.displayField]
+          } else {
+            displayLabel += this.selectedItems[i][this.displayField] + ', '
+          }
+        }
+        return displayLabel
+      }
     }
   },
   methods: {
@@ -177,6 +188,15 @@ export default {
       return this.dropdownItems.filter((item) =>
         item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
+    },
+    checkImage() {
+      for (let i = 0; i < this.dropdownItems.length; i++) {
+        console.log(this.dropdownItems[i][this.urlField])
+        if (this.dropdownItems[i][this.urlField] !== '') {
+          return true
+        }
+      }
+      return false
     },
     isSelected(item) {
       return this.selectedItems.includes(item)
@@ -381,7 +401,11 @@ export default {
 
       .ui-dropdown-content {
         overflow-y: auto;
-
+        .dropdown-item-img {
+          width: 0.75rem;
+          height: 0.75rem;
+          padding-right: 10px;
+        }
         .ui-dropdown-item {
           display: flex;
           align-items: center;
@@ -397,6 +421,7 @@ export default {
           }
           &.selected {
             font-weight: bold;
+            width: 100%;
           }
           .item-text {
             flex-grow: 1;
