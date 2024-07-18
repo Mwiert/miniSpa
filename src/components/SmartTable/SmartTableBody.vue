@@ -17,13 +17,18 @@
     <div v-if="NoItemFound" class="grid-row no-items-found">
       <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
       <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
-    </div>
+
+    </div> 
+    
+    
     <div
-      class="grid-row"
-      :class="{ rowIndex }"
-      v-for="(tableRow, rowIndex) in tableRowData"
-      :key="rowIndex"
+      class='grid-row'
+      :class="{rowIndex}"
+      v-for="(tableRow, rowIndex) in denemeRow" 
+      :key="rowIndex" 
     >
+
+
       <div
         v-for="(cell, cellIndex) in tableRow"
         :key="cellIndex"
@@ -49,6 +54,8 @@ export default {
   props: {
     tableData: Array,
     options: Object,
+    activePage:Number,
+    
     noItemsFound: {
       type: Boolean,
       required: true
@@ -69,8 +76,12 @@ export default {
     Columns() {
       return this.options.table.columns
     },
-    NoItemFound() {
-      return this.$parent.filteredData.length == 0
+    denemeRow(){
+      const currentPage = this.activePage
+      const perPage = 5
+      const start = (currentPage -1) * perPage
+      const end = perPage + start
+      return this.tableRowData.slice(start,end)
     }
   },
 
