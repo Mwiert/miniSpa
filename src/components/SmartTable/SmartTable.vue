@@ -4,12 +4,16 @@
     <!-- Header kısmı filters ve searchbar'ı içerir v-on ile emit ettiğimiz değerleri alıyoruz-->
 
     <SmartTableBody
+  
       :tableData="filteredData"
       :options="options"
+      :activePage="activePage"
       />   
       <!-- noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz -->
 
-      <SmartTableFooter/>
+      <SmartTableFooter  
+      @update:currentPage= "handlerSetPage"
+      />
     <!-- Footer kısmı pagination içerir -->
   </div>
 
@@ -36,6 +40,7 @@ export default {
     return {
       dummies: dummies,
       searchTerm: '',
+      activePage:1,
     }
   },
   computed: {
@@ -60,6 +65,9 @@ export default {
     handleSearchInput(value: string) {
       this.searchTerm = value
     },    
+    handlerSetPage(val){
+      this.activePage = val
+    }
   }
 }
 </script>
