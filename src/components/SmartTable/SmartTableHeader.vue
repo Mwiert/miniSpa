@@ -1,21 +1,41 @@
 <template>
     <div class="smart-table-header-container">
         <SearchBar class="search-bar" v-on:search-value="handleSearchInput" /><!-- SearchBardan emit ettiğimiz değeri buraya alıyoruz ki daha sonra ihtiyacımız kolursa direk header içinden alalım -->
+        <UIDropdown
+    v-model="selectedItems"
+    :items="pets"
+    :fontSize="fontSize"
+    displayField="name"
+    urlField="imageUrl"
+    :dataSize="dataSize"
+    maxVisibleItems="3"
+    primaryKey="id"
+    :placeHolder="placeHolder"
+        />
     </div>
 </template>
 
 <script lang="ts">
+import UIDropdown from '../Dropdown/UIDropdown.vue';
 import SearchBar from './SmartTableSearchBar.vue'
 export default {
     name: 'SmartTableHeader',
     components: {
-        SearchBar
+        SearchBar,
+        UIDropdown
     },
     methods: {
         handleSearchInput(value: string) {
             this.$emit('search-input', value); //Tekrardan emit ettik ki tablomuza alabilelim bu değeri
         }
-    }
+    },
+    data() {
+        return {
+      fontSize: 12,
+      dataSize: 3,
+      placeHolder:"Sort by Res. Status"
+        }
+    },
 }
 </script>
 

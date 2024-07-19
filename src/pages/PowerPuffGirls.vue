@@ -2,10 +2,10 @@
   <div class="input-box">
     <UIInput
       :id="'username'"
-      :label="'UserName:'"
-      :placeholder="'Enter your username'"
+      :label="'Email'"
       :maxLength="70"
       :minLength="3"
+      :iconE="iconNextToText"
     />
   </div>
   <div class="button-c">
