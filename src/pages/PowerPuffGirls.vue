@@ -5,7 +5,7 @@
       :label="'Email'"
       :maxLength="70"
       :minLength="3"
-      :iconE="iconNextToText"
+      :icon="'mail'"
     />
   </div>
   <div class="button-c">
@@ -196,6 +196,7 @@ export default {
     return {
 
       inputValue:this.value,
+
       
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
