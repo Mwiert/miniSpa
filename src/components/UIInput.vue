@@ -5,6 +5,7 @@
     </div>
 
     <div class="input-wrapper">
+      
       <input
         class="input-value"
         :type="type"
@@ -14,10 +15,11 @@
         :maxLength="maxLength"
         :minLength="minLength"
         :disabled="disabled"
+        :iconNextToText="iconE"
         v-model="inputValue"
         @input="handleInput"
       />
-
+      <img class="email-icon" src="../assets/icons/search.svg" :alt="iconNextToText"/>
       <SvgIcon v-if="inputValue" class="clear-btn" :icon="'x'" :size="'s'" @click="clearInput" />
     </div>
   </div>
@@ -70,6 +72,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    iconNextToText: {
+      type: Image,
+      default: null
     }
   },
   methods: {
@@ -102,10 +108,10 @@ export default {
     bottom: 8px;
     .clear-btn {
       position: absolute;
-      right: 16px;
       background: none;
       border: none;
       cursor: pointer;
+      right: 32px;
       width: 16px;
       height: 16px;
       padding: 0px;
@@ -115,11 +121,25 @@ export default {
         transform: scale(1.2);
         filter: opacity(0.5);
       }
+      
+    }
+    .email-icon {
+      position: absolute;
+      background: none;
+      border: none;
+      cursor: pointer;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      padding: 0px;
+      padding-left: 5px;
+      border-radius: 50%;
     }
     .input-value {
       font-size: 1rem;
       padding: 1rem;
-      padding-right: 3rem;
+      padding-right: 4rem;
+      padding-left: 2rem;
       border: 1px solid #666666;
       border-radius: 8px;
     }
