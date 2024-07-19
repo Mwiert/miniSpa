@@ -31,28 +31,6 @@ export default {
     },
     data() {
         return {
-            pets: [
-        {
-          id: 0,
-          imageUrl:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
-          name: 'Dog',
-          detail: 'a'
-        },
-        {
-          id: 1,
-          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/VAN_CAT.png',
-          name: 'Cat',
-          detail: 'b'
-        },
-        { id: 2, imageUrl: '', name: 'Fish', detail: 'c' },
-        { id: 3, imageUrl: '', name: 'Bird', detail: 'd' },
-        { id: 4, imageUrl: '', name: 'Mouse', detail: 'c' },
-        { id: 5, imageUrl: '', name: 'Elephant', detail: 'd' },
-        { id: 6, imageUrl: '', name: 'Hawk', detail: 'c' },
-        { id: 7, imageUrl: '', name: 'Monkey', detail: 'a' }
-      ],
-
       fontSize: 12,
       dataSize: 3,
       placeHolder:"Sort by Res. Status"
