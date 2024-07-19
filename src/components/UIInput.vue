@@ -1,7 +1,6 @@
 <template>
   <div class="input-box-c">
     <div class="input-wrapper">
-      
       <input
         class="input-value"
         :class="isFocused ? 'active': ''"
@@ -12,21 +11,20 @@
         :maxLength="maxLength"
         :minLength="minLength"
         :disabled="disabled"
-        :icon="iconE"
         v-model="inputValue"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
       />
       <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
-      <img class="icon" src="../assets/icons/search.svg" :alt="iconNextToText"/>
-      <SvgIcon v-if="inputValue" class="clear-btn" :icon="'x'" :size="'s'" @click="clearInput" />
+      <SvgIcon v-if="icon" class="icon" :name="icon"/>
+      <SvgIcon v-if="inputValue && clearButton" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import SvgIcon from './SvgIcon.vue'
+import SvgIcon from './SvgIcon.vue';
 
 export default {
   name: 'UIInput',
@@ -65,7 +63,6 @@ export default {
       type: Number,
       default: null
     },
-
     value: {
       type: String,
       default: ''
@@ -75,8 +72,17 @@ export default {
       default: false
     },
     icon: {
-      type: Image,
-      default: null
+      type: String,
+      default: ''
+    },
+    clearButton: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    computedIcon() {
+      return this.icon || null;
     }
   },
   methods: {
@@ -155,7 +161,7 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 12px;
+      right: 16px;
       width: 24px;
       height: 24px;
       padding: 0px;
