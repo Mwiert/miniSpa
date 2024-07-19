@@ -3,14 +3,14 @@
         <SearchBar class="search-bar" v-on:search-value="handleSearchInput" /><!-- SearchBardan emit ettiğimiz değeri buraya alıyoruz ki daha sonra ihtiyacımız kolursa direk header içinden alalım -->
         <UIDropdown
     v-model="selectedItems"
-    :items="pets"
+    :items="options" 
     :fontSize="fontSize"
     displayField="name"
-    urlField="imageUrl"
+    urlField=""
     :dataSize="dataSize"
-    maxVisibleItems="3"
     primaryKey="id"
     :placeHolder="placeHolder"
+    
         />
     </div>
 </template>
@@ -33,7 +33,20 @@ export default {
         return {
       fontSize: 12,
       dataSize: 3,
-      placeHolder:"Sort by Res. Status"
+      placeHolder:"Sort by Res. Status",
+      selectedItems:this.options[0]
+            
+        }
+    },
+    props:{
+        options: Array,
+    },
+    watch:{
+        selectedItems:{
+            handler: function(val) {
+            this.$emit('per-page', val.name); //Tekrardan emit ettik ki tablomuza alabilelim bu değeri
+        },
+        immediate: true
         }
     },
 }

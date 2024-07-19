@@ -16,7 +16,14 @@ export default {
     return {
       tableOptions: {
         options: {
-          header: {},
+          header: {
+            perPageOptions: [
+              { id: 0, imageUrl: '', name: '5' },
+              { id: 1, imageUrl: '', name: '10'},
+              { id: 2, imageUrl: '', name: '50' },
+              { id: 3, imageUrl: '', name: 'All'}
+            ],
+          },
           body: {},
           footer: {}
         },
