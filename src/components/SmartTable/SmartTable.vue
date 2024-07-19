@@ -1,7 +1,9 @@
 <template>
   <div class="smart-table-c">
-    <SmartTableHeader @search-input="handleSearchInput" />
+    <SmartTableHeader @search-input="handleSearchInput"
+     />
     <!-- Header kısmı filters ve searchbar'ı içerir v-on ile emit ettiğimiz değerleri alıyoruz-->
+     
 
     <SmartTableBody
       :tableData="filteredData"
