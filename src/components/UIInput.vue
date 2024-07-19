@@ -12,14 +12,14 @@
         :maxLength="maxLength"
         :minLength="minLength"
         :disabled="disabled"
-        :iconNextToText="iconE"
+        :icon="iconE"
         v-model="inputValue"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
       />
       <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
-      <img class="email-icon" src="../assets/icons/search.svg" :alt="iconNextToText"/>
+      <img class="icon" src="../assets/icons/search.svg" :alt="iconNextToText"/>
       <SvgIcon v-if="inputValue" class="clear-btn" :icon="'x'" :size="'s'" @click="clearInput" />
     </div>
   </div>
@@ -74,7 +74,7 @@ export default {
       type: Boolean,
       default: false
     },
-    iconNextToText: {
+    icon: {
       type: Image,
       default: null
     }
@@ -150,7 +150,7 @@ export default {
       }
       
     }
-    .email-icon {
+    .icon {
       position: absolute;
       background: none;
       border: none;
@@ -168,12 +168,11 @@ export default {
       outline: none;
       border: none;
       border-radius: 8px;
-      padding: 1rem 3rem 1rem 1rem;
+      padding: 1rem 4rem 1rem 1rem;
       transition: all 0.3s ease;
       &.active {
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
-        
       }
     
   }
