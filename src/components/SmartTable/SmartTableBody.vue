@@ -1,5 +1,6 @@
 <template>
   <div class="smart-table-body-c">
+    {{ this.hidecolumn }}
     <div class="export-buttons">
       <button class="pdf-button" @click="triggerExportPrint()">Print</button>
     </div>
@@ -71,6 +72,7 @@ export default {
     tableData: Array,
     options: Object,
     activePage: Number,
+    hidecolumn: Array,
     perPage: Number,
 
     noItemsFound: {
@@ -80,7 +82,7 @@ export default {
   },
   data() {
     return {
-      tableRowData: [],
+      tableRowData: this.tableData,
       lastSortedColumn: null,
       lastSortOrder: null
     }
@@ -102,7 +104,7 @@ export default {
       // return this.tableRowData.slice(0,sortEnd)
     },
     visibleItems() {
-      return this.items.slice(0, this.selectedOption);
+      return this.items.slice(0, this.selectedOption)
     }
   },
 
@@ -118,10 +120,10 @@ export default {
     }
   },
 
-  created() {
-    //compu çağırdığımızda props olarak gelen tableData doğrudan tableRowDataya atıyoruz bu sayede tablonun verileri sayfa açıldığında direk hazır oluyor
-    this.tableRowData = this.tableData
-  },
+  // created() {
+  //   //compu çağırdığımızda props olarak gelen tableData doğrudan tableRowDataya atıyoruz bu sayede tablonun verileri sayfa açıldığında direk hazır oluyor
+  //   this.tableRowData = this.tableData
+  // },
 
   methods: {
     triggerExportPrint() {
@@ -253,7 +255,7 @@ export default {
       }
     },
     updateVisibleItems() {
-      this.visibleItems = this.items.slice(0, this.selectedOption); // update item count on the screen
+      this.visibleItems = this.items.slice(0, this.selectedOption) // update item count on the screen
     }
   }
 }
