@@ -44,16 +44,22 @@
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }"
           >
-            <div v-if="checkImage()">
+            <div v-if="this.isSelected(item)">
               <img
                 :src="item[urlField]"
                 alt=""
                 class="dropdown-item-img"
-                :class="{ invisible: item[urlField] === '' }"
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
               />
               <span>{{ item[displayField] }}</span>
             </div>
             <div v-else>
+              <img
+                :src="item[urlField]"
+                alt=""
+                class="dropdown-item-img"
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
+              />
               <span>{{ item[displayField] }}</span>
             </div>
           </div>
@@ -130,7 +136,8 @@ export default {
       isOpen: false, // checks that if drowdown is open or not.
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItem: this.modelValue, // represents the currently selected item.
-      dropdownItems: this.items
+      dropdownItems: this.items,
+      isImageAvailable: false
     }
   },
   computed: {
@@ -150,6 +157,9 @@ export default {
       return this.dropdownItems.filter((item) =>
         item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
+    },
+    checkItem(item) {
+      return item[this.urlField] !== ''
     },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
@@ -205,6 +215,9 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside) // Ensures that the clickEventListener added in mounted is removed.
+  },
+  created() {
+    this.isImageAvailable = this.checkImage()
   },
   watch: {
     // watches the changes and updates the selectedItem.
@@ -351,10 +364,15 @@ export default {
             font-weight: bold;
           }
           .dropdown-item-img {
+            position: static;
             width: 0.75rem;
             height: 0.75rem;
             padding-right: 10px;
-            &.invisible {
+            display: none;
+            &.isVisible {
+              display: inline-block;
+            }
+            &.visibleIcon {
               visibility: hidden;
             }
           }

@@ -1,7 +1,7 @@
 <template>
   <div class="ui-multi-dropdown-c">
     <div class="ui-multi-dropdown-c-wrapper">
-      <label class="label">{{ label }}</label>
+      <label class="label" v-if="label.length !== 0">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-multi-dropdown-button" :class="{ active: isOpen }">
         <div class="placeholder-text">{{ labelDisplay }}</div>
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
@@ -48,11 +48,9 @@
                   :src="item[urlField]"
                   alt=""
                   class="dropdown-item-img"
-                  :class="{ visible: item[urlField] === '' }"
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
                 />
-                <span class="item-name" :class="{ visibleItem: isImageAvailable }">
-                  {{ item[displayField] }}</span
-                >
+                <span class="item-name"> {{ item[displayField] }}</span>
               </div>
 
               <span :class="['circle', className ? `${className}` : '']"> </span>
@@ -63,11 +61,9 @@
                   :src="item[urlField]"
                   alt=""
                   class="dropdown-item-img"
-                  :class="{ visible: item[urlField] === '' }"
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
                 />
-                <span class="item-name" :class="{ visibleItem: isImageAvailable }">{{
-                  item[displayField]
-                }}</span>
+                <span class="item-name">{{ item[displayField] }}</span>
               </div>
             </div>
           </div>
@@ -86,10 +82,26 @@ export default {
     SvgIcon
   },
   props: {
+    items: {
+      // items in the database.
+      type: Array,
+      required: true,
+      default: () => []
+    },
+    primaryKey: {
+      type: String,
+      required: true,
+      default: 'id'
+    },
+    dataSize: {
+      // how many data will shown in the dropdown.
+      type: Number
+    },
     maxVisibleItems: {
       type: Number,
       default: 1
     },
+
     hasActionBox: {
       type: Boolean
     },
@@ -101,12 +113,7 @@ export default {
       type: Array,
       default: () => []
     },
-    items: {
-      // items in the database.
-      type: Array,
-      required: true,
-      default: () => []
-    },
+
     label: {
       // label on the dropdown to understand what the dropdown contents are.
       type: String
@@ -133,19 +140,11 @@ export default {
       type: String,
       default: 'name'
     },
-    primaryKey: {
-      type: String,
-      required: true
-    },
+
     urlField: {
       // picture of the object taken here
       type: String,
-      default: 'url'
-    },
-    dataSize: {
-      // how many data will shown in the dropdown.
-      type: Number,
-      required: true
+      default: ''
     }
   },
   data() {
@@ -204,6 +203,9 @@ export default {
       return this.dropdownItems.filter((item) =>
         item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
+    },
+    checkItem(item) {
+      return item[this.urlField] !== ''
     },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
@@ -465,37 +467,36 @@ export default {
               justify-content: center;
               height: 100%;
               width: 100%;
-              .item-name {
-                &.visibleItem {
-                  padding-left: 1.25rem;
-                }
+            }
+            .dropdown-item-img {
+              position: static;
+              width: 12px;
+              height: 12px;
+              padding-right: 10px;
+              display: none;
+              &.isVisible {
+                display: inline-block;
               }
-              .dropdown-item-img {
-                position: absolute;
-                width: 12px;
-                height: 12px;
-                padding-right: 10px;
-                &.visible {
-                  display: none;
-                }
+              &.visibleIcon {
+                visibility: hidden;
               }
             }
+          }
 
-            .circle {
-              height: 12px;
-              width: 12px;
-              background-color: red;
-              border-radius: 100%;
-              display: inline-block;
-              justify-self: end;
+          .circle {
+            height: 12px;
+            width: 12px;
+            background-color: red;
+            border-radius: 100%;
+            display: inline-block;
+            justify-self: end;
 
-              &.flight {
-                background-color: $primary-color;
-              }
+            &.flight {
+              background-color: $primary-color;
+            }
 
-              &.hotel {
-                background-color: $secondary-color;
-              }
+            &.hotel {
+              background-color: $secondary-color;
             }
           }
         }

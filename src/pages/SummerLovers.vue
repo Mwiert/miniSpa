@@ -75,7 +75,8 @@ export default {
       pets: [
         {
           id: 0,
-          imageUrl: '',
+          imageUrl:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
           name: 'Dog',
           detail: 'a'
         },
