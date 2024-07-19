@@ -1,7 +1,7 @@
 <template>
   <div class="ui-dropdown-c">
     <div class="ui-dropdown-c-wrapper">
-      <label class="label" v-if="label.length !== 0">{{ label }}</label>
+      <label class="label" v-if="label?.length !== 0">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
         <span
           :class="{ 'placeholder-text-active': !selectedItem[displayField] }"
@@ -361,7 +361,7 @@ export default {
             background-color: #f3f3f3;
           }
           &.selected {
-            font-weight: bold;
+            text-shadow: 0 0 0.75px black;
           }
           .dropdown-item-img {
             position: static;
