@@ -1,7 +1,7 @@
 <template>
   <div class="ui-date-range-picker-c">
     <!-- This is for opening and closing the calendar -->
-    <div class="button" @click="toggleDatePicker()" ref="dateRangePicker">
+    <div class="button" @click="toggleDatePicker()" ref="dateRangePicker" :class="{ 'multi': isMultiDatePicker, 'single': isSingleDatePicker }">
       <div class="button-items">
         <!-- This is where we are checking if it is single calendar or multi calendar -->
         <div class="is-single-date">
@@ -41,7 +41,7 @@
       </div>
     </div>
     <div class="date-picker" ref="datePicker">
-      <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
+<!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
       <div v-if="isSingleDatePicker">
         <UIDatePicker
           v-show="isSingleDatePickerEnable"
@@ -262,6 +262,14 @@ export default {
     padding: 10px;
     cursor: pointer;
     border-radius: 12px;
+    &.multi { 
+      padding-left: 5px;
+      width: 170px
+    }
+    &.single { 
+      width: 100px;
+    }
+    
     //This is content inside of button
     .button-items {
       display: flex;
@@ -308,6 +316,7 @@ export default {
           //Divider for multi date picker
           &.divider {
             border-left: 1px solid #b6b6b6;
+            margin: 0 10px; 
           }
         }
       }
