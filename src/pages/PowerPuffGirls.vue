@@ -2,10 +2,10 @@
   <div class="input-box">
     <UIInput
       :id="'username'"
-      :label="'UserName:'"
-      :placeholder="'Enter your username'"
+      :label="'Email'"
       :maxLength="70"
       :minLength="3"
+      :icon="'mail'"
     />
   </div>
   <div class="button-c">
@@ -196,6 +196,7 @@ export default {
     return {
 
       inputValue:this.value,
+
       
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {

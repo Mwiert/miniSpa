@@ -1,7 +1,7 @@
 <template>
     <div class="smart-table-pagination-c">
 
-      <button @click="setPage(localCurrentPage-1)" class="prev-page-btn">
+      <button v-if="localCurrentPage-1 != -1" @click="setPage(localCurrentPage-1)" class="prev-page-btn">
         <SvgIcon :name="'arrow-left'" size="s" />
       </button>
       <button
@@ -11,9 +11,9 @@
         :class="['page-btn', { active: page === localCurrentPage }]"
       >
         {{ page }}
-      
+
       </button>
-      <button @click="setPage(localCurrentPage+1)" class="next-page-btn">
+      <button   @click="setPage(localCurrentPage+1)" class="next-page-btn">
         <SvgIcon :name="'arrow-right'" size="s" />
       </button>
     </div>
@@ -34,7 +34,7 @@
     },
     data() {
       return {
-        localCurrentPage: this.currentPage
+        localCurrentPage: this.currentPage 
       };
     },
     methods: {
@@ -94,12 +94,13 @@
       cursor: pointer;
   
       &.active {
-        background-color: #007bff;
+        background-color: #04070a;
         color: #ffffff;
       }
   
       &:hover {
-        background-color: #f0f0f0;
+        background-color: #04070a;
+        color: #ffffff;
       }
     }
   }
