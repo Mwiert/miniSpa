@@ -31,7 +31,9 @@
                 textDecoration: day.textDecoration,
                 blink: day.blink,
                 between: day.between,
-                isToday: day.isToday
+                isToday: day.isToday,
+                firstInitialDate: day.firstInitialDate,
+                secondInitialDate: day.secondInitialDate,
               }"
               @click="selectDate(day)"
             >
@@ -255,16 +257,18 @@ export default {
       // Create the days of the month
       for (let i = 0; i < endOfMonth.date(); i++) {
         const dateSender = date.startOf('month').add(i, 'day')
-
+        const getDate = dayjs(dateSender).format('YYYY-MM-DD')
         daysInWholeMonth.push({
-          date: dayjs(dateSender).format('YYYY-MM-DD'),
+          date: getDate,
           inactive: false,
           selected: false,
           textDecoration: false,
-          isToday: this.presentDate == dayjs(dateSender).format('YYYY-MM-DD'),
+          isToday: this.presentDate == getDate,
           number: String(i + 1),
           month: dayjs(dateSender).format('MM'),
-          year: dayjs(dateSender).format('YYYY')
+          year: dayjs(dateSender).format('YYYY'),
+          firstInitialDate: false,
+          secondInitialDate: false
         })
       }
 
@@ -612,13 +616,8 @@ export default {
       color: white;
     }
 
-    .days li.first {
+    .days li.firstInitialDate, .days li.secondInitialDate {
       background-color: orange; 
-    }
-
-    .days li.second {
-      background-color: orange; 
-      color: white;
     }
   }
 }

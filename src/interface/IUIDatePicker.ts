@@ -11,5 +11,7 @@ interface DateModel {
   month?: string
   year?: string
   day?: string
+  firstInitialDate?: boolean
+  secondInitialDate?: boolean
 }
 export default DateModel

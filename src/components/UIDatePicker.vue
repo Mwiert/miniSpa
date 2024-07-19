@@ -8,11 +8,11 @@
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <button class="nav-button" @click="onClickToLeft" v-if="minDate < currentDate">
+            <button id="prev" class="nav-button" @click="onClickToLeft" v-show="minDate < currentDate">
               <img src="../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{ dateHolder }}</span>
-            <button class="nav-button" @click="onClickToRight" v-if="currentDate < maxDate">
+            <button id="next" class="nav-button" @click="onClickToRight" v-show="currentDate < maxDate">
               <img src="../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
@@ -73,7 +73,8 @@ export default {
     monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
-    initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') }
+    initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
+    isDatePickerEnable: {type: Boolean,}
   },
   methods: {
     checkRange() {
@@ -252,6 +253,15 @@ export default {
           }
         }
       }
+    }
+  },
+  watch: {
+    firstSelectedDate(newValue, oldValue) {
+      if (this.isDatePickerEnable) {
+        newValue; // fonksiyon cagir
+      }
+      console.log("newVal:  ", newValue)
+      console.log("oldVal:  ", oldValue)
     }
   },
   computed: {

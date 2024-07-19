@@ -1,6 +1,7 @@
 <template>
   <div class="ui-date-range-picker-c">
     <!-- This is for opening and closing the calendar -->
+     {{ initialDate }}
     <div class="button" @click="toggleDatePicker()" ref="dateRangePicker" :class="{ 'multi': isMultiDatePicker, 'single': isSingleDatePicker }">
       <div class="button-items">
         <!-- This is where we are checking if it is single calendar or multi calendar -->
@@ -51,6 +52,7 @@
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="firstSelectedDate.date"
+          :isDatePickerEnable="isSingleDatePickerEnable"
           @sendDateToParent="setCurrentDate"
           @dateSelected="handleFirstDateSelected"
           @click="sendDateToParent()"
@@ -106,10 +108,25 @@ export default {
       secondSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
       isSingleDatePickerEnable: false, //This is for enabling the single date picker as default false
       isMultiDatePickerEnable: false, //This is for enabling the multi date picker as default false
-      presentDate: {} as date
+      presentDate: {} as date,
+      tempInitial: this.initialDate,
     }
   },
+  mounted() {
+    document.addEventListener('click', this.handleClickOutside)
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside)
+  },
   methods: {
+    handleClickOutside(event) {
+      if (!this.$el.contains(event.target)) {
+        setTimeout(() => {
+          this.isSingleDatePickerEnable = false
+          this.isMultiDatePickerEnable = false
+        }, 100)
+      }
+    },
     sendDateToParent() {
       //We are sending the selected date to the parent component with v-model implementation.
       this.$emit('update:modelValue', this.firstSelectedDate.date)
@@ -148,6 +165,7 @@ export default {
       this.presentDate = presentDate
     },
     toggleDatePicker() {
+      this.test1 = !this.test1 
       //If the single date picker is enabled on TimeBenders, we are toggling the single date picker
       if (this.isSingleDatePicker === true) {
         //We can implement it by this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable; but it will create problem in muldi date picker implementation
@@ -167,23 +185,8 @@ export default {
           this.isMultiDatePickerEnable = false
         }
       }
-      if (this.isSingleDatePickerEnable || this.isMultiDatePickerEnable) {
-        document.addEventListener('click', this.handleClickOutside)
-      } else {
-        document.removeEventListener('click', this.handleClickOutside)
-      }
-    },
-    handleClickOutside(event: MouseEvent) {
-      const dateRangePicker = this.$refs.dateRangePicker as HTMLElement
-      const datePicker = this.$refs.datePicker as HTMLElement
-      if (
-        !dateRangePicker.contains(event.target as Node) &&
-        !datePicker.contains(event.target as Node)
-      ) {
-        this.isSingleDatePickerEnable = false
-        this.isMultiDatePickerEnable = false
-        document.removeEventListener('click', this.handleClickOutside)
-      }
+
+
     },
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
