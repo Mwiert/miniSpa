@@ -5,6 +5,7 @@
       :label="'Email'"
       :maxLength="70"
       :minLength="3"
+      :iconE="iconNextToText"
     />
   </div>
   <div class="button-c">
