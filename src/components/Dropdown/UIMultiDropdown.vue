@@ -35,53 +35,39 @@
           class="ui-multi-dropdown-content"
           :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }"
         >
-          <div v-if="checkImage()">
-            <div
-              v-for="(item, index) in filteredItems()"
-              :key="index"
-              class="ui-multi-dropdown-item"
-              @click.stop="selectItem(item)"
-              :class="{ selected: isSelected(item) }"
-            >
-              <div v-if="this.isSelected(item)" class="item-container">
-                <div class="image-label-wrapper">
-                  <img
-                    :src="item[urlField]"
-                    alt=""
-                    class="dropdown-item-img"
-                    :class="{ invisible: item[urlField] === '' }"
-                  />
-                  <span>{{ item[displayField] }}</span>
-                </div>
-                <span :class="['circle', className ? `${className}` : '']"> </span>
+          <div
+            v-for="(item, index) in filteredItems()"
+            :key="index"
+            class="ui-multi-dropdown-item"
+            @click.stop="selectItem(item)"
+            :class="{ selected: isSelected(item) }"
+          >
+            <div v-if="this.isSelected(item)" class="item-container">
+              <div class="image-label-wrapper">
+                <img
+                  :src="item[urlField]"
+                  alt=""
+                  class="dropdown-item-img"
+                  :class="{ visible: item[urlField] === '' }"
+                />
+                <span class="item-name" :class="{ visibleItem: isImageAvailable }">
+                  {{ item[displayField] }}</span
+                >
               </div>
-              <div v-else class="item-container">
-                <div class="image-label-wrapper">
-                  <img
-                    :src="item[urlField]"
-                    alt=""
-                    class="dropdown-item-img"
-                    :class="{ invisible: item[urlField] === '' }"
-                  />
-                  <span>{{ item[displayField] }}</span>
-                </div>
-              </div>
+
+              <span :class="['circle', className ? `${className}` : '']"> </span>
             </div>
-          </div>
-          <div v-else>
-            <div
-              v-for="(item, index) in filteredItems()"
-              :key="index"
-              class="ui-multi-dropdown-item"
-              @click.stop="selectItem(item)"
-              :class="{ selected: isSelected(item) }"
-            >
-              <div v-if="this.isSelected(item)" class="item-container">
-                <span>{{ item[displayField] }}</span>
-                <span :class="['circle', className ? `${className}` : '']"> </span>
-              </div>
-              <div v-else>
-                <span>{{ item[displayField] }}</span>
+            <div v-else class="item-container">
+              <div class="image-label-wrapper">
+                <img
+                  :src="item[urlField]"
+                  alt=""
+                  class="dropdown-item-img"
+                  :class="{ visible: item[urlField] === '' }"
+                />
+                <span class="item-name" :class="{ visibleItem: isImageAvailable }">{{
+                  item[displayField]
+                }}</span>
               </div>
             </div>
           </div>
@@ -168,7 +154,8 @@ export default {
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItems: this.modelValue, // represents the currently selected item.
       dropdownItems: this.items,
-      dropdownClass: this.className
+      dropdownClass: this.className,
+      isImageAvailable: false
     }
   },
   computed: {
@@ -279,6 +266,9 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside) // Ensures that the clickEventListener added in mounted is removed.
+  },
+  created() {
+    this.isImageAvailable = this.checkImage()
   },
 
   watch: {
@@ -468,24 +458,36 @@ export default {
             display: flex;
             width: 100%;
             align-items: center;
-            justify-content: space-between;
             height: 100%;
 
             .image-label-wrapper {
+              flex-grow: 1;
               justify-content: center;
               height: 100%;
+              width: 100%;
+              .item-name {
+                &.visibleItem {
+                  padding-left: 1.25rem;
+                }
+              }
               .dropdown-item-img {
+                position: absolute;
                 width: 12px;
                 height: 12px;
                 padding-right: 10px;
+                &.visible {
+                  display: none;
+                }
               }
             }
+
             .circle {
               height: 12px;
               width: 12px;
               background-color: red;
               border-radius: 100%;
               display: inline-block;
+              justify-self: end;
 
               &.flight {
                 background-color: $primary-color;

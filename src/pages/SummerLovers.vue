@@ -82,7 +82,7 @@ export default {
         },
         {
           id: 1,
-          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/VAN_CAT.png',
+          imageUrl: '',
           name: 'Cat',
           detail: 'b'
         },
@@ -125,8 +125,7 @@ export default {
       dataSize: 3,
       selectedPet: {
         id: 0,
-        imageUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
+        imageUrl: '',
         name: 'Dog',
         detail: 'a'
       },
