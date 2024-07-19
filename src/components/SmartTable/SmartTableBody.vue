@@ -1,46 +1,62 @@
 <template>
   <div class="smart-table-body-c">
-    <div class="smart-table-main-grid">
-      <div class="grid-header" v-for="(header, index) in Columns" :key="index">
-        <span>{{ header.name }}</span>
-        <span v-if="header.sortable">
-          <SvgIcon
-            class="sort-button"
-            :name="'arrow-selector-v'"
-            size="s"
-            @click="header.sortable ? sort(header.label) : null"
-          />
-        </span>
-      </div>
+    <div class="export-buttons">
+      <button class="pdf-button" @click="triggerExportPrint()">Print</button>
     </div>
+    <div ref="print">
+      <div class="smart-table-main-grid">
+        <div class="grid-header" v-for="(header, index) in Columns" :key="index">
+          <span>{{ header.name }} </span>
+          <span v-if="header.sortable">
+            <SvgIcon
+              v-if="getSortIcon(header.label) === 'arrow-down'"
+              class="sort-button"
+              :name="'arrow-down'"
+              size="s"
+              @click="header.sortable ? sort(header.label) : null"
+            />
+            <SvgIcon
+              v-else-if="getSortIcon(header.label) === 'arrow-up'"
+              class="sort-button"
+              :name="'arrow-up'"
+              size="s"
+              @click="header.sortable ? sort(header.label) : null"
+            />
+            <SvgIcon
+              v-else
+              class="sort-button"
+              :name="'arrow-selector-v'"
+              size="s"
+              @click="header.sortable ? sort(header.label) : null"
+            />
+          </span>
+        </div>
+      </div>
 
-    <div v-if="NoItemFound" class="grid-row no-items-found">
-      <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
-      <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
-
-    </div> 
-    
-    
-    <div
-      class='grid-row'
-      :class="{rowIndex}"
-      v-for="(tableRow, rowIndex) in denemeRow" 
-      :key="rowIndex" 
-    >
-
+      <div v-if="NoItemFound" class="grid-row no-items-found">
+        <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
+        <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
+      </div>
 
       <div
-        v-for="(cell, cellIndex) in tableRow"
-        :key="cellIndex"
-        :class="[cell.class, 'grid-item']"
+        class="grid-row"
+        :class="{ rowIndex }"
+        v-for="(tableRow, rowIndex) in denemeRow"
+        :key="rowIndex"
       >
-        <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
-        <template v-if="typeof cell == 'object'">
-          <span :class="cell?.class" @click="handlerUrl(cell?.url)">
-            {{ cell?.text ?? '' }}
-          </span>
-        </template>
-        <template v-else>{{ cell }}</template>
+        <div
+          v-for="(cell, cellIndex) in tableRow"
+          :key="cellIndex"
+          :class="[cell.class, 'grid-item']"
+        >
+          <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
+          <template v-if="typeof cell == 'object'">
+            <span :class="cell?.class" @click="handlerUrl(cell?.url)">
+              {{ cell?.text ?? '' }}
+            </span>
+          </template>
+          <template v-else>{{ cell }}</template>
+        </div>
       </div>
     </div>
   </div>
@@ -54,8 +70,8 @@ export default {
   props: {
     tableData: Array,
     options: Object,
-    activePage:Number,
-    
+    activePage: Number,
+
     noItemsFound: {
       type: Boolean,
       required: true
@@ -76,12 +92,12 @@ export default {
     Columns() {
       return this.options.table.columns
     },
-    denemeRow(){
+    denemeRow() {
       const currentPage = this.activePage
       const perPage = 5
-      const start = (currentPage -1) * perPage
+      const start = (currentPage - 1) * perPage
       const end = perPage + start
-      return this.tableRowData.slice(start,end)
+      return this.tableRowData.slice(start, end)
     }
   },
 
@@ -103,6 +119,93 @@ export default {
   },
 
   methods: {
+    triggerExportPrint() {
+      const divToPrint = this.$parent.$refs.pinkpanthers.$refs.print
+      console.log(divToPrint)
+      const newPrintWindow = window.open('', 'Print')
+      newPrintWindow.document.write(
+        `<html>
+          <head>
+            <style>
+              .smart-table-body-c {
+                display: block;
+                margin: 20px 0;
+              }
+              .smart-table-main-grid {
+                display: grid;
+                grid-template-columns: repeat(${this.Columns.length}, 1fr);
+                width: 100%;
+                gap: 10px;
+              }
+              .grid-header {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: bold;
+                color: black;
+                padding: 15px;
+                border-radius: 10px;
+                border: none;
+              }
+              .grid-row {
+                display: grid;
+                grid-template-columns: repeat(${this.Columns.length}, 1fr);
+                width: 100%;
+                gap: 5px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 40px;
+                padding: 0.5px;
+              }
+              .no-grid-item {
+                padding: 28px;
+                border: 1px solid #ccc;
+                text-align: center;
+                font-weight: bold;
+                border-radius: 40px;
+                background-color: #ffffff;
+                grid-column: 1 / -1;
+              }
+              .grid-item {
+                padding: 15px;
+                border: 1px solid #ccc;
+                text-align: center;
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                border-radius: 30px;
+              }
+              .grid-item.confirmed {
+                background-color: #ccffdd;
+                color: #1f9947;
+                border-color: #4deb81;
+              }
+              .grid-item.pending {
+                background-color: #ffe6cc;
+                color: #e87807;
+                border-color: #ee9c4b;
+              }
+              .grid-item.cancelled {
+                background-color: #ff6b6b;
+                color: #7e2323;
+                border-color: #ee3535;
+              }
+            </style>
+          </head>
+          <body>
+            ${divToPrint.outerHTML}
+          </body>
+        </html>`
+      )
+
+      newPrintWindow.print()
+      //newPrintWindow.close()
+    },
+    getSortIcon(column: string) {
+      if (this.lastSortedColumn === column) {
+        return this.lastSortOrder === 'asc' ? 'arrow-down' : 'arrow-up'
+      }
+    },
     sort(column: string) {
       let sortedRows = [...this.tableRowData]
 
