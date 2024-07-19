@@ -1,7 +1,7 @@
 <template>
     <div class="smart-table-pagination-c">
 
-      <button v-if="localCurrentPage-1 != -1" @click="setPage(localCurrentPage-1)" class="prev-page-btn">
+      <button v-if="localCurrentPage != 1"  @click="setPage(localCurrentPage-1)" class="prev-page-btn">
         <SvgIcon :name="'arrow-left'" size="s" />
       </button>
       <button
@@ -13,7 +13,7 @@
         {{ page }}
 
       </button>
-      <button   @click="setPage(localCurrentPage+1)" class="next-page-btn">
+      <button  v-if="localCurrentPage != totalPages.length" @click="setPage(localCurrentPage+1)" class="next-page-btn">
         <SvgIcon :name="'arrow-right'" size="s" />
       </button>
     </div>
@@ -39,8 +39,12 @@
     },
     methods: {
       setPage(page) {
-        this.localCurrentPage = page;
-        this.$emit('update:currentPage', this.localCurrentPage);
+        console.log(this.totalPages.length,page)
+          if(page != 0 && page <= this.totalPages.length ){
+            this.localCurrentPage = page;
+            this.$emit('update:currentPage', this.localCurrentPage);
+            console.log(this.localCurrentPage);
+          }
       }
     },
     computed: {
