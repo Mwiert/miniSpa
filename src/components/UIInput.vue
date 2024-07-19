@@ -1,6 +1,7 @@
 <template>
   <div class="input-box-c">
     <div class="input-wrapper">
+      
       <input
         class="input-value"
         :class="isFocused ? 'active': ''"
@@ -11,13 +12,14 @@
         :maxLength="maxLength"
         :minLength="minLength"
         :disabled="disabled"
+        :icon="iconE"
         v-model="inputValue"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
       />
       <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
-
+      <img class="icon" src="../assets/icons/search.svg" :alt="iconNextToText"/>
       <SvgIcon v-if="inputValue" class="clear-btn" :icon="'x'" :size="'s'" @click="clearInput" />
     </div>
   </div>
@@ -71,6 +73,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    icon: {
+      type: Image,
+      default: null
     }
   },
   methods: {
@@ -131,10 +137,10 @@ export default {
     }
     .clear-btn {
       position: absolute;
-      right: 16px;
       background: none;
       border: none;
       cursor: pointer;
+      right: 32px;
       width: 16px;
       height: 16px;
       border-radius: 50%;
@@ -142,6 +148,19 @@ export default {
         transform: scale(1.2);
         filter: opacity(0.5);
       }
+      
+    }
+    .icon {
+      position: absolute;
+      background: none;
+      border: none;
+      cursor: pointer;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      padding: 0px;
+      padding-left: 5px;
+      border-radius: 50%;
     }
     //styling
     .input-value {
@@ -149,12 +168,11 @@ export default {
       outline: none;
       border: none;
       border-radius: 8px;
-      padding: 1rem 3rem 1rem 1rem;
+      padding: 1rem 4rem 1rem 1rem;
       transition: all 0.3s ease;
       &.active {
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
-        
       }
     
   }
