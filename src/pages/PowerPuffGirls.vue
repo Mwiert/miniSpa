@@ -2,7 +2,8 @@
   <div class="input-box">
     <UIInput
       :id="'username'"
-      :label="'Email'"
+      :label="'Password'"
+      :type="'password'"
       :maxLength="70"
       :minLength="3"
       :icon="'mail'"

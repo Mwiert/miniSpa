@@ -4,7 +4,7 @@
       <input
         class="input-value"
         :class="isFocused ? 'active': ''"
-        :type="type"
+        :type="inputType"
         :placeholder="placeholder"
         :id="id"
         :label="label"
@@ -17,7 +17,7 @@
         @blur="handleBlur"
       />
       <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
-      <SvgIcon v-if="icon" class="icon" :name="icon"/>
+      <SvgIcon v-if="isPasswordField" class="icon" :name="computedIcon()" @click="togglePasswordVisibility"/>
       <SvgIcon v-if="inputValue && clearButton" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
     </div>
   </div>
@@ -35,6 +35,8 @@ export default {
     return {
       inputValue: this.value,
       isFocused: false,
+      isPasswordVisible: false,
+      iconName: String
     }
   },
   props: {
@@ -80,12 +82,30 @@ export default {
       default: false
     }
   },
-  computed: {
-    computedIcon() {
-      return this.icon || null;
+  watch: {
+    isPasswordVisible() {
+      this.iconName = this.computedIcon;
+      
+      console.log( this.iconName)
     }
   },
+  computed: {
+
+    isPasswordField() {
+      return this.type === 'password';
+    },
+    inputType() {
+      return this.isPasswordVisible && this.isPasswordField ? 'text' : this.type;
+    }
+
+  },
   methods: {
+    computedIcon() {
+      if (this.isPasswordField) {
+        return this.isPasswordVisible ? 'search' : 'arrow-up';
+      }
+      return this.icon;
+    },
     updateValue(newValue: String) {
       this.$emit('update:value', newValue)
     },
@@ -104,6 +124,9 @@ export default {
       if(this.inputValue === '') {
         this.isFocused = false
       }
+    },
+    togglePasswordVisibility() {
+      this.isPasswordVisible = !this.isPasswordVisible;
     }
   }
 }
