@@ -27,7 +27,7 @@
             </span>
           </div>
         </div>
-        <div class="button-wrapper">
+        <div class="button-wrapper" v-if="hasActionBox">
           <span class="toggle" @click="selectAll">Select All</span>
           <span class="toggle" @click="dropAll">Drop All</span>
         </div>
@@ -104,7 +104,7 @@ export default {
       type: Number,
       default: 1
     },
-    toggleSelectAll: {
+    hasActionBox: {
       type: Boolean
     },
     className: {
@@ -188,13 +188,9 @@ export default {
       } else if (this.selectedItems.length > this.maxVisibleItems) {
         return this.selectedItems.length + ' items have been selected'
       } else {
-        let displayLabel = ''
-        for (let i = 0; i < this.selectedItems.length; i++) {
-          if (i == this.selectedItems.length - 1) {
-            displayLabel += this.selectedItems[i][this.displayField]
-          } else {
-            displayLabel += this.selectedItems[i][this.displayField] + ', '
-          }
+        let displayLabel = this.selectedItems[0][this.displayField]
+        for (let i = 1; i < this.selectedItems.length; i++) {
+          displayLabel = displayLabel + ',' + this.selectedItems[i][this.displayField]
         }
         return displayLabel
       }
@@ -202,10 +198,20 @@ export default {
   },
   methods: {
     dropAll() {
-      this.selectedItems = []
+      const toBeDeleted = this.filteredItems()
+      for (let i = 0; i < toBeDeleted.length; i++) {
+        this.selectedItems = this.selectedItems.filter(
+          (selected) => selected[this.primaryKey] !== toBeDeleted[i][this.primaryKey]
+        )
+      }
     },
     selectAll() {
-      this.selectedItems = this.dropdownItems
+      let addedItems = this.filteredItems()
+      for (let i = 0; i < addedItems.length; i++) {
+        if (!this.isSelected(addedItems[i])) {
+          this.selectedItems.push(addedItems[i])
+        }
+      }
     },
     filteredItems(): Array<any> {
       return this.dropdownItems.filter((item) =>

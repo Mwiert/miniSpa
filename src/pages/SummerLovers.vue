@@ -10,6 +10,7 @@
     searchable
     maxVisibleItems="2"
     primaryKey="id"
+    :hasActionBox="true"
   />
   <div>
     <UIDropdown

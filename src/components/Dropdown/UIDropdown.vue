@@ -1,7 +1,7 @@
 <template>
   <div class="ui-dropdown-c">
     <div class="ui-dropdown-c-wrapper">
-      <label class="label">{{ label }}</label>
+      <label class="label" v-if="label.length !== 0">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
         <span
           :class="{ 'placeholder-text-active': !selectedItem[displayField] }"
@@ -16,7 +16,6 @@
         <div class="search-container">
           <div v-if="searchable" class="search-content-wrapper">
             <input
-              v-if="searchable"
               type="text"
               v-model="searchQuery"
               placeholder="Search..."
@@ -73,16 +72,23 @@ export default {
     SvgIcon
   },
   props: {
-    modelValue: {
-      type: Object,
-      default: () => ({})
-    },
     items: {
       // items in the database.
       type: Array,
       required: true,
       default: () => []
     },
+    primaryKey: {
+      type: String,
+      required: true,
+      default: 'id'
+    },
+
+    modelValue: {
+      type: Object,
+      default: () => ({})
+    },
+
     label: {
       // label on the dropdown to understand what the dropdown contents are.
       type: String
@@ -108,19 +114,15 @@ export default {
       type: String,
       default: 'name'
     },
-    primaryKey: {
-      type: String,
-      required: true
-    },
+
     urlField: {
       // picture of the object taken here
       type: String,
-      default: 'url'
+      default: ''
     },
     dataSize: {
       // how many data will shown in the dropdown.
-      type: Number,
-      required: true
+      type: Number
     }
   },
   data() {
