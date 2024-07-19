@@ -162,18 +162,18 @@ export default {
       padding-left: 5px;
       border-radius: 50%;
     }
+    //styling
     .input-value {
       font-size: 1rem;
-      padding-right: 4rem;
-      padding-left: 2rem;
       outline: none;
       border: none;
       border-radius: 8px;
-      padding: 1rem;
+      padding: 1rem 3rem 1rem 1rem;
       transition: all 0.3s ease;
       &.active {
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
+        
       }
     
   }
