@@ -71,6 +71,7 @@ export default {
     tableData: Array,
     options: Object,
     activePage: Number,
+    perPage: Number,
 
     noItemsFound: {
       type: Boolean,
@@ -88,16 +89,20 @@ export default {
     gridTemplateColumns() {
       return `repeat(${this.Columns.length}, 1fr)`
     },
-
     Columns() {
       return this.options.table.columns
     },
     denemeRow() {
       const currentPage = this.activePage
-      const perPage = 5
+      const perPage = this.perPage
       const start = (currentPage - 1) * perPage
       const end = perPage + start
       return this.tableRowData.slice(start, end)
+      // const sortEnd = 2
+      // return this.tableRowData.slice(0,sortEnd)
+    },
+    visibleItems() {
+      return this.items.slice(0, this.selectedOption);
     }
   },
 
@@ -246,6 +251,9 @@ export default {
       if (url == null) {
         window.open(url, '_blank')
       }
+    },
+    updateVisibleItems() {
+      this.visibleItems = this.items.slice(0, this.selectedOption); // update item count on the screen
     }
   }
 }

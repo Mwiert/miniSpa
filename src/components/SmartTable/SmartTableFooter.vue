@@ -1,7 +1,7 @@
 <template>
   <div class="smart-table-footer-container"  >
     Showing {{ tableCount }} reservations
-    <SmartTablePagination :totalPages="totalPage" @update:currentPage= "handlerSetPage"  />
+    <SmartTablePagination :totalPages="totalPage" @update:currentPage= "handlerSetPage" @update:currentPerPage = "handlerSetPerPage"  />
   </div>
 </template>
 
@@ -16,10 +16,7 @@ export default {
     return {
       pagination:{
         enabled: true,
-        perPage:5,
-        pages:  [],
-        options: [],
-        activePage: 1
+        
       }
     }
   },
@@ -32,7 +29,7 @@ export default {
     },
     totalPage() {
        const totalPageArr = []
-       const totalPageNum = Math.ceil(this.tableCount / this.pagination.perPage);
+       const totalPageNum = Math.ceil(this.tableCount / this.$parent.perPage);
        for (let i=1; i <= totalPageNum ; i++) {
         totalPageArr.push(i)
        }
@@ -42,6 +39,9 @@ export default {
   methods: {
     handlerSetPage(val){
         this.$emit('update:currentPage', val);
+    },
+    handlerSetPerPage(val){
+        this.$emit('update:currentPerPage', val);
     }
   },
 }

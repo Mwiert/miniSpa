@@ -9,11 +9,12 @@
       :tableData="filteredData"
       :options="options"
       :activePage="activePage"
+      :perPage="perPage"
       ref="pinkpanthers"
     />
     <!-- noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz -->
 
-    <SmartTableFooter @update:currentPage="handlerSetPage" />
+    <SmartTableFooter @update:currentPage="handlerSetPage" @update:currentPerPage="handlerSetPerPage" />
     <!-- Footer kısmı pagination içerir -->
   </div>
 </template>
@@ -37,7 +38,8 @@ export default {
     return {
       dummies: dummies,
       searchTerm: '',
-      activePage: 1
+      activePage: 1,
+      perPage: 2
     }
   },
   computed: {
@@ -64,6 +66,9 @@ export default {
     },
     handlerSetPage(val) {
       this.activePage = val
+    },
+    handlerSetPerPage(val) {
+      this.perPage = val
     }
   }
 }
