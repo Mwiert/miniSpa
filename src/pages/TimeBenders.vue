@@ -1,7 +1,7 @@
 <template>
   <div class="time-benders-c">
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
-    <UIDateRangePicker v-model="selectedDate" :isSingleDatePicker="true" :validateMonth="2"/>
+    <UIDateRangePicker v-model="selectedDate" :isSingleDatePicker="true"/>
   </div>
 </template>
 

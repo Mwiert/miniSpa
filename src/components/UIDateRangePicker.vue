@@ -43,9 +43,8 @@
     </div>
     <div class="date-picker" ref="datePicker">
 <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
-      <div v-if="isSingleDatePicker">
         <UIDatePicker
-          v-show="isSingleDatePickerEnable"
+          v-if="isSingleDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
           :saveDate="firstSelectedDate.date"
@@ -57,10 +56,8 @@
           @dateSelected="handleFirstDateSelected"
           @click="sendDateToParent()"
         />
-      </div>
-      <div v-if="isMultiDatePicker">
         <UIMultiDatePicker
-          v-show="isMultiDatePickerEnable"
+          v-if="isMultiDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
           :saveFirstDate="firstSelectedDate.date"
@@ -73,7 +70,6 @@
           @dateSecondSelected="handleSecondDateSelected"
           @click="sendDateToParent()"
         />
-      </div>
     </div>
   </div>
 </template>
