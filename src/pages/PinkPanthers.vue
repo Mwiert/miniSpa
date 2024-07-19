@@ -29,16 +29,16 @@ export default {
         },
         table: {
           columns: [
-            { name: 'Status', label: 'status', sortable: true },
-            { name: 'Creation Date', label: 'creationDate' },
-            { name: 'Order Id', label: 'orderId', sortable: true },
-            { name: 'Market', label: 'market' },
-            { name: 'Provider Name/Surname', label: 'providerNameSurname' },
-            { name: 'Check In', label: 'checkIn', sortable: true },
-            { name: 'Check Out', label: 'checkOut', sortable: true },
-            { name: 'Room Type', label: 'roomType' },
-            { name: 'Promo Code', label: 'promoCode' },
-            { name: 'Price', label: 'price', sortable: true }
+            { id: 1, name: 'Status', label: 'status', sortable: true },
+            { id: 2, name: 'Creation Date', label: 'creationDate' },
+            { id: 3, name: 'Order Id', label: 'orderId', sortable: true },
+            { id: 4, name: 'Market', label: 'market' },
+            { id: 5, name: 'Provider Name/Surname', label: 'providerNameSurname' },
+            { id: 6, name: 'Check In', label: 'checkIn', sortable: true },
+            { id: 7, name: 'Check Out', label: 'checkOut', sortable: true },
+            { id: 8, name: 'Room Type', label: 'roomType' },
+            { id: 9, name: 'Promo Code', label: 'promoCode' },
+            { id: 10, name: 'Price', label: 'price', sortable: true }
           ],
           rows: []
         }
