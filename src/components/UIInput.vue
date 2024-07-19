@@ -143,6 +143,7 @@ export default {
         filter: opacity(0.5);
       }
     }
+    //styling
     .input-value {
       font-size: 1rem;
       outline: none;
