@@ -18,7 +18,7 @@
       />
       <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
       <SvgIcon v-if="icon" class="icon" :name="icon"/>
-      <SvgIcon v-if="inputValue" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
+      <SvgIcon v-if="inputValue && clearButton" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
     </div>
   </div>
 </template>
@@ -63,7 +63,6 @@ export default {
       type: Number,
       default: null
     },
-
     value: {
       type: String,
       default: ''
@@ -74,7 +73,11 @@ export default {
     },
     icon: {
       type: String,
-      default: null
+      default: ''
+    },
+    clearButton: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -158,7 +161,7 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 12px;
+      right: 16px;
       width: 24px;
       height: 24px;
       padding: 0px;
