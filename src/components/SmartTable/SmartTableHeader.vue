@@ -5,11 +5,10 @@
     v-model="selectedItems"
     :items="options" 
     :fontSize="fontSize"
+    :placeHolder="placeHolder"
     displayField="name"
-    urlField=""
     :dataSize="dataSize"
     primaryKey="id"
-    :placeHolder="placeHolder"
     
         />
     </div>
@@ -34,7 +33,7 @@ export default {
       fontSize: 12,
       dataSize: 3,
       placeHolder:"Sort by Res. Status",
-      selectedItems:this.options[0]
+      selectedItems: {id:1,imageUrl:'',name:'5'}
             
         }
     },
@@ -44,6 +43,7 @@ export default {
     watch:{
         selectedItems:{
             handler: function(val) {
+                console.log('watcher:',val)
             this.$emit('per-page', val.name); //Tekrardan emit ettik ki tablomuza alabilelim bu değeri
         },
         immediate: true
