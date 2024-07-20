@@ -1,8 +1,13 @@
 <template>
   <div class="ui-date-range-picker-c">
     <!-- This is for opening and closing the calendar -->
-     {{ initialDate }}
-    <div class="button" @click="toggleDatePicker()" ref="dateRangePicker" :class="{ 'multi': isMultiDatePicker, 'single': isSingleDatePicker }">
+    <!-- {{ sendInitialDates.firstInitialDate + ' ' + sendInitialDates.secondInitialDate }} -->
+    <div
+      class="button"
+      @click="toggleDatePicker()"
+      ref="dateRangePicker"
+      :class="{ multi: isMultiDatePicker, single: isSingleDatePicker }"
+    >
       <div class="button-items">
         <!-- This is where we are checking if it is single calendar or multi calendar -->
         <div class="is-single-date">
@@ -42,34 +47,36 @@
       </div>
     </div>
     <div class="date-picker" ref="datePicker">
-<!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
-        <UIDatePicker
-          v-if="isSingleDatePickerEnable"
-          :yearRange="validateYear"
-          :monthRange="validateMonth"
-          :saveDate="firstSelectedDate.date"
-          :isFutureValidation="isFuture"
-          :isPastValidation="isPast"
-          :initialDate="firstSelectedDate.date"
-          :isDatePickerEnable="isSingleDatePickerEnable"
-          @sendDateToParent="setCurrentDate"
-          @dateSelected="handleFirstDateSelected"
-          @click="sendDateToParent()"
-        />
-        <UIMultiDatePicker
-          v-if="isMultiDatePickerEnable"
-          :yearRange="validateYear"
-          :monthRange="validateMonth"
-          :saveFirstDate="firstSelectedDate.date"
-          :saveSecondDate="secondSelectedDate.date"
-          :isFutureValidation="isFuture"
-          :isPastValidation="isPast"
-          :initialDate="firstSelectedDate.date"
-          @sendDateToParent="setCurrentDate"
-          @dateFirstSelected="handleFirstDateSelected"
-          @dateSecondSelected="handleSecondDateSelected"
-          @click="sendDateToParent()"
-        />
+      <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
+      <UIDatePicker
+        v-if="isSingleDatePickerEnable"
+        :yearRange="validateYear"
+        :monthRange="validateMonth"
+        :saveDate="firstSelectedDate.date"
+        :isFutureValidation="isFuture"
+        :isPastValidation="isPast"
+        :initialDate="firstSelectedDate.date"
+        :isDatePickerEnable="isSingleDatePickerEnable"
+        @sendDateToParent="setCurrentDate"
+        @dateSelected="handleFirstDateSelected"
+        @click="sendDateToParent()"
+      />
+      <UIMultiDatePicker
+        v-if="isMultiDatePickerEnable"
+        :yearRange="validateYear"
+        :monthRange="validateMonth"
+        :saveFirstDate="firstSelectedDate.date"
+        :saveSecondDate="secondSelectedDate.date"
+        :isFutureValidation="isFuture"
+        :isPastValidation="isPast"
+        :initialDate="firstSelectedDate.date"
+        :baseInitialDates="sendInitialDates"
+        :isDatePickerEnable="isMultiDatePickerEnable"
+        @sendDateToParent="setCurrentDate"
+        @dateFirstSelected="handleFirstDateSelected"
+        @dateSecondSelected="handleSecondDateSelected"
+        @click="sendDateToParent()"
+      />
     </div>
   </div>
 </template>
@@ -106,6 +113,10 @@ export default {
       isMultiDatePickerEnable: false, //This is for enabling the multi date picker as default false
       presentDate: {} as date,
       tempInitial: this.initialDate,
+      sendInitialDates: {
+        firstInitialDate: '',
+        secondInitialDate: ''
+      }
     }
   },
   mounted() {
@@ -161,7 +172,7 @@ export default {
       this.presentDate = presentDate
     },
     toggleDatePicker() {
-      this.test1 = !this.test1 
+      this.test1 = !this.test1
       //If the single date picker is enabled on TimeBenders, we are toggling the single date picker
       if (this.isSingleDatePicker === true) {
         //We can implement it by this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable; but it will create problem in muldi date picker implementation
@@ -181,8 +192,6 @@ export default {
           this.isMultiDatePickerEnable = false
         }
       }
-
-
     },
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
@@ -215,6 +224,8 @@ export default {
           date: dayjs(this.secondSelectedDate).format('YYYY-MM-DD')
         }
       }
+      ;(this.sendInitialDates.firstInitialDate = this.firstSelectedDate),
+        (this.sendInitialDates.secondInitialDate = this.secondSelectedDate)
     },
 
     checkMultiOrSingleCalendar() {}
@@ -261,14 +272,14 @@ export default {
     padding: 10px;
     cursor: pointer;
     border-radius: 12px;
-    &.multi { 
+    &.multi {
       padding-left: 5px;
-      width: 170px
+      width: 170px;
     }
-    &.single { 
+    &.single {
       width: 100px;
     }
-    
+
     //This is content inside of button
     .button-items {
       display: flex;
@@ -315,7 +326,7 @@ export default {
           //Divider for multi date picker
           &.divider {
             border-left: 1px solid #b6b6b6;
-            margin: 0 10px; 
+            margin: 0 10px;
           }
         }
       }
