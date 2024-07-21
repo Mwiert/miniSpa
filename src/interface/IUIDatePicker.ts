@@ -1,6 +1,6 @@
 interface DateModel {
   date?: string
-  number?: string
+  number?: number
   inactive?: boolean
   active?: boolean
   selected?: boolean

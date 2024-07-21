@@ -48,35 +48,37 @@
     </div>
     <div class="date-picker" ref="datePicker">
       <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
-      <UIDatePicker
-        v-if="isSingleDatePickerEnable"
-        :yearRange="validateYear"
-        :monthRange="validateMonth"
-        :saveDate="firstSelectedDate.date"
-        :isFutureValidation="isFuture"
-        :isPastValidation="isPast"
-        :initialDate="firstSelectedDate.date"
-        :isDatePickerEnable="isSingleDatePickerEnable"
-        @sendDateToParent="setCurrentDate"
-        @dateSelected="handleFirstDateSelected"
-        @click="sendDateToParent()"
-      />
-      <UIMultiDatePicker
-        v-if="isMultiDatePickerEnable"
-        :yearRange="validateYear"
-        :monthRange="validateMonth"
-        :saveFirstDate="firstSelectedDate.date"
-        :saveSecondDate="secondSelectedDate.date"
-        :isFutureValidation="isFuture"
-        :isPastValidation="isPast"
-        :initialDate="firstSelectedDate.date"
-        :baseInitialDates="sendInitialDates"
-        :isDatePickerEnable="isMultiDatePickerEnable"
-        @sendDateToParent="setCurrentDate"
-        @dateFirstSelected="handleFirstDateSelected"
-        @dateSecondSelected="handleSecondDateSelected"
-        @click="sendDateToParent()"
-      />
+      <div v-if="isSingleDatePicker">
+        <UIDatePicker
+          v-show="isSingleDatePickerEnable"
+          :yearRange="validateYear"
+          :monthRange="validateMonth"
+          :saveDate="firstSelectedDate.date"
+          :isFutureValidation="isFuture"
+          :isPastValidation="isPast"
+          :initialDate="firstSelectedDate.date"
+          :isDatePickerEnable="isSingleDatePickerEnable"
+          @dateSelected="handleFirstDateSelected"
+        />
+      </div>
+      <div v-if="isMultiDatePicker">
+        <UIMultiDatePicker
+          v-show="isMultiDatePickerEnable"
+          :yearRange="validateYear"
+          :monthRange="validateMonth"
+          :saveFirstDate="firstSelectedDate.date"
+          :saveSecondDate="secondSelectedDate.date"
+          :isFutureValidation="isFuture"
+          :isPastValidation="isPast"
+          :initialDate="firstSelectedDate.date"
+          :baseInitialDates="sendInitialDates"
+          :isDatePickerEnable="isMultiDatePickerEnable"
+          @dateFirstSelected="handleFirstDateSelected"
+          @dateSecondSelected="handleSecondDateSelected"
+          @resetBaseInitialDates="handleResetInitialDates"
+        />
+      </div>
+      
     </div>
   </div>
 </template>
@@ -158,18 +160,12 @@ export default {
       return months[month] || month
     },
     handleFirstDateSelected(firstDate: date) {
-      console.log('first date:', firstDate)
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.firstSelectedDate = firstDate
     },
     handleSecondDateSelected(secondDate: date) {
-      console.log('second date:', secondDate)
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.secondSelectedDate = secondDate
-    },
-    setCurrentDate(presentDate: date) {
-      //We are setting the current date to the present date (Handling the emit from UIDatePicker to UIDateRangePicker)
-      this.presentDate = presentDate
     },
     toggleDatePicker() {
       this.test1 = !this.test1
@@ -227,9 +223,13 @@ export default {
       ;(this.sendInitialDates.firstInitialDate = this.firstSelectedDate),
         (this.sendInitialDates.secondInitialDate = this.secondSelectedDate)
     },
-
+    handleResetInitialDates() {
+      console.log('Emit');
+      this.sendInitialDates.firstInitialDate = false;
+      this.sendInitialDates.secondInitialDate = false;
+    },
     checkMultiOrSingleCalendar() {}
-  },
+  },    
   created() {
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()

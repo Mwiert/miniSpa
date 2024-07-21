@@ -75,7 +75,7 @@ export default {
       presentDate: dayjs().format('YYYY-DD-MM'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
-      saveDateHistory: this.saveDate //Saving the date history so we can see when we close calendar
+      saveDateHistory: this.saveDate, //Saving the date history so we can see when we close calendar
     }
   },
   props: {
@@ -177,7 +177,7 @@ export default {
           selected: false,
           textDecoration: false,
           isToday: this.presentDate === getDate,
-          number: String(i + 1),
+          number: i + 1,
           month: dayjs(dateSender).format('MM'),
           year: dayjs(dateSender).format('YYYY')
         })
@@ -266,6 +266,15 @@ export default {
     //This is for the current date holder
     dateHolder() {
       return this.currentMonth() + ' ' + this.currentYear()
+    }
+  },
+  watch: {
+    isDatePickerEnable(newVal) {
+      if (newVal) {
+        this.calendarDate =  dayjs(this.saveDateHistory)
+        this.currentDate = this.calendarDate.format('YYYY-MM-DD')
+        this.totalDaysInMonth()
+      }
     }
   },
   created() {
