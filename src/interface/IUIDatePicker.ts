@@ -1,6 +1,6 @@
 interface DateModel {
   date?: string
-  number?: string
+  number?: number
   inactive?: boolean
   active?: boolean
   selected?: boolean
@@ -11,5 +11,7 @@ interface DateModel {
   month?: string
   year?: string
   day?: string
+  firstInitialDate?: boolean
+  secondInitialDate?: boolean
 }
 export default DateModel
