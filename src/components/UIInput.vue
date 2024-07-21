@@ -18,7 +18,7 @@
       />
       <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
       <SvgIcon v-if="icon" class="icon" :name="icon"/>
-      <SvgIcon v-if="inputValue" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
+      <SvgIcon v-if="inputValue && clearButton" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
     </div>
   </div>
 </template>
@@ -63,7 +63,6 @@ export default {
       type: Number,
       default: null
     },
-
     value: {
       type: String,
       default: ''
@@ -74,7 +73,11 @@ export default {
     },
     icon: {
       type: String,
-      default: null
+      default: ''
+    },
+    clearButton: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -114,6 +117,8 @@ export default {
   flex-direction: column;
   background-color: #fff;
   margin-top: 1rem;
+  border-radius: 8px;
+  padding: 0.5rem;
   .input-wrapper {
     width: fit-content;
     display: flex;
@@ -122,6 +127,11 @@ export default {
     bottom: 8px;
     border: 1px solid #666666;
     border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+
+    &:hover {
+      border-color: #007bff;
+    }
     .label {
       position: absolute;
       left: 16px;
@@ -147,9 +157,10 @@ export default {
       width: 16px;
       height: 16px;
       border-radius: 50%;
+      transition: transform 0.3s ease, filter 0.3s ease;
       &:hover {
         transform: scale(1.2);
-        filter: opacity(0.5);
+        filter: opacity(0.7);
       }
       
     }
@@ -158,7 +169,7 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 12px;
+      right: 8px;
       width: 24px;
       height: 24px;
       padding: 0px;
@@ -173,11 +184,11 @@ export default {
       border-radius: 8px;
       padding: 1rem 4rem 1rem 1rem;
       transition: all 0.3s ease;
+      width: 100%;
       &.active {
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
       }
-    
   }
 }
 }

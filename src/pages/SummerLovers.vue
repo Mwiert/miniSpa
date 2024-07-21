@@ -1,33 +1,24 @@
 <template>
-  <UIMultiDropdown
-    v-model="selectedPets"
-    :items="pets"
-    :fontSize="fontSize"
-    displayField="name"
-    urlField="imageUrl"
-    :label="petLabel"
-    :dataSize="dataSize"
-    searchable
-    maxVisibleItems="2"
-    primaryKey="id"
-  />
   <div>
-    <UIDropdown
-      v-model="selectedPet"
+    <UIEnumDropdown :isMulti="isMulti" :isSingle="isSingle" :enumObj="EOdrEntity" :label="Sa" />
+    <UIMultiDropdown
+      v-model="selectedPets"
       :items="pets"
       :fontSize="fontSize"
       displayField="name"
       urlField="imageUrl"
-      :label="petLabel"
+      :label="label"
       :dataSize="dataSize"
       searchable
+      maxVisibleItems="2"
       primaryKey="id"
+      :hasActionBox="true"
     />
     <UIDropdown
-      v-model="selectedFood"
-      :items="foods"
+      v-model="selectedItem"
+      :items="items"
+      :label="label"
       :fontSize="fontSize"
-      :label="foodLabel"
       displayField="name"
       urlField="imageUrl"
       searchable
@@ -35,42 +26,25 @@
       primaryKey="id"
     />
   </div>
-  <UIDropdown
-    v-model="selectedToy"
-    :items="toys"
-    :fontSize="fontSize"
-    displayField="name"
-    :label="toyLabel"
-    urlField="imageUrl"
-    searchable
-    :dataSize="dataSize"
-    primaryKey="id"
-  />
-  <UIDropdown
-    v-model="selectedItem"
-    :items="items"
-    :label="itemLabel"
-    :fontSize="fontSize"
-    displayField="name"
-    urlField="imageUrl"
-    searchable
-    :dataSize="dataSize"
-    primaryKey="id"
-  />
 </template>
 
 <script lang="ts">
+import UIEnumDropdown from '../components/Dropdown/UIEnumDropdown.vue'
 import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
-
+import EOdrEntity from '../enum/EOdrEntityType'
 export default {
   name: 'SummerLovers',
   components: {
+    UIEnumDropdown,
     UIDropdown,
     UIMultiDropdown
   },
   data() {
     return {
+      isMulti: true,
+      isSingle: false,
+      EOdrEntity: EOdrEntity,
       pets: [
         {
           id: 0,
@@ -81,7 +55,7 @@ export default {
         },
         {
           id: 1,
-          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/VAN_CAT.png',
+          imageUrl: '',
           name: 'Cat',
           detail: 'b'
         },
@@ -124,8 +98,7 @@ export default {
       dataSize: 3,
       selectedPet: {
         id: 0,
-        imageUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
+        imageUrl: '',
         name: 'Dog',
         detail: 'a'
       },

@@ -6,6 +6,7 @@
       :maxLength="70"
       :minLength="3"
       :icon="'mail'"
+      clearButton
     />
   </div>
   <div class="button-c">
