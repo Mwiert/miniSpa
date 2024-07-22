@@ -4,6 +4,7 @@ import PowerPuffGirls from '../pages/PowerPuffGirls.vue'
 import SummerLovers from '../pages/SummerLovers.vue'
 import PinkPanthers from '../pages/PinkPanthers.vue'
 import HomeView from '../pages/HomeView.vue'
+import FlexiTablePage from '../../mentors/flexitable/FlexiTablePage.vue'
 
 const router = createRouter({
   history: createWebHistory('./'),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/',
       name: 'HomePage',
       component: HomeView
+    },
+    {
+      path: '/flexitable',
+      name: 'FlexiTablePage',
+      component: FlexiTablePage
     }
   ]
 })

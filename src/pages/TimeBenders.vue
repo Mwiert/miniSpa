@@ -1,7 +1,7 @@
 <template>
   <div class="time-benders-c">
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
-    <UIDateRangePicker v-model="selectedDate" :isMultiDatePicker="true" />
+    <UIDateRangePicker :isMultiDatePicker="true"/>
   </div>
 </template>
 
@@ -15,17 +15,8 @@ export default {
   },
   data() {
     return {
-      //Creating initial date
-      selectedDate: ' '
     }
   },
-  methods: {},
-  //To check if the selected date is changing by v-model implementation as requested
-  watch: {
-    selectedDate: function (val: string) {
-      console.log(val)
-    }
-  }
 }
 </script>
 
