@@ -3,7 +3,7 @@
   <div>
     <UIEnumDropdown
       v-model="selectedEnum"
-      :items="EOdrEntity"
+      :items="[EInternSingleComponentType]"
       :fontSize="fontSize"
       displayField="name"
       urlField="imageUrl"
@@ -19,7 +19,7 @@
       :enumObj="EInternSingleComponentType" />
     <UIEnumDropdown
       v-model="selectedEnums"
-      :items="EOdrEntity"
+      :items="[EInternComponentType]"
       :fontSize="fontSize"
       displayField="name"
       urlField="imageUrl"

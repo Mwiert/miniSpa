@@ -1,10 +1,30 @@
 <template>
   <div>
-    <UIMultiDropdown v-if="isMulti" v-model="selectedItems" :items="dropdownItems" :fontSize="fontSize"
-      displayField="name" urlField="imageUrl" :label="label" :dataSize="dataSize" searchable maxVisibleItems="2"
-      primaryKey="id" :hasActionBox="true" @update:modelValue="($event) => $emit('update:modelValue', $event)" />
-    <UIDropdown v-else v-model="selectedItem" :items="dropdownItems" :label="label" :fontSize="fontSize"
-      displayField="name" urlField="imageUrl" searchable :dataSize="dataSize" primaryKey="id"
+    <UIMultiDropdown
+      v-if="isMulti"
+      v-model="selectedItems"
+      :items="dropdownItems"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      :label="label"
+      :dataSize="dataSize"
+      searchable
+      maxVisibleItems="2"
+      primaryKey="id"
+      :hasActionBox="true"
+      @update:modelValue="($event) => $emit('update:modelValue', $event)" />
+    <UIDropdown
+      v-else
+      v-model="selectedItem"
+      :items="dropdownItems"
+      :label="label"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      searchable
+      :dataSize="dataSize"
+      primaryKey="id"
       @update:modelValue="($event) => $emit('update:modelValue', $event)" />
   </div>
 </template>
@@ -85,7 +105,7 @@ export default {
       default: ''
     },
     isMulti: { type: Boolean, default: false },
-    enumObj: { type: Object, default: () => { } },
+    enumObj: { type: Object, default: () => {} },
     showAll: { type: Boolean, default: false },
     showUnknown: { type: Boolean, default: false }
   },
