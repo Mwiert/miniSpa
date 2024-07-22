@@ -1,47 +1,15 @@
 <template>
   <div>
-    <UIEnumDropdown
-      v-model="selectedPetsForEnum"
-      :items="pets"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      :label="label"
-      :dataSize="dataSize"
-      searchable
-      maxVisibleItems="2"
-      primaryKey="id"
-      :hasActionBox="true"
-      :isMulti="isMulti"
-      :isSingle="isSingle"
-      :showAll="true"
-      :showUnknown="true"
-      :enumObj="EOdrEntity"
-    />
-    <UIMultiDropdown
-      v-model="selectedPets"
-      :items="pets"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      :label="label"
-      :dataSize="dataSize"
-      searchable
-      maxVisibleItems="2"
-      primaryKey="id"
-      :hasActionBox="true"
-    />
-    <UIDropdown
-      v-model="selectedItem"
-      :items="items"
-      :label="label"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      searchable
-      :dataSize="dataSize"
-      primaryKey="id"
-    />
+    {{ selectedEnum }}
+  </div>
+  <div>
+    <UIEnumDropdown v-model="selectedEnum" :items="EOdrEntity" :fontSize="fontSize" displayField="name"
+      urlField="imageUrl" :label="label" :dataSize="dataSize" searchable maxVisibleItems="2" primaryKey="id"
+      :hasActionBox="true" :isMulti="!isMulti" :showAll="true" :showUnknown="true" :enumObj="EOdrEntity" />
+    <UIMultiDropdown v-model="selectedPets" :items="pets" :fontSize="fontSize" displayField="name" urlField="imageUrl"
+      :label="label" :dataSize="dataSize" searchable maxVisibleItems="2" primaryKey="id" :hasActionBox="true" />
+    <UIDropdown v-model="selectedItem" :items="items" :label="label" :fontSize="fontSize" displayField="name"
+      urlField="imageUrl" searchable :dataSize="dataSize" primaryKey="id" />
   </div>
 </template>
 
@@ -60,7 +28,6 @@ export default {
   data() {
     return {
       isMulti: true,
-      isSingle: false,
       EOdrEntity: EOdrEntity,
       pets: [
         {
@@ -113,6 +80,7 @@ export default {
       itemLabel: 'Select an Airline',
       fontSize: 12,
       dataSize: 3,
+      label: 'Select an Item',
       selectedPet: {
         id: 0,
         imageUrl: '',
@@ -143,10 +111,12 @@ export default {
         { id: 0, imageUrl: 'https://example.com/dog.png', name: 'Dog', detail: 'a' },
         { id: 1, imageUrl: '', name: 'Cat', detail: 'b' }
       ],
-      selectedPetsForEnum: [
-        { id: 0, imageUrl: 'https://example.com/dog.png', name: 'Dog', detail: 'a' },
-        { id: 1, imageUrl: '', name: 'Cat', detail: 'b' }
-      ]
+      selectedEnums: [
+        { id: 0, name: 'UNKNOWN' },
+        { id: -1, name: 'ALL' }
+      ],
+      selectedEnum:
+        { id: 0, name: 'UNKNOWN' }
     }
   }
 }

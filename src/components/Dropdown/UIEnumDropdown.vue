@@ -1,33 +1,11 @@
 <template>
   <div>
-    <UIMultiDropdown
-      v-if="isMulti"
-      v-model="selectedItems"
-      :items="dropdownItems"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      :label="label"
-      :dataSize="dataSize"
-      searchable
-      maxVisibleItems="2"
-      primaryKey="id"
-      :hasActionBox="true"
-      @update:modelValue="($event) => $emit('update:modelValue', $event)"
-    />
-    <UIDropdown
-      v-if="isSingle"
-      v-model="selectedItem"
-      :items="items"
-      :label="label"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      searchable
-      :dataSize="dataSize"
-      primaryKey="id"
-      @update:modelValue="($event) => $emit('update:modelValue', $event)"
-    />
+    <UIMultiDropdown v-if="isMulti" v-model="selectedItems" :items="dropdownItems" :fontSize="fontSize"
+      displayField="name" urlField="imageUrl" :label="label" :dataSize="dataSize" searchable maxVisibleItems="2"
+      primaryKey="id" :hasActionBox="true" @update:modelValue="($event) => $emit('update:modelValue', $event)" />
+    <UIDropdown v-else v-model="selectedItem" :items="dropdownItems" :label="label" :fontSize="fontSize"
+      displayField="name" urlField="imageUrl" searchable :dataSize="dataSize" primaryKey="id"
+      @update:modelValue="($event) => $emit('update:modelValue', $event)" />
   </div>
 </template>
 
@@ -70,7 +48,7 @@ export default {
       default: 'flight'
     },
     modelValue: {
-      type: Array,
+      type: [Array, Object],
       default: () => []
     },
 
@@ -107,17 +85,15 @@ export default {
       default: ''
     },
     isMulti: { type: Boolean, default: false },
-    isSingle: { type: Boolean, default: false },
-    enumObj: { type: Object, default: () => {} },
+    enumObj: { type: Object, default: () => { } },
     showAll: { type: Boolean, default: false },
     showUnknown: { type: Boolean, default: false }
   },
   data() {
     return {
-      enumFile: [],
       selectedItems: this.modelValue,
-      dropdownItems: this.items,
-      selectedItem: this.modelValue[0]
+      dropdownItems: this.getEnumFile(),
+      selectedItem: this.modelValue
     }
   },
   methods: {
@@ -127,16 +103,16 @@ export default {
         .filter((key) => !isNaN(key))
         .sort()
         .map((key) => ({
-          id: key.toString(),
+          id: key,
           name: this.enumObj[key]
         }))
 
       if (!this.showAll) {
-        sortedEnumArray = sortedEnumArray.filter((item) => item.id !== '-1')
+        sortedEnumArray = sortedEnumArray.filter((item) => item.id !== -1)
       }
 
       if (!this.showUnknown) {
-        sortedEnumArray = sortedEnumArray.filter((item) => item.id !== '0')
+        sortedEnumArray = sortedEnumArray.filter((item) => item.id !== 0)
       }
 
       return sortedEnumArray
