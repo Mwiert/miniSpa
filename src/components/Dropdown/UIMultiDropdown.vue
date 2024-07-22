@@ -9,9 +9,18 @@
       <div v-if="isOpen" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container">
           <div v-if="searchable" class="search-content-wrapper">
-            <input type="text" v-model="searchQuery" placeholder="Search..." class="ui-multi-dropdown-search" />
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Search..."
+              class="ui-multi-dropdown-search" />
             <span class="clear-search">
-              <SvgIcon v-if="searchQuery" @click.stop="clearSearch" class="clear-search-img" :name="'x'" :size="'s'" />
+              <SvgIcon
+                v-if="searchQuery"
+                @click.stop="clearSearch"
+                class="clear-search-img"
+                :name="'x'"
+                :size="'s'" />
             </span>
           </div>
         </div>
@@ -19,23 +28,35 @@
           <span class="toggle" @click="selectAll">Select All</span>
           <span class="toggle" @click="dropAll">Drop All</span>
         </div>
-        <div class="ui-multi-dropdown-content" :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
-          <div v-for="(item, index) in filteredItems()" :key="index" class="ui-multi-dropdown-item"
-            @click.stop="selectItem(item)" :class="{ selected: isSelected(item) }">
+        <div
+          class="ui-multi-dropdown-content"
+          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
+          <div
+            v-for="(item, index) in filteredItems()"
+            :key="index"
+            class="ui-multi-dropdown-item"
+            @click.stop="selectItem(item)"
+            :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)" class="item-container">
               <div class="image-label-wrapper">
-                <img :src="item[urlField]" alt="" class="dropdown-item-img"
+                <img
+                  :src="item[urlField]"
+                  alt=""
+                  class="dropdown-item-img"
                   :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
-                <span class="item-name"> {{ item[displayField] }}</span>
+                <span class="item-name"> {{ isLongItem(item) }}</span>
               </div>
 
               <span :class="['circle', className ? `${className}` : '']"> </span>
             </div>
             <div v-else class="item-container">
               <div class="image-label-wrapper">
-                <img :src="item[urlField]" alt="" class="dropdown-item-img"
+                <img
+                  :src="item[urlField]"
+                  alt=""
+                  class="dropdown-item-img"
                   :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
-                <span class="item-name">{{ item[displayField] }}</span>
+                <span class="item-name">{{ isLongItem(item) }}</span>
               </div>
             </div>
           </div>
@@ -145,9 +166,9 @@ export default {
       } else if (this.selectedItems.length > this.maxVisibleItems) {
         return this.selectedItems.length + ' items have been selected'
       } else {
-        let displayLabel = this.selectedItems[0][this.displayField]
+        let displayLabel = this.isLongItem(this.selectedItems[0])
         for (let i = 1; i < this.selectedItems.length; i++) {
-          displayLabel = displayLabel + ',' + this.selectedItems[i][this.displayField]
+          displayLabel = displayLabel + ',' + this.isLongItem(this.selectedItems[i])
         }
         return displayLabel
       }
@@ -174,8 +195,14 @@ export default {
     },
     filteredItems(): Array<any> {
       return this.dropdownItems.filter((item) =>
-        item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
+        String(item[this.displayField]).toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
+    },
+    isLongItem(item) {
+      if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
+        return String(item[this.displayField]).substring(0, 15) + '...'
+      } else if (item[this.displayField] === undefined) return item[this.displayField]
+      return String(item[this.displayField])
     },
     checkItem(item) {
       return item[this.urlField] !== '' && item[this.urlField] !== undefined
@@ -438,25 +465,29 @@ export default {
             height: 100%;
 
             .image-label-wrapper {
-              flex-grow: 1;
-              justify-content: center;
               height: 100%;
               width: 100%;
-            }
+              align-items: center;
+              display: flex;
+              justify-content: start;
 
-            .dropdown-item-img {
-              position: static;
-              width: 12px;
-              height: 12px;
-              padding-right: 10px;
-              display: none;
+              .dropdown-item-img {
+                width: 12px;
+                height: 12px;
+                padding-right: 10px;
+                justify-self: end;
+                display: none;
+                align-items: center;
 
-              &.isVisible {
-                display: inline-block;
-              }
+                &.isVisible {
+                  display: inline-block;
+                  align-items: center;
+                }
 
-              &.visibleIcon {
-                visibility: hidden;
+                &.visibleIcon {
+                  visibility: hidden;
+                  align-items: center;
+                }
               }
             }
           }
