@@ -47,7 +47,7 @@ export default {
       dummies: dummies,
       searchTerm: '',
       activePage: 1,
-      perPage: 4,
+      perPage: 2,
       hidecol: []
     }
   },
@@ -73,14 +73,18 @@ export default {
     handleSearchInput(value: string) {
       this.searchTerm = value
     },
-    handlerSetPage(val) {
+    handlerSetPage(val){
       this.activePage = val
     },
-    handlerSetPerPage(val) {
+    handlerSetPerPage(val){
       this.perPage = val
     },
     handlerPerPage(val) {
-      this.perPage = val
+      if(val == 'All'){
+        this.perPage = this.filteredData.length
+      }else{
+        this.perPage = Number(val)
+      }
     },
     handleColumnhide(val) {
       this.hidecol = val
