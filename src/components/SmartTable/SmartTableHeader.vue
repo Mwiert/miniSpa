@@ -12,6 +12,17 @@
     :placeHolder="placeHolder"
     
         />
+        <UIMultiDropdown
+      v-model="selectedColumns"
+      :items="columnOp"
+      :fontSize="fontSize"
+      displayField="name"
+      :dataSize="dataSize"
+      maxVisibleItems="3"
+      primaryKey="id"
+      searchable
+    />
+
     </div>
 </template>
 
