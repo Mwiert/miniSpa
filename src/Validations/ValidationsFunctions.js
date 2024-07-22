@@ -1,4 +1,11 @@
-import { isEmail, isRequired, isMinLength, isMaxLength } from '../Validations/ValidationsHelpers'
+import {
+  isEmail,
+  isRequired,
+  isMinLength,
+  isMaxLength,
+  isTc,
+  isNumber
+} from '../Validations/ValidationsHelpers'
 
 export function validateInput(value, rules) {
   const errors = []
@@ -14,11 +21,12 @@ export function validateInput(value, rules) {
   if (rules.maxLength && !isMaxLength(value, rules.maxLength)) {
     errors.push(`bu alan en fazla ${rules.maxLength} karakter olmalıdır`)
   }
-  // if (rules.isTc) {
-  //   if (!isTc(value)) {
-  //     errors.push('TC kimlik numarası 11 haneli olmalıdır')
-  //   }
-  // }
+  if (rules.tc && !isTc(value)) {
+    if (!value.isNumber) {
+      errors.push('tc kimlik numarası sadece rakamlardan oluşmalıdır')
+    }
+    errors.push('tc kimlik numarası 11 haneli olmalıdır')
+  }
 
   return errors
 }
