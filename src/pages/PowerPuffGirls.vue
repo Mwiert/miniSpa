@@ -17,14 +17,14 @@
       clearButton />
   </div>
 
-  <!-- <div class="input-box">
+  <div class="input-box">
     <UIInput
       :id="'idNumber'"
       :label="'idNumber'"
       :icon="'mail'"
-      :rules="{ required: true, isTc }"
+      :rules="{ required: true, tc: true }"
       clearButton />
-  </div> -->
+  </div>
   <!-- <button @click="submitForm">Submit</button> -->
 
   <div class="button-c">
@@ -200,6 +200,7 @@ export default {
       inputValue: this.value,
       email: '',
       password: '',
+      idNumber: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
