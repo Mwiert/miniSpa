@@ -93,7 +93,12 @@ export default {
         { id: 2, imageUrl: '', name: 'Fish', detail: 'c' },
         { id: 3, imageUrl: '', name: 'Bird', detail: 'd' },
         { id: 4, imageUrl: '', name: 'Mouse', detail: 'c' },
-        { id: 5, imageUrl: '', name: 'Elephant', detail: 'd' },
+        {
+          id: 5,
+          imageUrl: '',
+          name: 'ElephantElephantElephantElephantElephantElephantElephant',
+          detail: 'd'
+        },
         { id: 6, imageUrl: '', name: 'Hawk', detail: 'c' },
         { id: 7, imageUrl: '', name: 'Monkey', detail: 'a' }
       ],
@@ -117,7 +122,12 @@ export default {
       ],
       items: [
         { id: 0, imageUrl: '', name: 'Türk Hava Yollari', detail: 'o' },
-        { id: 1, imageUrl: '', name: 'Pegasus', detail: 'p' },
+        {
+          id: 1,
+          imageUrl: '',
+          name: 'PegasusPegasusPegasusPegasusPegasusPegasusPegasusPegasus',
+          detail: 'p'
+        },
         { id: 2, imageUrl: '', name: 'Sun Express', detail: 'r' },
         { id: 3, imageUrl: '', name: 'Corelon', detail: 's' }
       ],
