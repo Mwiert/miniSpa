@@ -1,7 +1,7 @@
 <template>
   <div class="ui-dropdown-c">
     <div class="ui-dropdown-c-wrapper">
-      <label class="label">{{ label }}</label>
+      <label class="label" v-if="label?.length !== 0">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
         <span
           :class="{ 'placeholder-text-active': !selectedItem[displayField] }"
@@ -16,7 +16,6 @@
         <div class="search-container">
           <div v-if="searchable" class="search-content-wrapper">
             <input
-              v-if="searchable"
               type="text"
               v-model="searchQuery"
               placeholder="Search..."
@@ -45,16 +44,22 @@
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }"
           >
-            <div v-if="checkImage()">
+            <div v-if="this.isSelected(item)">
               <img
                 :src="item[urlField]"
                 alt=""
                 class="dropdown-item-img"
-                :class="{ invisible: item[urlField] === '' }"
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
               />
               <span>{{ item[displayField] }}</span>
             </div>
             <div v-else>
+              <img
+                :src="item[urlField]"
+                alt=""
+                class="dropdown-item-img"
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
+              />
               <span>{{ item[displayField] }}</span>
             </div>
           </div>
@@ -73,16 +78,23 @@ export default {
     SvgIcon
   },
   props: {
-    modelValue: {
-      type: Object,
-      default: () => ({})
-    },
     items: {
       // items in the database.
       type: Array,
       required: true,
       default: () => []
     },
+    primaryKey: {
+      type: String,
+      required: true,
+      default: 'id'
+    },
+
+    modelValue: {
+      type: Object,
+      default: () => ({})
+    },
+
     label: {
       // label on the dropdown to understand what the dropdown contents are.
       type: String
@@ -108,19 +120,15 @@ export default {
       type: String,
       default: 'name'
     },
-    primaryKey: {
-      type: String,
-      required: true
-    },
+
     urlField: {
       // picture of the object taken here
       type: String,
-      default: 'url'
+      default: ''
     },
     dataSize: {
       // how many data will shown in the dropdown.
-      type: Number,
-      required: true
+      type: Number
     }
   },
   data() {
@@ -128,7 +136,8 @@ export default {
       isOpen: false, // checks that if drowdown is open or not.
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItem: this.modelValue, // represents the currently selected item.
-      dropdownItems: this.items
+      dropdownItems: this.items,
+      isImageAvailable: false
     }
   },
   computed: {
@@ -148,6 +157,9 @@ export default {
       return this.dropdownItems.filter((item) =>
         item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
+    },
+    checkItem(item) {
+      return item[this.urlField] !== ''
     },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
@@ -203,6 +215,9 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside) // Ensures that the clickEventListener added in mounted is removed.
+  },
+  created() {
+    this.isImageAvailable = this.checkImage()
   },
   watch: {
     // watches the changes and updates the selectedItem.
@@ -346,13 +361,18 @@ export default {
             background-color: #f3f3f3;
           }
           &.selected {
-            font-weight: bold;
+            text-shadow: 0 0 0.75px black;
           }
           .dropdown-item-img {
+            position: static;
             width: 0.75rem;
             height: 0.75rem;
             padding-right: 10px;
-            &.invisible {
+            display: none;
+            &.isVisible {
+              display: inline-block;
+            }
+            &.visibleIcon {
               visibility: hidden;
             }
           }
