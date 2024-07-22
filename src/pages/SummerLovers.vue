@@ -1,6 +1,38 @@
 <template>
+  <div></div>
   <div>
-    <UIEnumDropdown :isMulti="isMulti" :isSingle="isSingle" :enumObj="EOdrEntity" :label="Sa" />
+    <UIEnumDropdown
+      v-model="selectedEnum"
+      :items="[EInternSingleComponentType]"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      :label="label"
+      :dataSize="dataSize"
+      searchable
+      maxVisibleItems="2"
+      primaryKey="id"
+      :hasActionBox="true"
+      :isMulti="!isMulti"
+      :showAll="true"
+      :showUnknown="true"
+      :enumObj="EInternSingleComponentType" />
+    <UIEnumDropdown
+      v-model="selectedEnums"
+      :items="[EInternComponentType]"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      :label="label"
+      :dataSize="dataSize"
+      searchable
+      maxVisibleItems="2"
+      primaryKey="id"
+      :hasActionBox="true"
+      :isMulti="isMulti"
+      :showAll="true"
+      :showUnknown="true"
+      :enumObj="EInternComponentType" />
     <UIMultiDropdown
       v-model="selectedPets"
       :items="pets"
@@ -12,8 +44,7 @@
       searchable
       maxVisibleItems="2"
       primaryKey="id"
-      :hasActionBox="true"
-    />
+      :hasActionBox="true" />
     <UIDropdown
       v-model="selectedItem"
       :items="items"
@@ -23,8 +54,7 @@
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"
-      primaryKey="id"
-    />
+      primaryKey="id" />
   </div>
 </template>
 
@@ -32,7 +62,8 @@
 import UIEnumDropdown from '../components/Dropdown/UIEnumDropdown.vue'
 import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
-import EOdrEntity from '../enum/EOdrEntityType'
+import EInternComponentType from '../enum/EInternComponentType'
+import EInternSingleComponentType from '../enum/EInternSingleComponentType'
 export default {
   name: 'SummerLovers',
   components: {
@@ -43,8 +74,8 @@ export default {
   data() {
     return {
       isMulti: true,
-      isSingle: false,
-      EOdrEntity: EOdrEntity,
+      EInternComponentType: EInternComponentType,
+      EInternSingleComponentType: EInternSingleComponentType,
       pets: [
         {
           id: 0,
@@ -96,6 +127,7 @@ export default {
       itemLabel: 'Select an Airline',
       fontSize: 12,
       dataSize: 3,
+      label: 'Select an Item',
       selectedPet: {
         id: 0,
         imageUrl: '',
@@ -125,7 +157,12 @@ export default {
       selectedPets: [
         { id: 0, imageUrl: 'https://example.com/dog.png', name: 'Dog', detail: 'a' },
         { id: 1, imageUrl: '', name: 'Cat', detail: 'b' }
-      ]
+      ],
+      selectedEnums: [
+        { id: 0, name: 'UNKNOWN' },
+        { id: -1, name: 'ALL' }
+      ],
+      selectedEnum: { id: 0, name: 'UNKNOWN' }
     }
   }
 }
