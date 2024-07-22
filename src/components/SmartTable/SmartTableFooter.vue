@@ -4,8 +4,7 @@
     <SmartTablePagination
       :totalPages="totalPage"
       @update:currentPage="handlerSetPage"
-      @update:currentPerPage="handlerSetPerPage"
-    />
+      @update:currentPerPage="handlerSetPerPage" />
   </div>
 </template>
 

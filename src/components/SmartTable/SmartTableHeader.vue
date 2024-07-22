@@ -2,30 +2,44 @@
   <div class="smart-table-header-container">
     <SearchBar
       class="search-bar"
-      v-on:search-value="handleSearchInput"
-    /><!-- SearchBardan emit ettiğimiz değeri buraya alıyoruz ki daha sonra ihtiyacımız kolursa direk header içinden alalım -->
+      v-on:search-value="
+        handleSearchInput
+      " /><!-- SearchBardan emit ettiğimiz değeri buraya alıyoruz ki daha sonra ihtiyacımız kolursa direk header içinden alalım -->
     <UIDropdown
       v-model="selectedItems"
-      :items="pets"
+      :items="options"
       :fontSize="fontSize"
       displayField="name"
-      urlField="imageUrl"
+      urlField=""
+      :dataSize="dataSize"
+      primaryKey="id"
+      :placeHolder="placeHolder" />
+    <UIMultiDropdown
+      v-model="selectedColumns"
+      :items="columnOp"
+      :fontSize="fontSize"
+      displayField="name"
       :dataSize="dataSize"
       maxVisibleItems="3"
       primaryKey="id"
-      :placeHolder="placeHolder"
-    />
+      searchable />
   </div>
 </template>
 
 <script lang="ts">
 import UIDropdown from '../Dropdown/UIDropdown.vue'
 import SearchBar from './SmartTableSearchBar.vue'
+import UIMultiDropdown from '../Dropdown/UIMultiDropdown.vue'
 export default {
   name: 'SmartTableHeader',
   components: {
     SearchBar,
-    UIDropdown
+    UIDropdown,
+    UIMultiDropdown
+  },
+  props: {
+    columnOp: Array,
+    options: Array
   },
   methods: {
     handleSearchInput(value: string) {
@@ -37,6 +51,26 @@ export default {
       fontSize: 12,
       dataSize: 3,
       placeHolder: 'Sort by Res. Status'
+    }
+  }
+      placeHolder: 'Sort by Res. Status',
+      selectedColumns: [],
+      selectedItems: this.options[0]
+    }
+  },
+  watch: {
+    selectedColumns: {
+      handler: function (val) {
+        console.log(val)
+        this.$emit('column-hide', val)
+      },
+      deep: true
+    },
+    selectedItems: {
+      handler: function (val) {
+        this.$emit('per-page', val.name) //Tekrardan emit ettik ki tablomuza alabilelim bu değeri
+      },
+      immediate: true
     }
   }
 }

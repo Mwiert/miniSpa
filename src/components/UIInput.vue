@@ -1,12 +1,9 @@
 <template>
   <div class="input-box-c">
-    <div v-if="label" class="label">
-      <label  :for="id"> {{ label }} </label>
-    </div>
-
     <div class="input-wrapper">
       <input
         class="input-value"
+        :class="isFocused ? 'active': ''"
         :type="type"
         :placeholder="placeholder"
         :id="id"
@@ -16,15 +13,18 @@
         :disabled="disabled"
         v-model="inputValue"
         @input="handleInput"
+        @focus="handleFocus"
+        @blur="handleBlur"
       />
-
-      <SvgIcon v-if="inputValue" class="clear-btn" :icon="'x'" :size="'s'" @click="clearInput" />
+      <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
+      <SvgIcon v-if="icon" class="icon" :name="icon"/>
+      <SvgIcon v-if="inputValue && clearButton" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import SvgIcon from './SvgIcon.vue'
+import SvgIcon from './SvgIcon.vue';
 
 export default {
   name: 'UIInput',
@@ -33,7 +33,8 @@ export default {
   },
   data() {
     return {
-      inputValue: this.value
+      inputValue: this.value,
+      isFocused: false,
     }
   },
   props: {
@@ -62,7 +63,6 @@ export default {
       type: Number,
       default: null
     },
-
     value: {
       type: String,
       default: ''
@@ -70,6 +70,19 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    icon: {
+      type: String,
+      default: ''
+    },
+    clearButton: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    computedIcon() {
+      return this.icon || null;
     }
   },
   methods: {
@@ -82,6 +95,15 @@ export default {
     clearInput() {
       this.inputValue = ''
       this.updateValue('')
+      this.isFocused = false
+    },
+    handleFocus() {
+      this.isFocused = true
+    },
+    handleBlur() {
+      if(this.inputValue === '') {
+        this.isFocused = false
+      }
     }
   }
 }
@@ -94,44 +116,80 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #fff;
+  margin-top: 1rem;
+  border-radius: 8px;
+  padding: 0.5rem;
   .input-wrapper {
     width: fit-content;
     display: flex;
     align-items: center;
     position: relative;
     bottom: 8px;
+    border: 1px solid #666666;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+
+    &:hover {
+      border-color: #007bff;
+    }
+    .label {
+      position: absolute;
+      left: 16px;
+      font-size: 1rem;
+      font-weight: 100;
+      color: grey;
+      pointer-events: none;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: all 0.3s ease;
+      &.active {
+        transform: none;
+        top: 8px;
+        font-size: 12px;
+      }
+    }
     .clear-btn {
       position: absolute;
-      right: 16px;
       background: none;
       border: none;
       cursor: pointer;
+      right: 32px;
       width: 16px;
       height: 16px;
-      padding: 0px;
       border-radius: 50%;
-      &:hover {  
-        background-color: $accent-primary-color;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      &:hover {
         transform: scale(1.2);
-        filter: opacity(0.5);
+        filter: opacity(0.7);
       }
+      
     }
+    .icon {
+      position: absolute;
+      background: none;
+      border: none;
+      cursor: pointer;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      padding: 0px;
+      padding-left: 5px;
+      border-radius: 50%;
+    }
+    //styling
     .input-value {
       font-size: 1rem;
-      padding: 1rem;
-      padding-right: 3rem;
-      border: 1px solid #666666;
+      outline: none;
+      border: none;
       border-radius: 8px;
-    }
-    
+      padding: 1rem 4rem 1rem 1rem;
+      transition: all 0.3s ease;
+      width: 100%;
+      &.active {
+        padding-top: 1.5rem;
+        padding-bottom: 0.5rem;
+      }
   }
-
-  .label {
-    width: fit-content;
-    font-size: 1rem;
-    font-weight: 200;
-    margin-bottom: 0.5rem;
-    color: grey;
-  }
+}
 }
 </style>

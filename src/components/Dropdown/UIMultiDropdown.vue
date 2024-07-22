@@ -1,7 +1,7 @@
 <template>
   <div class="ui-multi-dropdown-c">
     <div class="ui-multi-dropdown-c-wrapper">
-      <label class="label">{{ label }}</label>
+      <label class="label" v-if="label?.length !== 0">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-multi-dropdown-button" :class="{ active: isOpen }">
         <div class="placeholder-text">{{ labelDisplay }}</div>
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
@@ -10,13 +10,12 @@
         <div class="search-container">
           <div v-if="searchable" class="search-content-wrapper">
             <input
-              v-if="searchable"
               type="text"
               v-model="searchQuery"
               placeholder="Search..."
               class="ui-multi-dropdown-search"
             />
-            <span class="clear-adsearch">
+            <span class="clear-search">
               <SvgIcon
                 v-if="searchQuery"
                 @click.stop="clearSearch"
@@ -27,7 +26,7 @@
             </span>
           </div>
         </div>
-        <div class="button-wrapper">
+        <div class="button-wrapper" v-if="hasActionBox">
           <span class="toggle" @click="selectAll">Select All</span>
           <span class="toggle" @click="dropAll">Drop All</span>
         </div>
@@ -35,53 +34,35 @@
           class="ui-multi-dropdown-content"
           :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }"
         >
-          <div v-if="checkImage()">
-            <div
-              v-for="(item, index) in filteredItems()"
-              :key="index"
-              class="ui-multi-dropdown-item"
-              @click.stop="selectItem(item)"
-              :class="{ selected: isSelected(item) }"
-            >
-              <div v-if="this.isSelected(item)" class="item-container">
-                <div class="image-label-wrapper">
-                  <img
-                    :src="item[urlField]"
-                    alt=""
-                    class="dropdown-item-img"
-                    :class="{ invisible: item[urlField] === '' }"
-                  />
-                  <span>{{ item[displayField] }}</span>
-                </div>
-                <span :class="['circle', className ? `${className}` : '']"> </span>
+          <div
+            v-for="(item, index) in filteredItems()"
+            :key="index"
+            class="ui-multi-dropdown-item"
+            @click.stop="selectItem(item)"
+            :class="{ selected: isSelected(item) }"
+          >
+            <div v-if="this.isSelected(item)" class="item-container">
+              <div class="image-label-wrapper">
+                <img
+                  :src="item[urlField]"
+                  alt=""
+                  class="dropdown-item-img"
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
+                />
+                <span class="item-name"> {{ item[displayField] }}</span>
               </div>
-              <div v-else class="item-container">
-                <div class="image-label-wrapper">
-                  <img
-                    :src="item[urlField]"
-                    alt=""
-                    class="dropdown-item-img"
-                    :class="{ invisible: item[urlField] === '' }"
-                  />
-                  <span>{{ item[displayField] }}</span>
-                </div>
-              </div>
+
+              <span :class="['circle', className ? `${className}` : '']"> </span>
             </div>
-          </div>
-          <div v-else>
-            <div
-              v-for="(item, index) in filteredItems()"
-              :key="index"
-              class="ui-multi-dropdown-item"
-              @click.stop="selectItem(item)"
-              :class="{ selected: isSelected(item) }"
-            >
-              <div v-if="this.isSelected(item)" class="item-container">
-                <span>{{ item[displayField] }}</span>
-                <span :class="['circle', className ? `${className}` : '']"> </span>
-              </div>
-              <div v-else>
-                <span>{{ item[displayField] }}</span>
+            <div v-else class="item-container">
+              <div class="image-label-wrapper">
+                <img
+                  :src="item[urlField]"
+                  alt=""
+                  class="dropdown-item-img"
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
+                />
+                <span class="item-name">{{ item[displayField] }}</span>
               </div>
             </div>
           </div>
@@ -100,11 +81,27 @@ export default {
     SvgIcon
   },
   props: {
-    maxVisibleItems: {
-      type: Number,
-      default: 1
+    items: {
+      // items in the database.
+      type: Array,
+      required: true,
+      default: () => []
     },
-    toggleSelectAll: {
+    primaryKey: {
+      type: String,
+      required: true,
+      default: 'id'
+    },
+    dataSize: {
+      // how many data will shown in the dropdown.
+      type: Number
+    },
+    maxVisibleItems: {
+      type: String,
+      default: '1'
+    },
+
+    hasActionBox: {
       type: Boolean
     },
     className: {
@@ -115,12 +112,7 @@ export default {
       type: Array,
       default: () => []
     },
-    items: {
-      // items in the database.
-      type: Array,
-      required: true,
-      default: () => []
-    },
+
     label: {
       // label on the dropdown to understand what the dropdown contents are.
       type: String
@@ -147,19 +139,11 @@ export default {
       type: String,
       default: 'name'
     },
-    primaryKey: {
-      type: String,
-      required: true
-    },
+
     urlField: {
       // picture of the object taken here
       type: String,
-      default: 'url'
-    },
-    dataSize: {
-      // how many data will shown in the dropdown.
-      type: Number,
-      required: true
+      default: ''
     }
   },
   data() {
@@ -168,7 +152,8 @@ export default {
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItems: this.modelValue, // represents the currently selected item.
       dropdownItems: this.items,
-      dropdownClass: this.className
+      dropdownClass: this.className,
+      isImageAvailable: false
     }
   },
   computed: {
@@ -188,13 +173,9 @@ export default {
       } else if (this.selectedItems.length > this.maxVisibleItems) {
         return this.selectedItems.length + ' items have been selected'
       } else {
-        let displayLabel = ''
-        for (let i = 0; i < this.selectedItems.length; i++) {
-          if (i == this.selectedItems.length - 1) {
-            displayLabel += this.selectedItems[i][this.displayField]
-          } else {
-            displayLabel += this.selectedItems[i][this.displayField] + ', '
-          }
+        let displayLabel = this.selectedItems[0][this.displayField]
+        for (let i = 1; i < this.selectedItems.length; i++) {
+          displayLabel = displayLabel + ',' + this.selectedItems[i][this.displayField]
         }
         return displayLabel
       }
@@ -202,20 +183,36 @@ export default {
   },
   methods: {
     dropAll() {
-      this.selectedItems = []
+      const toBeDeleted = this.filteredItems()
+      for (let i = 0; i < toBeDeleted.length; i++) {
+        this.selectedItems = this.selectedItems.filter(
+          (selected) => selected[this.primaryKey] !== toBeDeleted[i][this.primaryKey]
+        )
+      }
     },
     selectAll() {
-      this.selectedItems = this.dropdownItems
+      let addedItems = this.filteredItems()
+      for (let i = 0; i < addedItems.length; i++) {
+        if (!this.isSelected(addedItems[i])) {
+          this.selectedItems.push(addedItems[i])
+        }
+      }
     },
     filteredItems(): Array<any> {
       return this.dropdownItems.filter((item) =>
         item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
     },
+    checkItem(item) {
+      return item[this.urlField] !== '' && item[this.urlField] !== undefined
+    },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
         console.log(this.dropdownItems[i][this.urlField])
-        if (this.dropdownItems[i][this.urlField] !== '') {
+        if (
+          this.dropdownItems[i][this.urlField] !== '' &&
+          this.dropdownItems[i][this.urlField] !== undefined
+        ) {
           return true
         }
       }
@@ -273,6 +270,9 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside) // Ensures that the clickEventListener added in mounted is removed.
+  },
+  created() {
+    this.isImageAvailable = this.checkImage()
   },
 
   watch: {
@@ -451,7 +451,7 @@ export default {
           }
 
           &.selected {
-            font-weight: bold;
+            text-shadow: 0 0 0.75px black;
           }
 
           .item-text {
@@ -462,32 +462,46 @@ export default {
             display: flex;
             width: 100%;
             align-items: center;
-            justify-content: space-between;
             height: 100%;
 
             .image-label-wrapper {
+              flex-grow: 1;
               justify-content: center;
               height: 100%;
-              .dropdown-item-img {
-                width: 12px;
-                height: 12px;
-                padding-right: 10px;
+              width: 100%;
+            }
+
+            .dropdown-item-img {
+              position: static;
+              width: 12px;
+              height: 12px;
+              padding-right: 10px;
+              display: none;
+
+              &.isVisible {
+                display: inline-block;
+              }
+
+              &.visibleIcon {
+                visibility: hidden;
               }
             }
-            .circle {
-              height: 12px;
-              width: 12px;
-              background-color: red;
-              border-radius: 100%;
-              display: inline-block;
+          }
 
-              &.flight {
-                background-color: $primary-color;
-              }
+          .circle {
+            height: 12px;
+            width: 12px;
+            background-color: red;
+            border-radius: 100%;
+            display: inline-block;
+            justify-self: end;
 
-              &.hotel {
-                background-color: $secondary-color;
-              }
+            &.flight {
+              background-color: $primary-color;
+            }
+
+            &.hotel {
+              background-color: $secondary-color;
             }
           }
         }

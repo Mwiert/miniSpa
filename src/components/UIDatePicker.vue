@@ -1,5 +1,6 @@
 <template>
   <!-- This is the main container to create the calendar -->
+  <!-- {{ Number(this.calendarDate.endOf('month').$D) }} -->
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
@@ -8,11 +9,21 @@
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <button class="nav-button" @click="onClickToLeft" v-if="minDate < currentDate">
+            <button
+              id="prev"
+              class="nav-button"
+              @click="onClickToLeft"
+              v-show="minDate < currentDate"
+            >
               <img src="../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{ dateHolder }}</span>
-            <button class="nav-button" @click="onClickToRight" v-if="currentDate < maxDate">
+            <button
+              id="next"
+              class="nav-button"
+              @click="onClickToRight"
+              v-show="currentDate < maxDate"
+            >
               <img src="../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
@@ -57,14 +68,14 @@ export default {
   data() {
     return {
       weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], //Static weekdays
-      calendarDate: dayjs(this.initialDate), //Creating the calendar date
+      calendarDate: dayjs(this.saveDate), //Creating the calendar date
       daysInMonth: [] as date[], //Creating the days in month as date interface object
       firstSelectedDate: {}, //Getting first selected date as type of date interface object
-      currentDate: dayjs(this.initialDate).format('YYYY-MM-DD'), //Manipulated date
-      presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
+      currentDate: dayjs(this.saveDate).format('YYYY-MM-DD'), //Manipulated date
+      presentDate: dayjs().format('YYYY-DD-MM'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
-      saveDateHistory: this.saveDate //Saving the date history so we can see when we close calendar
+      saveDateHistory: this.saveDate, //Saving the date history so we can see when we close calendar
     }
   },
   props: {
@@ -73,7 +84,7 @@ export default {
     monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
-    initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') }
+    isDatePickerEnable: { type: Boolean }
   },
   methods: {
     checkRange() {
@@ -86,40 +97,40 @@ export default {
 
       if (this.isPastValidation) {
         if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+          //let day = this.yearRange * 365
+          this.minDate = dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD')
           this.maxDate = dayjs().format('YYYY-MM-DD')
         }
 
         if (this.monthRange !== 99) {
-          let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+          // let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
+          this.minDate = dayjs().subtract(this.monthRange, 'month').format('YYYY-MM-DD')
           this.maxDate = dayjs().format('YYYY-MM-DD')
         }
       } else if (this.isFutureValidation) {
         if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          //let day = this.yearRange * 365
+          this.maxDate = dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD')
           this.minDate = dayjs().format('YYYY-MM-DD')
         }
         if (this.monthRange !== 99) {
-          let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          // let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
+          this.maxDate = dayjs().add(this.monthRange, 'month').format('YYYY-MM-DD')
           this.minDate = dayjs().format('YYYY-MM-DD')
         }
       } else {
         if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          // let day = this.yearRange * 365
+          this.minDate = dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD')
         } else if (this.monthRange !== 99) {
-          let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          // let day = this.monthRange * Number(this.calendarDate.endOf('month').$D)
+          this.minDate = dayjs().subtract(this.monthRange, 'month').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.monthRange, 'month').format('YYYY-MM-DD')
         } else {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          //let day = this.yearRange * 365
+          this.minDate = dayjs().subtract(this.yearRange, 'year').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.yearRange, 'year').format('YYYY-MM-DD')
         }
       }
     },
@@ -146,9 +157,8 @@ export default {
           (offsetValue + endOfMonth.date()) % 7 gives the day of the week for the last day of the month
           % 7 ensures the value stays within the range of 0-6
         */
-      const endOffsetValue = (7 - ((offsetValue + endOfMonth.date()) % 7)) % 7
+      const endOffsetValue = (offsetValue + (endOfMonth.date() % 7)) % 7
 
-      let today = dayjs().format('D') //Today's date but with manipulated format in loops
       const date = dayjs(this.currentDate) //Manipulated date's in loop manipulation
 
       // Create the empty values at the beginning of the month
@@ -159,17 +169,15 @@ export default {
       // Create the days of the month
       for (let i = 0; i < endOfMonth.date(); i++) {
         const dateSender = date.startOf('month').add(i, 'day')
+        const getDate = dayjs(dateSender).format('YYYY-MM-DD')
 
         daysInWholeMonth.push({
-          date: dayjs(dateSender).format('DD-MM-YYYY'),
+          date: getDate,
           inactive: false,
           selected: false,
           textDecoration: false,
-          isToday:
-            Number(today) === i + 1 &&
-            this.currentMonth() === dayjs().format('MMMM') &&
-            this.currentYear() === dayjs().format('YYYY'),
-          number: String(i + 1),
+          isToday: this.presentDate === getDate,
+          number: i + 1,
           month: dayjs(dateSender).format('MM'),
           year: dayjs(dateSender).format('YYYY')
         })
@@ -258,6 +266,15 @@ export default {
     //This is for the current date holder
     dateHolder() {
       return this.currentMonth() + ' ' + this.currentYear()
+    }
+  },
+  watch: {
+    isDatePickerEnable(newVal) {
+      if (newVal) {
+        this.calendarDate =  dayjs(this.saveDateHistory)
+        this.currentDate = this.calendarDate.format('YYYY-MM-DD')
+        this.totalDaysInMonth()
+      }
     }
   },
   created() {

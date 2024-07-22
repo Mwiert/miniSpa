@@ -1,5 +1,6 @@
 <template>
-  <div class="smart-table-body-c" @scroll="handleScroll">
+  <div class="smart-table-body-c">
+    {{ this.hidecolumn }}
     <div class="export-buttons">
       <button class="pdf-button" @click="triggerExportPrint()">Print</button>
     </div>
@@ -13,22 +14,19 @@
               class="sort-button"
               :name="'arrow-down'"
               size="s"
-              @click="header.sortable ? sort(header.label) : null"
-            />
+              @click="header.sortable ? sort(header.label) : null" />
             <SvgIcon
               v-else-if="getSortIcon(header.label) === 'arrow-up'"
               class="sort-button"
               :name="'arrow-up'"
               size="s"
-              @click="header.sortable ? sort(header.label) : null"
-            />
+              @click="header.sortable ? sort(header.label) : null" />
             <SvgIcon
               v-else
               class="sort-button"
               :name="'arrow-selector-v'"
               size="s"
-              @click="header.sortable ? sort(header.label) : null"
-            />
+              @click="header.sortable ? sort(header.label) : null" />
           </span>
         </div>
       </div>
@@ -38,28 +36,27 @@
       <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
     </div>
 
-    <div
-      class="grid-row"
-      :class="{ rowIndex }"
-      v-for="(tableRow, rowIndex) in denemeRow"
-      :key="rowIndex"
-    >
       <div
-        v-for="(cell, cellIndex) in tableRow"
-        :key="cellIndex"
-        :class="[cell.class, 'grid-item']"
+        class="grid-row"
+        :class="{ rowIndex }"
+        v-for="(tableRow, rowIndex) in denemeRow"
+        :key="rowIndex"
       >
-        <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
-        <template v-if="typeof cell == 'object'">
-          <span :class="cell?.class" @click="handlerUrl(cell?.url)">
-            {{ cell?.text ?? '' }}
-          </span>
-        </template>
-        <template v-else>{{ cell }}</template>
+        <div
+          v-for="(cell, cellIndex) in tableRow"
+          :key="cellIndex"
+          :class="[cell.class, 'grid-item']"
+        >
+          <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
+          <template v-if="typeof cell == 'object'">
+            <span :class="cell?.class" @click="handlerUrl(cell?.url)">
+              {{ cell?.text ?? '' }}
+            </span>
+          </template>
+          <template v-else>{{ cell }}</template>
+        </div>
       </div>
     </div>
-
-    <div v-if="loading" class="loading-spinner">Loading...</div>
   </div>
 </template>
 
@@ -72,6 +69,7 @@ export default {
     tableData: Array,
     options: Object,
     activePage: Number,
+    hidecolumn: Array,
     perPage: Number,
 
     noItemsFound: {
@@ -81,7 +79,7 @@ export default {
   },
   data() {
     return {
-      tableRowData: [],
+      tableRowData: this.tableData,
       lastSortedColumn: null,
       lastSortOrder: null,
       visibleRows: [],
@@ -122,14 +120,13 @@ export default {
         this.loadVisibleRows()
       },
       deep: true
-    },
-    activePage() {
-      this.loadVisibleRows()
-    },
-    perPage() {
-      this.loadVisibleRows()
     }
   },
+
+  // created() {
+  //   //compu çağırdığımızda props olarak gelen tableData doğrudan tableRowDataya atıyoruz bu sayede tablonun verileri sayfa açıldığında direk hazır oluyor
+  //   this.tableRowData = this.tableData
+  // },
 
   methods: {
     triggerExportPrint() {
@@ -261,42 +258,8 @@ export default {
       }
     },
     updateVisibleItems() {
-      this.visibleItems = this.items.slice(0, this.selectedOption)
-    },
-    handleScroll(event) {
-      const container = event.target
-      const bottom = container.scrollHeight === container.scrollTop + container.clientHeight
-      if (bottom && !this.isFetching) {
-        this.fetchMoreData()
-      }
-    },
-    fetchMoreData() {
-      this.isFetching = true
-      setTimeout(() => {
-        const fruits = ['apple', 'grape', 'pear']
-        const animals = ['cat', 'dog', 'bird']
-        const arr = [...fruits, 'melon']
-        this.tableRowData = [...this.tableRowData, ...this.generateDummyData()]
-        this.isFetching = false
-        this.loadVisibleRows()
-      }, 1000)
-    },
-    generateDummyData() {
-      return Array.from({ length: 50 }, (_, index) => ({
-        column1: `New Row ${index + 1}`,
-        column2: `Data ${index + 1}`
-      }))
-    },
-    loadVisibleRows() {
-      const start = (this.activePage - 1) * this.perPage
-      const end = start + this.perPage
-      this.visibleRows = this.allRows.slice(start, end)
+      this.visibleItems = this.items.slice(0, this.selectedOption) // update item count on the screen
     }
-  },
-  created() {
-    //compu çağırdığımızda props olarak gelen tableData doğrudan tableRowDataya atıyoruz bu sayede tablonun verileri sayfa açıldığında direk hazır oluyor
-    this.tableRowData = this.tableData
-    this.loadVisibleRows()
   }
 }
 </script>
