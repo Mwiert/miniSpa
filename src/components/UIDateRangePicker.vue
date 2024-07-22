@@ -56,7 +56,7 @@
           :saveDate="firstSelectedDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
-          :initialDate="firstSelectedDate.date"
+          :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
           @dateSelected="handleFirstDateSelected"
         />
@@ -70,7 +70,7 @@
           :saveSecondDate="secondSelectedDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
-          :initialDate="firstSelectedDate.date"
+          :initialDate="initialDate"
           :baseInitialDates="sendInitialDates"
           :isDatePickerEnable="isMultiDatePickerEnable"
           @dateFirstSelected="handleFirstDateSelected"
@@ -224,7 +224,6 @@ export default {
         (this.sendInitialDates.secondInitialDate = this.secondSelectedDate)
     },
     handleResetInitialDates() {
-      console.log('Emit');
       this.sendInitialDates.firstInitialDate = false;
       this.sendInitialDates.secondInitialDate = false;
     },
