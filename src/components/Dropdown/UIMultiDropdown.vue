@@ -9,20 +9,9 @@
       <div v-if="isOpen" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container">
           <div v-if="searchable" class="search-content-wrapper">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search..."
-              class="ui-multi-dropdown-search"
-            />
+            <input type="text" v-model="searchQuery" placeholder="Search..." class="ui-multi-dropdown-search" />
             <span class="clear-search">
-              <SvgIcon
-                v-if="searchQuery"
-                @click.stop="clearSearch"
-                class="clear-search-img"
-                :name="'x'"
-                :size="'s'"
-              />
+              <SvgIcon v-if="searchQuery" @click.stop="clearSearch" class="clear-search-img" :name="'x'" :size="'s'" />
             </span>
           </div>
         </div>
@@ -30,25 +19,13 @@
           <span class="toggle" @click="selectAll">Select All</span>
           <span class="toggle" @click="dropAll">Drop All</span>
         </div>
-        <div
-          class="ui-multi-dropdown-content"
-          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }"
-        >
-          <div
-            v-for="(item, index) in filteredItems()"
-            :key="index"
-            class="ui-multi-dropdown-item"
-            @click.stop="selectItem(item)"
-            :class="{ selected: isSelected(item) }"
-          >
+        <div class="ui-multi-dropdown-content" :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
+          <div v-for="(item, index) in filteredItems()" :key="index" class="ui-multi-dropdown-item"
+            @click.stop="selectItem(item)" :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)" class="item-container">
               <div class="image-label-wrapper">
-                <img
-                  :src="item[urlField]"
-                  alt=""
-                  class="dropdown-item-img"
-                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
-                />
+                <img :src="item[urlField]" alt="" class="dropdown-item-img"
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
                 <span class="item-name"> {{ item[displayField] }}</span>
               </div>
 
@@ -56,12 +33,8 @@
             </div>
             <div v-else class="item-container">
               <div class="image-label-wrapper">
-                <img
-                  :src="item[urlField]"
-                  alt=""
-                  class="dropdown-item-img"
-                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
-                />
+                <img :src="item[urlField]" alt="" class="dropdown-item-img"
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
                 <span class="item-name">{{ item[displayField] }}</span>
               </div>
             </div>
@@ -163,8 +136,7 @@ export default {
     },
     dropdownListMaxHeight(): String {
       const itemHeight = 30
-      const searchBoxHeight = this.searchable ? 30 : 0
-      const maxHeight = itemHeight * this.computedDataSize + searchBoxHeight
+      const maxHeight = itemHeight * this.computedDataSize
       return `${maxHeight}px`
     },
     labelDisplay(): String {
@@ -189,6 +161,7 @@ export default {
           (selected) => selected[this.primaryKey] !== toBeDeleted[i][this.primaryKey]
         )
       }
+      this.$emit('update:modelValue', this.selectedItems)
     },
     selectAll() {
       let addedItems = this.filteredItems()
@@ -197,6 +170,7 @@ export default {
           this.selectedItems.push(addedItems[i])
         }
       }
+      this.$emit('update:modelValue', this.selectedItems)
     },
     filteredItems(): Array<any> {
       return this.dropdownItems.filter((item) =>
@@ -208,7 +182,6 @@ export default {
     },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
-        console.log(this.dropdownItems[i][this.urlField])
         if (
           this.dropdownItems[i][this.urlField] !== '' &&
           this.dropdownItems[i][this.urlField] !== undefined
