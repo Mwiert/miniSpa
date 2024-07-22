@@ -151,8 +151,8 @@ export default {
       )
     },
     isLongItem(item) {
-      if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 10) {
-        return String(item[this.displayField]).substring(0, 10) + '...'
+      if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
+        return String(item[this.displayField]).substring(0, 15) + '...'
       } else if (item[this.displayField] === undefined) return item[this.displayField]
       return String(item[this.displayField])
     },

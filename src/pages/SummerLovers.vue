@@ -5,13 +5,13 @@
       v-model="selectedEnum"
       :items="[EInternSingleComponentType]"
       :fontSize="fontSize"
-      :displayField="name"
+      displayField="name"
       urlField="imageUrl"
       :label="label"
       :dataSize="dataSize"
       searchable
       :maxVisibleItems="2"
-      :primaryKey="id"
+      primaryKey="id"
       :hasActionBox="true"
       :isMulti="!isMulti"
       :showAll="true"
@@ -21,13 +21,13 @@
       v-model="selectedEnums"
       :items="[EInternComponentType]"
       :fontSize="fontSize"
-      :displayField="name"
+      displayField="name"
       urlField="imageUrl"
       :label="label"
       :dataSize="dataSize"
       searchable
       :maxVisibleItems="2"
-      :primaryKey="id"
+      primaryKey="id"
       :hasActionBox="true"
       :isMulti="isMulti"
       :showAll="true"
@@ -37,24 +37,24 @@
       v-model="selectedPets"
       :items="pets"
       :fontSize="fontSize"
-      :displayField="name"
+      displayField="name"
       urlField="imageUrl"
       :label="label"
       :dataSize="dataSize"
       searchable
       :maxVisibleItems="2"
-      :primaryKey="id"
+      primaryKey="id"
       :hasActionBox="true" />
     <UIDropdown
       v-model="selectedItem"
       :items="items"
       :label="label"
       :fontSize="fontSize"
-      :displayField="name"
+      displayField="id"
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"
-      :primaryKey="id" />
+      primaryKey="id" />
   </div>
 </template>
 
@@ -198,8 +198,8 @@ export default {
         { id: 1, imageUrl: '', name: 'Cat', detail: 'b' }
       ],
       selectedEnums: [
-        { id: 0, name: 'UNKNOWN' },
-        { id: -1, name: 'ALL' }
+        { id: -1, name: 'ALL' },
+        { id: 0, name: 'UNKNOWN' }
       ],
       selectedEnum: { id: 0, name: 'UNKNOWN' }
     }
