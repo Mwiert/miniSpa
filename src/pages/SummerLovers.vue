@@ -1,60 +1,17 @@
 <template>
   <div></div>
   <div>
-    <UIEnumDropdown
-      v-model="selectedEnum"
-      :items="[EInternSingleComponentType]"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      :label="label"
-      :dataSize="dataSize"
-      searchable
-      maxVisibleItems="2"
-      primaryKey="id"
-      :hasActionBox="true"
-      :isMulti="!isMulti"
-      :showAll="true"
-      :showUnknown="true"
+    <UIEnumDropdown v-model="selectedEnum" :items="[EInternSingleComponentType]" :fontSize="fontSize"
+      displayField="name" urlField="imageUrl" :label="label" :dataSize="dataSize" searchable maxVisibleItems="2"
+      primaryKey="id" :hasActionBox="true" :isMulti="!isMulti" :showAll="true" :showUnknown="true"
       :enumObj="EInternSingleComponentType" />
-    <UIEnumDropdown
-      v-model="selectedEnums"
-      :items="[EInternComponentType]"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      :label="label"
-      :dataSize="dataSize"
-      searchable
-      maxVisibleItems="2"
-      primaryKey="id"
-      :hasActionBox="true"
-      :isMulti="isMulti"
-      :showAll="true"
-      :showUnknown="true"
-      :enumObj="EInternComponentType" />
-    <UIMultiDropdown
-      v-model="selectedPets"
-      :items="pets"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      :label="label"
-      :dataSize="dataSize"
-      searchable
-      maxVisibleItems="2"
-      primaryKey="id"
-      :hasActionBox="true" />
-    <UIDropdown
-      v-model="selectedItem"
-      :items="items"
-      :label="label"
-      :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
-      searchable
-      :dataSize="dataSize"
-      primaryKey="id" />
+    <UIEnumDropdown v-model="selectedEnums" :items="[EInternComponentType]" :fontSize="fontSize" displayField="name"
+      urlField="imageUrl" :label="label" :dataSize="dataSize" searchable maxVisibleItems="2" primaryKey="id"
+      :hasActionBox="true" :isMulti="isMulti" :showAll="true" :showUnknown="true" :enumObj="EInternComponentType" />
+    <UIMultiDropdown v-model="selectedPets" :items="pets" :fontSize="fontSize" displayField="name" urlField="imageUrl"
+      :label="label" :dataSize="dataSize" searchable maxVisibleItems="2" primaryKey="id" :hasActionBox="true" />
+    <UIDropdown v-model="selectedItem" :items="items" :label="label" :fontSize="fontSize" displayField="id"
+      urlField="imageUrl" searchable :dataSize="dataSize" primaryKey="id" />
   </div>
 </template>
 

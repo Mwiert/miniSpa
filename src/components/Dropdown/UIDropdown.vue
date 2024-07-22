@@ -3,55 +3,30 @@
     <div class="ui-dropdown-c-wrapper">
       <label class="label" v-if="label?.length !== 0">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
-        <span
-          :class="{ 'placeholder-text-active': !isLongItem(selectedItem) }"
-          class="placeholder-text">
+        <span :class="{ 'placeholder-text-active': !selectedItem[displayField] }" class="placeholder-text">
           {{ isLongItem(selectedItem) || placeHolder }}
         </span>
-
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
         <div class="search-container">
           <div v-if="searchable" class="search-content-wrapper">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search..."
-              class="ui-dropdown-search" />
+            <input type="text" v-model="searchQuery" placeholder="Search..." class="ui-dropdown-search" />
             <span class="clear-search">
-              <SvgIcon
-                v-if="searchQuery"
-                @click.stop="clearSearch"
-                class="clear-search-img"
-                :name="'x'"
-                :size="'s'" />
+              <SvgIcon v-if="searchQuery" @click.stop="clearSearch" class="clear-search-img" :name="'x'" :size="'s'" />
             </span>
           </div>
         </div>
-        <div
-          class="ui-dropdown-content"
-          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
-          <div
-            v-for="(item, index) in filteredItems()"
-            :key="index"
-            :ref="'item-' + index"
-            class="ui-dropdown-item"
-            @click="selectItem(item)"
-            :class="{ selected: isSelected(item) }">
+        <div class="ui-dropdown-content" :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
+          <div v-for="(item, index) in filteredItems()" :key="index" :ref="'item-' + index" class="ui-dropdown-item"
+            @click="selectItem(item)" :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)">
-              <img
-                :src="item[urlField]"
-                alt=""
-                class="dropdown-item-img"
+              <img :src="item[urlField]" alt="" class="dropdown-item-img"
                 :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
               <span>{{ isLongItem(item) }}</span>
             </div>
             <div v-else>
-              <img
-                :src="item[urlField]"
-                alt=""
-                class="dropdown-item-img"
+              <img :src="item[urlField]" alt="" class="dropdown-item-img"
                 :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
               <span>{{ isLongItem(item) }}</span>
             </div>
@@ -148,14 +123,15 @@ export default {
   methods: {
     filteredItems(): Array<any> {
       return this.dropdownItems.filter((item) =>
-        item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
+        String(item[this.displayField]).toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
     },
     isLongItem(item) {
-      if (item[this.displayField].length > 10) {
-        return item[this.displayField].substring(0, 10) + '...'
+      if ((item[this.displayField] !== undefined) && (String(item[this.displayField])).length > 10) {
+        return (String(item[this.displayField])).substring(0, 10) + '...'
       }
-      return item[this.displayField]
+      else if ((item[this.displayField] === undefined)) return (item[this.displayField])
+      return (String(item[this.displayField]))
     },
     checkItem(item) {
       return item[this.urlField] !== '' && item[this.urlField] !== undefined
