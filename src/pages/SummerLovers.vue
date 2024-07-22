@@ -1,6 +1,23 @@
 <template>
   <div>
-    <UIEnumDropdown :isMulti="isMulti" :isSingle="isSingle" :enumObj="EOdrEntity" :label="Sa" />
+    <UIEnumDropdown
+      v-model="selectedPetsForEnum"
+      :items="pets"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      :label="label"
+      :dataSize="dataSize"
+      searchable
+      maxVisibleItems="2"
+      primaryKey="id"
+      :hasActionBox="true"
+      :isMulti="isMulti"
+      :isSingle="isSingle"
+      :showAll="true"
+      :showUnknown="true"
+      :enumObj="EOdrEntity"
+    />
     <UIMultiDropdown
       v-model="selectedPets"
       :items="pets"
@@ -123,6 +140,10 @@ export default {
         detail: 'o'
       },
       selectedPets: [
+        { id: 0, imageUrl: 'https://example.com/dog.png', name: 'Dog', detail: 'a' },
+        { id: 1, imageUrl: '', name: 'Cat', detail: 'b' }
+      ],
+      selectedPetsForEnum: [
         { id: 0, imageUrl: 'https://example.com/dog.png', name: 'Dog', detail: 'a' },
         { id: 1, imageUrl: '', name: 'Cat', detail: 'b' }
       ]

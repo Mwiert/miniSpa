@@ -163,8 +163,7 @@ export default {
     },
     dropdownListMaxHeight(): String {
       const itemHeight = 30
-      const searchBoxHeight = this.searchable ? 30 : 0
-      const maxHeight = itemHeight * this.computedDataSize + searchBoxHeight
+      const maxHeight = itemHeight * this.computedDataSize
       return `${maxHeight}px`
     },
     labelDisplay(): String {
@@ -189,6 +188,7 @@ export default {
           (selected) => selected[this.primaryKey] !== toBeDeleted[i][this.primaryKey]
         )
       }
+      this.$emit('update:modelValue', this.selectedItems)
     },
     selectAll() {
       let addedItems = this.filteredItems()
@@ -197,6 +197,7 @@ export default {
           this.selectedItems.push(addedItems[i])
         }
       }
+      this.$emit('update:modelValue', this.selectedItems)
     },
     filteredItems(): Array<any> {
       return this.dropdownItems.filter((item) =>

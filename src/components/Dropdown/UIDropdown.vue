@@ -147,8 +147,8 @@ export default {
     },
     dropdownListMaxHeight(): String {
       const itemHeight = 30
-      const searchBoxHeight = this.searchable ? 30 : 0
-      const maxHeight = itemHeight * this.computedDataSize + searchBoxHeight
+
+      const maxHeight = itemHeight * this.computedDataSize
       return `${maxHeight}px`
     }
   },
