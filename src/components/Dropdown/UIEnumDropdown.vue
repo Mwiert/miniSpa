@@ -5,14 +5,14 @@
       v-model="selectedItems"
       :items="dropdownItems"
       :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
+      :displayField="displayField"
+      :urlField="urlField"
       :label="label"
       :dataSize="dataSize"
       searchable
-      maxVisibleItems="2"
-      primaryKey="id"
-      :hasActionBox="true"
+      :maxVisibleItems="maxVisibleItems"
+      :primaryKey="primaryKey"
+      :hasActionBox="hasActionBox"
       @update:modelValue="($event) => $emit('update:modelValue', $event)" />
     <UIDropdown
       v-else
@@ -20,11 +20,11 @@
       :items="dropdownItems"
       :label="label"
       :fontSize="fontSize"
-      displayField="name"
-      urlField="imageUrl"
+      :displayField="displayField"
+      :urlField="urlField"
       searchable
       :dataSize="dataSize"
-      primaryKey="id"
+      :primaryKey="primaryKey"
       @update:modelValue="($event) => $emit('update:modelValue', $event)" />
   </div>
 </template>
@@ -120,20 +120,16 @@ export default {
     getEnumFile() {
       let sortedEnumArray = Object.keys(this.enumObj)
         .map(Number)
-        .filter((key) => !isNaN(key))
+        .filter(
+          (key) =>
+            !isNaN(key) &&
+            (!isNaN(key) || (this.showAll && key == -1) || (this.showUnknown && key == 0))
+        )
         .sort()
         .map((key) => ({
           id: key,
           name: this.enumObj[key]
         }))
-
-      if (!this.showAll) {
-        sortedEnumArray = sortedEnumArray.filter((item) => item.id !== -1)
-      }
-
-      if (!this.showUnknown) {
-        sortedEnumArray = sortedEnumArray.filter((item) => item.id !== 0)
-      }
 
       return sortedEnumArray
     }

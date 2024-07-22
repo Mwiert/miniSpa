@@ -3,7 +3,7 @@
     <div class="input-wrapper">
       <input
         class="input-value"
-        :class="isFocused ? 'active': ''"
+        :class="isFocused ? 'active' : ''"
         :type="type"
         :placeholder="placeholder"
         :id="id"
@@ -14,17 +14,25 @@
         v-model="inputValue"
         @input="handleInput"
         @focus="handleFocus"
-        @blur="handleBlur"
-      />
-      <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
-      <SvgIcon v-if="icon" class="icon" :name="icon"/>
-      <SvgIcon v-if="inputValue && clearButton" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
+        @blur="handleBlur" />
+      <label v-if="label" class="label" :class="isFocused ? 'active' : ''" :for="id">
+        {{ label }}
+      </label>
+      <SvgIcon v-if="icon" class="icon" :name="icon" />
+      <SvgIcon
+        v-if="inputValue && clearButton"
+        class="clear-btn"
+        :name="'x'"
+        :size="'s'"
+        @click="clearInput" />
     </div>
+    <span v-if="errors.length" class="error">{{ errors.join(', ') }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from './SvgIcon.vue'
+import { validateInput } from '../Validations/ValidationsFunctions'
 
 export default {
   name: 'UIInput',
@@ -35,6 +43,7 @@ export default {
     return {
       inputValue: this.value,
       isFocused: false,
+      errors: []
     }
   },
   props: {
@@ -78,11 +87,24 @@ export default {
     clearButton: {
       type: Boolean,
       default: false
+    },
+    rules: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  watch: {
+    value(newVal) {
+      this.inputValue = newVal
+    },
+    inputValue(newVal) {
+      this.$emit('update:value', newVal)
+      this.validate()
     }
   },
   computed: {
     computedIcon() {
-      return this.icon || null;
+      return this.icon || null
     }
   },
   methods: {
@@ -101,9 +123,13 @@ export default {
       this.isFocused = true
     },
     handleBlur() {
-      if(this.inputValue === '') {
+      if (this.inputValue === '') {
         this.isFocused = false
       }
+      this.validate()
+    },
+    validate() {
+      this.errors = validateInput(this.inputValue, this.rules)
     }
   }
 }
@@ -127,7 +153,7 @@ export default {
     bottom: 8px;
     border: 1px solid #666666;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 
     &:hover {
       border-color: #007bff;
@@ -157,12 +183,13 @@ export default {
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      transition: transform 0.3s ease, filter 0.3s ease;
+      transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
       &:hover {
         transform: scale(1.2);
         filter: opacity(0.7);
       }
-      
     }
     .icon {
       position: absolute;
@@ -189,7 +216,13 @@ export default {
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
       }
+    }
   }
-}
+
+  .error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
 }
 </style>
