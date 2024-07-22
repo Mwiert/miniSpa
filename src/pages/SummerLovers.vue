@@ -1,15 +1,60 @@
 <template>
+  <div></div>
   <div>
-    {{ selectedEnum }}
-  </div>
-  <div>
-    <UIEnumDropdown v-model="selectedEnum" :items="EOdrEntity" :fontSize="fontSize" displayField="name"
-      urlField="imageUrl" :label="label" :dataSize="dataSize" searchable maxVisibleItems="2" primaryKey="id"
-      :hasActionBox="true" :isMulti="!isMulti" :showAll="true" :showUnknown="true" :enumObj="EOdrEntity" />
-    <UIMultiDropdown v-model="selectedPets" :items="pets" :fontSize="fontSize" displayField="name" urlField="imageUrl"
-      :label="label" :dataSize="dataSize" searchable maxVisibleItems="2" primaryKey="id" :hasActionBox="true" />
-    <UIDropdown v-model="selectedItem" :items="items" :label="label" :fontSize="fontSize" displayField="name"
-      urlField="imageUrl" searchable :dataSize="dataSize" primaryKey="id" />
+    <UIEnumDropdown
+      v-model="selectedEnum"
+      :items="EOdrEntity"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      :label="label"
+      :dataSize="dataSize"
+      searchable
+      maxVisibleItems="2"
+      primaryKey="id"
+      :hasActionBox="true"
+      :isMulti="!isMulti"
+      :showAll="true"
+      :showUnknown="true"
+      :enumObj="EInternSingleComponentType" />
+    <UIEnumDropdown
+      v-model="selectedEnums"
+      :items="EOdrEntity"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      :label="label"
+      :dataSize="dataSize"
+      searchable
+      maxVisibleItems="2"
+      primaryKey="id"
+      :hasActionBox="true"
+      :isMulti="isMulti"
+      :showAll="true"
+      :showUnknown="true"
+      :enumObj="EInternComponentType" />
+    <UIMultiDropdown
+      v-model="selectedPets"
+      :items="pets"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      :label="label"
+      :dataSize="dataSize"
+      searchable
+      maxVisibleItems="2"
+      primaryKey="id"
+      :hasActionBox="true" />
+    <UIDropdown
+      v-model="selectedItem"
+      :items="items"
+      :label="label"
+      :fontSize="fontSize"
+      displayField="name"
+      urlField="imageUrl"
+      searchable
+      :dataSize="dataSize"
+      primaryKey="id" />
   </div>
 </template>
 
@@ -17,7 +62,8 @@
 import UIEnumDropdown from '../components/Dropdown/UIEnumDropdown.vue'
 import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
-import EOdrEntity from '../enum/EOdrEntityType'
+import EInternComponentType from '../enum/EInternComponentType'
+import EInternSingleComponentType from '../enum/EInternSingleComponentType'
 export default {
   name: 'SummerLovers',
   components: {
@@ -28,7 +74,8 @@ export default {
   data() {
     return {
       isMulti: true,
-      EOdrEntity: EOdrEntity,
+      EInternComponentType: EInternComponentType,
+      EInternSingleComponentType: EInternSingleComponentType,
       pets: [
         {
           id: 0,
@@ -115,8 +162,7 @@ export default {
         { id: 0, name: 'UNKNOWN' },
         { id: -1, name: 'ALL' }
       ],
-      selectedEnum:
-        { id: 0, name: 'UNKNOWN' }
+      selectedEnum: { id: 0, name: 'UNKNOWN' }
     }
   }
 }
