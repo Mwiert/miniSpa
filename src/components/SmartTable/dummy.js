@@ -804,7 +804,7 @@ const dummy = [
       price: "2.500 €",
    },
    {
-      status:"Pending",
+      status:"nazliii",
       creationDate:"04.06.2024",
       orderId: 214810,
       market: "North Europe",

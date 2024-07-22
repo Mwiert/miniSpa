@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="17.75" viewBox="0 0 12 17.75">
+  <g id="Group_11663" data-name="Group 11663" transform="translate(-760.5 -1435.75)">
+    <path id="arrow-selector-v" d="M12,21a1,1,0,0,1-.707-.293l-5-5a1,1,0,1,1,1.414-1.414L12,18.586l4.293-4.293a1,1,0,1,1,1.414,1.414l-5,5A1,1,0,0,1,12,21Z" transform="translate(754.5 1432.5)"/>
+    <path id="arrow-selector-v-2" data-name="arrow-selector-v" d="M12,20.75a.748.748,0,0,1-.53-.22l-5-5A.75.75,0,0,1,7.53,14.47L12,18.939l4.47-4.47A.75.75,0,0,1,17.53,15.53l-5,5A.748.748,0,0,1,12,20.75Z" transform="translate(778.5 1456.5) rotate(180)" opacity="0.2"/>
+  </g>
+</svg>
