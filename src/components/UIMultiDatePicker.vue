@@ -13,7 +13,7 @@
               id="prev"
               class="nav-button"
               @click="onClickToLeft"
-              v-show="minDate < currentDate">
+              v-show="prevMonthDate > minDate">
               <img src="../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{
@@ -116,6 +116,7 @@ export default {
       secondSelectedDate: {},
       currentDate: dayjs(this.initialDate).format('YYYY-MM-DD'), //Manipulated date for left calendar
       nextMonthDate: dayjs(this.initialDate).add(1, 'month').format('YYYY-MM-DD'), //Manipulated date for right calendar
+      prevMonthDate: dayjs(this.initialDate).subtract(1, 'month').format('YYYY-MM-DD'),
       presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
@@ -156,6 +157,9 @@ export default {
             .endOf('month')
             .format('YYYY-MM-DD')
           this.maxDate = dayjs().add(1, 'month').format('YYYY-MM-DD')
+
+          console.log('minDate: ', this.minDate)
+          console.log('maxDate: ', this.maxDate)
           // geriye gittikten sonra mevcut tarihe dönerken full çizili olacak sağdaki takvimin oluşması için add(1, 'month') yaptım
           // bence mantıklı olan isPast durumunda current takviminin başlangıçta sağdaki takvimde oluşması, bu sayede add(1, 'month')'e gerek olmaz
         }
@@ -235,7 +239,7 @@ export default {
         const dateSender = date.startOf('month').add(i, 'day')
         const getDate = dayjs(dateSender).format('YYYY-MM-DD')
         const test = dayjs(dateSender).format('YYYY-MMMM-DD')
-        console.log(test)
+        // console.log(test)
 
         daysInWholeMonth.push({
           date: getDate,
@@ -264,7 +268,7 @@ export default {
     //This is for the right button to go to the next month
     onClickToRight() {
       this.nextMonthDate = this.calendarDate.add(2, 'month').format('YYYY-MM-DD')
-
+      this.prevMonthDate = this.calendarDate.format('YYYY-MM-DD')
       this.calendarDate = this.calendarDate.add(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the next month with manipulated date
@@ -277,6 +281,7 @@ export default {
     //This is for the left button to go to the next month
     onClickToLeft() {
       this.nextMonthDate = this.calendarDate.format('YYYY-MM-DD')
+      this.prevMonthDate = this.calendarDate.subtract(2, 'month').format('YYYY-MM-DD')
 
       this.calendarDate = this.calendarDate.subtract(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
@@ -549,9 +554,28 @@ export default {
     },
     linedThroughDate() {
       if (this.isPastValidation) {
-        for (let i = 0; i < this.daysInMonth.length; i++) {
+        for (let i = 0; i < this.nextMonthDays.length; i++) {
           if (
             // monthRange ay önceki tarihin solundaki günler çizilir
+            this.nextMonthDays[i].date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
+            this.nextMonthDays[i].month === dayjs(this.minDate).format('MM') &&
+            this.nextMonthDays[i].year === dayjs(this.minDate).format('YYYY') &&
+            this.nextMonthDays[i].number < dayjs(this.presentDate).date()
+          ) {
+            this.nextMonthDays[i].textDecoration = true
+          }
+
+          if (
+            // bulunulan tarihin sağındaki günler çizilir
+            this.nextMonthDays[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
+            this.nextMonthDays[i].month === dayjs(this.maxDate).subtract(1, 'month').format('MM') && // üstte maxDate'i 1 arttırmıştım (line 151)
+            this.nextMonthDays[i].year === dayjs(this.maxDate).subtract(1, 'month').format('YYYY') //
+          ) {
+            this.nextMonthDays[i].textDecoration = true
+          }
+        }
+        for (let i = 0; i < this.daysInMonth.length; i++) {
+          if (
             this.daysInMonth[i].date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
             this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
             this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') &&
@@ -561,16 +585,12 @@ export default {
           }
 
           if (
-            // bulunulan tarihin sağındaki günler çizilir
             this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
-            this.daysInMonth[i].month === dayjs(this.maxDate).subtract(1, 'month').format('MM') && // üstte maxDate'i 1 arttırmıştım (line 151)
-            this.daysInMonth[i].year === dayjs(this.maxDate).subtract(1, 'month').format('YYYY') //
+            this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
+            this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
           ) {
             this.daysInMonth[i].textDecoration = true
           }
-        }
-        for (let i = 0; i < this.nextMonthDays.length; i++) {
-          this.nextMonthDays[i].textDecoration = true
         }
       } else if (this.isFutureValidation) {
         for (let i = 0; i < this.daysInMonth.length; i++) {
@@ -602,6 +622,7 @@ export default {
         this.calendarDate = dayjs(this.saveDateHistory)
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
         this.nextMonthDate = this.calendarDate.add(1, 'month').format('YYYY-MM-DD')
+        this.prevMonthDate = this.calendarDate.subtract(1, 'month').format('YYYY-MM-DD')
         this.populdateMonthDays()
 
         this.checkDateHistory()
