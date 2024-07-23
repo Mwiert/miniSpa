@@ -25,9 +25,8 @@ export default {
           columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
           columnGap: '.5rem',
           // hiddenColumns: ['annualFee', 'email'],
-
-          itemsPerPage: 30,
-          stickyHeader: true
+          stickyHeader: true,
+          pagination: true
           // disableSorting: true
         },
         columns: [
@@ -48,7 +47,7 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     // row mapper for FlexiTable
     this.flexiTableOptions.rows = response.map((item) => {
       return {

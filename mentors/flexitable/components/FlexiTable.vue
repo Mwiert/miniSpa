@@ -1,6 +1,6 @@
 <template>
   <div class="flexi-table-c">
-    <!-- {{ flexi.options }} -->
+     {{ flexi.options }}
     <FlexiTableControls />
     <FlexiTableHeader />
     <FlexiTableBody />
@@ -22,7 +22,6 @@ export default {
       ...flexiConfig,
       ...this.flexi.options
     }
-
     //sortable Control
     if (!this.flexi.options.disableSorting) {
       const sortableParamsExist = this.flexi.columns.some((column) => column.sortable == true)
@@ -38,6 +37,8 @@ export default {
         })
       }
     }
+    
+
   },
   components: {
     FlexiTableControls,
