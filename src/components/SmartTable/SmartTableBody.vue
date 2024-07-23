@@ -31,37 +31,56 @@
         </div>
       </div>
 
-      <div v-if="NoItemFound" class="grid-row no-items-found"></div>
-      <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
-      <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
-    </div>
+      <div v-if="NoItemFound" class="grid-row no-items-found">
+        <!-- V-if ile noItemFound propumuza göre true veya false alıyoruz bunun aramasını smarttable componentimizde yapıyoruz eğer true ise alttaki satırlar render edilir false ise bu satırlar görmezden gelinip normal tablomuz oluşur-->
+        <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
+      </div>
 
-      <div
+      <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
+        <div
+          class="flexi-table-body-row-wrapper"
+          :class="{ 'remove-radius': rowObj.details?.status }">
+          <div
+            class="flexi-table-body-row"
+            :style="[gridTemplateColumns, ColumnGap]"
+            @click="handlerToggleDetails(rowobjKey)">
+            <!-- Columns -->
+            <template v-for="(col, key) in rowObj.row" :key="key" />
+          </div>
+
+          <template v-if="rowObj.details?.status">
+            <div class="flexi-table-body-detail-wrapper">
+              <component
+                :is="getAsyncComponent(rowObj.details.componentPath)"
+                v-bind="rowObj.details.props">
+              </component>
+            </div>
+          </template>
+        </div>
+      </template>
+      <!-- <div
         class="grid-row"
         :class="{ rowIndex }"
         v-for="(tableRow, rowIndex) in denemeRow"
-        :key="rowIndex"
-      >
+        :key="rowIndex">
         <div
           v-for="(cell, cellIndex) in tableRow"
           :key="cellIndex"
-          :class="[cell.class, 'grid-item']"
-        >
-          <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
-          <template v-if="typeof cell == 'object'">
-            <span :class="cell?.class" @click="handlerUrl(cell?.url)">
-              {{ cell?.text ?? '' }}
-            </span>
-          </template>
-          <template v-else>{{ cell }}</template>
-        </div>
-      </div>
+          :class="[cell.class, 'grid-item']"> -->
+      <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
+      <!-- <template v-if="typeof cell == 'object'">
+        <span :class="cell?.class" @click="handlerUrl(cell?.url)">
+          {{ cell?.text ?? '' }}
+        </span>
+      </template>
+      <template v-else>{{ cell }}</template> -->
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import dayjs from 'dayjs'
+import { defineAsyncComponent } from 'vue'
 
 export default {
   name: 'SmartTableBody',
@@ -81,9 +100,7 @@ export default {
     return {
       tableRowData: this.tableData,
       lastSortedColumn: null,
-      lastSortOrder: null,
-      visibleRows: [],
-      isFetching: false
+      lastSortOrder: null
     }
   },
   computed: {
@@ -92,9 +109,6 @@ export default {
     },
     Columns() {
       return this.options.table.columns
-    },
-    allRows() {
-      return this.tableRowData
     },
     denemeRow() {
       const currentPage = this.activePage
@@ -117,7 +131,6 @@ export default {
         if (this.lastSortedColumn) {
           this.sort(this.lastSortedColumn)
         }
-        this.loadVisibleRows()
       },
       deep: true
     }
@@ -211,6 +224,9 @@ export default {
       newPrintWindow.print()
       //newPrintWindow.close()
     },
+    handlerToggleDetails(key) {
+      this.flexi.rows[key].details.status = !this.flexi.rows[key].details.status
+    },
     getSortIcon(column: string) {
       if (this.lastSortedColumn === column) {
         return this.lastSortOrder === 'asc' ? 'arrow-down' : 'arrow-up'
@@ -268,7 +284,6 @@ export default {
 .smart-table-body-c {
   display: block;
   margin: 20px 0;
-  overflow-y: auto;
 
   .smart-table-main-grid {
     display: grid;

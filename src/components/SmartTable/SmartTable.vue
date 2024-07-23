@@ -1,6 +1,5 @@
 <template>
   <div class="smart-table-c">
-    <SmartTableHeader @search-input="handleSearchInput" />
     <SmartTableHeader
       @search-input="handleSearchInput"
       :columnOp="options.table.columns"
@@ -71,16 +70,16 @@ export default {
     handleSearchInput(value: string) {
       this.searchTerm = value
     },
-    handlerSetPage(val){
+    handlerSetPage(val) {
       this.activePage = val
     },
-    handlerSetPerPage(val){
+    handlerSetPerPage(val) {
       this.perPage = val
     },
     handlerPerPage(val) {
-      if(val == 'All'){
+      if (val == 'All') {
         this.perPage = this.filteredData.length
-      }else{
+      } else {
         this.perPage = Number(val)
       }
     },
