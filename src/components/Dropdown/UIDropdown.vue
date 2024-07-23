@@ -121,6 +121,13 @@ export default {
     dataSize: {
       // how many data will shown in the dropdown.
       type: Number
+    },
+    sortField: {
+      type: String
+    },
+    sortByAscending: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -145,10 +152,23 @@ export default {
     }
   },
   methods: {
+    sortItems(items: Array<any>): Array<any> {
+      return items.sort((a, b) => {
+        const aValue = a[this.sortField].toLowerCase()
+        const bValue = b[this.sortField].toLowerCase()
+        if (aValue < bValue) return this.sortByAscending ? -1 : 1
+        if (aValue > bValue) return this.sortByAscending ? 1 : -1
+        return 0
+      })
+    },
     filteredItems(): Array<any> {
-      return this.dropdownItems.filter((item) =>
-        String(item[this.displayField]).toLowerCase().startsWith(this.searchQuery.toLowerCase())
+      let items = this.dropdownItems.filter((item) =>
+        String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
       )
+      if (this.sortField) {
+        items = this.sortItems(items)
+      }
+      return items
     },
     isLongItem(item) {
       if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
@@ -190,8 +210,10 @@ export default {
         this.clearSearch()
 
         this.$nextTick(() => {
-          const selectedIndex = this.dropdownItems.indexOf(this.selectedItem)
+          let itemsCopy = [...this.dropdownItems].sort().reverse()
+          const selectedIndex = itemsCopy.indexOf(this.selectedItem)
           const selectedItemRef = this.$refs['item-' + selectedIndex]
+
           if (selectedItemRef && selectedItemRef[0]) {
             selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
           }
@@ -219,18 +241,13 @@ export default {
   },
   created() {
     this.isImageAvailable = this.checkImage()
-  },
-  watch: {
-    // watches the changes and updates the selectedItem.
-    value(newVal) {
-      this.selectedItem = newVal
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .ui-dropdown-c {
+  user-select: none;
   display: inline-block;
   justify-content: space-around;
   width: fit-content;

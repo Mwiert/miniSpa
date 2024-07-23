@@ -91,8 +91,8 @@ export default {
       type: Number
     },
     maxVisibleItems: {
-      type: String,
-      default: '1'
+      type: Number,
+      default: 1
     },
 
     hasActionBox: {
@@ -138,6 +138,13 @@ export default {
       // picture of the object taken here
       type: String,
       default: ''
+    },
+    sortField: {
+      type: String
+    },
+    sortByAscending: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -146,7 +153,6 @@ export default {
       searchQuery: '', // when the user input text, it comes to the searchQuery.
       selectedItems: this.modelValue, // represents the currently selected item.
       dropdownItems: this.items,
-      dropdownClass: this.className,
       isImageAvailable: false
     }
   },
@@ -193,10 +199,23 @@ export default {
       }
       this.$emit('update:modelValue', this.selectedItems)
     },
+    sortItems(items: Array<any>): Array<any> {
+      return items.sort((a, b) => {
+        const aValue = a[this.sortField].toLowerCase()
+        const bValue = b[this.sortField].toLowerCase()
+        if (aValue < bValue) return this.sortByAscending ? -1 : 1
+        if (aValue > bValue) return this.sortByAscending ? 1 : -1
+        return 0
+      })
+    },
     filteredItems(): Array<any> {
-      return this.dropdownItems.filter((item) =>
-        String(item[this.displayField]).toLowerCase().startsWith(this.searchQuery.toLowerCase())
+      let items = this.dropdownItems.filter((item) =>
+        String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
       )
+      if (this.sortField) {
+        items = this.sortItems(items)
+      }
+      return items
     },
     isLongItem(item) {
       if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
@@ -241,13 +260,28 @@ export default {
       this.dropdownItems = this.items
     },
     toggleDropdown() {
-      //Opens and closes the dropdown
       this.isOpen = !this.isOpen
-      //If dropdown is open we are getting the scrollTop location
       if (this.isOpen) {
+        this.clearSearch()
+
         this.$nextTick(() => {
-          const dropDownContent = this.$el.querySelector('.ui-multi-dropdown-content')
-          dropDownContent.scrollTop = this.scrollPosition
+          if (this.sortField && this.sortByAscending) {
+            let itemsCopy = [...this.dropdownItems].sort().reverse()
+            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
+            const selectedItemRef = this.$refs['item-' + selectedIndex]
+
+            if (selectedItemRef && selectedItemRef[0]) {
+              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+            }
+          } else if (this.sortField) {
+            let itemsCopy = [...this.dropdownItems].sort()
+            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
+            const selectedItemRef = this.$refs['item-' + selectedIndex]
+
+            if (selectedItemRef && selectedItemRef[0]) {
+              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+            }
+          }
         })
       }
 
@@ -273,13 +307,6 @@ export default {
   },
   created() {
     this.isImageAvailable = this.checkImage()
-  },
-
-  watch: {
-    // watches the changes and updates the selectedItems.
-    value(newVal) {
-      this.selectedItems = newVal
-    }
   }
 }
 </script>

@@ -13,6 +13,8 @@
       :maxVisibleItems="maxVisibleItems"
       :primaryKey="primaryKey"
       :hasActionBox="hasActionBox"
+      :sortField="sortField"
+      :sortByAscending="sortByAscending"
       @update:modelValue="($event) => $emit('update:modelValue', $event)" />
     <UIDropdown
       v-else
@@ -25,6 +27,8 @@
       searchable
       :dataSize="dataSize"
       :primaryKey="primaryKey"
+      :sortField="sortField"
+      :sortByAscending="sortByAscending"
       @update:modelValue="($event) => $emit('update:modelValue', $event)" />
   </div>
 </template>
@@ -56,8 +60,8 @@ export default {
       type: Number
     },
     maxVisibleItems: {
-      type: String,
-      default: '1'
+      type: Number,
+      default: 1
     },
 
     hasActionBox: {
@@ -107,7 +111,9 @@ export default {
     isMulti: { type: Boolean, default: false },
     enumObj: { type: Object, default: () => {} },
     showAll: { type: Boolean, default: false },
-    showUnknown: { type: Boolean, default: false }
+    showUnknown: { type: Boolean, default: false },
+    sortField: { type: String },
+    sortByAscending: { type: Boolean, default: false }
   },
   data() {
     return {
