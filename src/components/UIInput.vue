@@ -18,7 +18,12 @@
       <label v-if="label" class="label" :class="isFocused ? 'active' : ''" :for="id">
         {{ label }}
       </label>
-      <SvgIcon v-if="icon" :key="computedIcon" class="icon" :name="computedIcon" @click="togglePasswordVisibility" />
+      <SvgIcon
+        v-if="icon"
+        :key="computedIcon"
+        class="icon"
+        :name="computedIcon"
+        @click="togglePasswordVisibility" />
       <SvgIcon
         v-if="inputValue && clearButton"
         class="clear-btn"
@@ -139,11 +144,10 @@ export default {
       this.validate()
     },
     validate() {
-      this.errors = validateInput(this.inputValue, this.rules)
+      this.errors = validateInput(this.inputValue, this.rules, this.type)
     }
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

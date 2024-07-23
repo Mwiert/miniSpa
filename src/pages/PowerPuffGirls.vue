@@ -4,12 +4,14 @@
       :id="'username'"
       :label="'Email'"
       :icon="'mail'"
+      :type="'email'"
       :rules="{ required: true, email: true }"
       clearButton />
   </div>
 
   <div class="input-box">
     <UIInput
+      :type="password"
       :id="'password'"
       :label="'password'"
       :icon="'mail'"
@@ -19,6 +21,7 @@
 
   <div class="input-box">
     <UIInput
+      :type="tc"
       :id="'idNumber'"
       :label="'idNumber'"
       :icon="'mail'"
@@ -184,6 +187,7 @@ import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
+import { validateInput } from '../Validations/ValidationsFunctions'
 
 export default {
   name: 'PowerPuffGirls',
