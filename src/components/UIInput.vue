@@ -4,7 +4,7 @@
       <input
         class="input-value"
         :class="isFocused ? 'active' : ''"
-        :type="type"
+        :type="isPassword ? (showPassword ? 'text' : 'password') : text"
         :placeholder="placeholder"
         :id="id"
         :label="label"
@@ -18,7 +18,7 @@
       <label v-if="label" class="label" :class="isFocused ? 'active' : ''" :for="id">
         {{ label }}
       </label>
-      <SvgIcon v-if="icon" class="icon" :name="icon" />
+      <SvgIcon v-if="icon" :key="computedIcon" class="icon" :name="computedIcon" @click="togglePasswordVisibility" />
       <SvgIcon
         v-if="inputValue && clearButton"
         class="clear-btn"
@@ -41,6 +41,7 @@ export default {
   },
   data() {
     return {
+      showPassword: false,
       inputValue: this.value,
       isFocused: false,
       errors: []
@@ -103,11 +104,20 @@ export default {
     }
   },
   computed: {
+    isPassword() {
+      return this.id === 'password'
+    },
     computedIcon() {
-      return this.icon || null
+      if (this.isPassword) {
+        return this.showPassword ? 'eye' : 'eye-off'
+      }
+      return this.icon
     }
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword
+    },
     updateValue(newValue: String) {
       this.$emit('update:value', newValue)
     },
@@ -133,6 +143,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

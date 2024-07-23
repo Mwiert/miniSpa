@@ -184,7 +184,6 @@ import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
-import { isRequired, isTc } from '../components/Validations/ValidatorHelpers'
 
 export default {
   name: 'PowerPuffGirls',
