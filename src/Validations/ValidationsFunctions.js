@@ -1,32 +1,62 @@
-import {
-  isEmail,
-  isRequired,
-  isMinLength,
-  isMaxLength,
-  isTc,
-  isNumber
-} from '../Validations/ValidationsHelpers'
+import '../Validations/ValidationsHelpers'
 
-export function validateInput(value, rules) {
+export function validateInput(value, rules, type) {
   const errors = []
-  if (rules.email && !isEmail(value)) {
-    errors.push('email formati hatali')
-  }
-  if (rules.required && !isRequired(value)) {
-    errors.push('bu alan zorunludur')
-  }
-  if (rules.minLength && !isMinLength(value, rules.minLength)) {
-    errors.push(`bu alan en az ${rules.minLength} karakter olmalıdır`)
-  }
-  if (rules.maxLength && !isMaxLength(value, rules.maxLength)) {
-    errors.push(`bu alan en fazla ${rules.maxLength} karakter olmalıdır`)
-  }
-  if (rules.tc && !isTc(value)) {
-    if (!value.isNumber) {
-      errors.push('tc kimlik numarası sadece rakamlardan oluşmalıdır')
+  if (type === 'email') {
+    if (rules.email && !value.isEmail()) {
+      errors.push('email formati hatali')
     }
-    errors.push('tc kimlik numarası 11 haneli olmalıdır')
+    if (rules.required && !value.isRequired()) {
+      errors.push('bu alan zorunludur')
+    }
   }
-
+  if (type === 'password') {
+    if (rules.password && !value.isPassword()) {
+      errors.push('password formati hatali')
+    }
+    if (rules.required && !value.isRequired()) {
+      errors.push('bu alan zorunludur')
+    }
+  }
+  if (type === 'phone') {
+    if (rules.phone && !value.isPhone()) {
+      errors.push('phone formati hatali')
+    }
+    if (rules.required && !value.isRequired()) {
+      errors.push('bu alan zorunludur')
+    }
+  }
+  if (type === 'tc') {
+    if (rules.tc && !value.isTc()) {
+      errors.push('tc formati hatali')
+    }
+    if (rules.required && !value.isRequired()) {
+      errors.push('bu alan zorunludur')
+    }
+  }
+  if (type === 'date') {
+    if (rules.date && !value.isDate()) {
+      errors.push('date formati hatali')
+    }
+    if (rules.required && !value.isRequired()) {
+      errors.push('bu alan zorunludur')
+    }
+  }
+  if (type === 'number') {
+    if (rules.number && !value.isNumber()) {
+      errors.push('number formati hatali')
+    }
+    if (rules.required && !value.isRequired()) {
+      errors.push('bu alan zorunludur')
+    }
+  }
+  if (type === 'text') {
+    if (rules.text && !value.isAlphaNumericWithSpaces()) {
+      errors.push('text formati hatali')
+    }
+    if (rules.required && !value.isRequired()) {
+      errors.push('bu alan zorunludur')
+    }
+  }
   return errors
 }
