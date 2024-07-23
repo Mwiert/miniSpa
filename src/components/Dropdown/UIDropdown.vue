@@ -169,8 +169,10 @@ export default {
         items = this.sortItems(items)
       }
       if (this.selectedItem) {
-        items = items.filter((item) => item[this.primaryKey] !== this.selectedItem[this.primaryKey])
-        items = [this.selectedItem, ...items]
+        items = [
+          this.selectedItem,
+          ...this.dropdownItems.filter((selected) => !this.isSelected(selected))
+        ]
       }
 
       return items
@@ -216,10 +218,10 @@ export default {
 
         this.$nextTick(() => {
           let itemsCopy = [...this.dropdownItems].sort().reverse()
-          itemsCopy = itemsCopy.filter(
-            (item) => item[this.primaryKey] !== this.selectedItem[this.primaryKey]
-          )
-          itemsCopy = [this.selectedItem, ...itemsCopy]
+          itemsCopy = [
+            this.selectedItem,
+            ...this.dropdownItems.filter((selected) => !this.isSelected(selected))
+          ]
           const selectedIndex = itemsCopy.findIndex((item) => this.isSelected(item))
           const selectedItemRef = this.$refs['item-' + selectedIndex]
 
