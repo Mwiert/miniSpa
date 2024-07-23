@@ -200,13 +200,16 @@ export default {
       this.$emit('update:modelValue', this.selectedItems)
     },
     sortItems(items: Array<any>): Array<any> {
-      return items.sort((a, b) => {
-        const aValue = a[this.sortField].toLowerCase()
-        const bValue = b[this.sortField].toLowerCase()
-        if (aValue < bValue) return this.sortByAscending ? -1 : 1
-        if (aValue > bValue) return this.sortByAscending ? 1 : -1
-        return 0
-      })
+      if (this.sortField === undefined) return items
+      else {
+        return items.sort((a, b) => {
+          const aValue = a[this.sortField].toLowerCase()
+          const bValue = b[this.sortField].toLowerCase()
+          if (aValue < bValue) return this.sortByAscending ? -1 : 1
+          if (aValue > bValue) return this.sortByAscending ? 1 : -1
+          return 0
+        })
+      }
     },
     createItemDropdown() {
       return this.dropdownItems.filter((item) =>

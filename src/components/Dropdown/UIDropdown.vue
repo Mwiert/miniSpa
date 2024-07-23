@@ -153,13 +153,16 @@ export default {
   },
   methods: {
     sortItems(items: Array<any>): Array<any> {
-      return items.sort((a, b) => {
-        const aValue = a[this.sortField].toLowerCase()
-        const bValue = b[this.sortField].toLowerCase()
-        if (aValue < bValue) return this.sortByAscending ? -1 : 1
-        if (aValue > bValue) return this.sortByAscending ? 1 : -1
-        return 0
-      })
+      if (this.sortField === undefined) return items
+      else {
+        return items.sort((a, b) => {
+          const aValue = a[this.sortField].toLowerCase()
+          const bValue = b[this.sortField].toLowerCase()
+          if (aValue < bValue) return this.sortByAscending ? -1 : 1
+          if (aValue > bValue) return this.sortByAscending ? 1 : -1
+          return 0
+        })
+      }
     },
     createItemDropdown() {
       return this.dropdownItems.filter((item) =>
@@ -167,23 +170,7 @@ export default {
       )
     },
     filteredItems(): Array<any> {
-      let items = this.createItemDropdown()
-
-      if (this.sortField !== undefined) {
-        items = this.sortItems(items)
-      }
-
-      if (this.selectedItem && this.selectedItem[this.primaryKey] !== undefined) {
-        items = items.filter((item) => item[this.primaryKey] !== this.selectedItem[this.primaryKey])
-
-        let selectedItemMatchesSearch = this.createItemDropdown()
-
-        if (selectedItemMatchesSearch || this.searchQuery === '') {
-          items = [this.selectedItem, ...items]
-        }
-      }
-
-      return items
+      return this.createItemDropdown()
     },
     isLongItem(item) {
       if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
@@ -225,14 +212,8 @@ export default {
         this.clearSearch()
 
         this.$nextTick(() => {
-          let itemsCopy = [...this.dropdownItems].sort().reverse()
-          itemsCopy = [
-            this.selectedItem,
-            ...this.dropdownItems.filter((selected) => !this.isSelected(selected))
-          ]
-          const selectedIndex = itemsCopy.findIndex((item) => this.isSelected(item))
+          const selectedIndex = this.dropdownItems.indexOf(this.selectedItem)
           const selectedItemRef = this.$refs['item-' + selectedIndex]
-
           if (selectedItemRef && selectedItemRef[0]) {
             selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
           }
