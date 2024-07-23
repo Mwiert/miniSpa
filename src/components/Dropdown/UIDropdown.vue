@@ -161,26 +161,28 @@ export default {
         return 0
       })
     },
-    filteredItems(): Array<any> {
-      let items = this.dropdownItems.filter((item) =>
+    createItemDropdown() {
+      return this.dropdownItems.filter((item) =>
         String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
       )
+    },
+    filteredItems(): Array<any> {
+      let items = this.createItemDropdown()
 
       if (this.sortField !== undefined) {
         items = this.sortItems(items)
       }
-      if (this.searchQuery === '') {
-        if (this.selectedItem && this.selectedItem[this.primaryKey] !== undefined) {
-          items = items.filter(
-            (item) => item[this.primaryKey] !== this.selectedItem[this.primaryKey]
-          )
-          if (this.sortByAscending) {
-            items = [this.selectedItem, ...items]
-          } else {
-            items.push(this.selectedItem)
-          }
+
+      if (this.selectedItem && this.selectedItem[this.primaryKey] !== undefined) {
+        items = items.filter((item) => item[this.primaryKey] !== this.selectedItem[this.primaryKey])
+
+        let selectedItemMatchesSearch = this.createItemDropdown()
+
+        if (selectedItemMatchesSearch || this.searchQuery === '') {
+          items = [this.selectedItem, ...items]
         }
       }
+
       return items
     },
     isLongItem(item) {

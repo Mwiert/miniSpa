@@ -208,32 +208,46 @@ export default {
         return 0
       })
     },
-    generateItems() {
+    createItemDropdown() {
       return this.dropdownItems.filter((item) =>
         String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
       )
     },
     filteredItems(): Array<any> {
-      let items = this.generateItems()
+      let items = this.createItemDropdown()
 
       if (this.sortField !== undefined) {
         items = this.sortItems(items)
       }
-      if (this.searchQuery === '') {
-        if (this.selectedItems.length > 0) {
-          items = items.filter(
-            (item) =>
-              !this.selectedItems.some(
-                (selectedItem) => item[this.primaryKey] === selectedItem[this.primaryKey]
-              )
-          )
 
-          if (this.sortByAscending) {
-            items = [...this.selectedItems, ...items]
-          } else {
-            items.push = this.selectedItems
-          }
-        }
+      // Filtering items based on the search query by checking if the displayField includes the search query
+      let filteredItems = items.filter((item) =>
+        String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
+
+      if (this.selectedItems.length > 0) {
+        // Separate selected items that match the search query or when there's no search query
+        let selectedItemsMatchingSearch = this.selectedItems.filter(
+          (selectedItem) =>
+            this.searchQuery === '' ||
+            String(selectedItem[this.displayField])
+              .toLowerCase()
+              .includes(this.searchQuery.toLowerCase())
+        )
+
+        // Remove selected items from the filtered list to avoid duplication
+        filteredItems = filteredItems.filter(
+          (item) =>
+            !this.selectedItems.some(
+              (selectedItem) => item[this.primaryKey] === selectedItem[this.primaryKey]
+            )
+        )
+
+        // Add the selectedItemsMatchingSearch to the top of the list
+        items = [...selectedItemsMatchingSearch, ...filteredItems]
+      } else {
+        // If no items are selected, just use the filtered list
+        items = filteredItems
       }
 
       return items
