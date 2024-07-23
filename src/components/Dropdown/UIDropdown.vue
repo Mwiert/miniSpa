@@ -121,6 +121,13 @@ export default {
     dataSize: {
       // how many data will shown in the dropdown.
       type: Number
+    },
+    sortField: {
+      type: String
+    },
+    sortByAscending: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -145,10 +152,25 @@ export default {
     }
   },
   methods: {
-    filteredItems(): Array<any> {
+    sortItems(items: Array<any>): Array<any> {
+      if (this.sortField === undefined) return items
+      else {
+        return items.sort((a, b) => {
+          const aValue = a[this.sortField].toLowerCase()
+          const bValue = b[this.sortField].toLowerCase()
+          if (aValue < bValue) return this.sortByAscending ? -1 : 1
+          if (aValue > bValue) return this.sortByAscending ? 1 : -1
+          return 0
+        })
+      }
+    },
+    createItemDropdown() {
       return this.dropdownItems.filter((item) =>
-        String(item[this.displayField]).toLowerCase().startsWith(this.searchQuery.toLowerCase())
+        String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
       )
+    },
+    filteredItems(): Array<any> {
+      return this.createItemDropdown()
     },
     isLongItem(item) {
       if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
@@ -219,18 +241,13 @@ export default {
   },
   created() {
     this.isImageAvailable = this.checkImage()
-  },
-  watch: {
-    // watches the changes and updates the selectedItem.
-    value(newVal) {
-      this.selectedItem = newVal
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .ui-dropdown-c {
+  user-select: none;
   display: inline-block;
   justify-content: space-around;
   width: fit-content;
