@@ -399,6 +399,20 @@ export default {
       })
       this.$emit('resetBaseInitialDates')
     },
+    emitResetSecondDates() {
+      this.daysInMonth.forEach((day) => {
+        if (day.secondInitialDate) {
+          day.secondInitialDate = false
+        }
+      })
+
+      this.nextMonthDays.forEach((day) => {
+        if (day.secondInitialDate) {
+          day.secondInitialDate = false
+        }
+      })
+      this.$emit('resetBaseSecondDates')
+    },
     checkDateHistory() {
       //Checking the date history and setting the selected date
       for (let i = 0; i < this.daysInMonth.length; i++) {
@@ -560,7 +574,9 @@ export default {
     },
     linedThroughDate() {
       if (this.isPastValidation) {
-        this.emitResetInitialDates()
+        this.emitResetSecondDates()
+        this.secondSelectedDate.selected = false
+        this.emitDate('dateSecondSelected', { date: '', inactive: true, isToday: false })
         this.deactivateAllBetween()
         for (let i = 0; i < this.nextMonthDays.length; i++) {
           if (
