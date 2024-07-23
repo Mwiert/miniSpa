@@ -24,25 +24,30 @@ export default {
         options: {
           columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
           columnGap: '.5rem',
-          // hiddenColumns: ['annualFee', 'email'],
+
+          // hiddenColumns: ['annualFee', 'city'],
+          // dropdownHiddenColumns: [
+          //   { id: 11, name: 'Annual Fee', label: 'annualFee' },
+          //   { id: 8, name: 'City', label: 'city' }
+          // ],
 
           itemsPerPage: 30,
           stickyHeader: true
           // disableSorting: true
         },
         columns: [
-          { name: '#', label: 'id' },
-          { name: 'Status', label: 'status' },
-          { name: 'Name ', label: 'nameSurname' },
-          { name: 'Student ID', label: 'studentNumber' },
-          { name: 'Class', label: 'class' },
-          { name: 'Birthdate', label: 'birthDate', type: 'date' },
-          { name: 'Gender', label: 'gender' },
-          { name: 'City', label: 'city' },
-          { name: 'Department', label: 'department' },
-          { name: 'GPA', label: 'gpa', class: 'txt-right ' },
-          { name: 'Annual Fee', label: 'annualFee', class: 'txt-right ' },
-          { name: 'Email Adress', label: 'email' }
+          { id: 1, name: '#', label: 'id' },
+          { id: 2, name: 'Status', label: 'status' },
+          { id: 3, name: 'Name ', label: 'nameSurname' },
+          { id: 4, name: 'Student ID', label: 'studentNumber' },
+          { id: 5, name: 'Class', label: 'class' },
+          { id: 6, name: 'Birthdate', label: 'birthDate', type: 'date' },
+          { id: 7, name: 'Gender', label: 'gender' },
+          { id: 8, name: 'City', label: 'city' },
+          { id: 9, name: 'Department', label: 'department' },
+          { id: 10, name: 'GPA', label: 'gpa', class: 'txt-right ' },
+          { id: 11, name: 'Annual Fee', label: 'annualFee', class: 'txt-right ' },
+          { id: 12, name: 'Email Adress', label: 'email' }
         ],
         rows: []
       }
