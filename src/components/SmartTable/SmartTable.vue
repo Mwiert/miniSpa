@@ -5,24 +5,22 @@
       :columnOp="options.table.columns"
       @column-hide="handleColumnhide"
       @per-page="handlerPerPage"
-      :options="options.options.header.perPageOptions"
-    />
+      :options="options.options.header.perPageOptions" />
     <!-- Header kısmı filters ve searchbar'ı içerir v-on ile emit ettiğimiz değerleri alıyoruz-->
 
     <SmartTableBody
       :tableData="filteredData"
       :options="options"
       :activePage="activePage"
-      :hidecolumn="hidecol"
+      :hidecolumn="options.options.hiddencolumns"
+      :deneme="hidecol"
       :perPage="perPage"
-      ref="pinkpanthers"
-    />
+      ref="pinkpanthers" />
     <!-- noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz -->
 
     <SmartTableFooter
       @update:currentPage="handlerSetPage"
-      @update:currentPerPage="handlerSetPerPage"
-    />
+      @update:currentPerPage="handlerSetPerPage" />
     <!-- Footer kısmı pagination içerir -->
   </div>
 </template>
@@ -73,16 +71,16 @@ export default {
     handleSearchInput(value: string) {
       this.searchTerm = value
     },
-    handlerSetPage(val){
+    handlerSetPage(val) {
       this.activePage = val
     },
-    handlerSetPerPage(val){
+    handlerSetPerPage(val) {
       this.perPage = val
     },
     handlerPerPage(val) {
-      if(val == 'All'){
+      if (val == 'All') {
         this.perPage = this.filteredData.length
-      }else{
+      } else {
         this.perPage = Number(val)
       }
     },
