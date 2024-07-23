@@ -165,16 +165,22 @@ export default {
       let items = this.dropdownItems.filter((item) =>
         String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
       )
-      if (this.sortField) {
+
+      if (this.sortField !== undefined) {
         items = this.sortItems(items)
       }
-      if (this.selectedItem) {
-        items = [
-          this.selectedItem,
-          ...this.dropdownItems.filter((selected) => !this.isSelected(selected))
-        ]
+      if (this.searchQuery === '') {
+        if (this.selectedItem && this.selectedItem[this.primaryKey] !== undefined) {
+          items = items.filter(
+            (item) => item[this.primaryKey] !== this.selectedItem[this.primaryKey]
+          )
+          if (this.sortByAscending) {
+            items = [this.selectedItem, ...items]
+          } else {
+            items.push(this.selectedItem)
+          }
+        }
       }
-
       return items
     },
     isLongItem(item) {
