@@ -5,11 +5,9 @@
       <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
         <span
           :class="{ 'placeholder-text-active': !selectedItem[displayField] }"
-          class="placeholder-text"
-        >
-          {{ selectedItem[displayField] || placeHolder }}
+          class="placeholder-text">
+          {{ isLongItem(selectedItem) || placeHolder }}
         </span>
-
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
@@ -19,48 +17,42 @@
               type="text"
               v-model="searchQuery"
               placeholder="Search..."
-              class="ui-dropdown-search"
-            />
+              class="ui-dropdown-search" />
             <span class="clear-search">
               <SvgIcon
                 v-if="searchQuery"
                 @click.stop="clearSearch"
                 class="clear-search-img"
                 :name="'x'"
-                :size="'s'"
-              />
+                :size="'s'" />
             </span>
           </div>
         </div>
         <div
           class="ui-dropdown-content"
-          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }"
-        >
+          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
           <div
             v-for="(item, index) in filteredItems()"
             :key="index"
             :ref="'item-' + index"
             class="ui-dropdown-item"
             @click="selectItem(item)"
-            :class="{ selected: isSelected(item) }"
-          >
-            <div v-if="this.isSelected(item)">
+            :class="{ selected: isSelected(item) }">
+            <div v-if="this.isSelected(item)" class="image-label-wrapper">
               <img
                 :src="item[urlField]"
                 alt=""
                 class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
-              />
-              <span>{{ item[displayField] }}</span>
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
+              <span>{{ isLongItem(item) }}</span>
             </div>
-            <div v-else>
+            <div v-else class="image-label-wrapper">
               <img
                 :src="item[urlField]"
                 alt=""
                 class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }"
-              />
-              <span>{{ item[displayField] }}</span>
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
+              <span>{{ isLongItem(item) }}</span>
             </div>
           </div>
         </div>
@@ -147,23 +139,32 @@ export default {
     },
     dropdownListMaxHeight(): String {
       const itemHeight = 30
-      const searchBoxHeight = this.searchable ? 30 : 0
-      const maxHeight = itemHeight * this.computedDataSize + searchBoxHeight
+
+      const maxHeight = itemHeight * this.computedDataSize
       return `${maxHeight}px`
     }
   },
   methods: {
     filteredItems(): Array<any> {
       return this.dropdownItems.filter((item) =>
-        item[this.displayField].toLowerCase().startsWith(this.searchQuery.toLowerCase())
+        String(item[this.displayField]).toLowerCase().startsWith(this.searchQuery.toLowerCase())
       )
     },
+    isLongItem(item) {
+      if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
+        return String(item[this.displayField]).substring(0, 15) + '...'
+      } else if (item[this.displayField] === undefined) return item[this.displayField]
+      return String(item[this.displayField])
+    },
     checkItem(item) {
-      return item[this.urlField] !== ''
+      return item[this.urlField] !== '' && item[this.urlField] !== undefined
     },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
-        if (this.dropdownItems[i][this.urlField] !== '') {
+        if (
+          this.dropdownItems[i][this.urlField] !== '' &&
+          this.dropdownItems[i][this.urlField] !== undefined
+        ) {
           return true
         }
       }
@@ -174,12 +175,12 @@ export default {
     },
 
     selectItem(item) {
-      if (this.selectedItem === item) {
+      if (this.isSelected(item)) {
         this.selectedItem = {}
       } else {
         this.selectedItem = item
       }
-      this.$emit('update:modelValue', item)
+      this.$emit('update:modelValue', this.selectedItem)
       this.isOpen = false
       this.dropdownItems = this.items
     },
@@ -234,11 +235,13 @@ export default {
   justify-content: space-around;
   width: fit-content;
   padding: 10px;
+
   .ui-dropdown-c-wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
     width: fit-content;
+
     .label {
       display: flex;
       justify-content: center;
@@ -277,6 +280,7 @@ export default {
           font-weight: normal;
         }
       }
+
       .arrow {
         padding: 5px;
 
@@ -301,6 +305,7 @@ export default {
       overflow-y: auto;
       z-index: 1000;
       box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
+
       .search-container {
         background-color: #fff;
         align-items: center;
@@ -322,6 +327,7 @@ export default {
             padding: 10px;
             border-radius: 10px;
             border: none;
+
             &:focus {
               outline: none;
             }
@@ -339,6 +345,7 @@ export default {
               cursor: pointer;
               width: 1rem;
               height: 1rem;
+
               &:hover {
                 filter: opacity(0.5);
               }
@@ -356,24 +363,32 @@ export default {
           padding: 8px;
           cursor: pointer;
           transition: background-color 0.3s;
+          justify-content: start;
 
           &:hover {
             background-color: #f3f3f3;
           }
+
           &.selected {
             text-shadow: 0 0 0.75px black;
           }
-          .dropdown-item-img {
-            position: static;
-            width: 0.75rem;
-            height: 0.75rem;
-            padding-right: 10px;
-            display: none;
-            &.isVisible {
-              display: inline-block;
-            }
-            &.visibleIcon {
-              visibility: hidden;
+          .image-label-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            .dropdown-item-img {
+              width: 0.75rem;
+              height: 0.75rem;
+              padding-right: 10px;
+              display: none;
+
+              &.isVisible {
+                display: inline-block;
+              }
+
+              &.visibleIcon {
+                visibility: hidden;
+              }
             }
           }
         }

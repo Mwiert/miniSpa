@@ -3,12 +3,30 @@
     <UIInput
       :id="'username'"
       :label="'Email'"
-      :maxLength="70"
-      :minLength="3"
       :icon="'mail'"
-      clearButton
-    />
+      :rules="{ required: true, email: true }"
+      clearButton />
   </div>
+
+  <div class="input-box">
+    <UIInput
+      :id="'password'"
+      :label="'password'"
+      :icon="'mail'"
+      :rules="{ required: true, minLength: 10 }"
+      clearButton />
+  </div>
+
+  <div class="input-box">
+    <UIInput
+      :id="'idNumber'"
+      :label="'idNumber'"
+      :icon="'mail'"
+      :rules="{ required: true, tc: true }"
+      clearButton />
+  </div>
+  <!-- <button @click="submitForm">Submit</button> -->
+
   <div class="button-c">
     <!-- UIButton component instances -->
     <UIButton
@@ -16,8 +34,7 @@
       :isSpinnerActive="loadingStates.home.isLoading"
       :isDisabled="loadingStates.home.isDisabled"
       @click="setLoadingState('home')"
-      routerUrl="/"
-    />
+      routerUrl="/" />
     <UIButton
       className="flight"
       text="Flight"
@@ -25,8 +42,7 @@
       :size="'small'"
       :isSpinnerActive="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
-      @click="setLoadingState('flight')"
-    />
+      @click="setLoadingState('flight')" />
     <UIButton
       className="hotel"
       text="Hotel"
@@ -34,8 +50,7 @@
       :iconSize="'s'"
       :isSpinnerActive="loadingStates.hotel.isLoading"
       :isDisabled="loadingStates.hotel.isDisabled"
-      @click="setLoadingState('hotel')"
-    />
+      @click="setLoadingState('hotel')" />
 
     <!-- Since the class name is not added, the default class will be used. -->
     <UIButton
@@ -43,8 +58,7 @@
       :icon="'refresh'"
       :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
-      @click="setLoadingState('default')"
-    />
+      @click="setLoadingState('default')" />
 
     <UIButton
       className="flight outline"
@@ -52,23 +66,20 @@
       :isSpinnerActive="loadingStates.flightOutline.isLoading"
       :icon="'refresh'"
       :isDisabled="loadingStates.flightOutline.isDisabled"
-      @click="setLoadingState('flightOutline')"
-    />
+      @click="setLoadingState('flightOutline')" />
 
     <UIButton
       className="hotel outline"
       text="Hotel"
       :isSpinnerActive="loadingStates.hotelOutline.isLoading"
       :isDisabled="loadingStates.hotelOutline.isDisabled"
-      @click="setLoadingState('hotelOutline')"
-    />
+      @click="setLoadingState('hotelOutline')" />
 
     <UIButton
       text="Disabled"
       :isSpinnerActive="loadingStates.disabledButton.isLoading"
       :isDisabled="loadingStates.disabledButton.isDisabled"
-      @click="setLoadingState('disabledButton')"
-    />
+      @click="setLoadingState('disabledButton')" />
 
     <!-- UIToggle component instances -->
     <div>
@@ -77,8 +88,7 @@
         :label="'Powerpuff Girls'"
         :checked="powerpuffGirls.checked"
         :disabled="powerpuffGirls.disabled"
-        @switchToggle="toggleChange1"
-      />
+        @switchToggle="toggleChange1" />
     </div>
 
     <div>
@@ -87,8 +97,7 @@
         :label="'Time Benders'"
         :checked="timeBenders.checked"
         :disabled="timeBenders.disabled"
-        @switchToggle="toggleChange2"
-      />
+        @switchToggle="toggleChange2" />
     </div>
 
     <div>
@@ -97,8 +106,7 @@
         :label="'Summer Lovers'"
         :checked="summerLovers.checked"
         :disabled="summerLovers.disabled"
-        @switchToggle="toggleChange3"
-      />
+        @switchToggle="toggleChange3" />
     </div>
 
     <div>
@@ -107,8 +115,7 @@
         :label="'Pink Panthers'"
         :checked="pinkPanthers.checked"
         :disabled="pinkPanthers.disabled"
-        @switchToggle="toggleChange4"
-      />
+        @switchToggle="toggleChange4" />
     </div>
 
     <!-- UIRadioButton component instances  -->
@@ -121,8 +128,7 @@
         :label="radio.label"
         :value="radio.value"
         v-model="pickedRadioHotel"
-        :disabled="radio.disabled"
-      />
+        :disabled="radio.disabled" />
     </div>
     <!--Radio Buttons for flight-->
     <div class="flight-radio-buttons">
@@ -134,8 +140,7 @@
         :value="radio.value"
         after
         :disabled="radio.disabled"
-        v-model="pickedRadioFlight"
-      />
+        v-model="pickedRadioFlight" />
     </div>
 
     <!-- UICheckBox component instances -->
@@ -147,8 +152,7 @@
         :className="'hotel'"
         :label="checkbox.label"
         :disabled="checkbox.disabled"
-        @takeCheckedInfo="takeCheckedInfo"
-      />
+        @takeCheckedInfo="takeCheckedInfo" />
     </div>
 
     <!-- Checkboxes for flight -->
@@ -160,8 +164,7 @@
         :disabled="checkbox.disabled"
         :label="checkbox.label"
         after
-        @takeCheckedInfo="takeCheckedInfo"
-      />
+        @takeCheckedInfo="takeCheckedInfo" />
     </div>
 
     <!-- Example of a disabled checkbox -->
@@ -171,10 +174,8 @@
       :after="false"
       :disabled="true"
       :name="'disabled'"
-      :id="'deneme'"
-    />
+      :id="'deneme'" />
   </div>
-  
 </template>
 
 <script lang="ts">
@@ -183,6 +184,7 @@ import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
+import { isRequired, isTc } from '../components/Validations/ValidatorHelpers'
 
 export default {
   name: 'PowerPuffGirls',
@@ -195,10 +197,11 @@ export default {
   },
   data() {
     return {
+      inputValue: this.value,
+      email: '',
+      password: '',
+      idNumber: '',
 
-      inputValue:this.value,
-
-      
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
         home: { isLoading: false, isDisabled: false }, // Initial state for home button
