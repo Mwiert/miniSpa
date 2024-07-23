@@ -12,10 +12,12 @@
       searchable
       :maxVisibleItems="2"
       primaryKey="id"
+      :sortField="sortField"
       :hasActionBox="true"
       :isMulti="!isMulti"
       :showAll="true"
       :showUnknown="true"
+      :sortByAscending="true"
       :enumObj="EInternSingleComponentType" />
     <UIEnumDropdown
       v-model="selectedEnums"
@@ -24,6 +26,7 @@
       displayField="name"
       urlField="imageUrl"
       :label="label"
+      :sortField="sortField"
       :dataSize="dataSize"
       searchable
       :maxVisibleItems="2"
@@ -32,28 +35,33 @@
       :isMulti="isMulti"
       :showAll="true"
       :showUnknown="true"
+      :sortByAscending="true"
       :enumObj="EInternComponentType" />
     <UIMultiDropdown
       v-model="selectedPets"
       :items="pets"
       :fontSize="fontSize"
       displayField="name"
+      :sortField="sortField"
       urlField="imageUrl"
       :label="label"
       :dataSize="dataSize"
       searchable
       :maxVisibleItems="2"
       primaryKey="id"
+      :sortByAscending="true"
       :hasActionBox="true" />
     <UIDropdown
       v-model="selectedItem"
       :items="items"
       :label="label"
       :fontSize="fontSize"
-      displayField="id"
+      displayField="name"
+      :sortField="sortField"
       urlField="imageUrl"
       searchable
       :dataSize="dataSize"
+      :sortByAscending="true"
       primaryKey="id" />
   </div>
 </template>
@@ -73,6 +81,7 @@ export default {
   },
   data() {
     return {
+      sortField: 'name',
       isMulti: true,
       EInternComponentType: EInternComponentType,
       EInternSingleComponentType: EInternSingleComponentType,
@@ -136,7 +145,7 @@ export default {
           id: 'THY',
           imageUrl:
             'https://seeklogo.com/images/T/turkish-airlines-logo-25BACC2D0C-seeklogo.com.png',
-          name: 'Türk Hava Yollari',
+          name: 'Türk Hava Yolları',
           detail: 'o'
         },
         {
@@ -156,7 +165,7 @@ export default {
           id: 'CRL',
           imageUrl:
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCSz2Zi2rJUYXY6S7013DGYqPDTL-jxOs5MQ&s',
-          name: 'Corellon',
+          name: 'Corendon',
           detail: 's'
         }
       ],
@@ -189,8 +198,8 @@ export default {
       },
       selectedItem: {
         id: 'THY',
-        imageUrl: '',
-        name: 'Türk Hava Yollari',
+        imageUrl: 'https://seeklogo.com/images/T/turkish-airlines-logo-25BACC2D0C-seeklogo.com.png',
+        name: 'Türk Hava Yolları',
         detail: 'o'
       },
       selectedPets: [
