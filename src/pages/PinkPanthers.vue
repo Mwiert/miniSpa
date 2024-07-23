@@ -53,7 +53,7 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     // row mapper for FlexiTable
     this.flexiTableOptions.rows = response.map((item) => {
       return {
