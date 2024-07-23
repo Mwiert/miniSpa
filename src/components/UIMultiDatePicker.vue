@@ -574,10 +574,6 @@ export default {
     },
     linedThroughDate() {
       if (this.isPastValidation) {
-        this.emitResetSecondDates()
-        this.secondSelectedDate.selected = false
-        this.emitDate('dateSecondSelected', { date: '', inactive: true, isToday: false })
-        this.deactivateAllBetween()
         for (let i = 0; i < this.nextMonthDays.length; i++) {
           if (
             // monthRange ay önceki tarihin solundaki günler çizilir

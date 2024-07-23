@@ -6,8 +6,7 @@
       class="button"
       @click="toggleDatePicker()"
       ref="dateRangePicker"
-      :class="{ multi: isMultiDatePicker, single: isSingleDatePicker }"
-    >
+      :class="{ multi: isMultiDatePicker, single: isSingleDatePicker }">
       <div class="button-items">
         <!-- This is where we are checking if it is single calendar or multi calendar -->
         <div class="is-single-date">
@@ -58,8 +57,7 @@
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
-          @dateSelected="handleFirstDateSelected"
-        />
+          @dateSelected="handleFirstDateSelected" />
       </div>
       <div v-if="isMultiDatePicker">
         <UIMultiDatePicker
@@ -75,10 +73,8 @@
           :isDatePickerEnable="isMultiDatePickerEnable"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
-          @resetBaseInitialDates="handleResetInitialDates"
-        />
+          @resetBaseInitialDates="handleResetInitialDates" />
       </div>
-      
     </div>
   </div>
 </template>
@@ -198,7 +194,11 @@ export default {
           year: dayjs(this.initialDate).format('YYYY'),
           date: dayjs(this.initialDate).format('YYYY-MM-DD')
         }
-        this.secondSelectedDate = dayjs(this.initialDate).add(3, 'day').format('YYYY-MM-DD')
+        if (!this.isPast) {
+          this.secondSelectedDate = dayjs(this.initialDate).add(3, 'day').format('YYYY-MM-DD')
+        } else {
+          this.secondSelectedDate = dayjs(this.initialDate).subtract(3, 'day').format('YYYY-MM-DD')
+        }
         this.secondSelectedDate = {
           number: dayjs(this.secondSelectedDate).format('DD'),
           month: dayjs(this.secondSelectedDate).format('MM'),
@@ -212,7 +212,12 @@ export default {
           year: dayjs().format('YYYY'),
           date: dayjs().format('YYYY-MM-DD')
         }
-        this.secondSelectedDate = dayjs().add(3, 'day').format('YYYY-MM-DD')
+        if (!this.isPast) {
+          this.secondSelectedDate = dayjs().add(3, 'day').format('YYYY-MM-DD')
+        } else {
+          this.secondSelectedDate = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
+        }
+
         this.secondSelectedDate = {
           number: dayjs(this.secondSelectedDate).format('DD'),
           month: dayjs(this.secondSelectedDate).format('MM'),
@@ -224,11 +229,11 @@ export default {
         (this.sendInitialDates.secondInitialDate = this.secondSelectedDate)
     },
     handleResetInitialDates() {
-      this.sendInitialDates.firstInitialDate = false;
-      this.sendInitialDates.secondInitialDate = false;
+      this.sendInitialDates.firstInitialDate = false
+      this.sendInitialDates.secondInitialDate = false
     },
     checkMultiOrSingleCalendar() {}
-  },    
+  },
   created() {
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
