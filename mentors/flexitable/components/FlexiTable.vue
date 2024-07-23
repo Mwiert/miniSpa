@@ -24,7 +24,6 @@ export default {
       ...flexiConfig,
       ...this.flexi.options
     }
-
     //sortable Control
     if (!this.flexi.options.disableSorting) {
       const sortableParamsExist = this.flexi.columns.some((column) => column.sortable == true)

@@ -1,61 +1,60 @@
 <template>
     <div class="smart-table-pagination-c">
-
-      <button v-if="localCurrentPage != 1"  @click="setPage(localCurrentPage-1)" class="prev-page-btn">
+      <button 
+      @click="setPage(flexi.options.currentPage-1)"
+      class="prev-page-btn"
+      >
         <SvgIcon :name="'arrow-left'" size="s" />
       </button>
       <button
-        v-for="page in totalPages"
+        v-for="page in flexi.options.pages "
         :key="page"
         @click="setPage(page)"
-        :class="['page-btn', { active: page === localCurrentPage }]"
+        :class="['page-btn', { active: page === flexi.options.currentPage }]"
       >
         {{ page }}
 
       </button>
-      <button  v-if="localCurrentPage != totalPages.length" @click="setPage(localCurrentPage+1)" class="next-page-btn">
+
+      <button 
+      @click="setPage(flexi.options.currentPage+1)"
+      class="next-page-btn"
+      >
         <SvgIcon :name="'arrow-right'" size="s" />
       </button>
     </div>
   </template>
   
-  <script lang="ts">
+  <script >
+  import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin'
   export default {
     name: 'SmartTablePagination',
-    props: {
-      currentPage: {
-        type: Number,
-        required: true
-      },
-      totalPages: {
-        type: Array,
-        required: true
-      }
-    },
-    data() {
-      return {
-        localCurrentPage: this.currentPage 
-      };
-    },
+    inject: ['flexi'],
+    mixins: [flexiTableMixin],
+
     methods: {
       setPage(page) {
-        console.log(this.totalPages.length,page)
-          if(page != 0 && page <= this.totalPages.length ){
-            this.localCurrentPage = page;
-            this.$emit('update:currentPage', this.localCurrentPage);
-            console.log(this.localCurrentPage);
+          if(page != 0 && page <= this.flexi.options.pages.length ){
+            this.flexi.options.currentPage = page;
           }
-      }
+      },
+    //   isVisible() {
+    //   return this.localCurrentPage !== 1;
+    // },
+    //   checkNext(item){
+    //     return item != this.totalPages.length
+    //   }
     },
-    computed: {
-
-    },
-    watch: {
-      currentPage(newVal){
-        this.localCurrentPage = newVal;
-      }
-    }
+  watch: {
+      "flexi.options.itemsPerPage":{
+        handler:function(val){
+          console.log( "itemsperpage",val)
+          this.GeneratePagination(val)
+        }, immediate: true
+      },
+     },
   };
+
   </script>
   
 
@@ -79,10 +78,14 @@
       border: 1px solid #dcdcdc;
       margin: 0 5px;
       cursor: pointer;
+      visibility: visible;
   
       &:hover {
         background-color: #f0f0f0;
       }
+      .prev-page-btn.isVisible {
+      visibility: hidden;
+}
     }
   
     .page-btn {

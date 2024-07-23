@@ -4,7 +4,7 @@
       <input
         class="input-value"
         :class="isFocused ? 'active' : ''"
-        :type="type"
+        :type="isPassword ? (showPassword ? 'text' : 'password') : text"
         :placeholder="placeholder"
         :id="id"
         :label="label"
@@ -18,7 +18,12 @@
       <label v-if="label" class="label" :class="isFocused ? 'active' : ''" :for="id">
         {{ label }}
       </label>
-      <SvgIcon v-if="icon" class="icon" :name="icon" />
+      <SvgIcon
+        v-if="icon"
+        :key="computedIcon"
+        class="icon"
+        :name="computedIcon"
+        @click="togglePasswordVisibility" />
       <SvgIcon
         v-if="inputValue && clearButton"
         class="clear-btn"
@@ -41,6 +46,7 @@ export default {
   },
   data() {
     return {
+      showPassword: false,
       inputValue: this.value,
       isFocused: false,
       errors: []
@@ -103,11 +109,20 @@ export default {
     }
   },
   computed: {
+    isPassword() {
+      return this.id === 'password'
+    },
     computedIcon() {
-      return this.icon || null
+      if (this.isPassword) {
+        return this.showPassword ? 'eye' : 'eye-off'
+      }
+      return this.icon
     }
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword
+    },
     updateValue(newValue: String) {
       this.$emit('update:value', newValue)
     },
@@ -129,7 +144,7 @@ export default {
       this.validate()
     },
     validate() {
-      this.errors = validateInput(this.inputValue, this.rules)
+      this.errors = validateInput(this.inputValue, this.rules, this.type)
     }
   }
 }
@@ -159,8 +174,9 @@ export default {
       border-color: #007bff;
     }
     .label {
+      margin-inline-start: 8px;
       position: absolute;
-      left: 16px;
+      left: 40px;
       font-size: 1rem;
       font-weight: 100;
       color: grey;
@@ -169,8 +185,9 @@ export default {
       transform: translateY(-50%);
       transition: all 0.3s ease;
       &.active {
+        margin-inline-start: 8px;
         transform: none;
-        top: 8px;
+        top: 6px;
         font-size: 12px;
       }
     }
@@ -179,7 +196,7 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 32px;
+      right: 16px;
       width: 16px;
       height: 16px;
       border-radius: 50%;
@@ -196,7 +213,8 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 8px;
+      left: 6px;
+      top: 12px;
       width: 24px;
       height: 24px;
       padding: 0px;
@@ -206,6 +224,8 @@ export default {
     //styling
     .input-value {
       font-size: 1rem;
+   
+      margin-inline-start: 30px;
       outline: none;
       border: none;
       border-radius: 8px;
@@ -213,6 +233,7 @@ export default {
       transition: all 0.3s ease;
       width: 100%;
       &.active {
+        
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
       }
