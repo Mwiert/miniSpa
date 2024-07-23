@@ -168,6 +168,11 @@ export default {
       if (this.sortField) {
         items = this.sortItems(items)
       }
+      if (this.selectedItem) {
+        items = items.filter((item) => item[this.primaryKey] !== this.selectedItem[this.primaryKey])
+        items = [this.selectedItem, ...items]
+      }
+
       return items
     },
     isLongItem(item) {
@@ -211,7 +216,11 @@ export default {
 
         this.$nextTick(() => {
           let itemsCopy = [...this.dropdownItems].sort().reverse()
-          const selectedIndex = itemsCopy.indexOf(this.selectedItem)
+          itemsCopy = itemsCopy.filter(
+            (item) => item[this.primaryKey] !== this.selectedItem[this.primaryKey]
+          )
+          itemsCopy = [this.selectedItem, ...itemsCopy]
+          const selectedIndex = itemsCopy.findIndex((item) => this.isSelected(item))
           const selectedItemRef = this.$refs['item-' + selectedIndex]
 
           if (selectedItemRef && selectedItemRef[0]) {

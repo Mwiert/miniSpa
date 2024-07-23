@@ -198,8 +198,8 @@ export default {
       },
       selectedItem: {
         id: 'THY',
-        imageUrl: '',
-        name: 'Türk Hava Yollari',
+        imageUrl: 'https://seeklogo.com/images/T/turkish-airlines-logo-25BACC2D0C-seeklogo.com.png',
+        name: 'Türk Hava Yolları',
         detail: 'o'
       },
       selectedPets: [

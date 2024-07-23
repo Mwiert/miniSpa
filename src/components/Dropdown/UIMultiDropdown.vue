@@ -215,6 +215,10 @@ export default {
       if (this.sortField) {
         items = this.sortItems(items)
       }
+      if (this.selectedItems.length > 0) {
+        items = items.filter((item) => !this.isSelected(item))
+        items = [...this.selectedItems, ...items]
+      }
       return items
     },
     isLongItem(item) {
