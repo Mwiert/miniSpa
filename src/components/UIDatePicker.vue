@@ -12,8 +12,7 @@
               id="prev"
               class="nav-button"
               @click="onClickToLeft"
-              v-show="minDate < currentDate"
-            >
+              v-show="minDate < currentDate">
               <img src="../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{ dateHolder }}</span>
@@ -21,8 +20,7 @@
               id="next"
               class="nav-button"
               @click="onClickToRight"
-              v-show="currentDate < maxDate"
-            >
+              v-show="currentDate < maxDate">
               <img src="../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
@@ -46,8 +44,7 @@
                 between: day.between,
                 isToday: day.isToday
               }"
-              @click="selectDate(day)"
-            >
+              @click="selectDate(day)">
               {{ day.number }}
             </li>
           </ul>
@@ -103,7 +100,14 @@ export default {
         }
 
         if (this.monthRange !== 99) {
-          this.minDate = dayjs().subtract(this.monthRange, 'month').endOf('month').format('YYYY-MM-DD')
+          this.minDate = dayjs()
+            .subtract(this.monthRange, 'month')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+          this.maxDate = dayjs().format('YYYY-MM-DD')
+        } else {
+          let day = this.yearRange * 365
+          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
           this.maxDate = dayjs().format('YYYY-MM-DD')
         }
       } else if (this.isFutureValidation) {
@@ -115,6 +119,10 @@ export default {
         if (this.monthRange !== 99) {
           this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
           this.minDate = dayjs().format('YYYY-MM-DD')
+        } else {
+          let day = this.yearRange * 365
+          this.minDate = dayjs().format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
         }
       } else {
         if (this.yearRange !== 99) {
@@ -122,7 +130,10 @@ export default {
           this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
           this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
         } else if (this.monthRange !== 99) {
-          this.minDate = dayjs().subtract(this.monthRange, 'month').endOf('month').format('YYYY-MM-DD')
+          this.minDate = dayjs()
+            .subtract(this.monthRange, 'month')
+            .endOf('month')
+            .format('YYYY-MM-DD')
           this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
         } else {
           let day = this.yearRange * 365
@@ -175,7 +186,7 @@ export default {
           isToday: this.presentDate === getDate,
           number: i + 1,
           month: dayjs(dateSender).format('MM'),
-          year: dayjs(dateSender).format('YYYY'),
+          year: dayjs(dateSender).format('YYYY')
         })
       }
 
@@ -260,7 +271,7 @@ export default {
             this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
             this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
             this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY') &&
-            this.daysInMonth[i].number > dayjs(this.presentDate).date() 
+            this.daysInMonth[i].number > dayjs(this.presentDate).date()
           ) {
             this.daysInMonth[i].textDecoration = true
           }
@@ -268,7 +279,7 @@ export default {
           if (
             this.daysInMonth[i].date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
             this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') 
+            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY')
           ) {
             this.daysInMonth[i].textDecoration = true
           }
@@ -293,7 +304,7 @@ export default {
   },
   created() {
     //When the component is created, we are checking the range, creating the days in month and checking the date history
-    this.checkRange()   
+    this.checkRange()
     this.totalDaysInMonth()
     this.checkDateHistory()
     this.linedThroughDate()

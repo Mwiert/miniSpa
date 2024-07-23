@@ -13,5 +13,6 @@ interface DateModel {
   day?: string
   firstInitialDate?: boolean
   secondInitialDate?: boolean
+  fullDateFormatted?: string
 }
 export default DateModel
