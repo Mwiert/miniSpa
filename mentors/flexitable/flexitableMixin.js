@@ -9,8 +9,8 @@ export default {
       )
     },
     FlexiBodyItemsPerPage() {
-      const itemsPerPage = this.flexi.options.itemsPerPage || 10
-      const currentPage = this.flexi.options.pagination?.currentPage || 1
+      const itemsPerPage = this.flexi.options.itemsPerPage 
+      const currentPage = this.flexi.options.currentPage 
       const startIndex = (currentPage - 1) * itemsPerPage
       const endIndex = startIndex + itemsPerPage
       return this.SearchKey.slice(startIndex, endIndex)
@@ -32,6 +32,16 @@ export default {
   methods: {
     HideColumn(key) {
       return !this.flexi.options.hiddenColumns?.includes(key)
+    },
+    GeneratePagination(itemsPerPage){
+      console.log("GeneratePagination")
+    //pagination
+    this.flexi.options.currentPage = 1
+    this.flexi.options.pages = []
+    const totalPageNum = Math.ceil(this.flexi.rows.length / itemsPerPage); 
+    for (let i=1; i <= totalPageNum ; i++) {
+      this.flexi.options.pages.push(i)
+    }
     }
   }
 }
