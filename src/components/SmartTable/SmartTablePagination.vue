@@ -1,5 +1,5 @@
 <template>
-  <div class="smart-table-pagination-c">
+  <div class="smart-table-pagination-c" v-if="flexi.options.pagination">
     <button 
       @click="setPage(flexi.options.currentPage - 1)"
       class="prev-page-btn"
@@ -41,26 +41,26 @@ export default {
       return this.flexi.options.pages.length;
     },
     pagesToShow() {
-      const currentPage = this.flexi.options.currentPage;
-      const totalPages = this.totalPages;
-      const pages = [];
+  const currentPage = this.flexi.options.currentPage;
+  const totalPages = this.totalPages;
+  const pages = [];
 
-      if (totalPages <= 7) {
-        for (let i = 1; i <= totalPages; i++) {
-          pages.push(i);
-        }
-      } else {
-        if (currentPage <= 2) {
-          pages.push(1, 2,3,4,5, '..', totalPages);
-        } else if (currentPage >= totalPages - 3) {
-          pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-        } else {
-          pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
-        }
-      }
-
-      return pages;
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
     }
+  } else {
+    if (currentPage <= 3) {
+      pages.push(1, 2, 3, '...', totalPages - 1, totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      pages.push(1, 2, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pages.push(1, 2, '...', currentPage, '...', totalPages - 1, totalPages);
+    }
+  }
+
+  return pages;
+}
   },
 
   methods: {

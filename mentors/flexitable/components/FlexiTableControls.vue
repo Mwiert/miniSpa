@@ -2,15 +2,16 @@
   <div class="flexi-table-controls-c">
     <!-- Items Per Page -->
     <div class="ftc-select-wrapper">
-      <UIDropdown
-        v-model="selectedItems"
-        :items="this.flexi.options.itemsPerPageOptions"
-        :fontSize="fontSize"
-        displayField="name"
-        urlField=""
-        :dataSize="dataSize"
-        primaryKey="id"
-        :placeHolder="placeHolder" />
+        -nazli-{{ flexi.options.selected }}
+        <UIEnumDropdown
+        v-model="flexi.options.selected"
+        :items="[flexi.options.EInternSingleComponentType]"
+        :enumObj="flexi.options.EInternSingleComponentType"
+        :label ="flexi.options.UIDropdownOrderProp.label"
+        :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
+        :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
+        :placeHolder="flexi.options.UIDropdownOrderProp.placeHolder"        
+       />
 
       <ul class="multi">
         <li v-for="(col, index) in flexi.columns" :key="index" @click="selectHidden(index)">
@@ -28,17 +29,26 @@
 
 <script>
 import flexiTableMixin from '../flexitableMixin'
-import UIDropdown from '../../../src/components/Dropdown/UIDropdown.vue'
+import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
   mixins: [flexiTableMixin],
   components: {
-    UIDropdown
+    UIEnumDropdown
   },
   methods: {
     selectHidden(index) {
       this.flexi.columns[index].status = !this.flexi.columns[index].status
+    }
+  },
+  watch:{
+    'flexi.options.selected': {
+      handler: function (val) {
+        this.flexi.options.pages = []
+        this.flexi.options.itemsPerPage = val.id
+        
+      },
     }
   }
 }

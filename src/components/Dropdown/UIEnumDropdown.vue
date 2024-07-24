@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import UIDropdown from '../Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../Dropdown/UIMultiDropdown.vue'
 
