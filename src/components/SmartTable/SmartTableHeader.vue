@@ -2,9 +2,8 @@
   <div class="smart-table-header-container">
     <SearchBar
       class="search-bar"
-      v-on:search-value="
-        handleSearchInput
-      " /><!-- SearchBardan emit ettiğimiz değeri buraya alıyoruz ki daha sonra ihtiyacımız kolursa direk header içinden alalım -->
+      v-on:search-value="handleSearchInput"
+    /><!-- SearchBardan emit ettiğimiz değeri buraya alıyoruz ki daha sonra ihtiyacımız kolursa direk header içinden alalım -->
     <UIDropdown
       v-model="selectedItems"
       :items="options"
@@ -13,7 +12,8 @@
       urlField=""
       :dataSize="dataSize"
       primaryKey="id"
-      :placeHolder="placeHolder" />
+      :placeHolder="placeHolder"
+    />
     <UIMultiDropdown
       v-model="selectedColumns"
       :items="columnOp"
@@ -22,7 +22,8 @@
       :dataSize="dataSize"
       maxVisibleItems="3"
       primaryKey="id"
-      searchable />
+      searchable
+    />
   </div>
 </template>
 
@@ -52,7 +53,7 @@ export default {
       dataSize: 3,
       placeHolder: 'Sort by Res. Status',
       selectedColumns: [],
-      selectedItems: { id: 1, imageUrl: '', name: '5' }
+      selectedItems: this.options[0]
     }
   },
   watch: {
@@ -65,7 +66,6 @@ export default {
     },
     selectedItems: {
       handler: function (val) {
-        console.log('watcher:', val)
         this.$emit('per-page', val.name) //Tekrardan emit ettik ki tablomuza alabilelim bu değeri
       },
       immediate: true

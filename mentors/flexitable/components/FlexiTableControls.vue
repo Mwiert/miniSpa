@@ -12,6 +12,8 @@
       </select>
     </div>
 
+    <!-- <button @click="toggleSelectAll">All</button> -->
+
     <!-- Search Table -->
     <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
       <input type="text" v-model="flexi.options.searchKeyWord" />

@@ -32,6 +32,16 @@ export default {
   methods: {
     HideColumn(key) {
       return !this.flexi.options.hiddenColumns?.includes(key)
+    },
+    toggleSelectAll() {
+      this.flexi.selectAll = !this.flexi.selectAll
+      this.flexi.rows.forEach((row) => {
+        row.row.forEach((col) => {
+          if (col.checkbox) {
+            col.value = this.flexi.selectAll
+          }
+        })
+      })
     }
   }
 }

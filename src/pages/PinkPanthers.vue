@@ -1,90 +1,128 @@
 <template>
-  <div>
-    <SmartTable :options="tableOptions" :headers="tableHeaders" :itemsPerPage="5" />
+  <div class="flexi-table-page-c">
+    <FlexiTable />
   </div>
 </template>
 
-<script lang="ts">
-import SmartTable from '../components/SmartTable/SmartTable.vue'
-import dummy from '../components/SmartTable/dummy.js'
+<script>
+import response from '../../mentors/flexitable/flexitableData'
+import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
+import { computed } from 'vue'
 export default {
-  name: 'PinkPanthers',
+  name: 'FlexiTablePage',
   components: {
-    SmartTable
+    FlexiTable
+  },
+  provide() {
+    return {
+      flexi: computed(() => this.flexiTableOptions)
+    }
   },
   data() {
     return {
-      tableOptions: {
+      //allSelected: false,
+      flexiTableOptions: {
         options: {
-          header: {
-            perPageOptions: [
-              { id: 0, imageUrl: '', name: '5' },
-              { id: 1, imageUrl: '', name: '10'},
-              { id: 2, imageUrl: '', name: '50' },
-              { id: 3, imageUrl: '', name: 'All'}
-            ],
-          },
-          body: {},
-          footer: {}
+          columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
+          columnGap: '.5rem',
+          // hiddenColumns: ['annualFee', 'email'],
+
+          itemsPerPage: 30,
+          stickyHeader: true
+          // disableSorting: true
         },
-        table: {
-          columns: [
-            { id: 1, name: 'Status', label: 'status', sortable: true },
-            { id: 2, name: 'Creation Date', label: 'creationDate' },
-            { id: 3, name: 'Order Id', label: 'orderId', sortable: true },
-            { id: 4, name: 'Market', label: 'market' },
-            { id: 5, name: 'Provider Name/Surname', label: 'providerNameSurname' },
-            { id: 6, name: 'Check In', label: 'checkIn', sortable: true },
-            { id: 7, name: 'Check Out', label: 'checkOut', sortable: true },
-            { id: 8, name: 'Room Type', label: 'roomType' },
-            { id: 9, name: 'Promo Code', label: 'promoCode' },
-            { id: 10, name: 'Price', label: 'price', sortable: true }
-          ],
-          rows: []
-        }
-      },
-      dummies: dummy
+        columns: [
+          { name: '#', label: 'id' },
+          { name: 'Status', label: 'status' },
+          { name: 'Name ', label: 'nameSurname' },
+          { name: 'Student ID', label: 'studentNumber' },
+          { name: 'Class', label: 'class' },
+          { name: 'Birthdate', label: 'birthDate', type: 'date' },
+          { name: 'Gender', label: 'gender' },
+          { name: 'City', label: 'city' },
+          { name: 'Department', label: 'department' },
+          { name: 'GPA', label: 'gpa', class: 'txt-right ' },
+          { name: 'Annual Fee', label: 'annualFee', class: 'txt-right ' },
+          { name: 'Email Adress', label: 'email' }
+        ],
+        rows: []
+      }
     }
   },
-  methods: {},
   mounted() {
-    this.tableOptions.table.rows = this.dummies.map((dummy: any) => {
+    // row mapper for FlexiTable
+    this.flexiTableOptions.rows = response.map((item) => {
       return {
-        status: {
-          text: dummy.status,
-          class: `status ${dummy.status.toLowerCase()}`
+        row: {
+          id: {
+            // value: item.gender == 'Female' ? true : false,
+            value: false,
+            checkbox: true,
+            pushelements: false,
+            selectedRows: []
+          },
+          status: {
+            value: item.status,
+            class: `item-${item.status}`,
+            url: `?status=${item.status}`
+          },
+          nameSurname: {
+            img: item.photo,
+            imgClass: `student-photo-${item.gender}`,
+            value: item.nameSurname
+          },
+          studentNumber: {
+            value: item.studentID
+          },
+          class: {
+            value: item.class
+          },
+          birthDate: {
+            value: item.birthDate
+          },
+          gender: item.gender,
+          city: item.city,
+          department: item.department,
+          gpa: {
+            value: item.highSchoolGPA,
+            class: 'txt-right'
+          },
+          annualFee: {
+            value: item.annualFee,
+            class: 'txt-right txt-bold'
+          },
+          email: {
+            value: item.email,
+            class: 'email'
+          }
         },
-        creationDate: {
-          text: dummy.creationDate,
-          class: ''
+        details: {
+          status: false,
+          componentName: 'CustomDetailsComponent',
+          componentPath: './CustomDetailsComponent.vue',
+          props: { msg: item.nameSurname }
         },
-        orderId: {
-          text: dummy.orderId,
-          class: '',
-          url: `https://google.com/search?q=${dummy.orderId}`
-        },
-        market: {
-          text: dummy.market
-        },
-        providerNameSurname: dummy.providerNameSurname,
-        checkIn: dummy.checkIn,
-        checkOut: dummy.checkOut,
-        roomType: {
-          text: dummy.roomType,
-          class: ''
-        },
-        promoCode: {
-          text: dummy.promoCode,
-          class: 'promoCode'
-        },
-        price: {
-          text: dummy.price,
-          class: 'price'
+        check: {
+          check: true
         }
       }
     })
+
+    // hidden Columns Reactivity Test
+    // setTimeout(() => {
+    //   this.flexiTableOptions.options.hiddenColumns.push('annualFee')
+    // }, 3000)
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.flexi-table-page-c {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+</style>

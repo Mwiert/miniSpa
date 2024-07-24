@@ -36,29 +36,7 @@
         <div :colspan="Columns.length" class="no-grid-item">No Item Found</div>
       </div>
 
-      <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
-        <div
-          class="flexi-table-body-row-wrapper"
-          :class="{ 'remove-radius': rowObj.details?.status }">
-          <div
-            class="flexi-table-body-row"
-            :style="[gridTemplateColumns, ColumnGap]"
-            @click="handlerToggleDetails(rowobjKey)">
-            <!-- Columns -->
-            <template v-for="(col, key) in rowObj.row" :key="key" />
-          </div>
-
-          <template v-if="rowObj.details?.status">
-            <div class="flexi-table-body-detail-wrapper">
-              <component
-                :is="getAsyncComponent(rowObj.details.componentPath)"
-                v-bind="rowObj.details.props">
-              </component>
-            </div>
-          </template>
-        </div>
-      </template>
-      <!-- <div
+      <div
         class="grid-row"
         :class="{ rowIndex }"
         v-for="(tableRow, rowIndex) in denemeRow"
@@ -66,21 +44,22 @@
         <div
           v-for="(cell, cellIndex) in tableRow"
           :key="cellIndex"
-          :class="[cell.class, 'grid-item']"> -->
-      <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
-      <!-- <template v-if="typeof cell == 'object'">
-        <span :class="cell?.class" @click="handlerUrl(cell?.url)">
-          {{ cell?.text ?? '' }}
-        </span>
-      </template>
-      <template v-else>{{ cell }}</template> -->
+          :class="[cell.class, 'grid-item']">
+          <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
+          <template v-if="typeof cell == 'object'">
+            <span :class="cell?.class" @click="handlerUrl(cell?.url)">
+              {{ cell?.text ?? '' }}
+            </span>
+          </template>
+          <template v-else>{{ cell }}</template>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import dayjs from 'dayjs'
-import { defineAsyncComponent } from 'vue'
 
 export default {
   name: 'SmartTableBody',
@@ -223,9 +202,6 @@ export default {
 
       newPrintWindow.print()
       //newPrintWindow.close()
-    },
-    handlerToggleDetails(key) {
-      this.flexi.rows[key].details.status = !this.flexi.rows[key].details.status
     },
     getSortIcon(column: string) {
       if (this.lastSortedColumn === column) {
