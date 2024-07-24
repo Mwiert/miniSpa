@@ -1,6 +1,14 @@
 <template>
   <div class="input-box-c">
     <div class="input-wrapper">
+      <div class="icon-wrapper" :class="{'icon-right': inputValue}">
+        <SvgIcon
+        v-if="icon"
+        :key="computedIcon"
+        class="icon"
+        :name="computedIcon"
+        @click="togglePasswordVisibility" />
+        </div>
       <input
         class="input-value"
         :class="isFocused ? 'active' : ''"
@@ -18,12 +26,6 @@
       <label v-if="label" class="label" :class="isFocused ? 'active' : ''" :for="id">
         {{ label }}
       </label>
-      <SvgIcon
-        v-if="icon"
-        :key="computedIcon"
-        class="icon"
-        :name="computedIcon"
-        @click="togglePasswordVisibility" />
       <SvgIcon
         v-if="inputValue && clearButton"
         class="clear-btn"
@@ -173,6 +175,26 @@ export default {
     &:hover {
       border-color: #007bff;
     }
+    .icon-wrapper {
+      display: flex;
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      &.icon-right {
+        right: auto;
+        left: 6px;
+      }
+      .icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      padding: 0px;
+      padding-left: 5px;
+      border-radius: 50%;
+    }
+    }
     .label {
       margin-inline-start: 8px;
       position: absolute;
@@ -196,7 +218,7 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 16px;
+      right: 4px;
       width: 16px;
       height: 16px;
       border-radius: 50%;
@@ -208,23 +230,9 @@ export default {
         filter: opacity(0.7);
       }
     }
-    .icon {
-      position: absolute;
-      background: none;
-      border: none;
-      cursor: pointer;
-      left: 6px;
-      top: 12px;
-      width: 24px;
-      height: 24px;
-      padding: 0px;
-      padding-left: 5px;
-      border-radius: 50%;
-    }
     //styling
     .input-value {
       font-size: 1rem;
-   
       margin-inline-start: 30px;
       outline: none;
       border: none;
