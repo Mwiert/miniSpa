@@ -1,42 +1,50 @@
 <template>
   <div class="text-area-c">
-      <UITextArea 
-        :label="'Address'"
-        :disabled="false"
-        :rows="10"
-        :cols="30"
-        :placeholder="'Enter your address'"
-        :maxLength="100"
-        v-model="valueTextArea"
-      ></UITextArea> 
-      <p>{{ valueTextArea }} </p>
-        
-    
+    <UITextArea
+      :label="'Address'"
+      :disabled="false"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="100"
+      v-model="valueTextArea"></UITextArea>
+    <p>{{ valueTextArea }}</p>
   </div>
-  <div class="input-box">
-    <UIInput
-      :id="'username'"
-      :label="'Email'"
-      :icon="'mail'"
-      :type="'email'"
-      clearButton />
+  <div class="text-area-c">
+    <UITextArea
+      :id="textarea"
+      :label="'text area length 10 '"
+      :disabled="false"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea2"></UITextArea>
+    <p>{{ valueTextArea2 }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :id="textarea"
+      :label="'disabled text area'"
+      :disabled="true"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea3"></UITextArea>
+    <p>{{ valueTextArea3 }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput
-      :type="'password'"
-      :id="'password'"
-      :label="'password'"
-      :icon="'mail'"
-      clearButton />
+    <UIInput :id="'username'" :label="'Email'" :icon="'mail'" :type="'email'" clearButton />
   </div>
 
   <div class="input-box">
-    <UIInput
-      :id="'idNumber'"
-      :label="'idNumber'"
-      :icon="'mail'"
-      clearButton />
+    <UIInput :type="'password'" :id="'password'" :label="'password'" :icon="'mail'" clearButton />
+  </div>
+
+  <div class="input-box">
+    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton />
   </div>
   <!-- <button @click="submitForm">Submit</button> -->
 
@@ -216,6 +224,8 @@ export default {
       password: '',
       idNumber: '',
       valueTextArea: '',
+      valueTextArea2: '',
+      valueTextArea3: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
