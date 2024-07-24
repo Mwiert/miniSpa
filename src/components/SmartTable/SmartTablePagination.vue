@@ -27,7 +27,6 @@
   </div>
 </template>
 
-
 <script>
 import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin';
 
@@ -81,9 +80,6 @@ export default {
   },
 };
 </script>
-
-
-
 <style lang="scss">
 .smart-table-pagination-c {
   display: flex;
@@ -108,12 +104,10 @@ export default {
     &:hover {
       background-color: #f0f0f0;
     }
-
     &.visibility { 
       visibility: hidden;
     }
   }
-
   .page-btn {
     height: 40px;
     width: 40px;

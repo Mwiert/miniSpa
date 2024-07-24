@@ -24,9 +24,7 @@ export default {
         options: {
           columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
           columnGap: '.5rem',
-
           hiddenColumns: ['annualFee', 'city'],
-
           itemsPerPage: 30,
           stickyHeader: true
           // disableSorting: true
