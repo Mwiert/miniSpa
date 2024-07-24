@@ -19,6 +19,7 @@
       :showUnknown="true"
       :sortByAscending="true"
       :enumObj="EInternSingleComponentType" />
+    {{ selectedEnum }}
     <UIEnumDropdown
       v-model="selectedEnums"
       :items="[EInternComponentType]"

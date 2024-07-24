@@ -1,6 +1,6 @@
 {
   "itemsPerPage": 10,
-  "currentPage":1,
+  "currentPage": 1,
   "itemsPerPageOptions": [
     { "id": 0, "name": "5" },
     { "id": 1, "name": "10" },
@@ -16,5 +16,6 @@
   "columnGap": "3rem",
   "stickyHeader": false,
   "pagination": true,
-  "pages":[]
+  "pages": [],
+  "show": false
 }
