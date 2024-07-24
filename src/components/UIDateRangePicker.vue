@@ -6,17 +6,17 @@
       class="button"
       @click="toggleDatePicker()"
       ref="dateRangePicker"
-      :class="{ multi: isMultiDatePicker, single: isSingleDatePicker }"
-    >
+      :class="{ multi: isMultiDatePicker, single: isSingleDatePicker }">
       <div class="button-items">
         <!-- This is where we are checking if it is single calendar or multi calendar -->
         <div class="is-single-date">
           <div class="single-date-box">
-            <span class="day">
+            <span class="day"   v-if="firstSelectedDate.date">
               <!-- This is where we are getting the day -->
               {{ firstSelectedDate.number }}
             </span>
-            <div class="month-year">
+
+            <div class="month-year"   v-if="firstSelectedDate.date">
               <span class="month">
                 <!-- This is where we are getting the month -->
                 {{ formatMonth(firstSelectedDate.month) }}
@@ -26,21 +26,31 @@
                 {{ firstSelectedDate.year }}
               </span>
             </div>
+
+            <div class="placeholder-select" v-else >
+              <span>Select</span>
+            </div>
           </div>
           <div class="single-date-box divider" v-if="isMultiDatePicker">
-            <span class="day">
+            <span class="day" v-if="secondSelectedDate.date">
               <!-- This is where we are getting the day -->
               {{ secondSelectedDate.number }}
             </span>
-            <div class="month-year">
+
+            <div class="month-year" v-if="secondSelectedDate.date">
               <span class="month">
                 <!-- This is where we are getting the month -->
                 {{ formatMonth(secondSelectedDate.month) }}
               </span>
+
               <span class="year">
                 <!-- This is where we are getting the year -->
                 {{ secondSelectedDate.year }}
               </span>
+            </div>
+
+            <div class="placeholder-select" v-else >
+              <span>Select</span>
             </div>
           </div>
         </div>
@@ -58,8 +68,7 @@
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
-          @dateSelected="handleFirstDateSelected"
-        />
+          @dateSelected="handleFirstDateSelected" />
       </div>
       <div v-if="isMultiDatePicker">
         <UIMultiDatePicker
@@ -75,10 +84,8 @@
           :isDatePickerEnable="isMultiDatePickerEnable"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
-          @resetBaseInitialDates="handleResetInitialDates"
-        />
+          @resetBaseInitialDates="handleResetInitialDates" />
       </div>
-      
     </div>
   </div>
 </template>
@@ -114,7 +121,6 @@ export default {
       isSingleDatePickerEnable: false, //This is for enabling the single date picker as default false
       isMultiDatePickerEnable: false, //This is for enabling the multi date picker as default false
       presentDate: {} as date,
-      tempInitial: this.initialDate,
       sendInitialDates: {
         firstInitialDate: '',
         secondInitialDate: ''
@@ -198,7 +204,11 @@ export default {
           year: dayjs(this.initialDate).format('YYYY'),
           date: dayjs(this.initialDate).format('YYYY-MM-DD')
         }
-        this.secondSelectedDate = dayjs(this.initialDate).add(3, 'day').format('YYYY-MM-DD')
+        if (!this.isPast) {
+          this.secondSelectedDate = dayjs(this.initialDate).add(3, 'day').format('YYYY-MM-DD')
+        } else {
+          this.secondSelectedDate = dayjs(this.initialDate).subtract(3, 'day').format('YYYY-MM-DD')
+        }
         this.secondSelectedDate = {
           number: dayjs(this.secondSelectedDate).format('DD'),
           month: dayjs(this.secondSelectedDate).format('MM'),
@@ -212,7 +222,12 @@ export default {
           year: dayjs().format('YYYY'),
           date: dayjs().format('YYYY-MM-DD')
         }
-        this.secondSelectedDate = dayjs().add(3, 'day').format('YYYY-MM-DD')
+        if (!this.isPast) {
+          this.secondSelectedDate = dayjs().add(3, 'day').format('YYYY-MM-DD')
+        } else {
+          this.secondSelectedDate = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
+        }
+
         this.secondSelectedDate = {
           number: dayjs(this.secondSelectedDate).format('DD'),
           month: dayjs(this.secondSelectedDate).format('MM'),
@@ -224,11 +239,19 @@ export default {
         (this.sendInitialDates.secondInitialDate = this.secondSelectedDate)
     },
     handleResetInitialDates() {
-      this.sendInitialDates.firstInitialDate = false;
-      this.sendInitialDates.secondInitialDate = false;
+      this.sendInitialDates.firstInitialDate = false
+      this.sendInitialDates.secondInitialDate = false
     },
     checkMultiOrSingleCalendar() {}
-  },    
+  },
+  watch: {
+    isMultiDatePickerEnable(newVal) {
+      console.log(this.firstSelectedDate.date)
+      if (!newVal && !this.firstSelectedDate.date) {
+        this.fillInitialDate()
+      }
+    }
+  },
   created() {
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
@@ -320,6 +343,12 @@ export default {
             .year {
               color: #7f7f7f;
             }
+          }
+
+          .placeholder-select {
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
           }
 
           //Divider for multi date picker
