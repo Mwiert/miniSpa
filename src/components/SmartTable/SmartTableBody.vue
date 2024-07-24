@@ -1,33 +1,37 @@
 <template>
   <div class="smart-table-body-c">
+    {{ this.deneme }}
     {{ this.hidecolumn }}
+
     <div class="export-buttons">
       <button class="pdf-button" @click="triggerExportPrint()">Print</button>
     </div>
     <div ref="print">
       <div class="smart-table-main-grid">
         <div class="grid-header" v-for="(header, index) in Columns" :key="index">
-          <span>{{ header.name }} </span>
-          <span v-if="header.sortable">
-            <SvgIcon
-              v-if="getSortIcon(header.label) === 'arrow-down'"
-              class="sort-button"
-              :name="'arrow-down'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null" />
-            <SvgIcon
-              v-else-if="getSortIcon(header.label) === 'arrow-up'"
-              class="sort-button"
-              :name="'arrow-up'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null" />
-            <SvgIcon
-              v-else
-              class="sort-button"
-              :name="'arrow-selector-v'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null" />
-          </span>
+          <div v-if="HideColumn(header.label)">
+            <span>{{ header.name }} </span>
+            <span v-if="header.sortable">
+              <SvgIcon
+                v-if="getSortIcon(header.label) === 'arrow-down'"
+                class="sort-button"
+                :name="'arrow-down'"
+                size="s"
+                @click="header.sortable ? sort(header.label) : null" />
+              <SvgIcon
+                v-else-if="getSortIcon(header.label) === 'arrow-up'"
+                class="sort-button"
+                :name="'arrow-up'"
+                size="s"
+                @click="header.sortable ? sort(header.label) : null" />
+              <SvgIcon
+                v-else
+                class="sort-button"
+                :name="'arrow-selector-v'"
+                size="s"
+                @click="header.sortable ? sort(header.label) : null" />
+            </span>
+          </div>
         </div>
       </div>
 
@@ -46,12 +50,16 @@
           :key="cellIndex"
           :class="[cell.class, 'grid-item']">
           <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
-          <template v-if="typeof cell == 'object'">
-            <span :class="cell?.class" @click="handlerUrl(cell?.url)">
-              {{ cell?.text ?? '' }}
-            </span>
-          </template>
-          <template v-else>{{ cell }}</template>
+          <div v-if="HideColumn(cellIndex)">
+            <div>
+              <template v-if="typeof cell == 'object'">
+                <span :class="cell?.class" @click="handlerUrl(cell?.url)">
+                  {{ cell?.text ?? '' }}
+                </span>
+              </template>
+              <template v-else>{{ cell }}</template>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -69,6 +77,8 @@ export default {
     activePage: Number,
     hidecolumn: Array,
     perPage: Number,
+    deneme: Array,
+    pat: Array,
 
     noItemsFound: {
       type: Boolean,
@@ -98,6 +108,7 @@ export default {
       // const sortEnd = 2
       // return this.tableRowData.slice(0,sortEnd)
     },
+
     visibleItems() {
       return this.items.slice(0, this.selectedOption)
     }
@@ -121,6 +132,9 @@ export default {
   // },
 
   methods: {
+    HideColumn(key) {
+      return !this.deneme?.includes(key)
+    },
     triggerExportPrint() {
       const divToPrint = this.$parent.$refs.pinkpanthers.$refs.print
       console.log(divToPrint)

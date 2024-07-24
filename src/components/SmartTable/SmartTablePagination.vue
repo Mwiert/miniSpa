@@ -1,64 +1,85 @@
 <template>
   <div class="smart-table-pagination-c">
-    <button
-      v-if="localCurrentPage != 1"
-      @click="setPage(localCurrentPage - 1)"
-      class="prev-page-btn">
+    <button 
+      @click="setPage(flexi.options.currentPage - 1)"
+      class="prev-page-btn"
+      :class=" flexi.options.currentPage === 1 ? 'visibility' : '' "
+    >
       <SvgIcon :name="'arrow-left'" size="s" />
     </button>
+
     <button
-      v-for="page in totalPages"
+      v-for="page in pagesToShow"
       :key="page"
       @click="setPage(page)"
-      :class="['page-btn', { active: page === localCurrentPage }]">
+      :class="['page-btn', { active: page === flexi.options.currentPage }]"
+    >
       {{ page }}
     </button>
-    <button
-      v-if="localCurrentPage != totalPages.length"
-      @click="setPage(localCurrentPage + 1)"
-      class="next-page-btn">
+
+    <button 
+      @click="setPage(flexi.options.currentPage + 1)"
+      class="next-page-btn"
+      :class=" flexi.options.currentPage === totalPages ? 'visibility' : '' "
+    >
       <SvgIcon :name="'arrow-right'" size="s" />
     </button>
   </div>
 </template>
 
-<script lang="ts">
+<script>
+import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin';
+
 export default {
   name: 'SmartTablePagination',
-  props: {
-    currentPage: {
-      type: Number,
-      required: true
+  inject: ['flexi'],
+  mixins: [flexiTableMixin],
+
+  computed: {
+    totalPages() {
+      return this.flexi.options.pages.length;
     },
-    totalPages: {
-      type: Array,
-      required: true
+    pagesToShow() {
+      const currentPage = this.flexi.options.currentPage;
+      const totalPages = this.totalPages;
+      const pages = [];
+
+      if (totalPages <= 7) {
+        for (let i = 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        if (currentPage <= 2) {
+          pages.push(1, 2,3,4,5, '..', totalPages);
+        } else if (currentPage >= totalPages - 3) {
+          pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+        } else {
+          pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+        }
+      }
+
+      return pages;
     }
   },
-  data() {
-    return {
-      localCurrentPage: this.currentPage
-    }
-  },
+
   methods: {
     setPage(page) {
-      console.log(this.totalPages.length, page)
-      if (page != 0 && page <= this.totalPages.length) {
-        this.localCurrentPage = page
-        this.$emit('update:currentPage', this.localCurrentPage)
-        console.log(this.localCurrentPage)
-      }
+      if (page === '...' || page <= 0 || page > this.totalPages) return;
+      this.flexi.options.currentPage = page;
     }
   },
-  computed: {},
-  watch: {
-    currentPage(newVal) {
-      this.localCurrentPage = newVal
-    }
-  }
-}
-</script>
 
+  watch: {
+    "flexi.options.itemsPerPage": {
+      handler: function(val) {
+        console.log("itemsperpage", val);
+        this.GeneratePagination(val);
+      },
+      immediate: true
+    },
+  },
+};
+</script>
 <style lang="scss">
 .smart-table-pagination-c {
   display: flex;
@@ -83,8 +104,10 @@ export default {
     &:hover {
       background-color: #f0f0f0;
     }
+    &.visibility { 
+      visibility: hidden;
+    }
   }
-
   .page-btn {
     height: 40px;
     width: 40px;
@@ -105,6 +128,11 @@ export default {
     &:hover {
       background-color: #04070a;
       color: #ffffff;
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   }
 }
