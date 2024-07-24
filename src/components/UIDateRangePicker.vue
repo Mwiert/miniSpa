@@ -206,12 +206,7 @@ export default {
         } else {
           this.secondSelectedDate = dayjs(this.initialDate).subtract(3, 'day').format('YYYY-MM-DD')
         }
-        this.secondSelectedDate = {
-          number: dayjs(this.secondSelectedDate).format('DD'),
-          month: dayjs(this.secondSelectedDate).format('MM'),
-          year: dayjs(this.secondSelectedDate).format('YYYY'),
-          date: dayjs(this.secondSelectedDate).format('YYYY-MM-DD')
-        }
+
       } else {
         this.firstSelectedDate = {
           number: dayjs().format('DD'),
@@ -225,15 +220,18 @@ export default {
           this.secondSelectedDate = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
         }
 
-        this.secondSelectedDate = {
+
+      }
+      
+      this.secondSelectedDate = {
           number: dayjs(this.secondSelectedDate).format('DD'),
           month: dayjs(this.secondSelectedDate).format('MM'),
           year: dayjs(this.secondSelectedDate).format('YYYY'),
           date: dayjs(this.secondSelectedDate).format('YYYY-MM-DD')
-        }
       }
-      ;(this.sendInitialDates.firstInitialDate = this.firstSelectedDate),
-        (this.sendInitialDates.secondInitialDate = this.secondSelectedDate)
+      
+      this.sendInitialDates.firstInitialDate = this.firstSelectedDate
+      this.sendInitialDates.secondInitialDate = this.secondSelectedDate
     },
     handleResetInitialDates() {
       this.sendInitialDates.firstInitialDate = false
