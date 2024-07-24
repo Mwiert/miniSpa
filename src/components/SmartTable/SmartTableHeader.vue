@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="smart-table-header-container">
     <SearchBar
       class="search-bar"
@@ -87,4 +87,4 @@ export default {
     background-color: white;
   }
 }
-</style> -->
+</style>

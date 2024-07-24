@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="smart-table-body-c">
     {{ this.deneme }}
     {{ this.hidecolumn }}
@@ -9,27 +9,6 @@
     <div ref="print">
       <div class="smart-table-main-grid">
         <div class="grid-header" v-for="(header, index) in Columns" :key="index">
-          <span>{{ header.name }} </span>
-          <span v-if="header.sortable">
-            <SvgIcon
-              v-if="getSortIcon(header.label) === 'arrow-down'"
-              class="sort-button"
-              :name="'arrow-down'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null" />
-            <SvgIcon
-              v-else-if="getSortIcon(header.label) === 'arrow-up'"
-              class="sort-button"
-              :name="'arrow-up'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null" />
-            <SvgIcon
-              v-else
-              class="sort-button"
-              :name="'arrow-selector-v'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null" />
-          </span>
           <div v-if="HideColumn(header.label)">
             <span>{{ header.name }} </span>
             <span v-if="header.sortable">
@@ -422,4 +401,4 @@ export default {
     }
   }
 }
-</style> -->
+</style>

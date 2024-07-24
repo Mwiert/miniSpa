@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="smart-table-c">
     <SmartTableHeader
       @search-input="handleSearchInput"
@@ -45,7 +45,7 @@ export default {
       dummies: dummies,
       searchTerm: '',
       activePage: 1,
-      perPage: 4,
+      perPage: 2,
       hidecol: []
     }
   },
@@ -98,4 +98,4 @@ export default {
   border-radius: 15px;
   box-shadow: 0 4px 8px #f5f7fa;
 }
-</style> -->
+</style>

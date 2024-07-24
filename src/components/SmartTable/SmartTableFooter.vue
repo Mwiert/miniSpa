@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="smart-table-footer-container">
     Showing {{ tableCount }} reservations
     <SmartTablePagination
@@ -51,4 +51,4 @@ export default {
 .smart-table-footer-container {
   height: 80px;
 }
-</style> -->
+</style>
