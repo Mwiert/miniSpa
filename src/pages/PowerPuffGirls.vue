@@ -1,31 +1,41 @@
 <template>
+  <div class="text-area-c">
+      <UITextArea 
+        :label="'Address'"
+        :disabled="false"
+        :rows="10"
+        :cols="30"
+        :placeholder="'Enter your address'"
+        :maxLength="100"
+        v-model="valueTextArea"
+      ></UITextArea> 
+      <p>{{ valueTextArea }} </p>
+        
+    
+  </div>
   <div class="input-box">
     <UIInput
       :id="'username'"
       :label="'Email'"
       :icon="'mail'"
       :type="'email'"
-      :rules="{ required: true, email: true }"
       clearButton />
   </div>
 
   <div class="input-box">
     <UIInput
-      :type="password"
+      :type="'password'"
       :id="'password'"
       :label="'password'"
       :icon="'mail'"
-      :rules="{ required: true, minLength: 10 }"
       clearButton />
   </div>
 
   <div class="input-box">
     <UIInput
-      :type="tc"
       :id="'idNumber'"
       :label="'idNumber'"
       :icon="'mail'"
-      :rules="{ required: true, tc: true }"
       clearButton />
   </div>
   <!-- <button @click="submitForm">Submit</button> -->
@@ -187,7 +197,7 @@ import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
-import { validateInput } from '../Validations/ValidationsFunctions'
+import UITextArea from '../components/UITextArea.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -196,7 +206,8 @@ export default {
     UIToggle,
     UIRadioButton,
     UICheckbox,
-    UIInput
+    UIInput,
+    UITextArea
   },
   data() {
     return {
@@ -204,6 +215,7 @@ export default {
       email: '',
       password: '',
       idNumber: '',
+      valueTextArea: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
