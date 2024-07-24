@@ -1,5 +1,10 @@
 <template>
   <div class="flexi-table-body-c">
+    <button @click="selectAllCheckboxes" style="margin-right: 100px">
+      {{ allSelected ? 'Deselect All' : 'Select All' }}
+    </button>
+    <button @click="pushtheArray">{{ pushelements ? 'Kaan False' : 'Kaan True' }}</button>
+
     <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
       <div
         class="flexi-table-body-row-wrapper"
@@ -70,7 +75,30 @@ export default {
       return defineAsyncComponent(() => import(`${componentPath}`))
     },
     handlerToggleDetails(key) {
+      this.flexi.rows.forEach((row, index) => {
+        if (index !== key) {
+          row.details.status = false
+        }
+      })
       this.flexi.rows[key].details.status = !this.flexi.rows[key].details.status
+    },
+    selectAllCheckboxes() {
+      this.flexi.rows.forEach((row) => {
+        const columns = Array.isArray(row.row) ? row.row : Object.values(row.row)
+        columns.forEach((col) => {
+          if (col.checkbox) {
+            col.value = !col.value
+          }
+        })
+      })
+    },
+    pushtheArray() {
+      // push the selected object to array
+      this.selectedRows = this.flexi.rows.filter((row) => {
+        return Object.values(row.row).some((col) => col.checkbox && col.value)
+      })
+      this.pushelements = !this.pushelements
+      console.log(this.selectedRows)
     }
   }
 }

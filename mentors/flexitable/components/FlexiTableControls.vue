@@ -3,15 +3,14 @@
     <!-- Items Per Page -->
 
     <div class="ftc-select-wrapper">
-      <UIDropdown
-        v-model="selectedItems"
-        :items="flexi.options.itemsPerPageOptions"
-        :fontSize="fontSize"
-        displayField="name"
-        urlField=""
-        :dataSize="dataSize"
-        primaryKey="id"
-        :placeHolder="placeHolder" />
+      <UIEnumDropdown
+        v-model="flexi.options.selected"
+        :enumObj="flexi.options.EInternSingleComponentType"
+        :label="flexi.options.UIDropdownOrderProp.label"
+        :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
+        :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
+        :placeHolder="flexi.options.UIDropdownOrderProp.placeHolder" />
+
       <div class="dropdown">
         <div class="dropdown-icon" @click="Toggle">
           <SvgIcon name="eye" size="xs" />
@@ -30,6 +29,8 @@
       </div>
     </div>
 
+    <!-- <button @click="toggleSelectAll">All</button> -->
+
     <!-- Search Table -->
     <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
       <SvgIcon :name="'search'" size="s" class="search" />
@@ -47,13 +48,13 @@
 
 <script>
 import flexiTableMixin from '../flexitableMixin'
-import UIDropdown from '../../../src/components/Dropdown/UIDropdown.vue'
+import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
   mixins: [flexiTableMixin],
   components: {
-    UIDropdown
+    UIEnumDropdown
   },
   methods: {
     selectClear() {
@@ -71,6 +72,14 @@ export default {
     },
     clearSearch() {
       this.flexi.options.searchKeyWord = ''
+    }
+  },
+  watch: {
+    'flexi.options.selected': {
+      handler: function (val) {
+        this.flexi.options.pages = []
+        this.flexi.options.itemsPerPage = val.id
+      }
     }
   }
 }
