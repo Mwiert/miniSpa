@@ -105,7 +105,6 @@
         :fontSize="fontSize"
         displayField="name"
         :sortField="sortField"
-        urlField="imageUrl"
         :label="'Multi dropdown with images and action box and max item threshold searchable'"
         :dataSize="dataSize"
         searchable
@@ -113,6 +112,7 @@
         primaryKey="id"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
+        :iconImage="'iconImage'"
         :hasActionBox="true" />
       <UIMultiDropdown
         v-model="selectedPets"
@@ -120,7 +120,6 @@
         :fontSize="fontSize"
         displayField="name"
         :sortField="sortField"
-        urlField="''"
         :label="'Multi dropdown without images'"
         :dataSize="dataSize"
         searchable
@@ -135,7 +134,6 @@
         :fontSize="fontSize"
         displayField="name"
         :sortField="sortField"
-        urlField="''"
         :label="'Multi dropdown without maxVisibleItem'"
         :dataSize="dataSize"
         searchable
@@ -149,7 +147,6 @@
         :fontSize="fontSize"
         displayField="name"
         :sortField="sortField"
-        urlField="''"
         :label="'Multi dropdown without images and no action box and without max item threshold searchable'"
         :dataSize="dataSize"
         searchable
@@ -169,11 +166,11 @@
         :fontSize="fontSize"
         displayField="name"
         :sortField="sortField"
-        urlField="imageUrl"
         searchable
         :dataSize="dataSize"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
+        :iconImage="'iconImage'"
         primaryKey="id" />
       <UIDropdown
         v-model="selectedItem"
@@ -182,11 +179,11 @@
         :fontSize="fontSize"
         displayField="id"
         :sortField="sortField"
-        urlField="''"
         searchable
         :dataSize="dataSize"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
+        :iconImage="'iconImage'"
         primaryKey="id" />
       <UIDropdown
         v-model="selectedItem"
@@ -195,10 +192,10 @@
         :fontSize="fontSize"
         displayField="name"
         :sortField="sortField"
-        urlField="imageUrl"
         :dataSize="dataSize"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
+        :iconImage="'iconImage'"
         primaryKey="id" />
     </div>
   </div>
@@ -227,83 +224,77 @@ export default {
       pets: [
         {
           id: 0,
-          imageUrl:
-            'https://scontent.fayt3-1.fna.fbcdn.net/v/t1.18169-9/10897909_628158777306211_2985313991670757129_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=7b2446&_nc_ohc=93lV2ws2vMIQ7kNvgF-FtyQ&_nc_ht=scontent.fayt3-1.fna&oh=00_AYAiuHNBosscMy6SjMWPOszZaI0Yl0Hf_kxuqKWGeChLFA&oe=66C5CE1D',
+          iconImage: 'arrow-right',
           name: 'Dog',
           detail: 'a'
         },
         {
           id: 1,
-          imageUrl: 'https://www.petvet.com.tr/tr/images/uploads/44_2.jpg',
+          iconImage: 'arrow-right',
           name: 'Cat',
           detail: 'b'
         },
         {
           id: 2,
-          imageUrl:
-            'https://media.istockphoto.com/id/92121157/tr/foto%C4%9Fraf/animals-piranha.jpg?s=612x612&w=0&k=20&c=GaktAQKn48O32jyC6VixiHS90SIbZXgbdJWQVkaysMI=',
+          iconImage: 'arrow-right',
           name: 'Fish',
           detail: 'c'
         },
         {
           id: 3,
-          imageUrl: 'https://c.files.bbci.co.uk/127E7/production/_100715757_p063d74j.jpg',
+          iconImage: 'arrow-right',
           name: 'Bird',
           detail: 'd'
         },
-        { id: 4, imageUrl: '', name: 'Mouse', detail: 'c' },
+        { id: 4, iconImage: '', name: 'Mouse', detail: 'c' },
         {
           id: 5,
-          imageUrl: '',
+          iconImage: '',
           name: 'ElephantElephantElephantElephantElephantElephantElephant',
           detail: 'd'
         },
-        { id: 6, imageUrl: '', name: 'Hawk', detail: 'c' },
-        { id: 7, imageUrl: '', name: 'Monkey', detail: 'a' }
+        { id: 6, iconImage: '', name: 'Hawk', detail: 'c' },
+        { id: 7, iconImage: '', name: 'Monkey', detail: 'a' }
       ],
       foods: [
         {
           id: 0,
-          imageUrl:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
+          iconImage: 'arrow-right',
           name: 'Dog Food',
           detail: 'e'
         },
-        { id: 1, imageUrl: '', name: 'Cat Food', detail: 'f' },
-        { id: 2, imageUrl: '', name: 'Fish Food', detail: 'g' },
-        { id: 3, imageUrl: '', name: 'Bird Food', detail: 'h' }
+        { id: 1, iconImage: '', name: 'Cat Food', detail: 'f' },
+        { id: 2, iconImage: '', name: 'Fish Food', detail: 'g' },
+        { id: 3, iconImage: '', name: 'Bird Food', detail: 'h' }
       ],
       toys: [
-        { id: 0, imageUrl: '', name: 'Dog Toy', detail: 'k' },
-        { id: 1, imageUrl: '', name: 'Cat Toy', detail: 'l' },
-        { id: 2, imageUrl: '', name: 'Fish Toy', detail: 'm' },
-        { id: 3, imageUrl: '', name: 'Bird Toy', detail: 'n' }
+        { id: 0, iconImage: '', name: 'Dog Toy', detail: 'k' },
+        { id: 1, iconImage: '', name: 'Cat Toy', detail: 'l' },
+        { id: 2, iconImage: '', name: 'Fish Toy', detail: 'm' },
+        { id: 3, iconImage: '', name: 'Bird Toy', detail: 'n' }
       ],
       items: [
         {
           id: 'THY',
-          imageUrl:
-            'https://seeklogo.com/images/T/turkish-airlines-logo-25BACC2D0C-seeklogo.com.png',
+          iconImage: 'arrow-right',
           name: 'Türk Hava Yolları',
           detail: 'o'
         },
         {
           id: 'PGS',
-          imageUrl:
-            'https://ttyd.org.tr/wp-content/uploads/2022/01/pegasus-airlines-eps-vector-logo.png',
+          iconImage: 'arrow-right',
           name: 'Pegasus',
           detail: 'p'
         },
         {
           id: 'SXD',
-          imageUrl: 'https://media.tenor.com/ba-qljYNd84AAAAe/sunexpress-sunexpress-airlines.png',
+          iconImage: 'arrow-right',
           name: 'Sun Express',
           detail: 'r'
         },
         {
           id: 'CRL',
-          imageUrl:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCSz2Zi2rJUYXY6S7013DGYqPDTL-jxOs5MQ&s',
+          iconImage: 'arrow-right',
           name: 'Corendon',
           detail: 's'
         }
@@ -317,42 +308,39 @@ export default {
       label: 'Select an Item',
       selectedPet: {
         id: 0,
-        imageUrl:
-          'https://scontent.fayt3-1.fna.fbcdn.net/v/t1.18169-9/10897909_628158777306211_2985313991670757129_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=7b2446&_nc_ohc=93lV2ws2vMIQ7kNvgF-FtyQ&_nc_ht=scontent.fayt3-1.fna&oh=00_AYAiuHNBosscMy6SjMWPOszZaI0Yl0Hf_kxuqKWGeChLFA&oe=66C5CE1D',
+        iconImage: 'arrow-right',
         name: 'Dog',
         detail: 'a'
       },
       selectedFood: {
         id: 0,
-        imageUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxdaos6lr3fU5cMreuJ6LwqB8Oqakci-W4zA&s',
+        iconImage: 'arrow-right',
         name: 'Dog Food',
         detail: 'e'
       },
 
       selectedToy: {
         id: 0,
-        imageUrl: '',
+        iconImage: '',
         name: 'Dog Toy',
         detail: 'k'
       },
       selectedItem: {
         id: 'THY',
-        imageUrl: 'https://seeklogo.com/images/T/turkish-airlines-logo-25BACC2D0C-seeklogo.com.png',
+        iconImage: 'arrow-right',
         name: 'Türk Hava Yolları',
         detail: 'o'
       },
       selectedPets: [
         {
           id: 0,
-          imageUrl:
-            'https://scontent.fayt3-1.fna.fbcdn.net/v/t1.18169-9/10897909_628158777306211_2985313991670757129_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=7b2446&_nc_ohc=93lV2ws2vMIQ7kNvgF-FtyQ&_nc_ht=scontent.fayt3-1.fna&oh=00_AYAiuHNBosscMy6SjMWPOszZaI0Yl0Hf_kxuqKWGeChLFA&oe=66C5CE1D',
+          iconImage: 'arrow-right',
           name: 'Dog',
           detail: 'a'
         },
         {
           id: 1,
-          imageUrl: 'https://www.petvet.com.tr/tr/images/uploads/44_2.jpg',
+          iconImage: 'arrow-right',
           name: 'Cat',
           detail: 'b'
         }

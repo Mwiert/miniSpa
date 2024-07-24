@@ -39,19 +39,19 @@
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)" class="image-label-wrapper">
-              <img
-                :src="item[urlField]"
-                alt=""
+              <div
                 class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                <SvgIcon :name="item[iconImage]" :size="'s'" />
+              </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
             <div v-else class="image-label-wrapper">
-              <img
-                :src="item[urlField]"
-                alt=""
+              <div
                 class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                <SvgIcon :name="item[iconImage]" :size="'s'" />
+              </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
           </div>
@@ -113,11 +113,6 @@ export default {
       default: 'name'
     },
 
-    urlField: {
-      // picture of the object taken here
-      type: String,
-      default: ''
-    },
     dataSize: {
       // how many data will shown in the dropdown.
       type: Number
@@ -132,6 +127,10 @@ export default {
     maxItemThreshold: {
       type: Number,
       default: 15
+    },
+    iconImage: {
+      type: String,
+      default: 'iconImage'
     }
   },
   data() {
@@ -222,13 +221,13 @@ export default {
       return String(item[this.displayField])
     },
     checkItem(item) {
-      return item[this.urlField] !== '' && item[this.urlField] !== undefined
+      return item[this.iconImage] !== '' && item[this.iconImage] !== undefined
     },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
         if (
-          this.dropdownItems[i][this.urlField] !== '' &&
-          this.dropdownItems[i][this.urlField] !== undefined
+          this.dropdownItems[i][this.iconImage] !== '' &&
+          this.dropdownItems[i][this.iconImage] !== undefined
         ) {
           return true
         }
@@ -456,11 +455,15 @@ export default {
             align-items: center;
             justify-content: start;
             .dropdown-item-img {
-              width: 0.75rem;
-              height: 0.75rem;
+              width: 16px;
+              height: 16px;
               padding-right: 10px;
               display: none;
-
+              .svg-icon-c {
+                width: 16px;
+                height: 16px;
+                padding: 0;
+              }
               &.isVisible {
                 display: inline-block;
               }
