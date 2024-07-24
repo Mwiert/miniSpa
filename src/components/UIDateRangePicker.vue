@@ -15,6 +15,7 @@
               <!-- This is where we are getting the day -->
               {{ firstSelectedDate.number }}
             </span>
+
             <div class="month-year"   v-if="firstSelectedDate.date">
               <span class="month">
                 <!-- This is where we are getting the month -->
@@ -26,8 +27,8 @@
               </span>
             </div>
 
-            <div v-else>
-              Seçiniz
+            <div class="placeholder-select" v-else >
+              <span>Select</span>
             </div>
           </div>
           <div class="single-date-box divider" v-if="isMultiDatePicker">
@@ -48,8 +49,8 @@
               </span>
             </div>
 
-            <div v-else>
-              Seçiniz
+            <div class="placeholder-select" v-else >
+              <span>Select</span>
             </div>
           </div>
         </div>
@@ -244,8 +245,11 @@ export default {
     checkMultiOrSingleCalendar() {}
   },
   watch: {
-    isMultiDatePickerEnable() {
-      this.fillInitialDate()
+    isMultiDatePickerEnable(newVal) {
+      console.log(this.firstSelectedDate.date)
+      if (!newVal && !this.firstSelectedDate.date) {
+        this.fillInitialDate()
+      }
     }
   },
   created() {
@@ -339,6 +343,12 @@ export default {
             .year {
               color: #7f7f7f;
             }
+          }
+
+          .placeholder-select {
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
           }
 
           //Divider for multi date picker
