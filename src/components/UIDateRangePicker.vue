@@ -11,41 +11,58 @@
         <!-- This is where we are checking if it is single calendar or multi calendar -->
         <div class="is-single-date">
           <div class="single-date-box">
-            <span class="day" v-if="firstSelectedDate.date">
-              <!-- This is where we are getting the day -->
-              {{ firstSelectedDate.number }}
-            </span>
-
-            <div class="month-year" v-if="firstSelectedDate.date">
-              <span class="month">
-                <!-- This is where we are getting the month -->
-                {{ formatMonth(firstSelectedDate.month) }}
-              </span>
-              <span class="year">
-                <!-- This is where we are getting the year -->
-                {{ firstSelectedDate.year }}
-              </span>
-            </div>
-
-            <div class="placeholder-select" v-else>
-              <span>Select</span>
-            </div>
-          </div>
-          <div class="single-date-box divider" v-if="isMultiDatePicker">
             <span class="day">
               <!-- This is where we are getting the day -->
-              {{ secondSelectedDate.number }}
+              <span v-if="firstSelectedDate.date == null">{{
+                sendInitialDates.firstInitialDate.number
+              }}</span>
+              <span v-else>{{ firstSelectedDate.number }}</span>
             </span>
 
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                {{ formatMonth(secondSelectedDate.month) }}
+
+                <span v-if="firstSelectedDate.date == null">{{
+                  formatMonth(sendInitialDates.firstInitialDate.month)
+                }}</span>
+                <span v-else>{{ formatMonth(firstSelectedDate.month) }}</span>
+              </span>
+              <span class="year">
+                <!-- This is where we are getting the year -->
+
+                <span v-if="firstSelectedDate.date == null">
+                  {{ sendInitialDates.firstInitialDate.year }}</span
+                >
+                <span v-else> {{ firstSelectedDate.year }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="single-date-box divider" v-if="isMultiDatePicker">
+            <span class="day">
+              <!-- This is where we are getting the day -->
+
+              <span v-if="secondSelectedDate.date == null">{{
+                sendInitialDates.secondInitialDate.number
+              }}</span>
+              <span v-else>{{ secondSelectedDate.number }}</span>
+            </span>
+
+            <div class="month-year">
+              <span class="month">
+                <!-- This is where we are getting the month -->
+                <span v-if="secondSelectedDate.date == null">{{
+                  formatMonth(sendInitialDates.secondInitialDate.month)
+                }}</span>
+                <span v-else>{{ formatMonth(secondSelectedDate.month) }}</span>
               </span>
 
               <span class="year">
                 <!-- This is where we are getting the year -->
-                {{ secondSelectedDate.year }}
+                <span v-if="secondSelectedDate.date == null">{{
+                  sendInitialDates.secondInitialDate.year
+                }}</span>
+                <span v-else>{{ secondSelectedDate.year }}</span>
               </span>
             </div>
           </div>
@@ -59,7 +76,7 @@
           v-show="isSingleDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
-          :saveDate="firstSelectedDate.date"
+          :saveDate="sendInitialDates.firstInitialDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
@@ -71,8 +88,8 @@
           v-show="isMultiDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
-          :saveFirstDate="firstSelectedDate.date"
-          :saveSecondDate="secondSelectedDate.date"
+          :saveFirstDate="sendInitialDates.firstInitialDate.date"
+          :saveSecondDate="sendInitialDates.secondInitialDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
@@ -194,56 +211,60 @@ export default {
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
       if (this.initialDate) {
-        this.firstSelectedDate = {
+        this.sendInitialDates.firstInitialDate = {
           number: dayjs(this.initialDate).format('DD'),
           month: dayjs(this.initialDate).format('MM'),
           year: dayjs(this.initialDate).format('YYYY'),
           date: dayjs(this.initialDate).format('YYYY-MM-DD')
         }
         if (!this.isPast) {
-          this.secondSelectedDate = dayjs(this.initialDate).add(3, 'day').format('YYYY-MM-DD')
+          this.sendInitialDates.secondInitialDate = dayjs(this.initialDate)
+            .add(3, 'day')
+            .format('YYYY-MM-DD')
         } else {
-          this.secondSelectedDate = dayjs(this.initialDate).subtract(3, 'day').format('YYYY-MM-DD')
+          this.sendInitialDates.secondInitialDate = dayjs(this.initialDate)
+            .subtract(3, 'day')
+            .format('YYYY-MM-DD')
         }
-        this.secondSelectedDate = {
-          number: dayjs(this.secondSelectedDate).format('DD'),
-          month: dayjs(this.secondSelectedDate).format('MM'),
-          year: dayjs(this.secondSelectedDate).format('YYYY'),
-          date: dayjs(this.secondSelectedDate).format('YYYY-MM-DD')
+        this.sendInitialDates.secondInitialDate = {
+          number: dayjs(this.sendInitialDates.secondInitialDate).format('DD'),
+          month: dayjs(this.sendInitialDates.secondInitialDate).format('MM'),
+          year: dayjs(this.sendInitialDates.secondInitialDate).format('YYYY'),
+          date: dayjs(this.sendInitialDates.secondInitialDate).format('YYYY-MM-DD')
         }
       } else {
         if (!this.isPast) {
-          this.firstSelectedDate = {
+          this.sendInitialDates.firstInitialDate = {
             number: dayjs().format('DD'),
             month: dayjs().format('MM'),
             year: dayjs().format('YYYY'),
             date: dayjs().format('YYYY-MM-DD')
           }
-          this.secondSelectedDate = dayjs().add(3, 'day').format('YYYY-MM-DD')
-          this.secondSelectedDate = {
-            number: dayjs(this.secondSelectedDate).format('DD'),
-            month: dayjs(this.secondSelectedDate).format('MM'),
-            year: dayjs(this.secondSelectedDate).format('YYYY'),
-            date: dayjs(this.secondSelectedDate).format('YYYY-MM-DD')
+          this.sendInitialDates.secondInitialDate = dayjs().add(3, 'day').format('YYYY-MM-DD')
+          this.sendInitialDates.secondInitialDate = {
+            number: dayjs(this.sendInitialDates.secondInitialDate).format('DD'),
+            month: dayjs(this.sendInitialDates.secondInitialDate).format('MM'),
+            year: dayjs(this.sendInitialDates.secondInitialDate).format('YYYY'),
+            date: dayjs(this.sendInitialDates.secondInitialDate).format('YYYY-MM-DD')
           }
         } else {
-          this.secondSelectedDate = {
+          this.sendInitialDates.secondInitialDate = {
             number: dayjs().format('DD'),
             month: dayjs().format('MM'),
             year: dayjs().format('YYYY'),
             date: dayjs().format('YYYY-MM-DD')
           }
-          this.firstSelectedDate = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
-          this.firstSelectedDate = {
-            number: dayjs(this.firstSelectedDate).format('DD'),
-            month: dayjs(this.firstSelectedDate).format('MM'),
-            year: dayjs(this.firstSelectedDate).format('YYYY'),
-            date: dayjs(this.firstSelectedDate).format('YYYY-MM-DD')
+          this.sendInitialDates.firstInitialDate = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
+          this.sendInitialDates.firstInitialDate = {
+            number: dayjs(this.sendInitialDates.firstInitialDate).format('DD'),
+            month: dayjs(this.sendInitialDates.firstInitialDate).format('MM'),
+            year: dayjs(this.sendInitialDates.firstInitialDate).format('YYYY'),
+            date: dayjs(this.sendInitialDates.firstInitialDate).format('YYYY-MM-DD')
           }
         }
       }
-      this.sendInitialDates.firstInitialDate = this.firstSelectedDate
-      this.sendInitialDates.secondInitialDate = this.secondSelectedDate
+      //this.sendInitialDates.firstInitialDate = this.firstSelectedDate
+      //this.sendInitialDates.secondInitialDate = this.secondSelectedDate
     },
     handleResetInitialDates() {
       this.sendInitialDates.firstInitialDate = false
