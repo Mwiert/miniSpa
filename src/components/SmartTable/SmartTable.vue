@@ -45,7 +45,7 @@ export default {
       dummies: dummies,
       searchTerm: '',
       activePage: 1,
-      perPage: 2,
+      perPage: 4,
       hidecol: []
     }
   },
