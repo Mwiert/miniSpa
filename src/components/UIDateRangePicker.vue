@@ -13,28 +13,34 @@
           <div class="single-date-box">
             <span class="day">
               <!-- This is where we are getting the day -->
-              <span v-if="!firstSelectedDate.date">{{
-                sendInitialDates.firstInitialDate.number
-              }}</span>
-              <span v-else>{{ firstSelectedDate.number }}</span>
+              <span v-if="!firstSelectedDate.date">
+                {{ sendInitialDates.firstInitialDate.number }}
+              </span>
+              <span v-else>
+                {{ firstSelectedDate.number }}
+              </span>
             </span>
 
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
 
-                <span v-if="!firstSelectedDate.date">{{
-                  formatMonth(sendInitialDates.firstInitialDate.month)
-                }}</span>
-                <span v-else>{{ formatMonth(firstSelectedDate.month) }}</span>
+                <span v-if="!firstSelectedDate.date">
+                  {{ formatMonth(sendInitialDates.firstInitialDate.month) }}
+                </span>
+                <span v-else>
+                  {{ formatMonth(firstSelectedDate.month) }}
+                </span>
               </span>
               <span class="year">
                 <!-- This is where we are getting the year -->
 
                 <span v-if="!firstSelectedDate.date">
-                  {{ sendInitialDates.firstInitialDate.year }}</span
-                >
-                <span v-else> {{ firstSelectedDate.year }}</span>
+                  {{ sendInitialDates.firstInitialDate.year }}
+                </span>
+                <span v-else> 
+                  {{ firstSelectedDate.year }}
+                </span>
               </span>
             </div>
           </div>
@@ -42,28 +48,38 @@
             <span class="day">
               <!-- This is where we are getting the day -->
 
-              <span v-if="!secondSelectedDate.date">{{
-                sendInitialDates.secondInitialDate.number
-              }}</span>
-              <span v-else>{{ secondSelectedDate.number }}</span>
+              <span v-if="!secondSelectedDate.date">
+                {{ sendInitialDates.secondInitialDate.number }} 
+              </span>
+              <span v-else>
+                {{ secondSelectedDate.number }}
+              </span>
             </span>
 
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                <span v-if="!secondSelectedDate.date">{{
-                  formatMonth(sendInitialDates.secondInitialDate.month)
-                }}</span>
-                <span v-else>{{ formatMonth(secondSelectedDate.month) }}</span>
+                <span v-if="!secondSelectedDate.date">
+                  {{ formatMonth(sendInitialDates.secondInitialDate.month) }}
+                </span>
+                <span v-else>
+                  {{ formatMonth(secondSelectedDate.month) }}
+                </span>
               </span>
 
               <span class="year">
                 <!-- This is where we are getting the year -->
-                <span v-if="!secondSelectedDate.date">{{
-                  sendInitialDates.secondInitialDate.year
-                }}</span>
-                <span v-else>{{ secondSelectedDate.year }}</span>
+                <span v-if="!secondSelectedDate.date">
+                  {{ sendInitialDates.secondInitialDate.year }}
+                </span>
+                <span v-else>
+                  {{ secondSelectedDate.year }}
+                </span>
               </span>
+            </div>
+
+            <div class="placeholder-select" v-if="!secondSelectedDate.date && !sendInitialDates.secondInitialDate.date">
+                <span>Select</span>
             </div>
           </div>
         </div>
@@ -267,14 +283,13 @@ export default {
       //this.sendInitialDates.secondInitialDate = this.secondSelectedDate
     },
     handleResetInitialDates() {
-      this.sendInitialDates.firstInitialDate = false
-      this.sendInitialDates.secondInitialDate = false
+      this.sendInitialDates.firstInitialDate = { date: ''}
+      this.sendInitialDates.secondInitialDate = { date: ''}
     },
     checkMultiOrSingleCalendar() {}
   },
   watch: {
     firstSelectedDate(newVal) {
-      console.log('newVal ' + newVal.date)
       if (!newVal.date) {
         this.fillInitialDate()
       }
