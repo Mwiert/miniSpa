@@ -27,7 +27,6 @@
   </div>
 </template>
 
-
 <script>
 import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin';
 
@@ -45,22 +44,39 @@ export default {
   const totalPages = this.totalPages;
   const pages = [];
 
-  if (totalPages <= 7) {
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(i);
-    }
-  } else {
-    if (currentPage <= 3) {
-      pages.push(1, 2, 3, '...', totalPages - 1, totalPages);
-    } else if (currentPage >= totalPages - 2) {
-      pages.push(1, 2, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-    } else {
-      pages.push(1, 2, '...', currentPage, '...', totalPages - 1, totalPages);
-    }
+  // Always show the first two pages
+  pages.push(1);
+  if (totalPages > 1) {
+    pages.push(2);
+  }
+
+  // Show ellipsis and middle pages if necessary
+  if (currentPage > 3) {
+    pages.push('...');
+  }
+
+  // Show current page in the middle if it's not one of the first two or last two pages
+  if (currentPage > 2 && currentPage < totalPages - 1) {
+    pages.push(currentPage);
+  }
+
+  // Show ellipsis if necessary before the last two pages
+  if (currentPage < totalPages - 2) {
+    pages.push('...');
+  }
+
+  // Always show the last two pages
+  if (totalPages > 1) {
+    pages.push(totalPages - 1);
+  }
+  if (totalPages > 2) {
+    pages.push(totalPages);
   }
 
   return pages;
 }
+
+
   },
 
   methods: {
@@ -81,9 +97,6 @@ export default {
   },
 };
 </script>
-
-
-
 <style lang="scss">
 .smart-table-pagination-c {
   display: flex;
@@ -108,12 +121,10 @@ export default {
     &:hover {
       background-color: #f0f0f0;
     }
-
     &.visibility { 
       visibility: hidden;
     }
   }
-
   .page-btn {
     height: 40px;
     width: 40px;
