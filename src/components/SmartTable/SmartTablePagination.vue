@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="smart-table-pagination-c">
     <button
       v-if="localCurrentPage != 1"
@@ -192,4 +192,4 @@ export default {
     }
   }
 }
-</style>
+</style> -->
