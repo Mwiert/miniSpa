@@ -1,29 +1,50 @@
 <template>
-  <div class="input-box">
-    <UIInput
-      :id="'username'"
-      :label="'Email'"
-      :icon="'mail'"
-      :rules="{ required: true, email: true }"
-      clearButton />
+  <div class="text-area-c">
+    <UITextArea
+      :label="'Address'"
+      :disabled="false"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="100"
+      v-model="valueTextArea"></UITextArea>
+    <p>{{ valueTextArea }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :id="textarea"
+      :label="'text area length 10 '"
+      :disabled="false"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea2"></UITextArea>
+    <p>{{ valueTextArea2 }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :id="textarea"
+      :label="'disabled text area'"
+      :disabled="true"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea3"></UITextArea>
+    <p>{{ valueTextArea3 }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput
-      :id="'password'"
-      :label="'password'"
-      :icon="'mail'"
-      :rules="{ required: true, minLength: 10 }"
-      clearButton />
+    <UIInput :id="'username'" :label="'Email'" :icon="'mail'" :type="'email'" clearButton />
   </div>
 
   <div class="input-box">
-    <UIInput
-      :id="'idNumber'"
-      :label="'idNumber'"
-      :icon="'mail'"
-      :rules="{ required: true, tc: true }"
-      clearButton />
+    <UIInput :type="'password'" :id="'password'" :label="'password'" :icon="'mail'" clearButton />
+  </div>
+
+  <div class="input-box">
+    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton />
   </div>
   <!-- <button @click="submitForm">Submit</button> -->
 
@@ -184,6 +205,7 @@ import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
+import UITextArea from '../components/UITextArea.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -192,7 +214,8 @@ export default {
     UIToggle,
     UIRadioButton,
     UICheckbox,
-    UIInput
+    UIInput,
+    UITextArea
   },
   data() {
     return {
@@ -200,6 +223,9 @@ export default {
       email: '',
       password: '',
       idNumber: '',
+      valueTextArea: '',
+      valueTextArea2: '',
+      valueTextArea3: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {

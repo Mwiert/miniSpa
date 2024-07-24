@@ -11,16 +11,15 @@
         :dataSize="dataSize"
         primaryKey="id"
         :placeHolder="placeHolder" />
-      <UIMultiDropdown
-        v-model="selectedColumns"
-        :items="this.flexi.columns"
-        :fontSize="fontSize"
-        displayField="name"
-        :dataSize="dataSize"
-        maxVisibleItems="3"
-        primaryKey="id"
-        searchable />
+
+      <ul class="multi">
+        <li v-for="(col, index) in flexi.columns" :key="index" @click="selectHidden(index)">
+          {{ col }}
+        </li>
+      </ul>
     </div>
+
+    <!-- <button @click="toggleSelectAll">All</button> -->
 
     <!-- Search Table -->
     <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
@@ -32,35 +31,16 @@
 <script>
 import flexiTableMixin from '../flexitableMixin'
 import UIDropdown from '../../../src/components/Dropdown/UIDropdown.vue'
-import UIMultiDropdown from '../../../src/components/Dropdown/UIMultiDropdown.vue'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
   mixins: [flexiTableMixin],
   components: {
-    UIMultiDropdown,
     UIDropdown
   },
-  data() {
-    return {
-      selectedItems: this.flexi.options.itemsPerPageOptions[0],
-      selectedColumns: this.flexi.options.dropdownHiddenColumns
-    }
-  },
-  watch: {
-    selectedColumns: {
-      handler(val) {
-        const labels = val.map((column) => column.label)
-        this.flexi.options.hiddenColumns = labels
-      },
-      deep: true
-    },
-    selectedItems: {
-      handler: function (val) {
-        console.log(val)
-        this.flexi.options.itemsPerPage = val.name
-      },
-      immediate: true
+  methods: {
+    selectHidden(index) {
+      this.flexi.columns[index].status = !this.flexi.columns[index].status
     }
   }
 }
