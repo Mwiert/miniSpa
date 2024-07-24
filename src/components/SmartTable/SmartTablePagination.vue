@@ -58,6 +58,90 @@ export default {
   }
 }
 </script>
+  <div class="smart-table-pagination-c">
+    <button 
+      @click="setPage(flexi.options.currentPage - 1)"
+      class="prev-page-btn"
+      :class=" flexi.options.currentPage === 1 ? 'visibility' : '' "
+    >
+      <SvgIcon :name="'arrow-left'" size="s" />
+    </button>
+
+    <button
+      v-for="page in pagesToShow"
+      :key="page"
+      @click="setPage(page)"
+      :class="['page-btn', { active: page === flexi.options.currentPage }]"
+    >
+      {{ page }}
+    </button>
+
+    <button 
+      @click="setPage(flexi.options.currentPage + 1)"
+      class="next-page-btn"
+      :class=" flexi.options.currentPage === totalPages ? 'visibility' : '' "
+    >
+      <SvgIcon :name="'arrow-right'" size="s" />
+    </button>
+  </div>
+</template>
+
+
+<script>
+import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin';
+
+export default {
+  name: 'SmartTablePagination',
+  inject: ['flexi'],
+  mixins: [flexiTableMixin],
+
+  computed: {
+    totalPages() {
+      return this.flexi.options.pages.length;
+    },
+    pagesToShow() {
+      const currentPage = this.flexi.options.currentPage;
+      const totalPages = this.totalPages;
+      const pages = [];
+
+      if (totalPages <= 7) {
+        for (let i = 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        if (currentPage <= 2) {
+          pages.push(1, 2,3,4,5, '..', totalPages);
+        } else if (currentPage >= totalPages - 3) {
+          pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+        } else {
+          pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+        }
+      }
+
+      return pages;
+    }
+  },
+
+  methods: {
+    setPage(page) {
+      if (page === '...' || page <= 0 || page > this.totalPages) return;
+      this.flexi.options.currentPage = page;
+    }
+  },
+
+  watch: {
+    "flexi.options.itemsPerPage": {
+      handler: function(val) {
+        console.log("itemsperpage", val);
+        this.GeneratePagination(val);
+      },
+      immediate: true
+    },
+  },
+};
+</script>
+
+
 
 <style lang="scss">
 .smart-table-pagination-c {

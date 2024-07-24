@@ -1,5 +1,7 @@
 <template>
   <div class="flexi-table-c">
+    {{ this.flexi.options.hiddenColumns }}
+    {{ this.flexi.columns }}
     <!-- {{ flexi.options }} -->
     <FlexiTableControls />
     <FlexiTableHeader />
@@ -22,7 +24,6 @@ export default {
       ...flexiConfig,
       ...this.flexi.options
     }
-
     //sortable Control
     if (!this.flexi.options.disableSorting) {
       const sortableParamsExist = this.flexi.columns.some((column) => column.sortable == true)
@@ -38,12 +39,35 @@ export default {
         })
       }
     }
+    //Dropdown
+    this.flexi.columns = this.flexi.columns.map((col) => {
+      return {
+        ...col,
+        status: !this.flexi.options.hiddenColumns.includes(col.label)
+      }
+    })
   },
   components: {
     FlexiTableControls,
     FlexiTableHeader,
     FlexiTableBody,
     FlexiTableFooter
+  },
+
+  watch: {
+    'flexi.columns': {
+      handler: function () {
+        const hidden = []
+        for (let i = 0; i < this.flexi.columns.length; i++) {
+          if (this.flexi.columns[i].status === false) {
+            hidden.push(this.flexi.columns[i].label)
+          }
+        }
+        this.flexi.options.hiddenColumns = hidden
+      },
+
+      deep: true
+    }
   }
 }
 </script>

@@ -3,8 +3,8 @@
     <div class="input-wrapper">
       <input
         class="input-value"
-        :class="isFocused ? 'active': ''"
-        :type="type"
+        :class="isFocused ? 'active' : ''"
+        :type="isPassword ? (showPassword ? 'text' : 'password') : text"
         :placeholder="placeholder"
         :id="id"
         :label="label"
@@ -14,17 +14,30 @@
         v-model="inputValue"
         @input="handleInput"
         @focus="handleFocus"
-        @blur="handleBlur"
-      />
-      <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
-      <SvgIcon v-if="icon" class="icon" :name="icon"/>
-      <SvgIcon v-if="inputValue && clearButton" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
+        @blur="handleBlur" />
+      <label v-if="label" class="label" :class="isFocused ? 'active' : ''" :for="id">
+        {{ label }}
+      </label>
+      <SvgIcon
+        v-if="icon"
+        :key="computedIcon"
+        class="icon"
+        :name="computedIcon"
+        @click="togglePasswordVisibility" />
+      <SvgIcon
+        v-if="inputValue && clearButton"
+        class="clear-btn"
+        :name="'x'"
+        :size="'s'"
+        @click="clearInput" />
     </div>
+    <span v-if="errors.length" class="error">{{ errors.join(', ') }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from './SvgIcon.vue'
+import { validateInput } from '../Validations/ValidationsFunctions'
 
 export default {
   name: 'UIInput',
@@ -33,8 +46,10 @@ export default {
   },
   data() {
     return {
+      showPassword: false,
       inputValue: this.value,
       isFocused: false,
+      errors: []
     }
   },
   props: {
@@ -78,14 +93,36 @@ export default {
     clearButton: {
       type: Boolean,
       default: false
+    },
+    rules: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  watch: {
+    value(newVal) {
+      this.inputValue = newVal
+    },
+    inputValue(newVal) {
+      this.$emit('update:value', newVal)
+      this.validate()
     }
   },
   computed: {
+    isPassword() {
+      return this.id === 'password'
+    },
     computedIcon() {
-      return this.icon || null;
+      if (this.isPassword) {
+        return this.showPassword ? 'eye' : 'eye-off'
+      }
+      return this.icon
     }
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword
+    },
     updateValue(newValue: String) {
       this.$emit('update:value', newValue)
     },
@@ -101,9 +138,13 @@ export default {
       this.isFocused = true
     },
     handleBlur() {
-      if(this.inputValue === '') {
+      if (this.inputValue === '') {
         this.isFocused = false
       }
+      this.validate()
+    },
+    validate() {
+      this.errors = validateInput(this.inputValue, this.rules, this.type)
     }
   }
 }
@@ -127,14 +168,15 @@ export default {
     bottom: 8px;
     border: 1px solid #666666;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 
     &:hover {
       border-color: #007bff;
     }
     .label {
+      margin-inline-start: 8px;
       position: absolute;
-      left: 16px;
+      left: 40px;
       font-size: 1rem;
       font-weight: 100;
       color: grey;
@@ -143,8 +185,9 @@ export default {
       transform: translateY(-50%);
       transition: all 0.3s ease;
       &.active {
+        margin-inline-start: 8px;
         transform: none;
-        top: 8px;
+        top: 6px;
         font-size: 12px;
       }
     }
@@ -153,23 +196,25 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 32px;
+      right: 16px;
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      transition: transform 0.3s ease, filter 0.3s ease;
+      transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
       &:hover {
         transform: scale(1.2);
         filter: opacity(0.7);
       }
-      
     }
     .icon {
       position: absolute;
       background: none;
       border: none;
       cursor: pointer;
-      right: 8px;
+      left: 6px;
+      top: 12px;
       width: 24px;
       height: 24px;
       padding: 0px;
@@ -179,6 +224,8 @@ export default {
     //styling
     .input-value {
       font-size: 1rem;
+   
+      margin-inline-start: 30px;
       outline: none;
       border: none;
       border-radius: 8px;
@@ -186,10 +233,17 @@ export default {
       transition: all 0.3s ease;
       width: 100%;
       &.active {
+        
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
       }
+    }
   }
-}
+
+  .error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
 }
 </style>

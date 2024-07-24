@@ -9,8 +9,8 @@ export default {
       )
     },
     FlexiBodyItemsPerPage() {
-      const itemsPerPage = this.flexi.options.itemsPerPage || 10
-      const currentPage = this.flexi.options.pagination?.currentPage || 1
+      const itemsPerPage = parseInt(this.flexi.options.itemsPerPage)
+      const currentPage = parseInt(this.flexi.options.currentPage)
       const startIndex = (currentPage - 1) * itemsPerPage
       const endIndex = startIndex + itemsPerPage
       return this.SearchKey.slice(startIndex, endIndex)
@@ -33,15 +33,19 @@ export default {
     HideColumn(key) {
       return !this.flexi.options.hiddenColumns?.includes(key)
     },
-    toggleSelectAll() {
-      this.flexi.selectAll = !this.flexi.selectAll
-      this.flexi.rows.forEach((row) => {
-        row.row.forEach((col) => {
-          if (col.checkbox) {
-            col.value = this.flexi.selectAll
-          }
-        })
-      })
+    GeneratePagination(itemsPerPage) {
+      //pagination
+      if (itemsPerPage === 'All') {
+        itemsPerPage = this.flexi.rows.length // itemsPerPage = 46 but items are not loading to the body of the page
+        console.log(itemsPerPage)
+      } else {
+        this.flexi.options.currentPage = 1
+        this.flexi.options.pages = []
+        const totalPageNum = Math.ceil(this.flexi.rows.length / parseInt(itemsPerPage))
+        for (let i = 1; i <= totalPageNum; i++) {
+          this.flexi.options.pages.push(i)
+        }
+      }
     }
   }
 }
