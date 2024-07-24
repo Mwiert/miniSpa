@@ -1,7 +1,7 @@
 {
   "itemsPerPage": 2,
-  
-  "currentPage":1,
+
+  "currentPage": 1,
   "itemsPerPageOptions": [
     { "id": 0, "name": "5" },
     { "id": 1, "name": "10" },
@@ -16,14 +16,14 @@
   "columnGap": "3rem",
   "stickyHeader": false,
   "pagination": true,
-  "pages":[],
-  "selected":{ "id": 5, "name": "FIVE" },
+  "pages": [],
+  "selected": { "id": 5, "name": "FIVE" },
+  "show": false,
 
   "UIDropdownOrderProp": {
-  "label": "Select an Item",
-  "dataSize": 3,
-  "placeHolder": "hellooo",
-  "fontSize":12
+    "label": "Select an Item",
+    "dataSize": 3,
+    "placeHolder": "hellooo",
+    "fontSize": 12
   }
-
 }
