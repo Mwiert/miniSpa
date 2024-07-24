@@ -145,6 +145,10 @@ export default {
     sortByAscending: {
       type: Boolean,
       default: false
+    },
+    maxItemThreshold: {
+      type: Number,
+      default: 15
     }
   },
   data() {
@@ -203,18 +207,47 @@ export default {
       if (this.sortField === undefined) return items
       else {
         return items.sort((a, b) => {
-          const aValue = a[this.sortField].toLowerCase()
-          const bValue = b[this.sortField].toLowerCase()
+          const aValue = String(a[this.sortField]).toLowerCase()
+          const bValue = String(b[this.sortField]).toLowerCase()
           if (aValue < bValue) return this.sortByAscending ? -1 : 1
           if (aValue > bValue) return this.sortByAscending ? 1 : -1
           return 0
         })
       }
     },
-    createItemDropdown() {
-      return this.dropdownItems.filter((item) =>
-        String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
+    mapToTurkishWords(word) {
+      const mappedTurkishLetters = {
+        ç: 'c',
+        ı: 'i',
+        ğ: 'g',
+        ö: 'o',
+        ş: 's',
+        ü: 'u'
+      }
+
+      return word.replace(
+        /[çığöşü]/g,
+        (letter) => mappedTurkishLetters[letter.toLowerCase()] || letter
       )
+    },
+    stringContainsAnyWord(word, array) {
+      return array.some((char) => word.includes(char))
+    },
+
+    createItemDropdown() {
+      const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
+
+      if (this.stringContainsAnyWord(this.searchQuery, turkishLetters)) {
+        return this.dropdownItems.filter((item) =>
+          String(item[this.displayField].toLowerCase()).includes(this.searchQuery.toLowerCase())
+        )
+      } else {
+        return this.dropdownItems.filter((item) =>
+          this.mapToTurkishWords(item[this.displayField].toLowerCase()).includes(
+            this.searchQuery.toLowerCase()
+          )
+        )
+      }
     },
     filteredItems(): Array<any> {
       let items = this.createItemDropdown()
@@ -256,8 +289,11 @@ export default {
       return items
     },
     isLongItem(item) {
-      if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
-        return String(item[this.displayField]).substring(0, 15) + '...'
+      if (
+        item[this.displayField] !== undefined &&
+        String(item[this.displayField]).length > this.maxItemThreshold
+      ) {
+        return String(item[this.displayField]).substring(0, this.maxItemThreshold) + '...'
       } else if (item[this.displayField] === undefined) return item[this.displayField]
       return String(item[this.displayField])
     },
@@ -528,13 +564,15 @@ export default {
             width: 100%;
             align-items: center;
             height: 100%;
+            flex-shrink: 0;
 
             .image-label-wrapper {
               height: 100%;
-              width: 100%;
+              width: 90%;
               align-items: center;
               display: flex;
               justify-content: start;
+              flex-shrink: 0;
 
               .dropdown-item-img {
                 width: 12px;
@@ -564,6 +602,8 @@ export default {
             border-radius: 100%;
             display: inline-block;
             justify-self: end;
+            margin-left: auto;
+            flex-shrink: 0;
 
             &.flight {
               background-color: $primary-color;
