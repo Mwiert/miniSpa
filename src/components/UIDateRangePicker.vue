@@ -13,7 +13,7 @@
           <div class="single-date-box">
             <span class="day">
               <!-- This is where we are getting the day -->
-              <span v-if="firstSelectedDate.date == null">{{
+              <span v-if="!firstSelectedDate.date">{{
                 sendInitialDates.firstInitialDate.number
               }}</span>
               <span v-else>{{ firstSelectedDate.number }}</span>
@@ -23,7 +23,7 @@
               <span class="month">
                 <!-- This is where we are getting the month -->
 
-                <span v-if="firstSelectedDate.date == null">{{
+                <span v-if="!firstSelectedDate.date">{{
                   formatMonth(sendInitialDates.firstInitialDate.month)
                 }}</span>
                 <span v-else>{{ formatMonth(firstSelectedDate.month) }}</span>
@@ -31,7 +31,7 @@
               <span class="year">
                 <!-- This is where we are getting the year -->
 
-                <span v-if="firstSelectedDate.date == null">
+                <span v-if="!firstSelectedDate.date">
                   {{ sendInitialDates.firstInitialDate.year }}</span
                 >
                 <span v-else> {{ firstSelectedDate.year }}</span>
@@ -42,7 +42,7 @@
             <span class="day">
               <!-- This is where we are getting the day -->
 
-              <span v-if="secondSelectedDate.date == null">{{
+              <span v-if="!secondSelectedDate.date">{{
                 sendInitialDates.secondInitialDate.number
               }}</span>
               <span v-else>{{ secondSelectedDate.number }}</span>
@@ -51,7 +51,7 @@
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                <span v-if="secondSelectedDate.date == null">{{
+                <span v-if="!secondSelectedDate.date">{{
                   formatMonth(sendInitialDates.secondInitialDate.month)
                 }}</span>
                 <span v-else>{{ formatMonth(secondSelectedDate.month) }}</span>
@@ -59,7 +59,7 @@
 
               <span class="year">
                 <!-- This is where we are getting the year -->
-                <span v-if="secondSelectedDate.date == null">{{
+                <span v-if="!secondSelectedDate.date">{{
                   sendInitialDates.secondInitialDate.year
                 }}</span>
                 <span v-else>{{ secondSelectedDate.year }}</span>
