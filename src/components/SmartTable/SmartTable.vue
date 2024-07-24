@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="smart-table-c">
     <SmartTableHeader
       @search-input="handleSearchInput"
@@ -98,4 +98,4 @@ export default {
   border-radius: 15px;
   box-shadow: 0 4px 8px #f5f7fa;
 }
-</style>
+</style> -->

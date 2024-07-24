@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="smart-table-body-c">
     {{ this.deneme }}
     {{ this.hidecolumn }}
@@ -422,4 +422,4 @@ export default {
     }
   }
 }
-</style>
+</style> -->

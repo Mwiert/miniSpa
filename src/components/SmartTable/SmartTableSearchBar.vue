@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <form class="search-bar-c">
     <div class="input-wrapper">
       <SvgIcon :name="'search'" size="s" class="search" />
@@ -86,4 +86,4 @@ export default {
     }
   }
 }
-</style>
+</style> -->
