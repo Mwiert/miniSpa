@@ -11,11 +11,12 @@
         <!-- This is where we are checking if it is single calendar or multi calendar -->
         <div class="is-single-date">
           <div class="single-date-box">
-            <span class="day">
+            <span class="day"   v-if="firstSelectedDate.date">
               <!-- This is where we are getting the day -->
               {{ firstSelectedDate.number }}
             </span>
-            <div class="month-year">
+
+            <div class="month-year"   v-if="firstSelectedDate.date">
               <span class="month">
                 <!-- This is where we are getting the month -->
                 {{ formatMonth(firstSelectedDate.month) }}
@@ -25,21 +26,31 @@
                 {{ firstSelectedDate.year }}
               </span>
             </div>
+
+            <div class="placeholder-select" v-else >
+              <span>Select</span>
+            </div>
           </div>
           <div class="single-date-box divider" v-if="isMultiDatePicker">
-            <span class="day">
+            <span class="day" v-if="secondSelectedDate.date">
               <!-- This is where we are getting the day -->
               {{ secondSelectedDate.number }}
             </span>
-            <div class="month-year">
+
+            <div class="month-year" v-if="secondSelectedDate.date">
               <span class="month">
                 <!-- This is where we are getting the month -->
                 {{ formatMonth(secondSelectedDate.month) }}
               </span>
+
               <span class="year">
                 <!-- This is where we are getting the year -->
                 {{ secondSelectedDate.year }}
               </span>
+            </div>
+
+            <div class="placeholder-select" v-else >
+              <span>Select</span>
             </div>
           </div>
         </div>
@@ -110,7 +121,6 @@ export default {
       isSingleDatePickerEnable: false, //This is for enabling the single date picker as default false
       isMultiDatePickerEnable: false, //This is for enabling the multi date picker as default false
       presentDate: {} as date,
-      tempInitial: this.initialDate,
       sendInitialDates: {
         firstInitialDate: '',
         secondInitialDate: ''
@@ -234,6 +244,14 @@ export default {
     },
     checkMultiOrSingleCalendar() {}
   },
+  watch: {
+    isMultiDatePickerEnable(newVal) {
+      console.log(this.firstSelectedDate.date)
+      if (!newVal && !this.firstSelectedDate.date) {
+        this.fillInitialDate()
+      }
+    }
+  },
   created() {
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
@@ -325,6 +343,12 @@ export default {
             .year {
               color: #7f7f7f;
             }
+          }
+
+          .placeholder-select {
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
           }
 
           //Divider for multi date picker
