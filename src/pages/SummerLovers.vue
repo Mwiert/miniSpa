@@ -201,7 +201,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import UIEnumDropdown from '../components/Dropdown/UIEnumDropdown.vue'
 import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
