@@ -154,6 +154,7 @@ export default {
 @import '@/assets/css/main.scss';
 
 .input-box-c {
+  user-select: none;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -224,7 +225,7 @@ export default {
     //styling
     .input-value {
       font-size: 1rem;
-   
+
       margin-inline-start: 30px;
       outline: none;
       border: none;
@@ -233,7 +234,6 @@ export default {
       transition: all 0.3s ease;
       width: 100%;
       &.active {
-        
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
       }
