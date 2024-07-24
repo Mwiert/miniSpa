@@ -128,6 +128,10 @@ export default {
     sortByAscending: {
       type: Boolean,
       default: false
+    },
+    maxItemThreshold: {
+      type: Number,
+      default: 15
     }
   },
   data() {
@@ -153,28 +157,67 @@ export default {
   },
   methods: {
     sortItems(items: Array<any>): Array<any> {
-      if (this.sortField === undefined) return items
-      else {
+      if (this.sortField === undefined) {
+        return items
+      } else {
         return items.sort((a, b) => {
-          const aValue = a[this.sortField].toLowerCase()
-          const bValue = b[this.sortField].toLowerCase()
+          const aValue = String(a[this.sortField]).toLowerCase()
+          const bValue = String(b[this.sortField]).toLowerCase()
           if (aValue < bValue) return this.sortByAscending ? -1 : 1
           if (aValue > bValue) return this.sortByAscending ? 1 : -1
           return 0
         })
       }
     },
-    createItemDropdown() {
-      return this.dropdownItems.filter((item) =>
-        String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
+    mapToTurkishWords(word) {
+      const mappedTurkishLetters = {
+        ç: 'c',
+        ı: 'i',
+        ğ: 'g',
+        ö: 'o',
+        ş: 's',
+        ü: 'u'
+      }
+
+      return word.replace(
+        /[çığöşü]/g,
+        (letter) => mappedTurkishLetters[letter.toLowerCase()] || letter
       )
     },
+    stringContainsAnyWord(word, array) {
+      return array.some((char) => word.includes(char))
+    },
+
+    createItemDropdown() {
+      const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
+
+      if (this.stringContainsAnyWord(this.searchQuery, turkishLetters)) {
+        return this.dropdownItems.filter((item) =>
+          String(item[this.displayField].toLowerCase()).includes(this.searchQuery.toLowerCase())
+        )
+      } else {
+        return this.dropdownItems.filter((item) =>
+          this.mapToTurkishWords(item[this.displayField].toLowerCase()).includes(
+            this.searchQuery.toLowerCase()
+          )
+        )
+      }
+    },
     filteredItems(): Array<any> {
-      return this.createItemDropdown()
+      let items = this.createItemDropdown()
+
+      if (this.sortField !== undefined) {
+        items = this.sortItems(items)
+      }
+
+      return items
     },
     isLongItem(item) {
-      if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
-        return String(item[this.displayField]).substring(0, 15) + '...'
+      if (
+        item[this.displayField] !== undefined &&
+        String(item[this.displayField]).length > this.maxItemThreshold
+      ) {
+        return String(item[this.displayField]).substring(0, this.maxItemThreshold) + '...'
       } else if (item[this.displayField] === undefined) return item[this.displayField]
       return String(item[this.displayField])
     },
@@ -212,13 +255,31 @@ export default {
         this.clearSearch()
 
         this.$nextTick(() => {
-          const selectedIndex = this.dropdownItems.indexOf(this.selectedItem)
-          const selectedItemRef = this.$refs['item-' + selectedIndex]
-          if (selectedItemRef && selectedItemRef[0]) {
-            selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+          if (this.sortField && this.sortByAscending) {
+            let itemsCopy = [...this.dropdownItems].sort().reverse()
+            let primaryKeys = []
+            for (let i = 0; i < itemsCopy.length; i++) {
+              primaryKeys.push(itemsCopy[i][this.primaryKey])
+            }
+
+            const selectedIndex = primaryKeys.indexOf(this.selectedItem[this.primaryKey])
+            const selectedItemRef = this.$refs['item-' + selectedIndex]
+
+            if (selectedItemRef && selectedItemRef[0]) {
+              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+            }
+          } else if (this.sortField) {
+            let itemsCopy = [...this.dropdownItems].sort()
+            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
+            const selectedItemRef = this.$refs['item-' + selectedIndex]
+
+            if (selectedItemRef && selectedItemRef[0]) {
+              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+            }
           }
         })
       }
+
       this.clearSearch()
     },
     clearSearch() {
@@ -315,6 +376,7 @@ export default {
       right: 0;
       margin-top: 0.2rem;
       padding-bottom: 1rem;
+      padding-top: 0.5rem;
       background-color: #fff;
       border: 1px solid #ccc;
       border-radius: 12px;
