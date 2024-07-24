@@ -36,7 +36,7 @@
   </div>
 
   <div class="input-box">
-    <UIInput :id="'username'" :label="'Email'" :icon="'mail'" :type="'email'" clearButton />
+    <UIInput :id="'username'" :label="'Email'" :icon="'mail'" :type="'email'" />
   </div>
 
   <div class="input-box">

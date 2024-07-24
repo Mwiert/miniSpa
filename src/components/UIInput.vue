@@ -1,7 +1,7 @@
 <template>
   <div class="input-box-c">
     <div class="input-wrapper">
-      <div class="icon-wrapper" :class="{'icon-right': inputValue}">
+      <div class="icon-wrapper" :class="{'icon-left': clearButton, 'icon-right': !clearButton}">
         <SvgIcon
         v-if="icon"
         :key="computedIcon"
@@ -11,7 +11,7 @@
         </div>
       <input
         class="input-value"
-        :class="isFocused ? 'active' : ''"
+        :class="[{'active': isFocused}, {'icon-left-padding': !clearButton}]"
         :type="isPassword ? (showPassword ? 'text' : 'password') : text"
         :placeholder="placeholder"
         :id="id"
@@ -40,6 +40,7 @@
 <script lang="ts">
 import SvgIcon from './SvgIcon.vue'
 import { validateInput } from '../Validations/ValidationsFunctions'
+import { clear } from 'console';
 
 export default {
   name: 'UIInput',
@@ -168,7 +169,6 @@ export default {
     display: flex;
     align-items: center;
     position: relative;
-    bottom: 8px;
     border: 1px solid #666666;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -179,11 +179,12 @@ export default {
     .icon-wrapper {
       display: flex;
       position: absolute;
-      right: 12px;
       top: 12px;
-      &.icon-right {
-        right: auto;
+      &.icon-left {
         left: 6px;
+      }
+      &.icon-right {
+        right: 12px;
       }
       .icon {
       background: none;
