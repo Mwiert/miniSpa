@@ -27,9 +27,6 @@
               </span>
             </div>
 
-            <div class="placeholder-select" v-else >
-              <span>Select</span>
-            </div>
           </div>
           <div class="single-date-box divider" v-if="isMultiDatePicker">
             <span class="day" v-if="secondSelectedDate.date">
@@ -245,9 +242,9 @@ export default {
     checkMultiOrSingleCalendar() {}
   },
   watch: {
-    isMultiDatePickerEnable(newVal) {
-      console.log(this.firstSelectedDate.date)
-      if (!newVal && !this.firstSelectedDate.date) {
+    firstSelectedDate(newVal) {
+      console.log("newVal " + newVal.date)
+      if (!newVal.date) {
         this.fillInitialDate()
       }
     }
@@ -295,8 +292,9 @@ export default {
     cursor: pointer;
     border-radius: 12px;
     &.multi {
-      padding-left: 5px;
       width: 170px;
+      align-items: center;
+      justify-content: center;
     }
     &.single {
       width: 100px;
@@ -321,8 +319,10 @@ export default {
         .single-date-box {
           display: flex;
           justify-content: center;
+          align-items: center;
           flex-direction: row;
           width: 100%;
+          height: 24px;
 
           .day {
             font-size: 20px;
@@ -330,11 +330,12 @@ export default {
             color: #2b2b2b;
             padding: 0 5px;
           }
+
           //Month and Year Box To Design
           .month-year {
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            justify-content: center;
             align-items: start;
             font-size: 10px;
             .month {
@@ -346,9 +347,13 @@ export default {
           }
 
           .placeholder-select {
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 14px;
             color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
           }
 
           //Divider for multi date picker
