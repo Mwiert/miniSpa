@@ -25,8 +25,11 @@ export default {
           columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
           columnGap: '.5rem',
           // hiddenColumns: ['annualFee', 'email'],
-
+          
           itemsPerPage: 30,
+
+          EInternComponentType: EInternComponentType,
+          EInternSingleComponentType: EInternSingleComponentType,
           stickyHeader: true
           // disableSorting: true
         },
@@ -44,7 +47,12 @@ export default {
           { name: 'Annual Fee', label: 'annualFee', class: 'txt-right ' },
           { name: 'Email Adress', label: 'email' }
         ],
-        rows: []
+        rows: [],
+        selectedEnums: [
+        { id: -1, name: 'ALL' },
+        { id: 0, name: 'UNKNOWN' }
+      ],
+        selectedEnum: { id: 0, name: 'UNKNOWN' }
       }
     }
   },

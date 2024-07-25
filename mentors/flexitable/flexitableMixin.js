@@ -34,12 +34,17 @@ export default {
       return !this.flexi.options.hiddenColumns?.includes(key)
     },
     GeneratePagination(itemsPerPage){
-    //pagination
-      if (itemsPerPage === "All") {
-      itemsPerPage  = this.flexi.rows.length // itemsPerPage = 46 but items are not loading to the body of the page
-      console.log(itemsPerPage)
-           }
+      //pagination
+      if (itemsPerPage == -1) {
+        this.flexi.options.pages = []
+        this.flexi.options.currentPage = 1
+      itemsPerPage  = this.flexi.rows.length 
+      console.log("nazli",itemsPerPage)
+      this.flexi.options.pagination = false
+      
+      }
         else {
+          this.flexi.options.pagination = true
             this.flexi.options.currentPage = 1
             this.flexi.options.pages = []
             const totalPageNum = Math.ceil(this.flexi.rows.length / parseInt(itemsPerPage))
