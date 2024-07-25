@@ -286,9 +286,9 @@ export default {
       this.searchQuery = ''
     },
     handleClickOutside(event: MouseEvent) {
-      // when clicked out of the dropdown, dropdownMenu closes.
       const target = event.target as HTMLElement
-      if (!this.$el.contains(target)) {
+      console.log(this.$el.children[0].children[1])
+      if (!this.$el.children[0]?.children[1]?.contains(target)) {
         this.isOpen = false
       }
     }
