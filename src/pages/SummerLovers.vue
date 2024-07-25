@@ -126,7 +126,6 @@
     </div>
     <div>
       <h1>{{ 'Multi Dropdown' }}</h1>
-
       <UIMultiDropdown
         v-model="selectedPets"
         :items="pets"

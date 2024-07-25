@@ -203,7 +203,6 @@ export default {
     },
     //sorts items by ascending or descending
     sortItems(items: Array<any>): Array<any> {
-      console.log(this.sortField)
       if (this.sortField === undefined) return [...items]
       else {
         return [...items].sort((a, b) => {
