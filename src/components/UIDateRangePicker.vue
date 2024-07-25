@@ -104,8 +104,6 @@
           v-show="isMultiDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
-          :saveFirstDate="sendInitialDates.firstInitialDate.date"
-          :saveSecondDate="sendInitialDates.secondInitialDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"

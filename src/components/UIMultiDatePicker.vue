@@ -120,14 +120,12 @@ export default {
       presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
-      saveFirstDateHistory: this.saveFirstDate, //Saving the date history so we can see when we close calendar
-      saveSecondDateHistory: this.saveSecondDate //Saving the date history so we can see when we close calendar
+      saveFirstDateHistory: "", //Saving the date history so we can see when we close calendar
+      saveSecondDateHistory: "" //Saving the date history so we can see when we close calendar
     }
   },
   props: {
     yearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
-    saveFirstDate: { type: String, default: '' }, //This is for saving the date history
-    saveSecondDate: { type: String, default: '' },
     monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
@@ -320,14 +318,22 @@ export default {
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
           }
-        } else if (selectedDay.date == this.firstSelectedDate.date) {
-          // Seçilen gün first'e eşitse gir (seçilenleri kaldırır)
-          this.firstSelectedDate.selected = false
-          this.secondSelectedDate.selected = false
-          this.firstSelectedDate = { date: '' }
-          this.secondSelectedDate = { date: '' }
-          this.saveFirstDateHistory = ''
-          this.saveSecondDateHistory = ''
+        } else if (selectedDay.date == this.firstSelectedDate.date ) {
+          if (this.isPastValidation) {
+            this.firstSelectedDate.selected = false
+            this.firstSelectedDate = this.secondSelectedDate
+            this.saveFirstDateHistory = this.firstSelectedDate.date
+            this.secondSelectedDate = { date: '' }
+            this.saveSecondDateHistory = ''
+          } else {
+            // Seçilen gün first'e eşitse gir (seçilenleri kaldırır)
+            this.firstSelectedDate.selected = false
+            this.secondSelectedDate.selected = false
+            this.firstSelectedDate = { date: '' }
+            this.secondSelectedDate = { date: '' }
+            this.saveFirstDateHistory = ''
+            this.saveSecondDateHistory = ''
+          }
         } else if (selectedDay.date > this.firstSelectedDate.date) {
           // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
           this.secondSelectedDate.selected = false
