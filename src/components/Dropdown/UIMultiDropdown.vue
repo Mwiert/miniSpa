@@ -7,8 +7,8 @@
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
       </button>
       <div v-if="isOpen" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
-        <div class="search-container">
-          <div v-if="searchable" class="search-content-wrapper">
+        <div v-if="searchable" class="search-container">
+          <div class="search-content-wrapper">
             <input
               type="text"
               v-model="searchQuery"
@@ -30,10 +30,10 @@
         </div>
         <div
           class="ui-multi-dropdown-content"
-          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
+          :style="{ fontSize: fontSize + 'px', height: dropdownListMaxHeight }">
           <div
-            v-for="(item, index) in filteredItems()"
-            :key="index"
+            v-for="item in filteredItems()"
+            :key="item[primaryKey]"
             class="ui-multi-dropdown-item"
             @click.stop="selectItem(item)"
             :class="{ selected: isSelected(item) }">
@@ -81,7 +81,6 @@ export default {
     },
     primaryKey: {
       type: String,
-      required: true,
       default: 'id'
     },
     dataSize: {
@@ -101,8 +100,8 @@ export default {
       default: 'flight'
     },
     modelValue: {
-      type: Array,
-      default: () => []
+      type: Array<Object>,
+      default: () => [{}]
     },
 
     label: {
@@ -160,13 +159,15 @@ export default {
   computed: {
     computedDataSize(): Number {
       //if it is defined 'dataSize' if not 'itemLength'
-      return this.dataSize !== null ? this.dataSize : this.items.length
+      return this.dataSize !== undefined ? this.dataSize : this.items.length
     },
-    dropdownListMaxHeight(): String {
-      const itemHeight = 30
+    //sets the height of dropdown content
+    dropdownListMaxHeight(): string {
+      const itemHeight = 33
       const maxHeight = itemHeight * this.computedDataSize
       return `${maxHeight}px`
     },
+    //prints selected items on dropdown button
     labelDisplay(): String {
       if (this.selectedItems.length === 0) {
         return this.placeHolder.toString()
@@ -200,10 +201,12 @@ export default {
       }
       this.$emit('update:modelValue', this.selectedItems)
     },
+    //sorts items by ascending or descending
     sortItems(items: Array<any>): Array<any> {
-      if (this.sortField === undefined) return items
+      console.log(this.sortField)
+      if (this.sortField === undefined) return [...items]
       else {
-        return items.sort((a, b) => {
+        return [...items].sort((a, b) => {
           const aValue = String(a[this.sortField]).toLowerCase()
           const bValue = String(b[this.sortField]).toLowerCase()
           if (aValue < bValue) return this.sortByAscending ? -1 : 1
@@ -212,7 +215,8 @@ export default {
         })
       }
     },
-    mapToTurkishWords(word) {
+    //maps Turkish characters to english characters
+    mapToTurkishWords(word): string {
       const mappedTurkishLetters = {
         ç: 'c',
         ı: 'i',
@@ -227,11 +231,11 @@ export default {
         (letter) => mappedTurkishLetters[letter.toLowerCase()] || letter
       )
     },
-    stringContainsAnyWord(word, array) {
+    stringContainsAnyWord(word, array): boolean {
       return array.some((char) => word.includes(char))
     },
 
-    createItemDropdown() {
+    createItemDropdown(): string {
       const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
 
       if (this.stringContainsAnyWord(this.searchQuery, turkishLetters)) {
@@ -285,7 +289,8 @@ export default {
 
       return items
     },
-    isLongItem(item) {
+    //this method shortens the word if the word is too long and puts ... at the end
+    isLongItem(item): string {
       if (
         item[this.displayField] !== undefined &&
         String(item[this.displayField]).length > this.maxItemThreshold
@@ -294,12 +299,11 @@ export default {
       } else if (item[this.displayField] === undefined) return item[this.displayField]
       return String(item[this.displayField])
     },
-    checkItem(item) {
+    checkItem(item): boolean {
       return item[this.iconImage] !== '' && item[this.iconImage] !== undefined
     },
-    checkImage() {
+    checkImage(): boolean {
       for (let i = 0; i < this.dropdownItems.length; i++) {
-        console.log(this.dropdownItems[i][this.iconImage])
         if (
           this.dropdownItems[i][this.iconImage] !== '' &&
           this.dropdownItems[i][this.iconImage] !== undefined
@@ -309,7 +313,7 @@ export default {
       }
       return false
     },
-    isSelected(item) {
+    isSelected(item): boolean {
       let flag = false
       for (let i = 0; i < this.selectedItems.length; i++) {
         if (this.selectedItems[i][this.primaryKey] === item[this.primaryKey]) {
@@ -335,26 +339,6 @@ export default {
       this.isOpen = !this.isOpen
       if (this.isOpen) {
         this.clearSearch()
-
-        this.$nextTick(() => {
-          if (this.sortField && this.sortByAscending) {
-            let itemsCopy = [...this.dropdownItems].sort().reverse()
-            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-            }
-          } else if (this.sortField) {
-            let itemsCopy = [...this.dropdownItems].sort()
-            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-            }
-          }
-        })
       }
 
       this.clearSearch()
@@ -366,7 +350,10 @@ export default {
     handleClickOutside(event: MouseEvent) {
       // when clicked out of the dropdown, dropdownMenu closes.
       const target = event.target as HTMLElement
-      if (!this.$el.contains(target)) {
+      if (
+        !this.$el.children[0]?.children[1]?.contains(target) &&
+        !this.$el.children[0].children[2]?.contains(target)
+      ) {
         this.isOpen = false
       }
     }
@@ -456,7 +443,7 @@ export default {
       left: 0;
       right: 0;
       margin-top: 0.2rem;
-      padding-bottom: 1rem;
+      padding-bottom: 0.5rem;
       background-color: #fff;
       border: 1px solid #ccc;
       border-radius: 12px;
