@@ -1,5 +1,5 @@
 {
-  "itemsPerPage": 2,
+  "itemsPerPage": 5,
 
   "currentPage": 1,
   "itemsPerPageOptions": [
@@ -22,8 +22,9 @@
 
   "UIDropdownOrderProp": {
     "label": "Select an Item",
-    "dataSize": 3,
+    "dataSize": 5,
     "placeHolder": "hellooo",
-    "fontSize": 12
+    "fontSize": 12,
+    "showAll":true
   }
 }

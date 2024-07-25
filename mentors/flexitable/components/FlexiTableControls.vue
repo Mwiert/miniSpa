@@ -9,7 +9,10 @@
         :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
-        :placeHolder="flexi.options.UIDropdownOrderProp.placeHolder" />
+        :placeHolder="flexi.options.UIDropdownOrderProp.placeHolder"
+        :showAll = "flexi.options.UIDropdownOrderProp.showAll"
+        
+        />
 
       <div class="dropdown">
         <div class="dropdown-icon" @click="Toggle">
