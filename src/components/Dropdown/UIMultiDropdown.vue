@@ -366,8 +366,10 @@ export default {
     handleClickOutside(event: MouseEvent) {
       // when clicked out of the dropdown, dropdownMenu closes.
       const target = event.target as HTMLElement
-      console.log(this.$el.children[0].children[1])
-      if (!this.$el.children[0]?.children[1]?.contains(target)) {
+      if (
+        !this.$el.children[0]?.children[1]?.contains(target) &&
+        !this.$el.children[0].children[2]?.contains(target)
+      ) {
         this.isOpen = false
       }
     }
