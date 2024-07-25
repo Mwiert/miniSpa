@@ -1,7 +1,5 @@
 <template>
   <div class="flexi-table-c">
-    {{ this.flexi.options.hiddenColumns }}
-    {{ this.flexi.columns }}
     <!-- {{ flexi.options }} -->
     <FlexiTableControls />
     <FlexiTableHeader />

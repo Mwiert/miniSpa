@@ -157,11 +157,6 @@ export default {
             .endOf('month')
             .format('YYYY-MM-DD')
           this.maxDate = dayjs().add(1, 'month').format('YYYY-MM-DD')
-
-          console.log('minDate: ', this.minDate)
-          console.log('maxDate: ', this.maxDate)
-          // geriye gittikten sonra mevcut tarihe dönerken full çizili olacak sağdaki takvimin oluşması için add(1, 'month') yaptım
-          // bence mantıklı olan isPast durumunda current takviminin başlangıçta sağdaki takvimde oluşması, bu sayede add(1, 'month')'e gerek olmaz
         }
       } else if (this.isFutureValidation) {
         if (this.yearRange !== 99) {
@@ -297,135 +292,53 @@ export default {
       this.updateBetweenDates()
       this.linedThroughDate()
     },
-    selectDate(date: date) {
+    selectDate(selectedDay: date) {
       if (this.baseInitialDates.firstInitialDate) {
         this.emitResetInitialDates() // turuncu baslangic degerlerini ilk tiklamada emit edip false olmasini saglar
       }
-      if (this.firstSelectedDate == null) {
-        // 1. first null ise first'e date'i ata
-        this.firstSelectedDate = date
+
+      if (!this.firstSelectedDate.date) {
+        // First boşsa gir
+        this.firstSelectedDate = selectedDay
         this.firstSelectedDate.selected = true
         this.saveFirstDateHistory = this.firstSelectedDate.date
-        this.emitDate('dateFirstSelected', date)
-        return
-      } else if (this.secondSelectedDate == null) {
-        // 2. second null ise
-        if (date.date == this.firstSelectedDate.date) {
-          // 2.1. date,  first'ten büyükse second'a date'i ata
-          this.firstSelectedDate.selected = false
-          this.firstSelectedDate = null
-          this.saveFirstDateHistory = ''
-          this.emitDate('dateFirstSelected', { date: '', inactive: true, isToday: false })
-          this.deactivateAllBetween()
-        } else if (this.isPastValidation) {
-            if (date.date < this.firstSelectedDate.date) {
-              // 2.2. date, first ile eşit ise first'ü null yap
-              this.secondSelectedDate = date
-              this.secondSelectedDate.selected = true
-              this.saveSecondDateHistory = this.secondSelectedDate.date
-              this.emitDate('dateSecondSelected', date) // ve takvimi kapat
-            } else {
-              // 2.3. date, first'ten küçük ise first'e date'i ata
-              this.firstSelectedDate.selected = false
-              this.firstSelectedDate = date
-              this.firstSelectedDate.selected = true
-
-              this.saveFirstDateHistory = this.firstSelectedDate.date
-              this.emitDate('dateFirstSelected', this.firstSelectedDate)
-            }
-        } else {
-          if (date.date > this.firstSelectedDate.date) {
-              // 2.2. date, first ile eşit ise first'ü null yap
-              this.secondSelectedDate = date
-              this.secondSelectedDate.selected = true
-              this.saveSecondDateHistory = this.secondSelectedDate.date
-              this.emitDate('dateSecondSelected', date) // ve takvimi kapat
-            } else {
-              // 2.3. date, first'ten küçük ise first'e date'i ata
-              this.firstSelectedDate.selected = false
-              this.firstSelectedDate = date
-              this.firstSelectedDate.selected = true
-
-              this.saveFirstDateHistory = this.firstSelectedDate.date
-              this.emitDate('dateFirstSelected', this.firstSelectedDate)
-            }
-        }
       } else {
-        // 3. first ve second'ın null olmadığı durumda
-        if (this.firstSelectedDate.date == date.date) {
-          // 3.1. date ile first eşit ise ikisini de null yap
-          this.firstSelectedDate.selected = false
-          this.firstSelectedDate = null
-          this.saveFirstDateHistory = ''
-          this.emitDate('dateFirstSelected', { date: '', inactive: true, isToday: false })
-
-          this.secondSelectedDate.selected = false
-          this.secondSelectedDate = null
-          this.saveSecondDateHistory = ''
-          this.emitDate('dateSecondSelected', { date: '', inactive: true, isToday: false })
-          this.deactivateAllBetween()
-        } else if (this.secondSelectedDate.date == date.date) {
-          // 3.2. date ile second eşit ise sadece second'ı null yap
-          this.secondSelectedDate.selected = false
-          this.secondSelectedDate = null
-          this.saveSecondDateHistory = ''
-          this.emitDate('dateSecondSelected', { date: '', inactive: true, isToday: false })
-          this.deactivateAllBetween()
-        } else if (this.isPastValidation) {
-            if (date.date < this.firstSelectedDate.date) {
-              // 3.3. date, first'ten büyük ise second'a date'i ata
-              this.secondSelectedDate.selected = false
-              this.secondSelectedDate = date
-              this.secondSelectedDate.selected = true
-
-              this.saveSecondDateHistory = this.secondSelectedDate.date
-              this.emitDate('dateSecondSelected', this.secondSelectedDate) // ve takvimi kapat
-              this.deactivateAllBetween()
-            } else {
-              // 3.4. date, first'ten küçük ise ikisini null yap ve first'e date'i ata
-              this.firstSelectedDate.selected = false
-              this.secondSelectedDate.selected = false
-
-              this.firstSelectedDate = date
-              this.secondSelectedDate = null
-
-              this.firstSelectedDate.selected = true
-              this.saveFirstDateHistory = this.firstSelectedDate.date
-              this.saveSecondDateHistory = ''
-              this.emitDate('dateFirstSelected', date)
-              this.emitDate('dateSecondSelected', { date: '', inactive: true, isToday: false })
-              this.deactivateAllBetween()
-            }
-        } else {
-          if (date.date > this.firstSelectedDate.date) {
-            // 3.3. date, first'ten büyük ise second'a date'i ata
-            this.secondSelectedDate.selected = false
-            this.secondSelectedDate = date
+        if (selectedDay.date < this.firstSelectedDate.date) {
+          // Seçilen gün first'ten küçükse gir
+          if (!this.secondSelectedDate.date) {
+            // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
+            this.secondSelectedDate = this.firstSelectedDate
+            this.firstSelectedDate = selectedDay
+            this.firstSelectedDate.selected = true
             this.secondSelectedDate.selected = true
-
+            this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
-            this.emitDate('dateSecondSelected', this.secondSelectedDate) // ve takvimi kapat
-            this.deactivateAllBetween()
           } else {
-            // 3.4. date, first'ten küçük ise ikisini null yap ve first'e date'i ata
+            // First ve second varsa gir (tarihi sola doğru genişletir)
             this.firstSelectedDate.selected = false
-            this.secondSelectedDate.selected = false
-
-            this.firstSelectedDate = date
-            this.secondSelectedDate = null
-
+            this.firstSelectedDate = selectedDay
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
-            this.saveSecondDateHistory = ''
-            this.emitDate('dateFirstSelected', date)
-            this.emitDate('dateSecondSelected', { date: '', inactive: true, isToday: false })
-            this.deactivateAllBetween()
           }
+        } else if (selectedDay.date == this.firstSelectedDate.date) {
+          // Seçilen gün first'e eşitse gir (seçilenleri kaldırır)
+          this.firstSelectedDate.selected = false
+          this.secondSelectedDate.selected = false
+          this.firstSelectedDate = { date: '' }
+          this.secondSelectedDate = { date: '' }
+          this.saveFirstDateHistory = ''
+          this.saveSecondDateHistory = ''
+        } else if (selectedDay.date > this.firstSelectedDate.date) {
+          // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
+          this.secondSelectedDate.selected = false
+          this.secondSelectedDate = selectedDay
+          this.secondSelectedDate.selected = true
+          this.saveSecondDateHistory = this.secondSelectedDate.date
         }
-        
-        
-
       }
+      this.emitDate('dateFirstSelected', this.firstSelectedDate)
+      this.emitDate('dateSecondSelected', this.secondSelectedDate)
+      this.deactivateAllBetween()
       this.updateBetweenDates()
     },
     emitDate(event, date) {
@@ -451,6 +364,7 @@ export default {
       this.daysInMonth.forEach((day) => {
         if (day.secondInitialDate) {
           day.secondInitialDate = false
+          // day.selected = false
         }
       })
 
@@ -510,9 +424,9 @@ export default {
       })
     },
     updateBetweenDates() {
-      const startDate = this.isPastValidation ? this.secondSelectedDate : this.firstSelectedDate
-      const endDate = this.isPastValidation ? this.firstSelectedDate : this.secondSelectedDate
-      if (startDate !== null && endDate !== null) {
+      const startDate = this.firstSelectedDate
+      const endDate = this.secondSelectedDate
+      if (startDate.date && endDate.date) {
         if (startDate.month !== endDate.month) {
           // seçilen iki tarih farklı aylardaysa
           const startDateMonthIndex = dayjs(startDate.date).month()
@@ -652,7 +566,7 @@ export default {
             this.daysInMonth[i].textDecoration = true
           }
         }
-      } else if (this.isFutureValidation) {
+      } else {
         for (let i = 0; i < this.daysInMonth.length; i++) {
           if (
             // bulunulan tarihin solundaki günler çizilir
@@ -691,18 +605,47 @@ export default {
   watch: {
     isDatePickerEnable(newVal) {
       if (newVal) {
-        this.calendarDate = dayjs(this.saveDateHistory)
+        if (!this.saveFirstDateHistory) {
+          this.calendarDate = dayjs(this.presentDate)
+        } else {
+          this.calendarDate = dayjs(this.saveFirstDateHistory)
+        }
+
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
         this.nextMonthDate = this.calendarDate.add(1, 'month').format('YYYY-MM-DD')
         this.prevMonthDate = this.calendarDate.subtract(1, 'month').format('YYYY-MM-DD')
         this.populdateMonthDays()
-
         this.checkDateHistory()
         this.updateBetweenDates()
         this.linedThroughDate() // Her iki takvim için geçerli
       }
+    },
+    saveFirstDateHistory(newVal) {
+      if (!newVal) {
+        // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin
+        this.daysInMonth.forEach((day) => {
+          // soldaki takvim için initial'ları ara
+          if (day.date == this.baseInitialDates.firstInitialDate.date) {
+            day.firstInitialDate = true
+          }
+          if (day.date == this.baseInitialDates.secondInitialDate.date) {
+            day.secondInitialDate = true
+          }
+        })
+
+        this.nextMonthDays.forEach((day) => {
+          // sağdaki takvim için initial'ları ara
+          if (day.date == this.baseInitialDates.firstInitialDate.date) {
+            day.firstInitialDate = true
+          }
+          if (day.date == this.baseInitialDates.secondInitialDate.date) {
+            day.secondInitialDate = true
+          }
+        })
+      }
     }
   },
+
   created() {
     //When the component is created, we are checking the range, creating the days in month and checking the date history
     this.checkRange()
