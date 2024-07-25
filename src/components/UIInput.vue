@@ -40,7 +40,6 @@
 <script lang="ts">
 import SvgIcon from './SvgIcon.vue'
 import { validateInput } from '../Validations/ValidationsFunctions'
-import { clear } from 'console';
 
 export default {
   name: 'UIInput',
@@ -200,7 +199,7 @@ export default {
     .label {
       margin-inline-start: 8px;
       position: absolute;
-      left: 40px;
+      
       font-size: 1rem;
       font-weight: 100;
       color: grey;
