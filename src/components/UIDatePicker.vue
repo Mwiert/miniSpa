@@ -287,6 +287,18 @@ export default {
           }
         }
       }
+      let today = dayjs()
+      let futureDate = today.add(3, 'month')
+      let pastDate = today.subtract(3, 'month').subtract(1, 'day');
+      
+
+      this.daysInMonth.forEach(day => {
+        if (day.date && dayjs(day.date).isAfter(futureDate)) {
+          day.textDecoration = true
+        }else if(day.date && dayjs(day.date).isBefore(pastDate)){
+          day.textDecoration = true
+        }
+      })
     }
   },
   computed: {
