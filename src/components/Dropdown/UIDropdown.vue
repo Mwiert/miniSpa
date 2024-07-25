@@ -254,17 +254,14 @@ export default {
         this.$nextTick(() => {
           if (this.sortField && this.sortByAscending) {
             let itemsCopy = [...this.dropdownItems].sort().reverse()
-            console.log(itemsCopy)
             let primaryKeys: string[] = []
             for (let i = 0; i < itemsCopy.length; i++) {
               primaryKeys.push(itemsCopy[i][this.primaryKey])
             }
-            console.log(primaryKeys)
 
             const selectedIndex =
               primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
             const selectedItemRef = this.$refs['item-' + selectedIndex]
-            console.log(selectedItemRef)
 
             if (selectedItemRef && selectedItemRef[0]) {
               selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
