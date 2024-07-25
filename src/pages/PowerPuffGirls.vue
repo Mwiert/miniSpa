@@ -36,15 +36,28 @@
   </div>
 
   <div class="input-box">
-    <UIInput :id="'username'" :label="'Email'" :icon="'mail'" :type="'email'" />
+    <UIInput
+      :id="'username'"
+      :label="'Email'"
+      :icon="'mail'"
+      :type="'email'"
+      v-model="messageInput" />
+    <p>{{ messageInput }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput :type="'password'" :id="'password'" :label="'password'" :icon="'mail'" clearButton />
+    <UIInput
+      :type="'password'"
+      :id="'password'"
+      :label="'Password'"
+      :icon="'eye'"
+      clearButton
+      v-model="messageInputWithClearButton" />
+    <p>{{ messageInputWithClearButton }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton />
+    <UIInput :id="'tckno'" :label="'TCKNO'" :icon="'arrow-up'" clearButton disabled />
   </div>
   <div class="input-box">
     <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton :disabled="true" />
@@ -256,7 +269,8 @@ export default {
       valueTextArea: '',
       valueTextArea2: '',
       valueTextArea3: '',
-      clickedButton: { id: '', isLoading: false }, // Object to store the ID and loading state of the clicked button
+      messageInput: '',
+      messageInputWithClearButton: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
