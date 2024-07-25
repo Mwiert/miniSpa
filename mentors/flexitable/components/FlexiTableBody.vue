@@ -1,5 +1,5 @@
 <template>
-  <div class="flexi-table-body-c">
+  <div class="flexi-table-body-c" ref="print">
     <button @click="selectAllCheckboxes" style="margin-right: 100px">
       {{ allSelected ? 'Deselect All' : 'Select All' }}
     </button>

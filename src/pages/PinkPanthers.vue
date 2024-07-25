@@ -23,12 +23,12 @@ export default {
     return {
       flexiTableOptions: {
         options: {
-          //columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
-          columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 1.3, 0.5, 1.75],
+          columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
+
           columnGap: '.5rem',
           EInternSingleComponentType: PageOrder,
 
-          hiddenColumns: ['annualFee', 'city'],
+          //hiddenColumns: ['annualFee', 'city'],
 
           //itemsPerPage: 5,
           stickyHeader: true,
