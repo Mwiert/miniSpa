@@ -183,7 +183,8 @@
         :label="radio.label"
         :value="radio.value"
         v-model="pickedRadioHotel"
-        :disabled="radio.disabled" />
+        :disabled="radio.disabled"/>
+        <p>{{ pickedRadioHotel }}</p>
     </div>
     <!--Radio Buttons for flight-->
     <div class="flight-radio-buttons">
