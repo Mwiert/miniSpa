@@ -162,6 +162,7 @@
         v-model="powerpuffGirls.checked"
         :disabled="powerpuffGirls.disabled"
         @update:modelValue="toggleChange1" />
+        <p> Status: {{ powerpuffGirls.checked }}</p>
     </div>
 
     <div>
@@ -201,7 +202,8 @@
         :label="radio.label"
         :value="radio.value"
         v-model="pickedRadioHotel"
-        :disabled="radio.disabled" />
+        :disabled="radio.disabled"/>
+        <p>{{ pickedRadioHotel }}</p>
     </div>
     <!--Radio Buttons for flight-->
     <div class="flight-radio-buttons">
@@ -225,7 +227,9 @@
         :className="'hotel'"
         :label="checkbox.label"
         :disabled="checkbox.disabled"
-        @takeCheckedInfo="takeCheckedInfo" />
+        v-model:checked="checkbox.checked"
+        @takeCheckedInfo="takeCheckedInfo"
+         />
     </div>
 
     <!-- Checkboxes for flight -->
@@ -237,17 +241,20 @@
         :disabled="checkbox.disabled"
         :label="checkbox.label"
         after
+        v-model:checked="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
+        <p>{{ checkboxFlight }}</p>
     </div>
-
     <!-- Example of a disabled checkbox -->
-    <UICheckbox
+    <!-- <UICheckbox
       :label="'Disabled'"
       :className="'hotel'"
       :after="false"
       :disabled="true"
       :name="'disabled'"
-      :id="'deneme'" />
+      :id="'deneme'"
+      v-model:checked="checkbox.checked"
+       /> -->
   </div>
 </template>
 
@@ -331,14 +338,14 @@ export default {
 
       // Initial states for checkboxes
       checkboxHotel: [
-        { label: 'Hotel 1', id: 'id1', disabled: false },
-        { label: 'Hotel 2', id: 'id2', disabled: false },
-        { label: 'Hotel 3', id: 'id3', disabled: true }
+        { label: 'Hotel 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Hotel 2', id: 'id2', disabled: false, checked: false },
+        { label: 'Hotel 3', id: 'id3', disabled: true, checked: false }
       ],
       checkboxFlight: [
-        { label: 'Flight 1', id: 'id1', disabled: false },
-        { label: 'Flight 2', id: 'id2', disabled: false },
-        { label: 'Flight 3', id: 'id3', disabled: false }
+        { label: 'Flight 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Flight 2', id: 'id2', disabled: false, checked: false },
+        { label: 'Flight 3', id: 'id3', disabled: false, checked: false }
       ]
     }
   },
