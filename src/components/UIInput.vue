@@ -1,6 +1,8 @@
 <template>
   <div class="input-box-c">
-    <div class="input-wrapper" :class="{ 'no-clear-button': !clearButton }">
+    <div
+      class="input-wrapper"
+      :class="[{ 'no-clear-button': !clearButton }, { disabled: disabled }]">
       <div class="icon-wrapper" :class="{ 'icon-left': clearButton, 'icon-right': !clearButton }">
         <SvgIcon
           v-if="icon"
@@ -11,16 +13,19 @@
       </div>
       <input
         class="input-value"
-        :class="[{ active: isFocused }, { 'no-clear-button': !clearButton }]"
+        :class="[
+          { active: isFocused },
+          { 'no-clear-button': !clearButton },
+          { disabled: disabled }
+        ]"
         :type="isPassword ? (showPassword ? 'text' : 'password') : text"
-        :placeholder="placeholder"
         :id="id"
         :label="label"
         :maxLength="maxLength"
         :minLength="minLength"
         :disabled="disabled"
         v-model="inputValue"
-        @input="handleInput"
+        @input="$emit('update:modelValue', $event.target.value)"
         @focus="handleFocus"
         @blur="handleBlur" />
       <label
@@ -36,13 +41,11 @@
         :size="'s'"
         @click="clearInput" />
     </div>
-    <span v-if="errors.length" class="error">{{ errors.join(', ') }}</span>
   </div>
 </template>
 
 <script lang="ts">
 import SvgIcon from './SvgIcon.vue'
-import { validateInput } from '../Validations/ValidationsFunctions'
 
 export default {
   name: 'UIInput',
@@ -52,20 +55,14 @@ export default {
   data() {
     return {
       showPassword: false,
-      inputValue: this.value,
+      inputValue: this.modelValue,
       isFocused: false,
-      errors: []
     }
   },
   props: {
     type: {
       type: String,
       default: 'text'
-    },
-
-    placeholder: {
-      type: String,
-      default: ''
     },
     id: {
       type: String,
@@ -77,15 +74,12 @@ export default {
     },
     maxLength: {
       type: Number,
-      default: null
     },
     minLength: {
       type: Number,
-      default: null
     },
-    value: {
+    modelValue: {
       type: String,
-      default: ''
     },
     disabled: {
       type: Boolean,
@@ -99,19 +93,6 @@ export default {
       type: Boolean,
       default: false
     },
-    rules: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  watch: {
-    value(newVal) {
-      this.inputValue = newVal
-    },
-    inputValue(newVal) {
-      this.$emit('update:value', newVal)
-      this.validate()
-    }
   },
   computed: {
     isPassword() {
@@ -128,29 +109,20 @@ export default {
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword
     },
-    updateValue(newValue: String) {
-      this.$emit('update:value', newValue)
-    },
-    handleInput() {
-      this.updateValue(this.inputValue)
-    },
     clearInput() {
       this.inputValue = ''
-      this.updateValue('')
+      this.$emit('update:modelValue', '')
       this.isFocused = false
     },
     handleFocus() {
       this.isFocused = true
     },
     handleBlur() {
-      if (this.inputValue === '') {
+      if (this.modelValue === '') {
         this.isFocused = false
       }
-      this.validate()
     },
-    validate() {
-      this.errors = validateInput(this.inputValue, this.rules, this.type)
-    }
+
   }
 }
 </script>
@@ -167,7 +139,7 @@ export default {
   border-radius: 8px;
   padding: 0.5rem;
   .input-wrapper {
-    width: 360px;
+    width: 240px;
     display: flex;
     align-items: center;
     position: relative;
@@ -203,11 +175,14 @@ export default {
         padding: 0px;
         padding-left: 5px;
         border-radius: 50%;
+        &.disabled {
+          cursor: not-allowed;
+        }
       }
     }
     .label {
       position: absolute;
-      left: 50px;
+      left: 46px;
       font-size: 1rem;
       font-weight: 100;
       color: grey;
@@ -265,6 +240,10 @@ export default {
     color: red;
     font-size: 0.8rem;
     margin-top: 0.5rem;
+  }
+  .disabled {
+    background-color: rgb(195, 192, 192);
+    cursor: not-allowed;
   }
 }
 </style>
