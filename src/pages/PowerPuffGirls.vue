@@ -140,36 +140,36 @@
       <UIToggle
         :id="'powerpuffGirls'"
         :label="'Powerpuff Girls'"
-        :checked="powerpuffGirls.checked"
+        v-model="powerpuffGirls.checked"
         :disabled="powerpuffGirls.disabled"
-        @switchToggle="toggleChange1" />
+        @update:modelValue="toggleChange1" />
     </div>
 
     <div>
       <UIToggle
         :id="'timeBenders'"
         :label="'Time Benders'"
-        :checked="timeBenders.checked"
+        v-model="timeBenders.checked"
         :disabled="timeBenders.disabled"
-        @switchToggle="toggleChange2" />
+        @update:modelValue="toggleChange2" />
     </div>
 
     <div>
       <UIToggle
         :id="'summerLovers'"
         :label="'Summer Lovers'"
-        :checked="summerLovers.checked"
+        v-model="summerLovers.checked"
         :disabled="summerLovers.disabled"
-        @switchToggle="toggleChange3" />
+        @update:modelValue="toggleChange3" />
     </div>
 
     <div>
       <UIToggle
         :id="'pinkPanthers'"
         :label="'Pink Panthers'"
-        :checked="pinkPanthers.checked"
+        v-model="pinkPanthers.checked"
         :disabled="pinkPanthers.disabled"
-        @switchToggle="toggleChange4" />
+        @update:modelValue="toggleChange4" />
     </div>
 
     <!-- UIRadioButton component instances  -->
@@ -333,13 +333,13 @@ export default {
     },
 
     // Methods to handle toggle state change
-    toggleChange1(newChecked) {
+    toggleChange1(newChecked: boolean) {
       // Changes the checked state of the first toggle switch (powerpuffGirls)
       this.powerpuffGirls.checked = newChecked
       //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
-    toggleChange2(newChecked) {
+    toggleChange2(newChecked: boolean) {
       this.timeBenders.checked = newChecked
       this.summerLovers.disabled = false
     },
@@ -356,8 +356,8 @@ export default {
       console.log('oldu')
     },
 
-    takeCheckedInfo(info) {
-      console.log(info)
+    takeCheckedInfo(name: string , id: string , isChecked: boolean) {
+      console.log(name, id, isChecked)
     }
   }
 }
