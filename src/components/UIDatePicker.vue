@@ -82,8 +82,7 @@ export default {
     monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
-    isDatePickerEnable: { type: Boolean },
-    initialDate: { type: String, default: '' }
+    isDatePickerEnable: { type: Boolean }
   },
   methods: {
     checkRange() {
@@ -129,18 +128,21 @@ export default {
       } else {
         if (this.yearRange !== 99) {
           let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          this.minDate = dayjs(this.saveDate).subtract(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs(this.saveDate).add(day, 'day').format('YYYY-MM-DD')
         } else if (this.monthRange !== 99) {
-          this.minDate = dayjs()
+          this.minDate = dayjs(this.saveDate)
             .subtract(this.monthRange, 'month')
             .endOf('month')
             .format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
+          this.maxDate = dayjs(this.saveDate)
+            .add(this.monthRange, 'month')
+            .startOf('month')
+            .format('YYYY-MM-DD')
         } else {
           let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          this.minDate = dayjs(this.saveDate).subtract(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs(this.saveDate).add(day, 'day').format('YYYY-MM-DD')
         }
       }
     },
@@ -267,7 +269,7 @@ export default {
             this.daysInMonth[i].textDecoration = true
           }
         }
-      } else if (this.isFutureValidation) {
+      } else {
         for (let i = 0; i < this.daysInMonth.length; i++) {
           if (
             this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
@@ -281,39 +283,13 @@ export default {
           if (
             this.daysInMonth[i].date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
             this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY')
+            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') &&
+            this.daysInMonth[i].number < dayjs(this.presentDate).date()
           ) {
             this.daysInMonth[i].textDecoration = true
           }
         }
       }
-      if(this.monthRange!=99){
-      let today = dayjs()
-      let futureDate = today.add(this.monthRange, 'month')
-      let pastDate = today.subtract(this.monthRange, 'month').subtract(1, 'day');
-      
-
-      this.daysInMonth.forEach(day => {
-        if (day.date && dayjs(day.date).isAfter(futureDate)) {
-          day.textDecoration = true
-        }else if(day.date && dayjs(day.date).isBefore(pastDate)){
-          day.textDecoration = true
-        }
-      })
-    }else if(this.yearRange!=99){
-      let today = dayjs()
-      let futureDate = today.add(this.yearRange, 'year')
-      let pastDate = today.subtract(this.yearRange, 'year').subtract(1, 'day');
-      
-
-      this.daysInMonth.forEach(day => {
-        if (day.date && dayjs(day.date).isAfter(futureDate)) {
-          day.textDecoration = true
-        }else if(day.date && dayjs(day.date).isBefore(pastDate)){
-          day.textDecoration = true
-        }
-      })
-    }
     }
   },
   computed: {
@@ -445,10 +421,6 @@ export default {
       padding-top: 6px;
       //Styling of depending on if it is today (coloring gray)
       .isToday {
-        background: #e7e7e7;
-        border-radius: 16px;
-      }
-      .initialDate {
         background: #e7e7e7;
         border-radius: 16px;
       }

@@ -93,7 +93,6 @@
           v-show="isSingleDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
-          :dayRange="validateDay"
           :saveDate="sendInitialDates.firstInitialDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
@@ -106,7 +105,6 @@
           v-show="isMultiDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
-          :dayRange="validateDay"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
@@ -141,9 +139,7 @@ export default {
     value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
-    //presentDate: dayjs().format('YYYY-MM-DD'),
-    initialDate: { type: String, default: '' },
-    validateDay: { type: Number, default: 99 }
+    initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') }
   },
   data() {
     return {
@@ -230,26 +226,38 @@ export default {
     fillInitialDate() {
       if (this.isMultiDatePicker) {
         if (this.initialDate) {
-          this.sendInitialDates.firstInitialDate = {
-            number: dayjs(this.initialDate).format('DD'),
-            month: dayjs(this.initialDate).format('MM'),
-            year: dayjs(this.initialDate).format('YYYY'),
-            date: dayjs(this.initialDate).format('YYYY-MM-DD')
-          }
           if (!this.isPast) {
+            this.sendInitialDates.firstInitialDate = {
+              number: dayjs(this.initialDate).format('DD'),
+              month: dayjs(this.initialDate).format('MM'),
+              year: dayjs(this.initialDate).format('YYYY'),
+              date: dayjs(this.initialDate).format('YYYY-MM-DD')
+            }
             this.sendInitialDates.secondInitialDate = dayjs(this.initialDate)
               .add(3, 'day')
               .format('YYYY-MM-DD')
+            this.sendInitialDates.secondInitialDate = {
+              number: dayjs(this.sendInitialDates.secondInitialDate).format('DD'),
+              month: dayjs(this.sendInitialDates.secondInitialDate).format('MM'),
+              year: dayjs(this.sendInitialDates.secondInitialDate).format('YYYY'),
+              date: dayjs(this.sendInitialDates.secondInitialDate).format('YYYY-MM-DD')
+            }
           } else {
-            this.sendInitialDates.secondInitialDate = dayjs(this.initialDate)
+            this.sendInitialDates.firstInitialDate = dayjs(this.initialDate)
               .subtract(3, 'day')
               .format('YYYY-MM-DD')
-          }
-          this.sendInitialDates.secondInitialDate = {
-            number: dayjs(this.sendInitialDates.secondInitialDate).format('DD'),
-            month: dayjs(this.sendInitialDates.secondInitialDate).format('MM'),
-            year: dayjs(this.sendInitialDates.secondInitialDate).format('YYYY'),
-            date: dayjs(this.sendInitialDates.secondInitialDate).format('YYYY-MM-DD')
+            this.sendInitialDates.firstInitialDate = {
+              number: dayjs(this.sendInitialDates.firstInitialDate).format('DD'),
+              month: dayjs(this.sendInitialDates.firstInitialDate).format('MM'),
+              year: dayjs(this.sendInitialDates.firstInitialDate).format('YYYY'),
+              date: dayjs(this.sendInitialDates.firstInitialDate).format('YYYY-MM-DD')
+            }
+            this.sendInitialDates.secondInitialDate = {
+              number: dayjs(this.initialDate).format('DD'),
+              month: dayjs(this.initialDate).format('MM'),
+              year: dayjs(this.initialDate).format('YYYY'),
+              date: dayjs(this.initialDate).format('YYYY-MM-DD')
+            }
           }
         } else {
           if (!this.isPast) {
