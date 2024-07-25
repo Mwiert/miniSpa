@@ -46,61 +46,91 @@
   <div class="input-box">
     <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton />
   </div>
+  <div class="input-box">
+    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton :disabled="true" />
+  </div>
   <!-- <button @click="submitForm">Submit</button> -->
 
   <div class="button-c">
     <!-- UIButton component instances -->
+    <!-- <p>id:{{ clickedButton.id }}</p> -->
     <UIButton
+      :id="'homebutton1'"
       text="Home"
       :isSpinnerActive="loadingStates.home.isLoading"
       :isDisabled="loadingStates.home.isDisabled"
       @click="setLoadingState('home')"
       routerUrl="/" />
     <UIButton
+      :id="'flightbutton1'"
       className="flight"
       text="Flight"
       :icon="'refresh'"
       :size="'small'"
       :isSpinnerActive="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
-      @click="setLoadingState('flight')" />
+      v-model="loadingStates.flight.isLoading"
+      @button-click="handleButtonClick('flight')" />
+    <p>Status:{{ loadingStates.flight.isLoading }}</p>
+
     <UIButton
+      :id="'hotelbutton1'"
       className="hotel"
       text="Hotel"
       :icon="'refresh'"
       :iconSize="'s'"
       :isSpinnerActive="loadingStates.hotel.isLoading"
       :isDisabled="loadingStates.hotel.isDisabled"
-      @click="setLoadingState('hotel')" />
+      v-model="loadingStates.hotel.isLoading"
+      @button-click="handleButtonClick('hotel')" />
+    Status:{{ loadingStates.hotel.isLoading }}
 
     <!-- Since the class name is not added, the default class will be used. -->
     <UIButton
+      :id="'ppgbutton'"
       text="PowerPuffGirls"
       :icon="'refresh'"
       :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
-      @click="setLoadingState('default')" />
+      v-model="loadingStates.default.isLoading"
+      @button-click="handleButtonClick('default')" />
+    Status:{{ loadingStates.default.isLoading }}
 
     <UIButton
+      :id="'flightoutline'"
       className="flight outline"
       text="Flight"
       :isSpinnerActive="loadingStates.flightOutline.isLoading"
       :icon="'refresh'"
       :isDisabled="loadingStates.flightOutline.isDisabled"
-      @click="setLoadingState('flightOutline')" />
+      v-model="loadingStates.flightOutline.isLoading"
+      @button-click="handleButtonClick('flightOutline')" />
+    Status:{{ loadingStates.flightOutline.isLoading }}
 
     <UIButton
+      :id="'hoteloutline'"
       className="hotel outline"
       text="Hotel"
       :isSpinnerActive="loadingStates.hotelOutline.isLoading"
       :isDisabled="loadingStates.hotelOutline.isDisabled"
-      @click="setLoadingState('hotelOutline')" />
-
+      v-model="loadingStates.hotelOutline.isLoading"
+      @button-click="handleButtonClick('hotelOutline')" />
+    Status:{{ loadingStates.hotelOutline.isLoading }}
     <UIButton
+      :id="'disabled'"
       text="Disabled"
       :isSpinnerActive="loadingStates.disabledButton.isLoading"
       :isDisabled="loadingStates.disabledButton.isDisabled"
-      @click="setLoadingState('disabledButton')" />
+      v-model="loadingStates.disabledButton.isLoading"
+      @button-click="handleButtonClick('disabledButton')" />
+    Status:{{ loadingStates.disabledButton.isLoading }}
+
+    <!-- <div>
+      <h3>Button status:</h3>
+      <li v-for="(state, key) in loadingStates" :key="key">
+        Button ID: {{ key }}, Loading State: {{ state.isLoading }}
+      </li>
+    </div> -->
 
     <!-- UIToggle component instances -->
     <div>
@@ -226,6 +256,7 @@ export default {
       valueTextArea: '',
       valueTextArea2: '',
       valueTextArea3: '',
+      clickedButton: { id: '', isLoading: false }, // Object to store the ID and loading state of the clicked button
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -286,14 +317,24 @@ export default {
     }
   },
   methods: {
+    handleButtonClick(id, isLoading) {
+      this.clickedButton.id = id
+      this.clickedButton.isLoading = isLoading
+      const button = id.replace('button1', '') // Buton id'sinden 'button1' kısmını çıkararak key alıyoruz
+      if (button in this.loadingStates) {
+        this.setLoadingState(button)
+      }
+    },
     // Method to set the loading state of a button and reset it after 2 seconds
     setLoadingState(buttonName: string) {
-      // Set the isLoading property to true for the specified button
-      this.loadingStates[buttonName].isLoading = true
-      // After 2 seconds, reset the isLoading property to false
-      setTimeout(() => {
-        this.loadingStates[buttonName].isLoading = false
-      }, 2000)
+      if (this.loadingStates[buttonName]) {
+        // Set the isLoading property to true for the specified button
+        this.loadingStates[buttonName].isLoading = true
+        // After 2 seconds, reset the isLoading property to false
+        setTimeout(() => {
+          this.loadingStates[buttonName].isLoading = false
+        }, 2000)
+      }
     },
 
     // Methods to handle toggle state change

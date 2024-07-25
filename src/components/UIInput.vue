@@ -1,6 +1,8 @@
 <template>
   <div class="input-box-c">
-    <div class="input-wrapper" :class="{ 'no-clear-button': !clearButton }">
+    <div
+      class="input-wrapper"
+      :class="[{ 'no-clear-button': !clearButton }, { disabled: disabled }]">
       <div class="icon-wrapper" :class="{ 'icon-left': clearButton, 'icon-right': !clearButton }">
         <SvgIcon
           v-if="icon"
@@ -11,7 +13,11 @@
       </div>
       <input
         class="input-value"
-        :class="[{ active: isFocused }, { 'no-clear-button': !clearButton }]"
+        :class="[
+          { active: isFocused },
+          { 'no-clear-button': !clearButton },
+          { disabled: disabled }
+        ]"
         :type="isPassword ? (showPassword ? 'text' : 'password') : text"
         :placeholder="placeholder"
         :id="id"
@@ -203,6 +209,9 @@ export default {
         padding: 0px;
         padding-left: 5px;
         border-radius: 50%;
+        &.disabled {
+          cursor: not-allowed;
+        }
       }
     }
     .label {
@@ -265,6 +274,10 @@ export default {
     color: red;
     font-size: 0.8rem;
     margin-top: 0.5rem;
+  }
+  .disabled {
+    background-color: rgb(195, 192, 192);
+    cursor: not-allowed;
   }
 }
 </style>
