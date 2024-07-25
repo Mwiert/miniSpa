@@ -18,7 +18,7 @@
           { 'no-clear-button': !clearButton },
           { disabled: disabled }
         ]"
-        :type="isPassword ? (showPassword ? 'text' : 'password') : text"
+        :type="isPassword ? (showPassword ? 'text' : 'password') : type"
         :id="id"
         :label="label"
         :maxLength="maxLength"

@@ -76,10 +76,10 @@
   </div>
 
   <div class="input-box">
-    <UIInput :id="'tckno'" :label="'TCKNO'" :icon="'arrow-up'" clearButton disabled />
+    <UIInput :id="'tckno'" :label="'TCKNO'" :icon="'arrow-up'" :type="'text'" clearButton disabled />
   </div>
   <div class="input-box">
-    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton :disabled="true" />
+    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" :type="'text'" clearButton :disabled="true" />
   </div>
   <!-- <button @click="submitForm">Submit</button> -->
 
