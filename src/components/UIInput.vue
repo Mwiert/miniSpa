@@ -1,29 +1,39 @@
 <template>
   <div class="input-box-c">
-    <div class="input-wrapper">
+    <div
+      class="input-wrapper"
+      :class="[{ 'no-clear-button': !clearButton }, { disabled: disabled }]">
+      <div class="icon-wrapper" :class="{ 'icon-left': clearButton, 'icon-right': !clearButton }">
+        <SvgIcon
+          v-if="icon"
+          :key="computedIcon"
+          class="icon"
+          :name="computedIcon"
+          @click="togglePasswordVisibility" />
+      </div>
       <input
         class="input-value"
-        :class="isFocused ? 'active' : ''"
+        :class="[
+          { active: isFocused },
+          { 'no-clear-button': !clearButton },
+          { disabled: disabled }
+        ]"
         :type="isPassword ? (showPassword ? 'text' : 'password') : text"
-        :placeholder="placeholder"
         :id="id"
         :label="label"
         :maxLength="maxLength"
         :minLength="minLength"
         :disabled="disabled"
         v-model="inputValue"
-        @input="handleInput"
+        @input="$emit('update:modelValue', $event.target.value)"
         @focus="handleFocus"
         @blur="handleBlur" />
-      <label v-if="label" class="label" :class="isFocused ? 'active' : ''" :for="id">
+      <label
+        v-if="label"
+        class="label"
+        :class="[{ active: isFocused }, { 'no-clear-button': !clearButton }]">
         {{ label }}
       </label>
-      <SvgIcon
-        v-if="icon"
-        :key="computedIcon"
-        class="icon"
-        :name="computedIcon"
-        @click="togglePasswordVisibility" />
       <SvgIcon
         v-if="inputValue && clearButton"
         class="clear-btn"
@@ -31,13 +41,11 @@
         :size="'s'"
         @click="clearInput" />
     </div>
-    <span v-if="errors.length" class="error">{{ errors.join(', ') }}</span>
   </div>
 </template>
 
 <script lang="ts">
 import SvgIcon from './SvgIcon.vue'
-import { validateInput } from '../Validations/ValidationsFunctions'
 
 export default {
   name: 'UIInput',
@@ -47,9 +55,8 @@ export default {
   data() {
     return {
       showPassword: false,
-      inputValue: this.value,
+      inputValue: this.modelValue,
       isFocused: false,
-      errors: []
     }
   },
   props: {
@@ -57,30 +64,22 @@ export default {
       type: String,
       default: 'text'
     },
-
-    placeholder: {
-      type: String,
-      default: ''
-    },
     id: {
       type: String,
       required: true
     },
     label: {
       type: String,
-      required: true
+      required: false
     },
     maxLength: {
       type: Number,
-      default: null
     },
     minLength: {
       type: Number,
-      default: null
     },
-    value: {
+    modelValue: {
       type: String,
-      default: ''
     },
     disabled: {
       type: Boolean,
@@ -94,19 +93,6 @@ export default {
       type: Boolean,
       default: false
     },
-    rules: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  watch: {
-    value(newVal) {
-      this.inputValue = newVal
-    },
-    inputValue(newVal) {
-      this.$emit('update:value', newVal)
-      this.validate()
-    }
   },
   computed: {
     isPassword() {
@@ -123,29 +109,20 @@ export default {
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword
     },
-    updateValue(newValue: String) {
-      this.$emit('update:value', newValue)
-    },
-    handleInput() {
-      this.updateValue(this.inputValue)
-    },
     clearInput() {
       this.inputValue = ''
-      this.updateValue('')
+      this.$emit('update:modelValue', '')
       this.isFocused = false
     },
     handleFocus() {
       this.isFocused = true
     },
     handleBlur() {
-      if (this.inputValue === '') {
+      if (this.modelValue === '') {
         this.isFocused = false
       }
-      this.validate()
     },
-    validate() {
-      this.errors = validateInput(this.inputValue, this.rules, this.type)
-    }
+
   }
 }
 </script>
@@ -162,22 +139,50 @@ export default {
   border-radius: 8px;
   padding: 0.5rem;
   .input-wrapper {
-    width: fit-content;
+    width: 240px;
     display: flex;
     align-items: center;
     position: relative;
-    bottom: 8px;
     border: 1px solid #666666;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 
+    &.no-clear-button {
+      .input-value {
+        margin-inline-start: 2px;
+      }
+    }
+
     &:hover {
       border-color: #007bff;
     }
-    .label {
-      margin-inline-start: 8px;
+    .icon-wrapper {
+      display: flex;
       position: absolute;
-      left: 40px;
+      top: 12px;
+      &.icon-left {
+        left: 6px;
+      }
+      &.icon-right {
+        right: 12px;
+      }
+      .icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        padding: 0px;
+        padding-left: 5px;
+        border-radius: 50%;
+        &.disabled {
+          cursor: not-allowed;
+        }
+      }
+    }
+    .label {
+      position: absolute;
+      left: 46px;
       font-size: 1rem;
       font-weight: 100;
       color: grey;
@@ -185,11 +190,16 @@ export default {
       top: 50%;
       transform: translateY(-50%);
       transition: all 0.3s ease;
+
       &.active {
-        margin-inline-start: 8px;
         transform: none;
         top: 6px;
         font-size: 12px;
+        right: 6px;
+      }
+
+      &.no-clear-button {
+        left: 16px;
       }
     }
     .clear-btn {
@@ -197,7 +207,7 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 16px;
+      right: 4px;
       width: 16px;
       height: 16px;
       border-radius: 50%;
@@ -209,23 +219,9 @@ export default {
         filter: opacity(0.7);
       }
     }
-    .icon {
-      position: absolute;
-      background: none;
-      border: none;
-      cursor: pointer;
-      left: 6px;
-      top: 12px;
-      width: 24px;
-      height: 24px;
-      padding: 0px;
-      padding-left: 5px;
-      border-radius: 50%;
-    }
     //styling
     .input-value {
       font-size: 1rem;
-
       margin-inline-start: 30px;
       outline: none;
       border: none;
@@ -244,6 +240,10 @@ export default {
     color: red;
     font-size: 0.8rem;
     margin-top: 0.5rem;
+  }
+  .disabled {
+    background-color: rgb(195, 192, 192);
+    cursor: not-allowed;
   }
 }
 </style>

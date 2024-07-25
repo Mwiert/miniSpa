@@ -36,35 +36,58 @@
   </div>
 
   <div class="input-box">
-    <UIInput :id="'username'" :label="'Email'" :icon="'mail'" :type="'email'" clearButton />
+    <UIInput
+      :id="'username'"
+      :label="'Email'"
+      :icon="'mail'"
+      :type="'email'"
+      v-model="messageInput" />
+    <p>{{ messageInput }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput :type="'password'" :id="'password'" :label="'password'" :icon="'mail'" clearButton />
+    <UIInput
+      :type="'password'"
+      :id="'password'"
+      :label="'Password'"
+      :icon="'eye'"
+      clearButton
+      v-model="messageInputWithClearButton" />
+    <p>{{ messageInputWithClearButton }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton />
+    <UIInput :id="'tckno'" :label="'TCKNO'" :icon="'arrow-up'" clearButton disabled />
+  </div>
+  <div class="input-box">
+    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton :disabled="true" />
   </div>
   <!-- <button @click="submitForm">Submit</button> -->
 
   <div class="button-c">
     <!-- UIButton component instances -->
+    <!-- <p>id:{{ clickedButton.id }}</p> -->
     <UIButton
+      :id="'homebutton1'"
       text="Home"
       :isSpinnerActive="loadingStates.home.isLoading"
       :isDisabled="loadingStates.home.isDisabled"
       @click="setLoadingState('home')"
       routerUrl="/" />
     <UIButton
+      :id="'flightbutton1'"
       className="flight"
       text="Flight"
       :icon="'refresh'"
       :size="'small'"
       :isSpinnerActive="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
-      @click="setLoadingState('flight')" />
+      @click="setLoadingState('flight')"
+      v-model="buttonValue" />
+    <p>{{ buttonValue }}</p>
+
     <UIButton
+      :id="'hotelbutton1'"
       className="hotel"
       text="Hotel"
       :icon="'refresh'"
@@ -75,6 +98,7 @@
 
     <!-- Since the class name is not added, the default class will be used. -->
     <UIButton
+      :id="'ppgbutton'"
       text="PowerPuffGirls"
       :icon="'refresh'"
       :isSpinnerActive="loadingStates.default.isLoading"
@@ -82,6 +106,7 @@
       @click="setLoadingState('default')" />
 
     <UIButton
+      :id="'flightoutline'"
       className="flight outline"
       text="Flight"
       :isSpinnerActive="loadingStates.flightOutline.isLoading"
@@ -90,53 +115,61 @@
       @click="setLoadingState('flightOutline')" />
 
     <UIButton
+      :id="'hoteloutline'"
       className="hotel outline"
       text="Hotel"
       :isSpinnerActive="loadingStates.hotelOutline.isLoading"
       :isDisabled="loadingStates.hotelOutline.isDisabled"
       @click="setLoadingState('hotelOutline')" />
-
     <UIButton
+      :id="'disabled'"
       text="Disabled"
       :isSpinnerActive="loadingStates.disabledButton.isLoading"
       :isDisabled="loadingStates.disabledButton.isDisabled"
       @click="setLoadingState('disabledButton')" />
+
+    <!-- <div>
+      <h3>Button status:</h3>
+      <li v-for="(state, key) in loadingStates" :key="key">
+        Button ID: {{ key }}, Loading State: {{ state.isLoading }}
+      </li>
+    </div> -->
 
     <!-- UIToggle component instances -->
     <div>
       <UIToggle
         :id="'powerpuffGirls'"
         :label="'Powerpuff Girls'"
-        :checked="powerpuffGirls.checked"
+        v-model="powerpuffGirls.checked"
         :disabled="powerpuffGirls.disabled"
-        @switchToggle="toggleChange1" />
+        @update:modelValue="toggleChange1" />
     </div>
 
     <div>
       <UIToggle
         :id="'timeBenders'"
         :label="'Time Benders'"
-        :checked="timeBenders.checked"
+        v-model="timeBenders.checked"
         :disabled="timeBenders.disabled"
-        @switchToggle="toggleChange2" />
+        @update:modelValue="toggleChange2" />
     </div>
 
     <div>
       <UIToggle
         :id="'summerLovers'"
         :label="'Summer Lovers'"
-        :checked="summerLovers.checked"
+        v-model="summerLovers.checked"
         :disabled="summerLovers.disabled"
-        @switchToggle="toggleChange3" />
+        @update:modelValue="toggleChange3" />
     </div>
 
     <div>
       <UIToggle
         :id="'pinkPanthers'"
         :label="'Pink Panthers'"
-        :checked="pinkPanthers.checked"
+        v-model="pinkPanthers.checked"
         :disabled="pinkPanthers.disabled"
-        @switchToggle="toggleChange4" />
+        @update:modelValue="toggleChange4" />
     </div>
 
     <!-- UIRadioButton component instances  -->
@@ -226,6 +259,9 @@ export default {
       valueTextArea: '',
       valueTextArea2: '',
       valueTextArea3: '',
+      messageInput: '',
+      messageInputWithClearButton: '',
+      buttonValue: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -297,13 +333,13 @@ export default {
     },
 
     // Methods to handle toggle state change
-    toggleChange1(newChecked) {
+    toggleChange1(newChecked: boolean) {
       // Changes the checked state of the first toggle switch (powerpuffGirls)
       this.powerpuffGirls.checked = newChecked
       //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
-    toggleChange2(newChecked) {
+    toggleChange2(newChecked: boolean) {
       this.timeBenders.checked = newChecked
       this.summerLovers.disabled = false
     },
@@ -320,8 +356,8 @@ export default {
       console.log('oldu')
     },
 
-    takeCheckedInfo(info) {
-      console.log(info)
+    takeCheckedInfo(name: string , id: string , isChecked: boolean) {
+      console.log(name, id, isChecked)
     }
   }
 }
