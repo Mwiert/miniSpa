@@ -45,6 +45,19 @@
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
         :enumObj="EInternSingleComponentType" />
+
+      <UIEnumDropdown
+        v-model="selectedEnum"
+        :fontSize="fontSize"
+        displayField="name"
+        :label="'Sorted by Name in Ascending Order All and Unknown Are On Searchable Closed Data Size Closed'"
+        :sortField="sortField"
+        :isMulti="!isMulti"
+        :showAll="true"
+        :showUnknown="true"
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :enumObj="EInternSingleComponentType" />
     </div>
     <div>
       <h1>{{ 'Multi Enum Dropdown' }}</h1>
@@ -87,6 +100,21 @@
         :label="'Sorted by Name in Ascending Order All and Unknown Are On Searchable Closed'"
         :sortField="'sortField'"
         :dataSize="dataSize"
+        :maxVisibleItems="2"
+        :hasActionBox="true"
+        :isMulti="isMulti"
+        :showAll="true"
+        :showUnknown="true"
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :enumObj="EInternComponentType" />
+
+      <UIEnumDropdown
+        v-model="selectedEnums"
+        :fontSize="fontSize"
+        displayField="name"
+        :label="'Sorted by Name in Ascending Order All and Unknown Are On Searchable Closed Data Size Closed'"
+        :sortField="'sortField'"
         :maxVisibleItems="2"
         :hasActionBox="true"
         :isMulti="isMulti"
