@@ -1,4 +1,5 @@
 <template>
+  {{ getEnumFile() }}
   <UIMultiDropdown
     v-if="isMulti"
     v-model="selectedItems"
@@ -110,7 +111,6 @@ export default {
         .filter(
           (key) => !isNaN(key) && (this.showAll || key !== -1) && (this.showUnknown || key !== 0)
         )
-        .sort()
         .map((key) => ({
           id: key,
           name: this.enumObj[key]
