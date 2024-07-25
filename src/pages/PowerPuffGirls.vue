@@ -7,7 +7,7 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="100"
-      v-model="valueTextArea"></UITextArea>
+      v-model="valueTextArea"/>
     <p>{{ valueTextArea }}</p>
   </div>
   <div class="text-area-c">
@@ -18,7 +18,7 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
-      v-model="valueTextArea2"></UITextArea>
+      v-model="valueTextArea2"/>
     <p>{{ valueTextArea2 }}</p>
   </div>
   <div class="text-area-c">
@@ -29,7 +29,7 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
-      v-model="valueTextArea3"></UITextArea>
+      v-model="valueTextArea3"/>
     <p>{{ valueTextArea3 }}</p>
   </div>
   <div class="text-area-c">
@@ -39,7 +39,7 @@
       :cols="10"
       :placeholder="'Enter your address'"
       :maxLength="10"
-      v-model="valueTextArea4"></UITextArea>
+      v-model="valueTextArea4"/>
     <p>{{ valueTextArea4 }}</p>
   </div>
 
@@ -50,7 +50,7 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
-      v-model="valueTextArea5"></UITextArea>
+      v-model="valueTextArea5"/>
     <p>{{ valueTextArea5 }}</p>
   </div>
 

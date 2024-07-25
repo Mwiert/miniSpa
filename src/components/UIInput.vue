@@ -45,13 +45,9 @@
 </template>
 
 <script lang="ts">
-import SvgIcon from './SvgIcon.vue'
 
 export default {
   name: 'UIInput',
-  components: {
-    SvgIcon
-  },
   data() {
     return {
       showPassword: false,
