@@ -27,7 +27,7 @@
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
 </template>
 
-<script lang="ts">
+<script>
 import UIDropdown from '../Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../Dropdown/UIMultiDropdown.vue'
 

@@ -39,11 +39,12 @@
             :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)" class="item-container">
               <div class="image-label-wrapper">
-                <img
-                  :src="item[urlField]"
-                  alt=""
+                <div
                   class="dropdown-item-img"
-                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                  <SvgIcon :name="item[iconImage]" :size="'s'" />
+                </div>
+
                 <span class="item-name"> {{ isLongItem(item) }}</span>
               </div>
 
@@ -51,11 +52,12 @@
             </div>
             <div v-else class="item-container">
               <div class="image-label-wrapper">
-                <img
-                  :src="item[urlField]"
-                  alt=""
+                <div
                   class="dropdown-item-img"
-                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                  <SvgIcon :name="item[iconImage]" :size="'s'" />
+                </div>
+
                 <span class="item-name">{{ isLongItem(item) }}</span>
               </div>
             </div>
@@ -67,13 +69,9 @@
 </template>
 
 <script lang="ts">
-import SvgIcon from '../SvgIcon.vue'
-
 export default {
   name: 'UIMultiDropDown',
-  components: {
-    SvgIcon
-  },
+
   props: {
     items: {
       // items in the database.
@@ -134,11 +132,6 @@ export default {
       default: 'name'
     },
 
-    urlField: {
-      // picture of the object taken here
-      type: String,
-      default: ''
-    },
     sortField: {
       type: String
     },
@@ -149,6 +142,10 @@ export default {
     maxItemThreshold: {
       type: Number,
       default: 15
+    },
+    iconImage: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -298,13 +295,14 @@ export default {
       return String(item[this.displayField])
     },
     checkItem(item) {
-      return item[this.urlField] !== '' && item[this.urlField] !== undefined
+      return item[this.iconImage] !== '' && item[this.iconImage] !== undefined
     },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
+        console.log(this.dropdownItems[i][this.iconImage])
         if (
-          this.dropdownItems[i][this.urlField] !== '' &&
-          this.dropdownItems[i][this.urlField] !== undefined
+          this.dropdownItems[i][this.iconImage] !== '' &&
+          this.dropdownItems[i][this.iconImage] !== undefined
         ) {
           return true
         }
@@ -575,13 +573,17 @@ export default {
               flex-shrink: 0;
 
               .dropdown-item-img {
-                width: 12px;
-                height: 12px;
+                width: 16px;
+                height: 16px;
                 padding-right: 10px;
                 justify-self: end;
                 display: none;
                 align-items: center;
-
+                .svg-icon-c {
+                  width: 16px;
+                  height: 16px;
+                  padding: 0;
+                }
                 &.isVisible {
                   display: inline-block;
                   align-items: center;

@@ -297,40 +297,46 @@ export default {
         this.emitResetInitialDates() // turuncu baslangic degerlerini ilk tiklamada emit edip false olmasini saglar
       }
 
-      if (!this.firstSelectedDate.date) {   // First boşsa gir
+      if (!this.firstSelectedDate.date) {
+        // First boşsa gir
         this.firstSelectedDate = selectedDay
         this.firstSelectedDate.selected = true
         this.saveFirstDateHistory = this.firstSelectedDate.date
       } else {
-        if (selectedDay.date < this.firstSelectedDate.date) {  // Seçilen gün first'ten küçükse gir
-          if (!this.secondSelectedDate.date) { // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
+        if (selectedDay.date < this.firstSelectedDate.date) {
+          // Seçilen gün first'ten küçükse gir
+          if (!this.secondSelectedDate.date) {
+            // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
             this.secondSelectedDate = this.firstSelectedDate
             this.firstSelectedDate = selectedDay
-            this.firstSelectedDate.selected = true            
+            this.firstSelectedDate.selected = true
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
-          } else { // First ve second varsa gir (tarihi sola doğru genişletir)
+          } else {
+            // First ve second varsa gir (tarihi sola doğru genişletir)
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = selectedDay
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
           }
-        } else if (selectedDay.date == this.firstSelectedDate.date) { // Seçilen gün first'e eşitse gir (seçilenleri kaldırır)
+        } else if (selectedDay.date == this.firstSelectedDate.date) {
+          // Seçilen gün first'e eşitse gir (seçilenleri kaldırır)
           this.firstSelectedDate.selected = false
           this.secondSelectedDate.selected = false
-          this.firstSelectedDate = { date: ''}
-          this.secondSelectedDate = { date: ''}
+          this.firstSelectedDate = { date: '' }
+          this.secondSelectedDate = { date: '' }
           this.saveFirstDateHistory = ''
           this.saveSecondDateHistory = ''
-        } else if (selectedDay.date > this.firstSelectedDate.date) { // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
+        } else if (selectedDay.date > this.firstSelectedDate.date) {
+          // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
           this.secondSelectedDate.selected = false
           this.secondSelectedDate = selectedDay
           this.secondSelectedDate.selected = true
           this.saveSecondDateHistory = this.secondSelectedDate.date
         }
-      }            
-      this.emitDate('dateFirstSelected', this.firstSelectedDate)            
+      }
+      this.emitDate('dateFirstSelected', this.firstSelectedDate)
       this.emitDate('dateSecondSelected', this.secondSelectedDate)
       this.deactivateAllBetween()
       this.updateBetweenDates()
@@ -418,8 +424,8 @@ export default {
       })
     },
     updateBetweenDates() {
-      const startDate = this.isPastValidation ? this.secondSelectedDate : this.firstSelectedDate
-      const endDate = this.isPastValidation ? this.firstSelectedDate : this.secondSelectedDate
+      const startDate = this.firstSelectedDate
+      const endDate = this.secondSelectedDate
       if (startDate.date && endDate.date) {
         if (startDate.month !== endDate.month) {
           // seçilen iki tarih farklı aylardaysa
@@ -560,7 +566,7 @@ export default {
             this.daysInMonth[i].textDecoration = true
           }
         }
-      } else if (this.isFutureValidation) {
+      } else {
         for (let i = 0; i < this.daysInMonth.length; i++) {
           if (
             // bulunulan tarihin solundaki günler çizilir
@@ -594,45 +600,52 @@ export default {
           }
         }
       }
-    },
+    }
   },
   watch: {
     isDatePickerEnable(newVal) {
-      // kapatılan tarihte başlamaması için
       if (newVal) {
-        this.calendarDate = dayjs(this.saveDateHistory)
+        if (!this.saveFirstDateHistory) {
+          this.calendarDate = dayjs(this.presentDate)
+        } else {
+          this.calendarDate = dayjs(this.saveFirstDateHistory)
+        }
+
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
         this.nextMonthDate = this.calendarDate.add(1, 'month').format('YYYY-MM-DD')
         this.prevMonthDate = this.calendarDate.subtract(1, 'month').format('YYYY-MM-DD')
         this.populdateMonthDays()
-
         this.checkDateHistory()
         this.updateBetweenDates()
         this.linedThroughDate() // Her iki takvim için geçerli
       }
     },
     saveFirstDateHistory(newVal) {
-      if (!newVal) { // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin
-        this.daysInMonth.forEach((day) => { // soldaki takvim için initial'ları ara
-        if (day.date == this.baseInitialDates.firstInitialDate.date ) {
-          day.firstInitialDate = true
-        }
-        if (day.date == this.baseInitialDates.secondInitialDate.date) {
-          day.secondInitialDate = true
-        }
-      })
+      if (!newVal) {
+        // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin
+        this.daysInMonth.forEach((day) => {
+          // soldaki takvim için initial'ları ara
+          if (day.date == this.baseInitialDates.firstInitialDate.date) {
+            day.firstInitialDate = true
+          }
+          if (day.date == this.baseInitialDates.secondInitialDate.date) {
+            day.secondInitialDate = true
+          }
+        })
 
-      this.nextMonthDays.forEach((day) => {  // sağdaki takvim için initial'ları ara
-        if (day.date == this.baseInitialDates.firstInitialDate.date ) {
-          day.firstInitialDate = true
-        }
-        if (day.date == this.baseInitialDates.secondInitialDate.date) {
-          day.secondInitialDate = true
-        }
-      })
+        this.nextMonthDays.forEach((day) => {
+          // sağdaki takvim için initial'ları ara
+          if (day.date == this.baseInitialDates.firstInitialDate.date) {
+            day.firstInitialDate = true
+          }
+          if (day.date == this.baseInitialDates.secondInitialDate.date) {
+            day.secondInitialDate = true
+          }
+        })
       }
     }
   },
+
   created() {
     //When the component is created, we are checking the range, creating the days in month and checking the date history
     this.checkRange()
