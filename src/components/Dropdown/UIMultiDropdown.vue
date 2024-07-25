@@ -30,7 +30,7 @@
         </div>
         <div
           class="ui-multi-dropdown-content"
-          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
+          :style="{ fontSize: fontSize + 'px', height: dropdownListMaxHeight }">
           <div
             v-for="item in filteredItems()"
             :key="item[primaryKey]"
@@ -159,10 +159,10 @@ export default {
   computed: {
     computedDataSize(): Number {
       //if it is defined 'dataSize' if not 'itemLength'
-      return this.dataSize !== null ? this.dataSize : this.items.length
+      return this.dataSize !== undefined ? this.dataSize : this.items.length
     },
-    dropdownListMaxHeight(): String {
-      const itemHeight = 30
+    dropdownListMaxHeight(): string {
+      const itemHeight = 33
       const maxHeight = itemHeight * this.computedDataSize
       return `${maxHeight}px`
     },
@@ -438,7 +438,7 @@ export default {
       left: 0;
       right: 0;
       margin-top: 0.2rem;
-      padding-bottom: 1rem;
+      padding-bottom: 0.5rem;
       background-color: #fff;
       border: 1px solid #ccc;
       border-radius: 12px;

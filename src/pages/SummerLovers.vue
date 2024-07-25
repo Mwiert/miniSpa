@@ -114,6 +114,21 @@
         :maxItemThreshold="maxItemThreshold"
         :iconImage="'iconImage'"
         :hasActionBox="true" />
+
+      <UIMultiDropdown
+        v-model="selectedPets"
+        :items="pets"
+        :fontSize="fontSize"
+        displayField="name"
+        :sortField="sortField"
+        :label="'Multi dropdown with images and action box and max item threshold searchable'"
+        searchable
+        :maxVisibleItems="2"
+        primaryKey="id"
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :iconImage="'iconImage'"
+        :hasActionBox="true" />
       <UIMultiDropdown
         v-model="selectedPets"
         :items="pets"
@@ -168,6 +183,19 @@
         :sortField="sortField"
         searchable
         :dataSize="dataSize"
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :iconImage="'iconImage'"
+        primaryKey="id" />
+
+      <UIDropdown
+        v-model="selectedItem"
+        :items="items"
+        :label="'Single dropdown with images with max item threshold searchable'"
+        :fontSize="fontSize"
+        displayField="name"
+        :sortField="sortField"
+        searchable
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
         :iconImage="'iconImage'"
