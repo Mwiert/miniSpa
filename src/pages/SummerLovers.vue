@@ -68,7 +68,7 @@
         v-model="selectedEnums2"
         :fontSize="fontSize"
         :label="'Sorted by Id in Descending Order All and Unknown Are Closed'"
-        :sortField="id"
+        :sortField="'id'"
         :dataSize="dataSize"
         searchable
         :maxVisibleItems="2"
@@ -76,7 +76,7 @@
         :isMulti="isMulti"
         :showAll="false"
         :showUnknown="false"
-        :sortByAscending="true"
+        :sortByAscending="false"
         :maxItemThreshold="maxItemThreshold"
         :enumObj="EInternComponentType" />
 

@@ -32,9 +32,9 @@
           class="ui-dropdown-content"
           :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
           <div
-            v-for="(item, index) in filteredItems()"
-            :key="index"
-            :ref="'item-' + index"
+            v-for="item in filteredItems()"
+            :key="item[primaryKey]"
+            :ref="'item-' + item[primaryKey]"
             class="ui-dropdown-item"
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }">
@@ -78,7 +78,6 @@ export default {
     },
     primaryKey: {
       type: String,
-      required: true,
       default: 'id'
     },
 
@@ -256,13 +255,17 @@ export default {
         this.$nextTick(() => {
           if (this.sortField && this.sortByAscending) {
             let itemsCopy = [...this.dropdownItems].sort().reverse()
+            console.log(itemsCopy)
             let primaryKeys = []
             for (let i = 0; i < itemsCopy.length; i++) {
               primaryKeys.push(itemsCopy[i][this.primaryKey])
             }
+            console.log(primaryKeys)
 
-            const selectedIndex = primaryKeys.indexOf(this.selectedItem[this.primaryKey])
+            const selectedIndex =
+              primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
             const selectedItemRef = this.$refs['item-' + selectedIndex]
+            console.log(selectedItemRef)
 
             if (selectedItemRef && selectedItemRef[0]) {
               selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
@@ -287,8 +290,10 @@ export default {
     },
     handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement
-      console.log(this.$el.children[0].children[1])
-      if (!this.$el.children[0]?.children[1]?.contains(target)) {
+      if (
+        !this.$el.children[0]?.children[1]?.contains(target) &&
+        !this.$el.children[0].children[2]?.contains(target)
+      ) {
         this.isOpen = false
       }
     }

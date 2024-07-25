@@ -32,8 +32,8 @@
           class="ui-multi-dropdown-content"
           :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
           <div
-            v-for="(item, index) in filteredItems()"
-            :key="index"
+            v-for="item in filteredItems()"
+            :key="item[primaryKey]"
             class="ui-multi-dropdown-item"
             @click.stop="selectItem(item)"
             :class="{ selected: isSelected(item) }">
@@ -81,7 +81,6 @@ export default {
     },
     primaryKey: {
       type: String,
-      required: true,
       default: 'id'
     },
     dataSize: {
@@ -201,9 +200,10 @@ export default {
       this.$emit('update:modelValue', this.selectedItems)
     },
     sortItems(items: Array<any>): Array<any> {
-      if (this.sortField === undefined) return items
+      console.log(this.sortField)
+      if (this.sortField === undefined) return [...items]
       else {
-        return items.sort((a, b) => {
+        return [...items].sort((a, b) => {
           const aValue = String(a[this.sortField]).toLowerCase()
           const bValue = String(b[this.sortField]).toLowerCase()
           if (aValue < bValue) return this.sortByAscending ? -1 : 1
@@ -299,7 +299,6 @@ export default {
     },
     checkImage() {
       for (let i = 0; i < this.dropdownItems.length; i++) {
-        console.log(this.dropdownItems[i][this.iconImage])
         if (
           this.dropdownItems[i][this.iconImage] !== '' &&
           this.dropdownItems[i][this.iconImage] !== undefined
@@ -335,26 +334,6 @@ export default {
       this.isOpen = !this.isOpen
       if (this.isOpen) {
         this.clearSearch()
-
-        this.$nextTick(() => {
-          if (this.sortField && this.sortByAscending) {
-            let itemsCopy = [...this.dropdownItems].sort().reverse()
-            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-            }
-          } else if (this.sortField) {
-            let itemsCopy = [...this.dropdownItems].sort()
-            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-            }
-          }
-        })
       }
 
       this.clearSearch()
