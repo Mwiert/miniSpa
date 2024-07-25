@@ -120,8 +120,8 @@ export default {
       presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
-      saveFirstDateHistory: "", //Saving the date history so we can see when we close calendar
-      saveSecondDateHistory: "" //Saving the date history so we can see when we close calendar
+      saveFirstDateHistory: '', //Saving the date history so we can see when we close calendar
+      saveSecondDateHistory: '' //Saving the date history so we can see when we close calendar
     }
   },
   props: {
@@ -190,6 +190,16 @@ export default {
     },
     populdateMonthDays() {
       if (this.isPastValidation) {
+        if (dayjs(this.calendarDate).format('MM') == dayjs(this.minDate).format('MM')) {
+          this.daysInMonth = this.totalDaysInMonth(0)
+          this.nextMonthDays = this.totalDaysInMonth(1)
+          return
+        }
+        this.daysInMonth = this.totalDaysInMonth(-1)
+        this.nextMonthDays = this.totalDaysInMonth(0)
+        return
+      }
+      if (dayjs(this.calendarDate).format('MM') == dayjs(this.maxDate).format('MM')) {
         this.daysInMonth = this.totalDaysInMonth(-1)
         this.nextMonthDays = this.totalDaysInMonth(0)
         return
@@ -318,7 +328,7 @@ export default {
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
           }
-        } else if (selectedDay.date == this.firstSelectedDate.date ) {
+        } else if (selectedDay.date == this.firstSelectedDate.date) {
           if (this.isPastValidation) {
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = this.secondSelectedDate
