@@ -45,6 +45,19 @@
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
         :enumObj="EInternSingleComponentType" />
+
+      <UIEnumDropdown
+        v-model="selectedEnum"
+        :fontSize="fontSize"
+        displayField="name"
+        :label="'Sorted by Name in Ascending Order All and Unknown Are On Searchable Closed Data Size Closed'"
+        :sortField="sortField"
+        :isMulti="!isMulti"
+        :showAll="true"
+        :showUnknown="true"
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :enumObj="EInternSingleComponentType" />
     </div>
     <div>
       <h1>{{ 'Multi Enum Dropdown' }}</h1>
@@ -68,7 +81,7 @@
         v-model="selectedEnums2"
         :fontSize="fontSize"
         :label="'Sorted by Id in Descending Order All and Unknown Are Closed'"
-        :sortField="id"
+        :sortField="'id'"
         :dataSize="dataSize"
         searchable
         :maxVisibleItems="2"
@@ -76,7 +89,7 @@
         :isMulti="isMulti"
         :showAll="false"
         :showUnknown="false"
-        :sortByAscending="true"
+        :sortByAscending="false"
         :maxItemThreshold="maxItemThreshold"
         :enumObj="EInternComponentType" />
 
@@ -95,10 +108,24 @@
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
         :enumObj="EInternComponentType" />
+
+      <UIEnumDropdown
+        v-model="selectedEnums"
+        :fontSize="fontSize"
+        displayField="name"
+        :label="'Sorted by Name in Ascending Order All and Unknown Are On Searchable Closed Data Size Closed'"
+        :sortField="'sortField'"
+        :maxVisibleItems="2"
+        :hasActionBox="true"
+        :isMulti="isMulti"
+        :showAll="true"
+        :showUnknown="true"
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :enumObj="EInternComponentType" />
     </div>
     <div>
       <h1>{{ 'Multi Dropdown' }}</h1>
-
       <UIMultiDropdown
         v-model="selectedPets"
         :items="pets"
@@ -107,6 +134,21 @@
         :sortField="sortField"
         :label="'Multi dropdown with images and action box and max item threshold searchable'"
         :dataSize="dataSize"
+        searchable
+        :maxVisibleItems="2"
+        primaryKey="id"
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :iconImage="'iconImage'"
+        :hasActionBox="true" />
+
+      <UIMultiDropdown
+        v-model="selectedPets"
+        :items="pets"
+        :fontSize="fontSize"
+        displayField="name"
+        :sortField="sortField"
+        :label="'Multi dropdown with images and action box and max item threshold searchable'"
         searchable
         :maxVisibleItems="2"
         primaryKey="id"
@@ -172,6 +214,19 @@
         :maxItemThreshold="maxItemThreshold"
         :iconImage="'iconImage'"
         primaryKey="id" />
+
+      <UIDropdown
+        v-model="selectedItem"
+        :items="items"
+        :label="'Single dropdown with images with max item threshold searchable'"
+        :fontSize="fontSize"
+        displayField="name"
+        :sortField="sortField"
+        searchable
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :iconImage="'iconImage'"
+        primaryKey="id" />
       <UIDropdown
         v-model="selectedItem"
         :items="items"
@@ -201,7 +256,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import UIEnumDropdown from '../components/Dropdown/UIEnumDropdown.vue'
 import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'

@@ -12,7 +12,6 @@
   </div>
   <div class="text-area-c">
     <UITextArea
-      :id="textarea"
       :label="'text area length 10 '"
       :disabled="false"
       :rows="10"
@@ -24,7 +23,6 @@
   </div>
   <div class="text-area-c">
     <UITextArea
-      :id="textarea"
       :label="'disabled text area'"
       :disabled="true"
       :rows="10"
@@ -33,6 +31,27 @@
       :maxLength="10"
       v-model="valueTextArea3"></UITextArea>
     <p>{{ valueTextArea3 }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area col 10'"
+      :rows="10"
+      :cols="10"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea4"></UITextArea>
+    <p>{{ valueTextArea4 }}</p>
+  </div>
+
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area col 30 row 2'"
+      :rows="2"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea5"></UITextArea>
+    <p>{{ valueTextArea5 }}</p>
   </div>
 
   <div class="input-box">
@@ -143,6 +162,7 @@
         v-model="powerpuffGirls.checked"
         :disabled="powerpuffGirls.disabled"
         @update:modelValue="toggleChange1" />
+        <p> Status: {{ powerpuffGirls.checked }}</p>
     </div>
 
     <div>
@@ -182,7 +202,8 @@
         :label="radio.label"
         :value="radio.value"
         v-model="pickedRadioHotel"
-        :disabled="radio.disabled" />
+        :disabled="radio.disabled"/>
+        <p>{{ pickedRadioHotel }}</p>
     </div>
     <!--Radio Buttons for flight-->
     <div class="flight-radio-buttons">
@@ -206,7 +227,9 @@
         :className="'hotel'"
         :label="checkbox.label"
         :disabled="checkbox.disabled"
-        @takeCheckedInfo="takeCheckedInfo" />
+        v-model:checked="checkbox.checked"
+        @takeCheckedInfo="takeCheckedInfo"
+         />
     </div>
 
     <!-- Checkboxes for flight -->
@@ -218,17 +241,20 @@
         :disabled="checkbox.disabled"
         :label="checkbox.label"
         after
+        v-model:checked="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
+        <p>{{ checkboxFlight }}</p>
     </div>
-
     <!-- Example of a disabled checkbox -->
-    <UICheckbox
+    <!-- <UICheckbox
       :label="'Disabled'"
       :className="'hotel'"
       :after="false"
       :disabled="true"
       :name="'disabled'"
-      :id="'deneme'" />
+      :id="'deneme'"
+      v-model:checked="checkbox.checked"
+       /> -->
   </div>
 </template>
 
@@ -259,6 +285,8 @@ export default {
       valueTextArea: '',
       valueTextArea2: '',
       valueTextArea3: '',
+      valueTextArea4: '',
+      valueTextArea5: '',
       messageInput: '',
       messageInputWithClearButton: '',
       buttonValue: '',
@@ -310,14 +338,14 @@ export default {
 
       // Initial states for checkboxes
       checkboxHotel: [
-        { label: 'Hotel 1', id: 'id1', disabled: false },
-        { label: 'Hotel 2', id: 'id2', disabled: false },
-        { label: 'Hotel 3', id: 'id3', disabled: true }
+        { label: 'Hotel 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Hotel 2', id: 'id2', disabled: false, checked: false },
+        { label: 'Hotel 3', id: 'id3', disabled: true, checked: false }
       ],
       checkboxFlight: [
-        { label: 'Flight 1', id: 'id1', disabled: false },
-        { label: 'Flight 2', id: 'id2', disabled: false },
-        { label: 'Flight 3', id: 'id3', disabled: false }
+        { label: 'Flight 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Flight 2', id: 'id2', disabled: false, checked: false },
+        { label: 'Flight 3', id: 'id3', disabled: false, checked: false }
       ]
     }
   },
@@ -356,7 +384,7 @@ export default {
       console.log('oldu')
     },
 
-    takeCheckedInfo(name: string , id: string , isChecked: boolean) {
+    takeCheckedInfo(name: string, id: string, isChecked: boolean) {
       console.log(name, id, isChecked)
     }
   }

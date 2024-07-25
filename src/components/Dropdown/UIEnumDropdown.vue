@@ -1,4 +1,5 @@
 <template>
+  {{ getEnumFile() }}
   <UIMultiDropdown
     v-if="isMulti"
     v-model="selectedItems"
@@ -27,7 +28,7 @@
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
 </template>
 
-<script>
+<script lang="ts">
 import UIDropdown from '../Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../Dropdown/UIMultiDropdown.vue'
 
@@ -97,19 +98,19 @@ export default {
   },
   data() {
     return {
-      selectedItems: this.modelValue,
+      selectedItems: this.modelValue as Array<Object>,
       dropdownItems: this.getEnumFile(),
       selectedItem: this.modelValue
     }
   },
   methods: {
-    getEnumFile() {
+    //takes enum object and sorts it.
+    getEnumFile(): Array<{ id: number; name: string }> {
       let sortedEnumArray = Object.keys(this.enumObj)
         .map(Number)
         .filter(
           (key) => !isNaN(key) && (this.showAll || key !== -1) && (this.showUnknown || key !== 0)
         )
-        .sort()
         .map((key) => ({
           id: key,
           name: this.enumObj[key]
