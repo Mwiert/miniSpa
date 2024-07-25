@@ -287,9 +287,10 @@ export default {
           }
         }
       }
+      if(this.monthRange!=99){
       let today = dayjs()
-      let futureDate = today.add(3, 'month')
-      let pastDate = today.subtract(3, 'month').subtract(1, 'day');
+      let futureDate = today.add(this.monthRange, 'month')
+      let pastDate = today.subtract(this.monthRange, 'month').subtract(1, 'day');
       
 
       this.daysInMonth.forEach(day => {
@@ -299,6 +300,20 @@ export default {
           day.textDecoration = true
         }
       })
+    }else if(this.yearRange!=99){
+      let today = dayjs()
+      let futureDate = today.add(this.yearRange, 'year')
+      let pastDate = today.subtract(this.yearRange, 'year').subtract(1, 'day');
+      
+
+      this.daysInMonth.forEach(day => {
+        if (day.date && dayjs(day.date).isAfter(futureDate)) {
+          day.textDecoration = true
+        }else if(day.date && dayjs(day.date).isBefore(pastDate)){
+          day.textDecoration = true
+        }
+      })
+    }
     }
   },
   computed: {
