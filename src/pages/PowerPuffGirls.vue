@@ -36,15 +36,31 @@
   </div>
 
   <div class="input-box">
-    <UIInput :id="'username'" :label="'Email'" :icon="'mail'" :type="'email'" />
+    <UIInput :id="'username'" 
+    :label="'Email'" 
+    :icon="'mail'" 
+    :type="'email'" 
+    v-model="messageInput"/>
+    <p>{{ messageInput }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput :type="'password'" :id="'password'" :label="'password'" :icon="'mail'" clearButton />
+    <UIInput :type="'password'" 
+    :id="'password'" 
+    :label="'Password'" 
+    :icon="'eye'" 
+    clearButton
+    v-model="messageInputWithClearButton" />
+    <p>{{ messageInputWithClearButton }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton />
+    <UIInput 
+    :id="'tckno'" 
+    :label="'TCKNO'" 
+    :icon="'arrow-up'" 
+    clearButton
+    disabled />
   </div>
   <!-- <button @click="submitForm">Submit</button> -->
 
@@ -226,6 +242,8 @@ export default {
       valueTextArea: '',
       valueTextArea2: '',
       valueTextArea3: '',
+      messageInput: '',
+      messageInputWithClearButton: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
