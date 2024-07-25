@@ -82,9 +82,9 @@
       :size="'small'"
       :isSpinnerActive="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
-      v-model="loadingStates.flight.isLoading"
-      @button-click="handleButtonClick('flight')" />
-    <p>Status:{{ loadingStates.flight.isLoading }}</p>
+      @click="setLoadingState('flight')"
+      v-model="buttonValue" />
+    <p>{{ buttonValue }}</p>
 
     <UIButton
       :id="'hotelbutton1'"
@@ -94,9 +94,7 @@
       :iconSize="'s'"
       :isSpinnerActive="loadingStates.hotel.isLoading"
       :isDisabled="loadingStates.hotel.isDisabled"
-      v-model="loadingStates.hotel.isLoading"
-      @button-click="handleButtonClick('hotel')" />
-    Status:{{ loadingStates.hotel.isLoading }}
+      @click="setLoadingState('hotel')" />
 
     <!-- Since the class name is not added, the default class will be used. -->
     <UIButton
@@ -105,9 +103,7 @@
       :icon="'refresh'"
       :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
-      v-model="loadingStates.default.isLoading"
-      @button-click="handleButtonClick('default')" />
-    Status:{{ loadingStates.default.isLoading }}
+      @click="setLoadingState('default')" />
 
     <UIButton
       :id="'flightoutline'"
@@ -116,9 +112,7 @@
       :isSpinnerActive="loadingStates.flightOutline.isLoading"
       :icon="'refresh'"
       :isDisabled="loadingStates.flightOutline.isDisabled"
-      v-model="loadingStates.flightOutline.isLoading"
-      @button-click="handleButtonClick('flightOutline')" />
-    Status:{{ loadingStates.flightOutline.isLoading }}
+      @click="setLoadingState('flightOutline')" />
 
     <UIButton
       :id="'hoteloutline'"
@@ -126,17 +120,13 @@
       text="Hotel"
       :isSpinnerActive="loadingStates.hotelOutline.isLoading"
       :isDisabled="loadingStates.hotelOutline.isDisabled"
-      v-model="loadingStates.hotelOutline.isLoading"
-      @button-click="handleButtonClick('hotelOutline')" />
-    Status:{{ loadingStates.hotelOutline.isLoading }}
+      @click="setLoadingState('hotelOutline')" />
     <UIButton
       :id="'disabled'"
       text="Disabled"
       :isSpinnerActive="loadingStates.disabledButton.isLoading"
       :isDisabled="loadingStates.disabledButton.isDisabled"
-      v-model="loadingStates.disabledButton.isLoading"
-      @button-click="handleButtonClick('disabledButton')" />
-    Status:{{ loadingStates.disabledButton.isLoading }}
+      @click="setLoadingState('disabledButton')" />
 
     <!-- <div>
       <h3>Button status:</h3>
@@ -277,6 +267,7 @@ export default {
       valueTextArea3: '',
       messageInput: '',
       messageInputWithClearButton: '',
+      buttonValue: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -337,24 +328,14 @@ export default {
     }
   },
   methods: {
-    handleButtonClick(id, isLoading) {
-      this.clickedButton.id = id
-      this.clickedButton.isLoading = isLoading
-      const button = id.replace('button1', '') // Buton id'sinden 'button1' kısmını çıkararak key alıyoruz
-      if (button in this.loadingStates) {
-        this.setLoadingState(button)
-      }
-    },
     // Method to set the loading state of a button and reset it after 2 seconds
     setLoadingState(buttonName: string) {
-      if (this.loadingStates[buttonName]) {
-        // Set the isLoading property to true for the specified button
-        this.loadingStates[buttonName].isLoading = true
-        // After 2 seconds, reset the isLoading property to false
-        setTimeout(() => {
-          this.loadingStates[buttonName].isLoading = false
-        }, 2000)
-      }
+      // Set the isLoading property to true for the specified button
+      this.loadingStates[buttonName].isLoading = true
+      // After 2 seconds, reset the isLoading property to false
+      setTimeout(() => {
+        this.loadingStates[buttonName].isLoading = false
+      }, 2000)
     },
 
     // Methods to handle toggle state change
