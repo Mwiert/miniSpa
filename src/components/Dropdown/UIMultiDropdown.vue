@@ -7,8 +7,8 @@
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
       </button>
       <div v-if="isOpen" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
-        <div class="search-container">
-          <div v-if="searchable" class="search-content-wrapper">
+        <div v-if="searchable" class="search-container">
+          <div class="search-content-wrapper">
             <input
               type="text"
               v-model="searchQuery"
@@ -100,8 +100,8 @@ export default {
       default: 'flight'
     },
     modelValue: {
-      type: Array,
-      default: () => []
+      type: Array<Object>,
+      default: () => [{}]
     },
 
     label: {
@@ -161,11 +161,13 @@ export default {
       //if it is defined 'dataSize' if not 'itemLength'
       return this.dataSize !== undefined ? this.dataSize : this.items.length
     },
+    //sets the height of dropdown content
     dropdownListMaxHeight(): string {
       const itemHeight = 33
       const maxHeight = itemHeight * this.computedDataSize
       return `${maxHeight}px`
     },
+    //prints selected items on dropdown button
     labelDisplay(): String {
       if (this.selectedItems.length === 0) {
         return this.placeHolder.toString()
@@ -199,6 +201,7 @@ export default {
       }
       this.$emit('update:modelValue', this.selectedItems)
     },
+    //sorts items by ascending or descending
     sortItems(items: Array<any>): Array<any> {
       console.log(this.sortField)
       if (this.sortField === undefined) return [...items]
@@ -212,7 +215,8 @@ export default {
         })
       }
     },
-    mapToTurkishWords(word) {
+    //maps Turkish characters to english characters
+    mapToTurkishWords(word): string {
       const mappedTurkishLetters = {
         ç: 'c',
         ı: 'i',
@@ -227,11 +231,11 @@ export default {
         (letter) => mappedTurkishLetters[letter.toLowerCase()] || letter
       )
     },
-    stringContainsAnyWord(word, array) {
+    stringContainsAnyWord(word, array): boolean {
       return array.some((char) => word.includes(char))
     },
 
-    createItemDropdown() {
+    createItemDropdown(): string {
       const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
 
       if (this.stringContainsAnyWord(this.searchQuery, turkishLetters)) {
@@ -285,7 +289,8 @@ export default {
 
       return items
     },
-    isLongItem(item) {
+    //this method shortens the word if the word is too long and puts ... at the end
+    isLongItem(item): string {
       if (
         item[this.displayField] !== undefined &&
         String(item[this.displayField]).length > this.maxItemThreshold
@@ -294,10 +299,10 @@ export default {
       } else if (item[this.displayField] === undefined) return item[this.displayField]
       return String(item[this.displayField])
     },
-    checkItem(item) {
+    checkItem(item): boolean {
       return item[this.iconImage] !== '' && item[this.iconImage] !== undefined
     },
-    checkImage() {
+    checkImage(): boolean {
       for (let i = 0; i < this.dropdownItems.length; i++) {
         if (
           this.dropdownItems[i][this.iconImage] !== '' &&
@@ -308,7 +313,7 @@ export default {
       }
       return false
     },
-    isSelected(item) {
+    isSelected(item): boolean {
       let flag = false
       for (let i = 0; i < this.selectedItems.length; i++) {
         if (this.selectedItems[i][this.primaryKey] === item[this.primaryKey]) {

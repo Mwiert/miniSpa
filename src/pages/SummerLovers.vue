@@ -229,7 +229,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import UIEnumDropdown from '../components/Dropdown/UIEnumDropdown.vue'
 import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
