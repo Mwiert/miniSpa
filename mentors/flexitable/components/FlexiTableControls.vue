@@ -10,9 +10,7 @@
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
         :placeHolder="flexi.options.UIDropdownOrderProp.placeHolder"
-        :showAll = "flexi.options.UIDropdownOrderProp.showAll"
-        
-        />
+        :showAll="flexi.options.UIDropdownOrderProp.showAll" />
 
       <div class="dropdown">
         <div class="dropdown-icon" @click="Toggle">
@@ -29,6 +27,9 @@
           </div>
           <button class="clear-button" @click="selectClear">Clear/Select All</button>
         </div>
+      </div>
+      <div class="export-buttons">
+        <button class="pdf-button" @click="triggerExportPrint()">Print</button>
       </div>
     </div>
 
@@ -60,15 +61,193 @@ export default {
     UIEnumDropdown
   },
   methods: {
+    triggerExportPrint() {
+      const divToPrint = this.$parent.$refs.flexibody.$refs.print
+      const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2
+      console.log(divToPrint)
+      const newPrintWindow = window.open('', 'Print')
+      newPrintWindow.document.write(
+        `<html>
+          <head>
+            <style >
+            .flexi-table-header-c {
+  &.sticky-header {
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+  }
+}
+.flexi-table-header-col-wrapper {
+  // width: fit-content;
+  cursor: pointer;
+  font-weight: 500;
+
+  // border: 1px solid #eee;
+
+  &:hover {
+    background-color: #f4f4f4;
+    border-radius: 1rem;
+  }
+
+  .flexi-table-header-col {
+    display: flex;
+    align-items: center;
+  }
+}
+.txt-right {
+  justify-content: flex-end;
+}
+              .flexi-table-body-c {
+  .flexi-table-body-row-wrapper {
+    border: 1.5px solid #e0e0e0;
+    margin: 0.45rem 0rem;
+    border-radius: 24rem;
+    // transition: border-radius 0.25s ease-in-out;
+    &.remove-radius {
+      border-radius: 1rem;
+      // background-color: azure !important;
+    }
+
+    &:hover {
+      // border-left: 1.5px solid #66fff7;
+      // transform: scale(1.01);
+      // background-color: #eee !important;
+      // background-color: #f6fefe !important;
+      background-color: #f0f2f4 !important;
+      // border-color: #fff !important;
+      // outline: 3px solid #a5ddfd;
+      // box-shadow: 0 0 4px #33ddff;
+    }
+
+    &:nth-child(even) {
+      background: #f5f7fa;
+    }
+    &:nth-child(odd) {
+      background: #ffff;
+    }
+
+    .flexi-table-body-detail-wrapper {
+      // background: red;
+      // height: 100px;
+    }
+    .flexi-table-body-row {
+      .flexi-table-body-col {
+        display: flex;
+        align-items: center;
+        // justify-content: center;
+        img {
+          width: 42px;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+  .pointer {
+    cursor: pointer;
+  }
+}
+
+[class*='item-'] {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  text-align: center;
+  min-width: 90px;
+  font-weight: 500;
+  height: fit-content;
+}
+.item- {
+  &active {
+    $bg-color: #ccffdd;
+    background: $bg-color;
+    outline: 3px solid rgba($bg-color, 0.5);
+    color: darken($bg-color, 60%);
+  }
+  &pending {
+    $bg-color: #ffebcc;
+    background: $bg-color;
+    outline: 3px solid rgba($bg-color, 0.5);
+    color: darken($bg-color, 45%);
+  }
+  &graduate {
+    $bg-color: #e8ccff;
+    background: $bg-color;
+    outline: 3px solid rgba($bg-color, 0.5);
+    color: darken($bg-color, 30%);
+  }
+}
+
+.txt-right {
+  text-align: right;
+  width: 100%;
+  display: block;
+}
+.txt-bold {
+  font-weight: 600;
+}
+.email {
+  font-size: 0.95rem;
+  color: #5c4958;
+  font-weight: 500;
+}
+.jc-center {
+  justify-content: center;
+}
+
+.student-photo-Male,
+.student-photo-Female {
+  border-radius: 50%;
+  width: 42px;
+  border: 1px solid #fff;
+}
+.student-photo-Male {
+  outline: 3px solid #b9ddff70;
+}
+.student-photo-Female {
+  outline: 3px solid #facfff70;
+}
+            </style>
+          </head>
+          <body>
+             ${divToPrint2.outerHTML}
+            ${divToPrint.outerHTML}
+          </body>
+        </html>`
+      )
+
+      newPrintWindow.print()
+      //newPrintWindow.close()
+    },
     selectClear() {
       if (this.flexi.options.hiddenColumns.length != 0) {
+        this.flexi.options.columnSizes = []
         for (let i = 0; i < this.flexi.columns.length; i++) {
           this.flexi.columns[i].status = true
+          this.flexi.options.columnSizes[i] = this.flexi.options.columnSizeholder[i]
         }
       }
     },
     selectHidden(index) {
       this.flexi.columns[index].status = !this.flexi.columns[index].status
+      if (this.flexi.columns[index].status === false) {
+        this.flexi.options.columnSizes.splice(index, 1)
+      } else {
+        this.flexi.options.columnSizes.splice(index, 0, this.flexi.options.columnSizeholder[index])
+      }
+      // if (this.flexi.columns[index].status === false) {
+      //   this.flexi.options.columnTemp.push({
+      //     index: index,
+      //     value: this.flexi.options.columnSizes[index]
+      //   })
+
+      //   this.flexi.options.columnSizes.splice(index, 1)
+      // } else {
+      //   const i = this.flexi.options.columnTemp.findIndex((col) => col.index == index)
+      //   this.flexi.options.columnSizes.splice(index, 0, this.flexi.options.columnTemp[i].value)
+      //   this.flexi.options.columnTemp.splice(i, 1)
+      // }
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show

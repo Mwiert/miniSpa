@@ -12,7 +12,6 @@
   </div>
   <div class="text-area-c">
     <UITextArea
-      :id="textarea"
       :label="'text area length 10 '"
       :disabled="false"
       :rows="10"
@@ -24,7 +23,6 @@
   </div>
   <div class="text-area-c">
     <UITextArea
-      :id="textarea"
       :label="'disabled text area'"
       :disabled="true"
       :rows="10"
@@ -33,6 +31,27 @@
       :maxLength="10"
       v-model="valueTextArea3"></UITextArea>
     <p>{{ valueTextArea3 }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area col 10'"
+      :rows="10"
+      :cols="10"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea4"></UITextArea>
+    <p>{{ valueTextArea4 }}</p>
+  </div>
+
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area col 30 row 2'"
+      :rows="2"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea5"></UITextArea>
+    <p>{{ valueTextArea5 }}</p>
   </div>
 
   <div class="input-box">
@@ -82,9 +101,9 @@
       :size="'small'"
       :isSpinnerActive="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
-      v-model="loadingStates.flight.isLoading"
-      @button-click="handleButtonClick('flight')" />
-    <p>Status:{{ loadingStates.flight.isLoading }}</p>
+      @click="setLoadingState('flight')"
+      v-model="buttonValue" />
+    <p>{{ buttonValue }}</p>
 
     <UIButton
       :id="'hotelbutton1'"
@@ -94,9 +113,7 @@
       :iconSize="'s'"
       :isSpinnerActive="loadingStates.hotel.isLoading"
       :isDisabled="loadingStates.hotel.isDisabled"
-      v-model="loadingStates.hotel.isLoading"
-      @button-click="handleButtonClick('hotel')" />
-    Status:{{ loadingStates.hotel.isLoading }}
+      @click="setLoadingState('hotel')" />
 
     <!-- Since the class name is not added, the default class will be used. -->
     <UIButton
@@ -105,9 +122,7 @@
       :icon="'refresh'"
       :isSpinnerActive="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
-      v-model="loadingStates.default.isLoading"
-      @button-click="handleButtonClick('default')" />
-    Status:{{ loadingStates.default.isLoading }}
+      @click="setLoadingState('default')" />
 
     <UIButton
       :id="'flightoutline'"
@@ -116,9 +131,7 @@
       :isSpinnerActive="loadingStates.flightOutline.isLoading"
       :icon="'refresh'"
       :isDisabled="loadingStates.flightOutline.isDisabled"
-      v-model="loadingStates.flightOutline.isLoading"
-      @button-click="handleButtonClick('flightOutline')" />
-    Status:{{ loadingStates.flightOutline.isLoading }}
+      @click="setLoadingState('flightOutline')" />
 
     <UIButton
       :id="'hoteloutline'"
@@ -126,17 +139,13 @@
       text="Hotel"
       :isSpinnerActive="loadingStates.hotelOutline.isLoading"
       :isDisabled="loadingStates.hotelOutline.isDisabled"
-      v-model="loadingStates.hotelOutline.isLoading"
-      @button-click="handleButtonClick('hotelOutline')" />
-    Status:{{ loadingStates.hotelOutline.isLoading }}
+      @click="setLoadingState('hotelOutline')" />
     <UIButton
       :id="'disabled'"
       text="Disabled"
       :isSpinnerActive="loadingStates.disabledButton.isLoading"
       :isDisabled="loadingStates.disabledButton.isDisabled"
-      v-model="loadingStates.disabledButton.isLoading"
-      @button-click="handleButtonClick('disabledButton')" />
-    Status:{{ loadingStates.disabledButton.isLoading }}
+      @click="setLoadingState('disabledButton')" />
 
     <!-- <div>
       <h3>Button status:</h3>
@@ -150,36 +159,37 @@
       <UIToggle
         :id="'powerpuffGirls'"
         :label="'Powerpuff Girls'"
-        :checked="powerpuffGirls.checked"
+        v-model="powerpuffGirls.checked"
         :disabled="powerpuffGirls.disabled"
-        @switchToggle="toggleChange1" />
+        @update:modelValue="toggleChange1" />
+        <p> Status: {{ powerpuffGirls.checked }}</p>
     </div>
 
     <div>
       <UIToggle
         :id="'timeBenders'"
         :label="'Time Benders'"
-        :checked="timeBenders.checked"
+        v-model="timeBenders.checked"
         :disabled="timeBenders.disabled"
-        @switchToggle="toggleChange2" />
+        @update:modelValue="toggleChange2" />
     </div>
 
     <div>
       <UIToggle
         :id="'summerLovers'"
         :label="'Summer Lovers'"
-        :checked="summerLovers.checked"
+        v-model="summerLovers.checked"
         :disabled="summerLovers.disabled"
-        @switchToggle="toggleChange3" />
+        @update:modelValue="toggleChange3" />
     </div>
 
     <div>
       <UIToggle
         :id="'pinkPanthers'"
         :label="'Pink Panthers'"
-        :checked="pinkPanthers.checked"
+        v-model="pinkPanthers.checked"
         :disabled="pinkPanthers.disabled"
-        @switchToggle="toggleChange4" />
+        @update:modelValue="toggleChange4" />
     </div>
 
     <!-- UIRadioButton component instances  -->
@@ -192,7 +202,8 @@
         :label="radio.label"
         :value="radio.value"
         v-model="pickedRadioHotel"
-        :disabled="radio.disabled" />
+        :disabled="radio.disabled"/>
+        <p>{{ pickedRadioHotel }}</p>
     </div>
     <!--Radio Buttons for flight-->
     <div class="flight-radio-buttons">
@@ -216,7 +227,9 @@
         :className="'hotel'"
         :label="checkbox.label"
         :disabled="checkbox.disabled"
-        @takeCheckedInfo="takeCheckedInfo" />
+        v-model:checked="checkbox.checked"
+        @takeCheckedInfo="takeCheckedInfo"
+         />
     </div>
 
     <!-- Checkboxes for flight -->
@@ -228,17 +241,20 @@
         :disabled="checkbox.disabled"
         :label="checkbox.label"
         after
+        v-model:checked="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
+        <p>{{ checkboxFlight }}</p>
     </div>
-
     <!-- Example of a disabled checkbox -->
-    <UICheckbox
+    <!-- <UICheckbox
       :label="'Disabled'"
       :className="'hotel'"
       :after="false"
       :disabled="true"
       :name="'disabled'"
-      :id="'deneme'" />
+      :id="'deneme'"
+      v-model:checked="checkbox.checked"
+       /> -->
   </div>
 </template>
 
@@ -269,8 +285,11 @@ export default {
       valueTextArea: '',
       valueTextArea2: '',
       valueTextArea3: '',
+      valueTextArea4: '',
+      valueTextArea5: '',
       messageInput: '',
       messageInputWithClearButton: '',
+      buttonValue: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -319,46 +338,36 @@ export default {
 
       // Initial states for checkboxes
       checkboxHotel: [
-        { label: 'Hotel 1', id: 'id1', disabled: false },
-        { label: 'Hotel 2', id: 'id2', disabled: false },
-        { label: 'Hotel 3', id: 'id3', disabled: true }
+        { label: 'Hotel 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Hotel 2', id: 'id2', disabled: false, checked: false },
+        { label: 'Hotel 3', id: 'id3', disabled: true, checked: false }
       ],
       checkboxFlight: [
-        { label: 'Flight 1', id: 'id1', disabled: false },
-        { label: 'Flight 2', id: 'id2', disabled: false },
-        { label: 'Flight 3', id: 'id3', disabled: false }
+        { label: 'Flight 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Flight 2', id: 'id2', disabled: false, checked: false },
+        { label: 'Flight 3', id: 'id3', disabled: false, checked: false }
       ]
     }
   },
   methods: {
-    handleButtonClick(id, isLoading) {
-      this.clickedButton.id = id
-      this.clickedButton.isLoading = isLoading
-      const button = id.replace('button1', '') // Buton id'sinden 'button1' kısmını çıkararak key alıyoruz
-      if (button in this.loadingStates) {
-        this.setLoadingState(button)
-      }
-    },
     // Method to set the loading state of a button and reset it after 2 seconds
     setLoadingState(buttonName: string) {
-      if (this.loadingStates[buttonName]) {
-        // Set the isLoading property to true for the specified button
-        this.loadingStates[buttonName].isLoading = true
-        // After 2 seconds, reset the isLoading property to false
-        setTimeout(() => {
-          this.loadingStates[buttonName].isLoading = false
-        }, 2000)
-      }
+      // Set the isLoading property to true for the specified button
+      this.loadingStates[buttonName].isLoading = true
+      // After 2 seconds, reset the isLoading property to false
+      setTimeout(() => {
+        this.loadingStates[buttonName].isLoading = false
+      }, 2000)
     },
 
     // Methods to handle toggle state change
-    toggleChange1(newChecked) {
+    toggleChange1(newChecked: boolean) {
       // Changes the checked state of the first toggle switch (powerpuffGirls)
       this.powerpuffGirls.checked = newChecked
       //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
-    toggleChange2(newChecked) {
+    toggleChange2(newChecked: boolean) {
       this.timeBenders.checked = newChecked
       this.summerLovers.disabled = false
     },
@@ -375,8 +384,8 @@ export default {
       console.log('oldu')
     },
 
-    takeCheckedInfo(info) {
-      console.log(info)
+    takeCheckedInfo(name: string, id: string, isChecked: boolean) {
+      console.log(name, id, isChecked)
     }
   }
 }
