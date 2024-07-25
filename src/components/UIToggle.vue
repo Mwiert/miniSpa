@@ -8,8 +8,8 @@
       <div class="toggle-label">
         {{ label }}
       </div>
-      <div class="toggle-switch" :class="{ checked: checked }">
-        <div class="toggle-slider" :class="{ checked: checked }"></div>
+      <div class="toggle-switch" :class="{ checked: modelValue }">
+        <div class="toggle-slider" :class="{ checked: modelValue }"></div>
       </div>
     </div>
   </div>
@@ -33,13 +33,12 @@ export default {
       type: Boolean,
       default: false
     },
-    // Determines if the toggle switch is in the checked state
-    checked: {
+    // Determines if the toggle switch is disabled
+    disabled: {
       type: Boolean,
       default: false
     },
-    // Determines if the toggle switch is disabled
-    disabled: {
+    modelValue: {
       type: Boolean,
       default: false
     }
@@ -48,7 +47,7 @@ export default {
     // Method to toggle the switch state, emitting an event if not disabled
     toggle() {
       if (!this.disabled) {
-        this.$emit('switchToggle', !this.checked)
+        this.$emit('update:modelValue', !this.modelValue)
       }
     }
   }
