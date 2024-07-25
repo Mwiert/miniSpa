@@ -11,8 +11,8 @@
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
-        <div class="search-container">
-          <div v-if="searchable" class="search-content-wrapper">
+        <div v-if="searchable" class="search-container">
+          <div class="search-content-wrapper">
             <input
               type="text"
               v-model="searchQuery"
@@ -32,9 +32,9 @@
           class="ui-dropdown-content"
           :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
           <div
-            v-for="(item, index) in filteredItems()"
-            :key="index"
-            :ref="'item-' + index"
+            v-for="item in filteredItems()"
+            :key="item[primaryKey]"
+            :ref="'item-' + item[primaryKey]"
             class="ui-dropdown-item"
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }">
@@ -62,13 +62,8 @@
 </template>
 
 <script lang="ts">
-import SvgIcon from '../SvgIcon.vue'
-
 export default {
   name: 'UIDropdown',
-  components: {
-    SvgIcon
-  },
   props: {
     items: {
       // items in the database.
@@ -78,7 +73,6 @@ export default {
     },
     primaryKey: {
       type: String,
-      required: true,
       default: 'id'
     },
 
@@ -147,7 +141,8 @@ export default {
       //if it is defined 'dataSize' if not 'itemLength'
       return this.dataSize !== null ? this.dataSize : this.items.length
     },
-    dropdownListMaxHeight(): String {
+    dropdownListMaxHeight(): string {
+      //sets the height of dropdown content
       const itemHeight = 30
 
       const maxHeight = itemHeight * this.computedDataSize
@@ -155,6 +150,7 @@ export default {
     }
   },
   methods: {
+    //sorts items by ascending or descending
     sortItems(items: Array<any>): Array<any> {
       if (this.sortField === undefined) {
         return items
@@ -168,7 +164,8 @@ export default {
         })
       }
     },
-    mapToTurkishWords(word) {
+    //maps Turkish characters to english characters
+    mapToTurkishWords(word): string {
       const mappedTurkishLetters = {
         ç: 'c',
         ı: 'i',
@@ -183,11 +180,11 @@ export default {
         (letter) => mappedTurkishLetters[letter.toLowerCase()] || letter
       )
     },
-    stringContainsAnyWord(word, array) {
+    stringContainsAnyWord(word, array): boolean {
       return array.some((char) => word.includes(char))
     },
 
-    createItemDropdown() {
+    createItemDropdown(): Array<Object> {
       const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
 
       if (this.stringContainsAnyWord(this.searchQuery, turkishLetters)) {
@@ -211,7 +208,8 @@ export default {
 
       return items
     },
-    isLongItem(item) {
+    //this method shortens the word if the word is too long and puts ... at the end
+    isLongItem(item): string {
       if (
         item[this.displayField] !== undefined &&
         String(item[this.displayField]).length > this.maxItemThreshold
@@ -220,10 +218,10 @@ export default {
       } else if (item[this.displayField] === undefined) return item[this.displayField]
       return String(item[this.displayField])
     },
-    checkItem(item) {
+    checkItem(item): boolean {
       return item[this.iconImage] !== '' && item[this.iconImage] !== undefined
     },
-    checkImage() {
+    checkImage(): boolean {
       for (let i = 0; i < this.dropdownItems.length; i++) {
         if (
           this.dropdownItems[i][this.iconImage] !== '' &&
@@ -234,7 +232,7 @@ export default {
       }
       return false
     },
-    isSelected(item) {
+    isSelected(item): boolean {
       return this.selectedItem[this.primaryKey] === item[this.primaryKey]
     },
 
@@ -256,13 +254,17 @@ export default {
         this.$nextTick(() => {
           if (this.sortField && this.sortByAscending) {
             let itemsCopy = [...this.dropdownItems].sort().reverse()
-            let primaryKeys = []
+            console.log(itemsCopy)
+            let primaryKeys: string[] = []
             for (let i = 0; i < itemsCopy.length; i++) {
               primaryKeys.push(itemsCopy[i][this.primaryKey])
             }
+            console.log(primaryKeys)
 
-            const selectedIndex = primaryKeys.indexOf(this.selectedItem[this.primaryKey])
+            const selectedIndex =
+              primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
             const selectedItemRef = this.$refs['item-' + selectedIndex]
+            console.log(selectedItemRef)
 
             if (selectedItemRef && selectedItemRef[0]) {
               selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
@@ -286,9 +288,11 @@ export default {
       this.searchQuery = ''
     },
     handleClickOutside(event: MouseEvent) {
-      // when clicked out of the dropdown, dropdownMenu closes.
       const target = event.target as HTMLElement
-      if (!this.$el.contains(target)) {
+      if (
+        !this.$el.children[0]?.children[1]?.contains(target) &&
+        !this.$el.children[0].children[2]?.contains(target)
+      ) {
         this.isOpen = false
       }
     }
