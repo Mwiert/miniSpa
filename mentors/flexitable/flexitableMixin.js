@@ -36,10 +36,12 @@ export default {
     GeneratePagination(itemsPerPage){
       //pagination
       if (itemsPerPage == -1) {
+        this.flexi.options.pages = []
+        this.flexi.options.currentPage = 1
       itemsPerPage  = this.flexi.rows.length 
       console.log("nazli",itemsPerPage)
       this.flexi.options.pagination = false
-      this.flexi.options.pages = []
+      
       }
         else {
           this.flexi.options.pagination = true

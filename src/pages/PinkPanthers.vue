@@ -30,7 +30,7 @@ export default {
 
           hiddenColumns: ['annualFee', 'city'],
 
-          itemsPerPage: 30,
+          //itemsPerPage: 5,
           stickyHeader: true,
           // disableSorting: true
           show: false

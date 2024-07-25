@@ -44,37 +44,45 @@ export default {
   const totalPages = this.totalPages;
   const pages = [];
 
-  // Always show the first two pages
+  if (totalPages === 1) {
+    pages.push(1);
+    return pages;
+  }
+
+  // Always show the first page
   pages.push(1);
-  if (totalPages > 1) {
+
+  // Show the second page if there are at least two pages
+  if (totalPages >= 2) {
     pages.push(2);
   }
 
   // Show ellipsis and middle pages if necessary
-  if (currentPage > 3) {
-    pages.push('...');
-  }
-
-  // Show current page in the middle if it's not one of the first two or last two pages
-  if (currentPage > 2 && currentPage < totalPages - 1) {
-    pages.push(currentPage);
-  }
-
-  // Show ellipsis if necessary before the last two pages
-  if (currentPage < totalPages - 2) {
-    pages.push('...');
-  }
-
-  // Always show the last two pages
-  if (totalPages > 1) {
-    pages.push(totalPages - 1);
-  }
   if (totalPages > 2) {
+    if (currentPage > 3) {
+      pages.push('...');
+    }
+
+    // Show current page in the middle if it's not one of the first two or last two pages
+    if (currentPage > 2 && currentPage < totalPages - 1) {
+      pages.push(currentPage);
+    }
+
+    // Show ellipsis if necessary before the last two pages
+    if (currentPage < totalPages - 2) {
+      pages.push('...');
+    }
+
+    // Always show the last two pages
+    if (totalPages - 1 > 2) {
+      pages.push(totalPages - 1);
+    }
     pages.push(totalPages);
   }
 
   return pages;
 }
+
 
 
   },
