@@ -1,5 +1,5 @@
 <template>
-  <div class="smart-table-pagination-c">
+  <div class="smart-table-pagination-c" v-if="flexi.options.pagination">
     <button
       @click="setPage(flexi.options.currentPage - 1)"
       class="prev-page-btn"
@@ -41,26 +41,40 @@ export default {
       const totalPages = this.totalPages
       const pages = []
 
-      if (totalPages <= 7) {
-        for (let i = 1; i <= totalPages; i++) {
-          pages.push(i)
+      if (totalPages === 1) {
+        pages.push(1)
+        return pages
+      }
+
+      // Always show the first page
+      pages.push(1)
+
+      // Show the second page if there are at least two pages
+      if (totalPages >= 2) {
+        pages.push(2)
+      }
+
+      // Show ellipsis and middle pages if necessary
+      if (totalPages > 2) {
+        if (currentPage > 3) {
+          pages.push('...')
         }
-      } else {
-        if (currentPage <= 2) {
-          pages.push(1, 2, 3, 4, 5, '..', totalPages)
-        } else if (currentPage >= totalPages - 3) {
-          pages.push(
-            1,
-            '...',
-            totalPages - 4,
-            totalPages - 3,
-            totalPages - 2,
-            totalPages - 1,
-            totalPages
-          )
-        } else {
-          pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages)
+
+        // Show current page in the middle if it's not one of the first two or last two pages
+        if (currentPage > 2 && currentPage < totalPages - 1) {
+          pages.push(currentPage)
         }
+
+        // Show ellipsis if necessary before the last two pages
+        if (currentPage < totalPages - 2) {
+          pages.push('...')
+        }
+
+        // Always show the last two pages
+        if (totalPages - 1 > 2) {
+          pages.push(totalPages - 1)
+        }
+        pages.push(totalPages)
       }
 
       return pages
@@ -86,6 +100,7 @@ export default {
 }
 </script>
 
+>>>>>>>>> Temporary merge branch 2
 <style lang="scss">
 .smart-table-pagination-c {
   display: flex;
@@ -115,7 +130,6 @@ export default {
       visibility: hidden;
     }
   }
-
   .page-btn {
     height: 40px;
     width: 40px;

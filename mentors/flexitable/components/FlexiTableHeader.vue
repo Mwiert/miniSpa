@@ -2,7 +2,8 @@
   <div
     class="flexi-table-header-c"
     :class="StickyHeaderClass"
-    :style="[gridTemplateColumns, ColumnGap]">
+    :style="[gridTemplateColumns, ColumnGap]"
+    ref="print2">
     <template v-for="column in flexi.columns" :key="column.name">
       <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
         <div

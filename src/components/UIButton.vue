@@ -5,8 +5,8 @@
       class="reisetech-btn"
       :class="[`reisetech-btn__${className}`, size, isDisabled ? 'disabled' : '']"
       :disabled="isDisabled"
-      v-if="routerUrl == ''"
-    >
+      @click="handleClick"
+      v-if="routerUrl == ''">
       <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
       <SvgIcon v-if="icon && !isSpinnerActive" :size="iconSize" :name="icon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
@@ -17,8 +17,7 @@
       :class="[`reisetech-btn__${className}`, size, isDisabled ? 'disabled' : '']"
       :disabled="isDisabled"
       @click="handlerUrl(routerUrl)"
-      v-else
-    >
+      v-else>
       <!-- Icon's name should be the name of the .svg file-->
       <SvgIcon v-if="icon && !isSpinnerActive" :size="iconSize" :name="icon" class="icon" />
       <span v-if="isSpinnerActive" class="spinner"></span>
@@ -31,6 +30,11 @@
 export default {
   name: 'UIButton',
   props: {
+    id: {
+      type: String,
+      default: '',
+      required: true
+    },
     // Classes such as hotel and flight are derived from the .reisetech-btn class.
     className: {
       type: String,
@@ -68,12 +72,26 @@ export default {
     size: {
       type: String,
       default: 'large'
+    },
+    modelValue: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {}
   },
   methods: {
+    handleClick() {
+      if (!this.isDisabled) {
+        this.$emit('update:modelValue', !this.modelValue)
+        this.$emit('button-click', this.id, !this.modelValue)
+
+        if (this.routerUrl) {
+          this.handlerUrl(this.routerUrl)
+        }
+      }
+    },
     handlerUrl(url) {
       window.open(url, '_self')
     }

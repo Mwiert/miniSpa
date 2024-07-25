@@ -11,8 +11,8 @@
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
       </button>
       <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
-        <div class="search-container">
-          <div v-if="searchable" class="search-content-wrapper">
+        <div v-if="searchable" class="search-container">
+          <div class="search-content-wrapper">
             <input
               type="text"
               v-model="searchQuery"
@@ -32,26 +32,26 @@
           class="ui-dropdown-content"
           :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
           <div
-            v-for="(item, index) in filteredItems()"
-            :key="index"
-            :ref="'item-' + index"
+            v-for="item in filteredItems()"
+            :key="item[primaryKey]"
+            :ref="'item-' + item[primaryKey]"
             class="ui-dropdown-item"
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)" class="image-label-wrapper">
-              <img
-                :src="item[urlField]"
-                alt=""
+              <div
                 class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                <SvgIcon :name="item[iconImage]" :size="'s'" />
+              </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
             <div v-else class="image-label-wrapper">
-              <img
-                :src="item[urlField]"
-                alt=""
+              <div
                 class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }" />
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                <SvgIcon :name="item[iconImage]" :size="'s'" />
+              </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
           </div>
@@ -62,13 +62,8 @@
 </template>
 
 <script lang="ts">
-import SvgIcon from '../SvgIcon.vue'
-
 export default {
   name: 'UIDropdown',
-  components: {
-    SvgIcon
-  },
   props: {
     items: {
       // items in the database.
@@ -78,7 +73,6 @@ export default {
     },
     primaryKey: {
       type: String,
-      required: true,
       default: 'id'
     },
 
@@ -113,11 +107,6 @@ export default {
       default: 'name'
     },
 
-    urlField: {
-      // picture of the object taken here
-      type: String,
-      default: ''
-    },
     dataSize: {
       // how many data will shown in the dropdown.
       type: Number
@@ -128,6 +117,14 @@ export default {
     sortByAscending: {
       type: Boolean,
       default: false
+    },
+    maxItemThreshold: {
+      type: Number,
+      default: 15
+    },
+    iconImage: {
+      type: String,
+      default: 'iconImage'
     }
   },
   data() {
@@ -144,7 +141,8 @@ export default {
       //if it is defined 'dataSize' if not 'itemLength'
       return this.dataSize !== null ? this.dataSize : this.items.length
     },
-    dropdownListMaxHeight(): String {
+    dropdownListMaxHeight(): string {
+      //sets the height of dropdown content
       const itemHeight = 30
 
       const maxHeight = itemHeight * this.computedDataSize
@@ -152,47 +150,89 @@ export default {
     }
   },
   methods: {
+    //sorts items by ascending or descending
     sortItems(items: Array<any>): Array<any> {
-      if (this.sortField === undefined) return items
-      else {
+      if (this.sortField === undefined) {
+        return items
+      } else {
         return items.sort((a, b) => {
-          const aValue = a[this.sortField].toLowerCase()
-          const bValue = b[this.sortField].toLowerCase()
+          const aValue = String(a[this.sortField]).toLowerCase()
+          const bValue = String(b[this.sortField]).toLowerCase()
           if (aValue < bValue) return this.sortByAscending ? -1 : 1
           if (aValue > bValue) return this.sortByAscending ? 1 : -1
           return 0
         })
       }
     },
-    createItemDropdown() {
-      return this.dropdownItems.filter((item) =>
-        String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
+    //maps Turkish characters to english characters
+    mapToTurkishWords(word): string {
+      const mappedTurkishLetters = {
+        ç: 'c',
+        ı: 'i',
+        ğ: 'g',
+        ö: 'o',
+        ş: 's',
+        ü: 'u'
+      }
+
+      return word.replace(
+        /[çığöşü]/g,
+        (letter) => mappedTurkishLetters[letter.toLowerCase()] || letter
       )
     },
-    filteredItems(): Array<any> {
-      return this.createItemDropdown()
+    stringContainsAnyWord(word, array): boolean {
+      return array.some((char) => word.includes(char))
     },
-    isLongItem(item) {
-      if (item[this.displayField] !== undefined && String(item[this.displayField]).length > 15) {
-        return String(item[this.displayField]).substring(0, 15) + '...'
+
+    createItemDropdown(): Array<Object> {
+      const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
+
+      if (this.stringContainsAnyWord(this.searchQuery, turkishLetters)) {
+        return this.dropdownItems.filter((item) =>
+          String(item[this.displayField].toLowerCase()).includes(this.searchQuery.toLowerCase())
+        )
+      } else {
+        return this.dropdownItems.filter((item) =>
+          this.mapToTurkishWords(item[this.displayField].toLowerCase()).includes(
+            this.searchQuery.toLowerCase()
+          )
+        )
+      }
+    },
+    filteredItems(): Array<any> {
+      let items = this.createItemDropdown()
+
+      if (this.sortField !== undefined) {
+        items = this.sortItems(items)
+      }
+
+      return items
+    },
+    //this method shortens the word if the word is too long and puts ... at the end
+    isLongItem(item): string {
+      if (
+        item[this.displayField] !== undefined &&
+        String(item[this.displayField]).length > this.maxItemThreshold
+      ) {
+        return String(item[this.displayField]).substring(0, this.maxItemThreshold) + '...'
       } else if (item[this.displayField] === undefined) return item[this.displayField]
       return String(item[this.displayField])
     },
-    checkItem(item) {
-      return item[this.urlField] !== '' && item[this.urlField] !== undefined
+    checkItem(item): boolean {
+      return item[this.iconImage] !== '' && item[this.iconImage] !== undefined
     },
-    checkImage() {
+    checkImage(): boolean {
       for (let i = 0; i < this.dropdownItems.length; i++) {
         if (
-          this.dropdownItems[i][this.urlField] !== '' &&
-          this.dropdownItems[i][this.urlField] !== undefined
+          this.dropdownItems[i][this.iconImage] !== '' &&
+          this.dropdownItems[i][this.iconImage] !== undefined
         ) {
           return true
         }
       }
       return false
     },
-    isSelected(item) {
+    isSelected(item): boolean {
       return this.selectedItem[this.primaryKey] === item[this.primaryKey]
     },
 
@@ -212,13 +252,32 @@ export default {
         this.clearSearch()
 
         this.$nextTick(() => {
-          const selectedIndex = this.dropdownItems.indexOf(this.selectedItem)
-          const selectedItemRef = this.$refs['item-' + selectedIndex]
-          if (selectedItemRef && selectedItemRef[0]) {
-            selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+          if (this.sortField && this.sortByAscending) {
+            let itemsCopy = [...this.dropdownItems].sort().reverse()
+            let primaryKeys: string[] = []
+            for (let i = 0; i < itemsCopy.length; i++) {
+              primaryKeys.push(itemsCopy[i][this.primaryKey])
+            }
+
+            const selectedIndex =
+              primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
+            const selectedItemRef = this.$refs['item-' + selectedIndex]
+
+            if (selectedItemRef && selectedItemRef[0]) {
+              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+            }
+          } else if (this.sortField) {
+            let itemsCopy = [...this.dropdownItems].sort()
+            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
+            const selectedItemRef = this.$refs['item-' + selectedIndex]
+
+            if (selectedItemRef && selectedItemRef[0]) {
+              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+            }
           }
         })
       }
+
       this.clearSearch()
     },
     clearSearch() {
@@ -226,9 +285,11 @@ export default {
       this.searchQuery = ''
     },
     handleClickOutside(event: MouseEvent) {
-      // when clicked out of the dropdown, dropdownMenu closes.
       const target = event.target as HTMLElement
-      if (!this.$el.contains(target)) {
+      if (
+        !this.$el.children[0]?.children[1]?.contains(target) &&
+        !this.$el.children[0].children[2]?.contains(target)
+      ) {
         this.isOpen = false
       }
     }
@@ -315,6 +376,7 @@ export default {
       right: 0;
       margin-top: 0.2rem;
       padding-bottom: 1rem;
+      padding-top: 0.5rem;
       background-color: #fff;
       border: 1px solid #ccc;
       border-radius: 12px;
@@ -394,11 +456,15 @@ export default {
             align-items: center;
             justify-content: start;
             .dropdown-item-img {
-              width: 0.75rem;
-              height: 0.75rem;
+              width: 16px;
+              height: 16px;
               padding-right: 10px;
               display: none;
-
+              .svg-icon-c {
+                width: 16px;
+                height: 16px;
+                padding: 0;
+              }
               &.isVisible {
                 display: inline-block;
               }

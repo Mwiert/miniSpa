@@ -1,52 +1,112 @@
 <template>
+  <div class="text-area-c">
+    <UITextArea
+      :label="'Address'"
+      :disabled="false"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="100"
+      v-model="valueTextArea"></UITextArea>
+    <p>{{ valueTextArea }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area length 10 '"
+      :disabled="false"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea2"></UITextArea>
+    <p>{{ valueTextArea2 }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :label="'disabled text area'"
+      :disabled="true"
+      :rows="10"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea3"></UITextArea>
+    <p>{{ valueTextArea3 }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area col 10'"
+      :rows="10"
+      :cols="10"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea4"></UITextArea>
+    <p>{{ valueTextArea4 }}</p>
+  </div>
+
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area col 30 row 2'"
+      :rows="2"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea5"></UITextArea>
+    <p>{{ valueTextArea5 }}</p>
+  </div>
+
   <div class="input-box">
     <UIInput
       :id="'username'"
       :label="'Email'"
       :icon="'mail'"
       :type="'email'"
-      :rules="{ required: true, email: true }"
-      clearButton />
+      v-model="messageInput" />
+    <p>{{ messageInput }}</p>
   </div>
 
   <div class="input-box">
     <UIInput
-      :type="password"
+      :type="'password'"
       :id="'password'"
-      :label="'password'"
-      :icon="'mail'"
-      :rules="{ required: true, minLength: 10 }"
-      clearButton />
+      :label="'Password'"
+      :icon="'eye'"
+      clearButton
+      v-model="messageInputWithClearButton" />
+    <p>{{ messageInputWithClearButton }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput
-      :type="tc"
-      :id="'idNumber'"
-      :label="'idNumber'"
-      :icon="'mail'"
-      :rules="{ required: true, tc: true }"
-      clearButton />
+    <UIInput :id="'tckno'" :label="'TCKNO'" :icon="'arrow-up'" clearButton disabled />
+  </div>
+  <div class="input-box">
+    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton :disabled="true" />
   </div>
   <!-- <button @click="submitForm">Submit</button> -->
 
   <div class="button-c">
     <!-- UIButton component instances -->
+    <!-- <p>id:{{ clickedButton.id }}</p> -->
     <UIButton
+      :id="'homebutton1'"
       text="Home"
       :isSpinnerActive="loadingStates.home.isLoading"
       :isDisabled="loadingStates.home.isDisabled"
       @click="setLoadingState('home')"
       routerUrl="/" />
     <UIButton
+      :id="'flightbutton1'"
       className="flight"
       text="Flight"
       :icon="'refresh'"
       :size="'small'"
       :isSpinnerActive="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
-      @click="setLoadingState('flight')" />
+      @click="setLoadingState('flight')"
+      v-model="buttonValue" />
+    <p>{{ buttonValue }}</p>
+
     <UIButton
+      :id="'hotelbutton1'"
       className="hotel"
       text="Hotel"
       :icon="'refresh'"
@@ -57,6 +117,7 @@
 
     <!-- Since the class name is not added, the default class will be used. -->
     <UIButton
+      :id="'ppgbutton'"
       text="PowerPuffGirls"
       :icon="'refresh'"
       :isSpinnerActive="loadingStates.default.isLoading"
@@ -64,6 +125,7 @@
       @click="setLoadingState('default')" />
 
     <UIButton
+      :id="'flightoutline'"
       className="flight outline"
       text="Flight"
       :isSpinnerActive="loadingStates.flightOutline.isLoading"
@@ -72,53 +134,62 @@
       @click="setLoadingState('flightOutline')" />
 
     <UIButton
+      :id="'hoteloutline'"
       className="hotel outline"
       text="Hotel"
       :isSpinnerActive="loadingStates.hotelOutline.isLoading"
       :isDisabled="loadingStates.hotelOutline.isDisabled"
       @click="setLoadingState('hotelOutline')" />
-
     <UIButton
+      :id="'disabled'"
       text="Disabled"
       :isSpinnerActive="loadingStates.disabledButton.isLoading"
       :isDisabled="loadingStates.disabledButton.isDisabled"
       @click="setLoadingState('disabledButton')" />
+
+    <!-- <div>
+      <h3>Button status:</h3>
+      <li v-for="(state, key) in loadingStates" :key="key">
+        Button ID: {{ key }}, Loading State: {{ state.isLoading }}
+      </li>
+    </div> -->
 
     <!-- UIToggle component instances -->
     <div>
       <UIToggle
         :id="'powerpuffGirls'"
         :label="'Powerpuff Girls'"
-        :checked="powerpuffGirls.checked"
+        v-model="powerpuffGirls.checked"
         :disabled="powerpuffGirls.disabled"
-        @switchToggle="toggleChange1" />
+        @update:modelValue="toggleChange1" />
+        <p> Status: {{ powerpuffGirls.checked }}</p>
     </div>
 
     <div>
       <UIToggle
         :id="'timeBenders'"
         :label="'Time Benders'"
-        :checked="timeBenders.checked"
+        v-model="timeBenders.checked"
         :disabled="timeBenders.disabled"
-        @switchToggle="toggleChange2" />
+        @update:modelValue="toggleChange2" />
     </div>
 
     <div>
       <UIToggle
         :id="'summerLovers'"
         :label="'Summer Lovers'"
-        :checked="summerLovers.checked"
+        v-model="summerLovers.checked"
         :disabled="summerLovers.disabled"
-        @switchToggle="toggleChange3" />
+        @update:modelValue="toggleChange3" />
     </div>
 
     <div>
       <UIToggle
         :id="'pinkPanthers'"
         :label="'Pink Panthers'"
-        :checked="pinkPanthers.checked"
+        v-model="pinkPanthers.checked"
         :disabled="pinkPanthers.disabled"
-        @switchToggle="toggleChange4" />
+        @update:modelValue="toggleChange4" />
     </div>
 
     <!-- UIRadioButton component instances  -->
@@ -131,7 +202,8 @@
         :label="radio.label"
         :value="radio.value"
         v-model="pickedRadioHotel"
-        :disabled="radio.disabled" />
+        :disabled="radio.disabled"/>
+        <p>{{ pickedRadioHotel }}</p>
     </div>
     <!--Radio Buttons for flight-->
     <div class="flight-radio-buttons">
@@ -155,7 +227,9 @@
         :className="'hotel'"
         :label="checkbox.label"
         :disabled="checkbox.disabled"
-        @takeCheckedInfo="takeCheckedInfo" />
+        v-model:checked="checkbox.checked"
+        @takeCheckedInfo="takeCheckedInfo"
+         />
     </div>
 
     <!-- Checkboxes for flight -->
@@ -167,17 +241,20 @@
         :disabled="checkbox.disabled"
         :label="checkbox.label"
         after
+        v-model:checked="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
+        <p>{{ checkboxFlight }}</p>
     </div>
-
     <!-- Example of a disabled checkbox -->
-    <UICheckbox
+    <!-- <UICheckbox
       :label="'Disabled'"
       :className="'hotel'"
       :after="false"
       :disabled="true"
       :name="'disabled'"
-      :id="'deneme'" />
+      :id="'deneme'"
+      v-model:checked="checkbox.checked"
+       /> -->
   </div>
 </template>
 
@@ -187,7 +264,7 @@ import UIToggle from '../components/UIToggle.vue'
 import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
-import { validateInput } from '../Validations/ValidationsFunctions'
+import UITextArea from '../components/UITextArea.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -196,7 +273,8 @@ export default {
     UIToggle,
     UIRadioButton,
     UICheckbox,
-    UIInput
+    UIInput,
+    UITextArea
   },
   data() {
     return {
@@ -204,6 +282,14 @@ export default {
       email: '',
       password: '',
       idNumber: '',
+      valueTextArea: '',
+      valueTextArea2: '',
+      valueTextArea3: '',
+      valueTextArea4: '',
+      valueTextArea5: '',
+      messageInput: '',
+      messageInputWithClearButton: '',
+      buttonValue: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -252,14 +338,14 @@ export default {
 
       // Initial states for checkboxes
       checkboxHotel: [
-        { label: 'Hotel 1', id: 'id1', disabled: false },
-        { label: 'Hotel 2', id: 'id2', disabled: false },
-        { label: 'Hotel 3', id: 'id3', disabled: true }
+        { label: 'Hotel 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Hotel 2', id: 'id2', disabled: false, checked: false },
+        { label: 'Hotel 3', id: 'id3', disabled: true, checked: false }
       ],
       checkboxFlight: [
-        { label: 'Flight 1', id: 'id1', disabled: false },
-        { label: 'Flight 2', id: 'id2', disabled: false },
-        { label: 'Flight 3', id: 'id3', disabled: false }
+        { label: 'Flight 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Flight 2', id: 'id2', disabled: false, checked: false },
+        { label: 'Flight 3', id: 'id3', disabled: false, checked: false }
       ]
     }
   },
@@ -275,13 +361,13 @@ export default {
     },
 
     // Methods to handle toggle state change
-    toggleChange1(newChecked) {
+    toggleChange1(newChecked: boolean) {
       // Changes the checked state of the first toggle switch (powerpuffGirls)
       this.powerpuffGirls.checked = newChecked
       //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
-    toggleChange2(newChecked) {
+    toggleChange2(newChecked: boolean) {
       this.timeBenders.checked = newChecked
       this.summerLovers.disabled = false
     },
@@ -298,8 +384,8 @@ export default {
       console.log('oldu')
     },
 
-    takeCheckedInfo(info) {
-      console.log(info)
+    takeCheckedInfo(name: string, id: string, isChecked: boolean) {
+      console.log(name, id, isChecked)
     }
   }
 }

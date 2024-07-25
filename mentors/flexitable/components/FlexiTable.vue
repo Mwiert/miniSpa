@@ -1,11 +1,13 @@
 <template>
   <div class="flexi-table-c">
-    {{ this.flexi.options.hiddenColumns }}
-    {{ this.flexi.columns }}
     <!-- {{ flexi.options }} -->
+
+    {{ flexi.options.columnTemp }}
+    {{ flexi.options.columnSizes }}
+    {{ flexi.options.columnSizeholder }}
     <FlexiTableControls />
-    <FlexiTableHeader />
-    <FlexiTableBody />
+    <FlexiTableHeader ref="flexiheader" />
+    <FlexiTableBody ref="flexibody" />
     <FlexiTableFooter />
   </div>
 </template>
@@ -24,6 +26,8 @@ export default {
       ...flexiConfig,
       ...this.flexi.options
     }
+    this.flexi.options.columnSizeholder = { ...this.flexi.options.columnSizes }
+    this.flexi.options.columnTemp = []
     //sortable Control
     if (!this.flexi.options.disableSorting) {
       const sortableParamsExist = this.flexi.columns.some((column) => column.sortable == true)

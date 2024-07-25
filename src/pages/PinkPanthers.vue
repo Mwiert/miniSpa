@@ -11,6 +11,7 @@
 import response from '../../mentors/flexitable/flexitableData'
 import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
 import { computed } from 'vue'
+import PageOrder from '../../src/enum/PageOrder'
 export default {
   name: 'FlexiTablePage',
   components: {
@@ -27,13 +28,16 @@ export default {
       flexiTableOptions: {
         options: {
           columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
+
           columnGap: '.5rem',
+          EInternSingleComponentType: PageOrder,
 
-          hiddenColumns: ['annualFee', 'city'],
+          //hiddenColumns: ['annualFee', 'city'],
 
-          itemsPerPage: 30,
-          stickyHeader: true
+          //itemsPerPage: 5,
+          stickyHeader: true,
           // disableSorting: true
+          show: false
         },
         columns: [
           { id: 1, name: '#', label: 'id' },
