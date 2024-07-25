@@ -2,7 +2,8 @@
   <div
     class="flexi-table-header-c"
     :class="StickyHeaderClass"
-    :style="[gridTemplateColumns, ColumnGap]">
+    :style="[gridTemplateColumns, ColumnGap]"
+    ref="print2">
     <template v-for="column in flexi.columns" :key="column.name">
       <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
         <div
@@ -74,88 +75,6 @@ export default {
           return 0
         }
       })
-    },
-    triggerExportPrint() {
-      const divToPrint = this.$parent.$refs.pinkpanthers.$refs.print
-      console.log(divToPrint)
-      const newPrintWindow = window.open('', 'Print')
-      newPrintWindow.document.write(
-        `<html>
-          <head>
-            <style>
-              .smart-table-body-c {
-                display: block;
-                margin: 20px 0;
-              }
-              .smart-table-main-grid {
-                display: grid;
-                grid-template-columns: repeat(${this.Columns.length}, 1fr);
-                width: 100%;
-                gap: 10px;
-              }
-              .grid-header {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-weight: bold;
-                color: black;
-                padding: 15px;
-                border-radius: 10px;
-                border: none;
-              }
-              .grid-row {
-                display: grid;
-                grid-template-columns: repeat(${this.Columns.length}, 1fr);
-                width: 100%;
-                gap: 5px;
-                margin-bottom: 10px;
-                border: 1px solid #ccc;
-                border-radius: 40px;
-                padding: 0.5px;
-              }
-              .no-grid-item {
-                padding: 28px;
-                border: 1px solid #ccc;
-                text-align: center;
-                font-weight: bold;
-                border-radius: 40px;
-                background-color: #ffffff;
-                grid-column: 1 / -1;
-              }
-              .grid-item {
-                padding: 15px;
-                border: 1px solid #ccc;
-                text-align: center;
-                justify-content: center;
-                align-items: center;
-                display: flex;
-                border-radius: 30px;
-              }
-              .grid-item.confirmed {
-                background-color: #ccffdd;
-                color: #1f9947;
-                border-color: #4deb81;
-              }
-              .grid-item.pending {
-                background-color: #ffe6cc;
-                color: #e87807;
-                border-color: #ee9c4b;
-              }
-              .grid-item.cancelled {
-                background-color: #ff6b6b;
-                color: #7e2323;
-                border-color: #ee3535;
-              }
-            </style>
-          </head>
-          <body>
-            ${divToPrint.outerHTML}
-          </body>
-        </html>`
-      )
-
-      newPrintWindow.print()
-      //newPrintWindow.close()
     }
   }
 }
