@@ -131,7 +131,8 @@ export default {
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
-    isDatePickerEnable: { type: Boolean }
+    isDatePickerEnable: { type: Boolean },
+    dayRange: { type: Number, default: 99 }
   },
   methods: {
     checkRange() {
@@ -156,6 +157,11 @@ export default {
             .format('YYYY-MM-DD')
           this.maxDate = dayjs().add(1, 'month').format('YYYY-MM-DD')
         }
+        if (this.dayRange !== 99) {
+          let day = this.dayRange
+          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs().format('YYYY-MM-DD')
+        }
       } else if (this.isFutureValidation) {
         if (this.yearRange !== 99) {
           let day = this.yearRange * 365
@@ -165,10 +171,11 @@ export default {
         if (this.monthRange !== 99) {
           this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
           this.minDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD')
-        } else {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
+        }
+        if (this.dayRange !== 99) {
+          let day = this.dayRange
           this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
+          this.minDate = dayjs().format('YYYY-MM-DD')
         }
       } else {
         if (this.yearRange !== 99) {
@@ -182,11 +189,13 @@ export default {
             .format('YYYY-MM-DD')
           this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
         } else {
-          let day = this.yearRange * 365
+          let day = this.dayRange
           this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
           this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
         }
       }
+      console.log('min ', this.minDate)
+      console.log('max ', this.maxDate)
     },
     populdateMonthDays() {
       if (this.isPastValidation) {
@@ -567,7 +576,7 @@ export default {
             // bulunulan tarihin sağındaki günler çizilir
             this.nextMonthDays[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
             this.nextMonthDays[i].month === dayjs(this.maxDate).subtract(1, 'month').format('MM') && // üstte maxDate'i 1 arttırmıştım (line 151)
-            this.nextMonthDays[i].year === dayjs(this.maxDate).subtract(1, 'month').format('YYYY') //
+            this.nextMonthDays[i].year === dayjs(this.maxDate).subtract(1, 'month').format('YYYY')
           ) {
             this.nextMonthDays[i].textDecoration = true
           }

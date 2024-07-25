@@ -106,6 +106,7 @@
           v-show="isMultiDatePickerEnable"
           :yearRange="validateYear"
           :monthRange="validateMonth"
+          :dayRange="validateDay"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
