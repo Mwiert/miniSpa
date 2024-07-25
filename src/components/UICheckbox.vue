@@ -65,10 +65,17 @@ export default {
       checkboxName: this.name
     }
   },
+  watch: {
+    checked(newValue) {
+      this.checkboxChecked = newValue
+      }
+    },
   methods: {
     //Emits true or false according to the checked state of the checkbox. Returns true if checked, false if unchecked
     handleClick() {
+      if (this.disabled) return
       this.checkboxChecked = !this.checkboxChecked
+      this.$emit('update:checked', this.checkboxChecked)
       this.$emit('takeCheckedInfo', this.checkboxChecked)
     }
   }

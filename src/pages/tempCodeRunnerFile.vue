@@ -1,0 +1,9 @@
+<UICheckbox
+      :label="'Disabled'"
+      :className="'hotel'"
+      :after="false"
+      :disabled="true"
+      :name="'disabled'"
+      :id="'deneme'"
+      v-model:checked="checkbox.checked"
+       />
