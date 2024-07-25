@@ -12,7 +12,6 @@
   </div>
   <div class="text-area-c">
     <UITextArea
-      :id="textarea"
       :label="'text area length 10 '"
       :disabled="false"
       :rows="10"
@@ -24,7 +23,6 @@
   </div>
   <div class="text-area-c">
     <UITextArea
-      :id="textarea"
       :label="'disabled text area'"
       :disabled="true"
       :rows="10"
@@ -33,6 +31,27 @@
       :maxLength="10"
       v-model="valueTextArea3"></UITextArea>
     <p>{{ valueTextArea3 }}</p>
+  </div>
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area col 10'"
+      :rows="10"
+      :cols="10"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea4"></UITextArea>
+    <p>{{ valueTextArea4 }}</p>
+  </div>
+
+  <div class="text-area-c">
+    <UITextArea
+      :label="'text area col 30 row 2'"
+      :rows="2"
+      :cols="30"
+      :placeholder="'Enter your address'"
+      :maxLength="10"
+      v-model="valueTextArea5"></UITextArea>
+    <p>{{ valueTextArea5 }}</p>
   </div>
 
   <div class="input-box">
@@ -259,6 +278,8 @@ export default {
       valueTextArea: '',
       valueTextArea2: '',
       valueTextArea3: '',
+      valueTextArea4: '',
+      valueTextArea5: '',
       messageInput: '',
       messageInputWithClearButton: '',
       buttonValue: '',
@@ -356,7 +377,7 @@ export default {
       console.log('oldu')
     },
 
-    takeCheckedInfo(name: string , id: string , isChecked: boolean) {
+    takeCheckedInfo(name: string, id: string, isChecked: boolean) {
       console.log(name, id, isChecked)
     }
   }

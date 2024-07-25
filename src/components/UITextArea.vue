@@ -3,6 +3,7 @@
     <div class="text-area-wrapper">
       <label v-if="label" :for="id">{{ label }}</label>
       <textarea
+        :class="{ disabled: disabled }"
         :name="name"
         :id="id"
         :cols="cols"
@@ -52,6 +53,11 @@ export default {
       &:focus {
         outline: none;
         border: 1px solid #000;
+      }
+      &.disabled {
+        background-color: #f5f5f5;
+        cursor: not-allowed;
+        resize: none;
       }
     }
   }
