@@ -75,7 +75,6 @@ export default {
     },
     modelValue: {
       type: Boolean,
-      default: false
     }
   },
   data() {
