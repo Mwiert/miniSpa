@@ -1,7 +1,12 @@
 <template>
   <div class="time-benders-c">
+    {{ selectDate}}
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
-    <UIDateRangePicker :isMultiDatePicker="true" :validateMonth="3" />
+    <UIDateRangePicker
+      v-model="selectDate"
+      :isMultiDatePicker="true"
+      :validateBackMonth="3"
+      :validateForwardMonth="2" />
   </div>
 </template>
 
@@ -14,7 +19,9 @@ export default {
     UIDateRangePicker
   },
   data() {
-    return {}
+    return {
+      selectDate: {}
+    }
   }
 }
 </script>

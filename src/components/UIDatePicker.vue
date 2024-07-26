@@ -77,72 +77,89 @@ export default {
     }
   },
   props: {
-    yearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    backYearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    forwardYearRange: { type: Number, default: 99 },
     saveDate: { type: String, default: '' }, //This is for saving the date history
-    monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    backMonthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    forwardMonthRange: { type: Number, default: 99 },
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
     isDatePickerEnable: { type: Boolean }
   },
   methods: {
     checkRange() {
-      /*
-
-            Check the range of the year and month, if year is not 9999, update year range, if month is not 9999, update month range.
-            This is intended request.
-
-          */
-
       if (this.isPastValidation) {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().format('YYYY-MM-DD')
+        if (this.backMonthRange !== 99) {
+          this.minDate = dayjs()
+            .subtract(this.backMonthRange, 'month')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+        } else {
+          this.minDate = dayjs()
+            .subtract(this.backYearRange, 'year')
+            .endOf('month')
+            .format('YYYY-MM-DD')
         }
 
-        if (this.monthRange !== 99) {
-          this.minDate = dayjs()
-            .subtract(this.monthRange, 'month')
-            .endOf('month')
-            .format('YYYY-MM-DD')
-          this.maxDate = dayjs().format('YYYY-MM-DD')
-        } else {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().format('YYYY-MM-DD')
-        }
+        this.maxDate = dayjs().startOf('month').format('YYYY-MM-DD')
       } else if (this.isFutureValidation) {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
-          this.minDate = dayjs().format('YYYY-MM-DD')
-        }
-        if (this.monthRange !== 99) {
-          this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
-          this.minDate = dayjs().format('YYYY-MM-DD')
-        } else {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
-        }
-      } else {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.minDate = dayjs(this.saveDate).subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.saveDate).add(day, 'day').format('YYYY-MM-DD')
-        } else if (this.monthRange !== 99) {
-          this.minDate = dayjs(this.saveDate)
-            .subtract(this.monthRange, 'month')
-            .endOf('month')
-            .format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.saveDate)
-            .add(this.monthRange, 'month')
+        this.minDate = dayjs().endOf('month').format('YYYY-MM-DD')
+
+        if (this.forwardMonthRange !== 99) {
+          this.maxDate = dayjs()
+            .add(this.forwardMonthRange, 'month')
             .startOf('month')
             .format('YYYY-MM-DD')
         } else {
-          let day = this.yearRange * 365
-          this.minDate = dayjs(this.saveDate).subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.saveDate).add(day, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs()
+            .add(this.forwardYearRange, 'year')
+            .startOf('month')
+            .format('YYYY-MM-DD')
+        }
+      } else {
+        if (this.backMonthRange !== 99) {
+          this.minDate = dayjs(this.saveDate)
+            .subtract(this.backMonthRange, 'month')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+          if (this.forwardMonthRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardMonthRange, 'month')
+              .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+          if (this.forwardYearRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardYearRange, 'year')
+              .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+        } else if (this.backYearRange !== 99) {
+          this.minDate = dayjs(this.saveDate)
+            .subtract(this.backYearRange, 'month')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+          if (this.forwardMonthRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardMonthRange, 'month')
+              .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+          if (this.forwardYearRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardYearRange, 'year')
+              .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+        } else {
+          this.minDate = dayjs(this.saveDate)
+            .subtract(this.forwardYearRange, 'year')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+          this.maxDate = dayjs(this.saveDate)
+            .add(this.forwardYearRange, 'year')
+            .startOf('month')
+            .format('YYYY-MM-DD')
         }
       }
     },
@@ -337,6 +354,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
+    margin-top: 1.5rem; 
     //This is the triangle for the calendar
     &::before {
       content: '';
