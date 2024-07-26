@@ -1,6 +1,5 @@
 <template>
   <!-- This is the main container to create the calendar -->
-  <!-- {{ baseInitialDates }} -->
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
@@ -378,7 +377,6 @@ export default {
       this.daysInMonth.forEach((day) => {
         if (day.secondInitialDate) {
           day.secondInitialDate = false
-          // day.selected = false
         }
       })
 
@@ -440,18 +438,20 @@ export default {
     updateBetweenDates() {
       const startDate = this.firstSelectedDate
       const endDate = this.secondSelectedDate
+
+      const startDateMonthIndex = dayjs(startDate.date).month()
+      const endDateMonthIndex = dayjs(endDate.date).month()
+
+      const leftCalendarMonthIndex = dayjs(this.daysInMonth[15].date).month()
+      const rightCalendarMonthIndex = dayjs(this.nextMonthDays[15].date).month()
+
       if (startDate.date && endDate.date) {
+        // seçilen iki tarih farklı aylardaysa
         if (startDate.month !== endDate.month) {
-          // seçilen iki tarih farklı aylardaysa
-          const startDateMonthIndex = dayjs(startDate.date).month()
-          const endDateMonthIndex = dayjs(endDate.date).month()
-
-          const leftCalendarMonthIndex = dayjs(this.daysInMonth[15].date).month()
-          const rightCalendarMonthIndex = dayjs(this.nextMonthDays[15].date).month()
-
+          // soldaki takvim için
           this.daysInMonth.forEach((day) => {
-            // soldaki takvimi ayarlama
             if (
+              // firstSelectedDate, soldaki takvimde ise o takvimdeki sağdaki günlerin between'ini true yap
               startDateMonthIndex == leftCalendarMonthIndex &&
               day.number > startDate.number &&
               day.number != 0
@@ -459,6 +459,7 @@ export default {
               day.active = true
               day.between = true
             } else if (
+              // secondSelectedDate, soldaki takvimde ise o takvimdeki soldaki günlerin between'ini true yap
               endDateMonthIndex == leftCalendarMonthIndex &&
               day.number < endDate.number &&
               day.number != 0
@@ -466,6 +467,7 @@ export default {
               day.active = true
               day.between = true
             } else if (
+              // iki tarihin ayı soldaki takvime ait değil ise soldaki takvimin tamamının between'ini true yap
               startDateMonthIndex < leftCalendarMonthIndex &&
               leftCalendarMonthIndex < endDateMonthIndex &&
               day.number != 0
@@ -475,8 +477,10 @@ export default {
             }
           })
 
+          // sağdaki takvim için
           this.nextMonthDays.forEach((day) => {
             if (
+              // firstSelectedDate, sağdaki takvimde ise o takvimdeki sağdaki günlerin between'ini true yap
               startDateMonthIndex == rightCalendarMonthIndex &&
               day.number > startDate.number &&
               day.number != 0
@@ -484,6 +488,7 @@ export default {
               day.active = true
               day.between = true
             } else if (
+              // secondSelectedDate, sağdaki takvimde ise o takvimdeki soldaki günlerin between'ini true yap
               endDateMonthIndex == rightCalendarMonthIndex &&
               day.number < endDate.number &&
               day.number != 0
@@ -491,6 +496,7 @@ export default {
               day.active = true
               day.between = true
             } else if (
+              // iki tarihin ayı sağdaki takvime ait değil ise sağdaki takvimin tamamının between'ini true yap
               startDateMonthIndex < rightCalendarMonthIndex &&
               rightCalendarMonthIndex < endDateMonthIndex &&
               day.number != 0
@@ -499,49 +505,31 @@ export default {
               day.between = true
             }
           })
-        } else {
-          // seçilen iki tarih aynı aylardaysa
-          const smallerDate = startDate.number < endDate.number ? startDate : endDate
-          const greaterDate = startDate.number < endDate.number ? endDate : startDate
+        }
+        // seçilen iki tarih aynı aylardaysa
+        else {
+          // seçilen iki tarih de soldaki takvimde ise tarihler arasındaki day'lerin between'ini true yap
           if (
-            startDate.month == this.daysInMonth[15].month &&
-            endDate.month == this.daysInMonth[15].month
+            startDateMonthIndex == leftCalendarMonthIndex &&
+            endDateMonthIndex == leftCalendarMonthIndex
           ) {
-            for (let i = 0; i < this.daysInMonth.length; i++) {
-              const day = this.daysInMonth[i]
-
-              if (
-                day.number > smallerDate.number &&
-                day.number < greaterDate.number &&
-                day.month === startDate.month &&
-                day.year === startDate.year
-              ) {
+            this.daysInMonth.forEach((day) => {
+              if (day.number > startDate.number && day.number < endDate.number && day.number != 0) {
                 day.active = true
                 day.between = true
-              } else {
-                day.active = false
-                day.between = false
               }
-            }
+            })
           } else if (
-            startDate.month == this.nextMonthDays[15].month &&
-            endDate.month == this.nextMonthDays[15].month
+            // seçilen iki tarih de sağdaki takvimde ise tarihler arasındaki day'lerin between'ini tru yap
+            startDateMonthIndex == rightCalendarMonthIndex &&
+            endDateMonthIndex == rightCalendarMonthIndex
           ) {
-            for (let i = 0; i < this.nextMonthDays.length; i++) {
-              const day = this.nextMonthDays[i]
-              if (
-                day.number > smallerDate.number &&
-                day.number < greaterDate.number &&
-                day.month === startDate.month &&
-                day.year === startDate.year
-              ) {
+            this.nextMonthDays.forEach((day) => {
+              if (day.number > startDate.number && day.number < endDate.number && day.number != 0) {
                 day.active = true
                 day.between = true
-              } else {
-                day.active = false
-                day.between = false
               }
-            }
+            })
           }
         }
         this.firstSelectedDate.active = true
@@ -606,7 +594,7 @@ export default {
           if (
             // bulunulan tarihin sağındaki günler çizilir
             this.nextMonthDays[i].date > dayjs(this.initialDate).format('YYYY-MM-DD') &&
-            this.nextMonthDays[i].month === dayjs(this.maxDate).format('MM') && // üstte maxDate'i 1 arttırmıştım (line 151)
+            this.nextMonthDays[i].month === dayjs(this.maxDate).format('MM') &&
             this.nextMonthDays[i].year === dayjs(this.maxDate).format('YYYY') &&
             this.nextMonthDays[i].number > dayjs(this.initialDate).date()
           ) {

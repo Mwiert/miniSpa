@@ -306,9 +306,6 @@ export default {
             date: dayjs().format('YYYY-MM-DD')
           }
         }
-
-        //this.sendInitialDates.firstInitialDate = this.firstSelectedDate
-        //this.sendInitialDates.secondInitialDate = this.secondSelectedDate
       }
     },
     handleResetInitialDates() {
