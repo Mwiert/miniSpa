@@ -187,7 +187,7 @@ export default {
       }
     },
     sendDateToParent() {
-      if (this.firstSelectedDate.date==null) {
+      if (this.firstSelectedDate.date == null) {
         const dates = {
           firstDate: this.sendInitialDates.firstInitialDate.date,
           secondDate: this.sendInitialDates.secondInitialDate.date
@@ -197,6 +197,14 @@ export default {
         const dates = {
           firstDate: this.firstSelectedDate.date,
           secondDate: this.secondSelectedDate.date
+        }
+        if (this.firstSelectedDate.date == '' && this.secondSelectedDate.date == '') {
+          const dates = {
+            firstDate: this.sendInitialDates.firstInitialDate.date,
+            secondDate: this.sendInitialDates.secondInitialDate.date
+          }
+          this.$emit('update:modelValue', dates)
+          return
         }
         //We are sending the selected date to the parent component with v-model implementation.
         this.$emit('update:modelValue', dates)
@@ -354,7 +362,6 @@ export default {
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
     this.sendDateToParent()
-    
   }
 }
 </script>
