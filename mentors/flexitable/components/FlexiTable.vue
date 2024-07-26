@@ -1,9 +1,8 @@
 <template>
   <div class="flexi-table-c">
-    <!-- {{ flexi.options }} -->
     <FlexiTableControls />
-    <FlexiTableHeader />
-    <FlexiTableBody />
+    <FlexiTableHeader ref="flexiheader" />
+    <FlexiTableBody ref="flexibody" />
     <FlexiTableFooter />
   </div>
 </template>
@@ -22,6 +21,7 @@ export default {
       ...flexiConfig,
       ...this.flexi.options
     }
+
     //sortable Control
     if (!this.flexi.options.disableSorting) {
       const sortableParamsExist = this.flexi.columns.some((column) => column.sortable == true)
@@ -38,10 +38,11 @@ export default {
       }
     }
     //Dropdown
-    this.flexi.columns = this.flexi.columns.map((col) => {
+    this.flexi.columns = this.flexi.columns.map((col, index) => {
       return {
         ...col,
-        status: !this.flexi.options.hiddenColumns.includes(col.label)
+        status: !this.flexi.options.hiddenColumns.includes(col.label),
+        colSizes: this.flexi.options.columnSizes[index]
       }
     })
   },
@@ -56,11 +57,16 @@ export default {
     'flexi.columns': {
       handler: function () {
         const hidden = []
-        for (let i = 0; i < this.flexi.columns.length; i++) {
-          if (this.flexi.columns[i].status === false) {
-            hidden.push(this.flexi.columns[i].label)
+        this.flexi.options.columnSizes = []
+        // The hiddenColumns and columnSizes arrays change according to the changes in the flex.columns array.
+        Object.keys(this.flexi.columns).forEach((column) => {
+          if (this.flexi.columns[column].status === true) {
+            this.flexi.options.columnSizes.push(this.flexi.columns[column].colSizes)
+          } else {
+            hidden.push(this.flexi.columns[column].label)
           }
-        }
+        })
+
         this.flexi.options.hiddenColumns = hidden
       },
 

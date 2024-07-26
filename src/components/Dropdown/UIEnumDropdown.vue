@@ -1,33 +1,14 @@
 <template>
-  <UIMultiDropdown
-    v-if="isMulti"
-    v-model="selectedItems"
-    :items="dropdownItems"
-    :fontSize="fontSize"
-    :label="label"
-    :dataSize="dataSize"
-    :searchable="searchable"
-    :maxVisibleItems="maxVisibleItems"
-    :hasActionBox="hasActionBox"
-    :sortField="sortField"
-    :sortByAscending="sortByAscending"
-    :maxItemThreshold="maxItemThreshold"
+  <UIMultiDropdown v-if="isMulti" v-model="selectedItems" :items="dropdownItems" :fontSize="fontSize" :label="label"
+    :dataSize="dataSize" :searchable="searchable" :maxVisibleItems="maxVisibleItems" :hasActionBox="hasActionBox"
+    :sortField="sortField" :sortByAscending="sortByAscending" :maxItemThreshold="maxItemThreshold"
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
-  <UIDropdown
-    v-else
-    v-model="selectedItem"
-    :items="dropdownItems"
-    :label="label"
-    :fontSize="fontSize"
-    :searchable="searchable"
-    :dataSize="dataSize"
-    :sortField="sortField"
-    :sortByAscending="sortByAscending"
-    :maxItemThreshold="maxItemThreshold"
-    @update:modelValue="($event) => $emit('update:modelValue', $event)" />
+  <UIDropdown v-else v-model="selectedItem" :items="dropdownItems" :label="label" :fontSize="fontSize"
+    :searchable="searchable" :dataSize="dataSize" :sortField="sortField" :sortByAscending="sortByAscending"
+    :maxItemThreshold="maxItemThreshold" @update:modelValue="($event) => $emit('update:modelValue', $event)" />
 </template>
 
-<script>
+<script lang="ts">
 import UIDropdown from '../Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../Dropdown/UIMultiDropdown.vue'
 
@@ -38,7 +19,7 @@ export default {
     UIMultiDropdown
   },
   props: {
-    enumObj: { type: Object, default: () => {}, required: true },
+    enumObj: { type: Object, default: () => { }, required: true },
 
     dataSize: {
       // how many data will shown in the dropdown.
@@ -97,19 +78,19 @@ export default {
   },
   data() {
     return {
-      selectedItems: this.modelValue,
+      selectedItems: this.modelValue as Array<Object>,
       dropdownItems: this.getEnumFile(),
       selectedItem: this.modelValue
     }
   },
   methods: {
-    getEnumFile() {
+    //takes enum object and sorts it.
+    getEnumFile(): Array<{ id: number; name: string }> {
       let sortedEnumArray = Object.keys(this.enumObj)
         .map(Number)
         .filter(
           (key) => !isNaN(key) && (this.showAll || key !== -1) && (this.showUnknown || key !== 0)
         )
-        .sort()
         .map((key) => ({
           id: key,
           name: this.enumObj[key]

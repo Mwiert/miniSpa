@@ -14,8 +14,7 @@
       :activePage="activePage"
       :hidecolumn="options.options.hiddencolumns"
       :deneme="hidecol"
-      :perPage="perPage"
-      ref="pinkpanthers" />
+      :perPage="perPage" />
     <!-- noItemsFound propunu smarttablebody içinde kullanmak için burada kontrol ediyoruz -->
 
     <SmartTableFooter
@@ -45,7 +44,7 @@ export default {
       dummies: dummies,
       searchTerm: '',
       activePage: 1,
-      perPage: 4,
+      perPage: 2,
       hidecol: []
     }
   },

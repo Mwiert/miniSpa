@@ -7,7 +7,12 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="100"
+<<<<<<< HEAD
       v-model="valueTextArea"></UITextArea>
+=======
+      v-model="valueTextArea"/>
+    <p>{{ valueTextArea }}</p>
+>>>>>>> 42c267d6427fc6859fea383a9ef6a2a7704b7c59
   </div>
   <div class="text-area-c">
     <UITextArea
@@ -17,7 +22,12 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
+<<<<<<< HEAD
       v-model="valueTextArea2"></UITextArea>
+=======
+      v-model="valueTextArea2"/>
+    <p>{{ valueTextArea2 }}</p>
+>>>>>>> 42c267d6427fc6859fea383a9ef6a2a7704b7c59
   </div>
   <div class="text-area-c">
     <UITextArea
@@ -27,7 +37,12 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
+<<<<<<< HEAD
       v-model="valueTextArea3"></UITextArea>
+=======
+      v-model="valueTextArea3"/>
+    <p>{{ valueTextArea3 }}</p>
+>>>>>>> 42c267d6427fc6859fea383a9ef6a2a7704b7c59
   </div>
   <div class="text-area-c">
     <UITextArea
@@ -36,7 +51,12 @@
       :cols="10"
       :placeholder="'Enter your address'"
       :maxLength="10"
+<<<<<<< HEAD
       v-model="valueTextArea4"></UITextArea>
+=======
+      v-model="valueTextArea4"/>
+    <p>{{ valueTextArea4 }}</p>
+>>>>>>> 42c267d6427fc6859fea383a9ef6a2a7704b7c59
   </div>
 
   <div class="text-area-c">
@@ -46,7 +66,12 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
+<<<<<<< HEAD
       v-model="valueTextArea5"></UITextArea>
+=======
+      v-model="valueTextArea5"/>
+    <p>{{ valueTextArea5 }}</p>
+>>>>>>> 42c267d6427fc6859fea383a9ef6a2a7704b7c59
   </div>
 
   <div class="input-box">
@@ -69,10 +94,10 @@
   </div>
 
   <div class="input-box">
-    <UIInput :id="'tckno'" :label="'TCKNO'" :icon="'arrow-up'" clearButton disabled />
+    <UIInput :id="'tckno'" :label="'TCKNO'" :icon="'arrow-up'" :type="'text'" clearButton disabled />
   </div>
   <div class="input-box">
-    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" clearButton :disabled="true" />
+    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" :type="'text'" clearButton :disabled="true" />
   </div>
 
   <div class="button-c">
