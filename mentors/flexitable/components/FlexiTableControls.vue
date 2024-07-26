@@ -63,7 +63,7 @@ export default {
   methods: {
     // print method style not working
     triggerExportPrint() {
-      const divToPrint = this.$parent.$refs.flexibody.$refs.print
+      const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
       const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2
       const newPrintWindow = window.open('', 'Print')
       newPrintWindow.document.write(
