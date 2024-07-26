@@ -217,17 +217,22 @@ export default {
 
     createItemDropdown(): string {
       const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
-
-      if (this.stringContainsAnyWord(this.searchQuery, turkishLetters)) {
-        return this.dropdownItems.filter((item) =>
-          String(item[this.displayField].toLowerCase()).includes(this.searchQuery.toLowerCase())
-        )
+      return this.filterItemsAccordingToTurkishCharacter(this.searchQuery, turkishLetters)
+    },
+    // Filters items according to turkish characters. This function is for reducing code redundancy. 
+    // If the searchQuery contains any turkish character, it filters the items according to the searchQuery.
+    // Otherwise, it filters the items according to the mapped version of SearchQuery
+    filterItemsAccordingToTurkishCharacter(searchQuery, turkishLetters) {
+      if (this.stringContainsAnyWord(searchQuery, turkishLetters)) {
+        return this.dropdownItems.filter(item =>
+          String(item[this.displayField].toLowerCase()).includes(searchQuery.toLowerCase())
+        );
       } else {
-        return this.dropdownItems.filter((item) =>
-          this.mapToTurkishWords(item[this.displayField].toLowerCase()).includes(
-            this.searchQuery.toLowerCase()
+        return this.dropdownItems.filter(item =>
+          this.mapToTurkishWords(String(item[this.displayField]).toLowerCase()).includes(
+            searchQuery.toLowerCase()
           )
-        )
+        );
       }
     },
     filteredItems(): Array<any> {
@@ -235,11 +240,16 @@ export default {
       if (this.sortField !== undefined) {
         items = this.sortItems(items)
       }
-      let selectedItems = items.filter(item => this.isSelected(item))
+      const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
+      if (this.searchQuery) {
+        let insideItems = this.filterItemsAccordingToTurkishCharacter(this.searchQuery, turkishLetters);
+        let insideSelectedItems = insideItems.filter(item => this.isSelected(item));
+        let insideNonSelectedItems = insideItems.filter(item => !this.isSelected(item));
+        return [...insideSelectedItems, ...insideNonSelectedItems];
+      }
       let nonSelectedItems = items.filter(item => !this.isSelected(item))
-
       // Concatenate selected items at the top
-      return [...selectedItems, ...nonSelectedItems]
+      return [...this.selectedItems, ...nonSelectedItems];
     },
     //this method shortens the word if the word is too long and puts ... at the end
     isLongItem(item): string {
