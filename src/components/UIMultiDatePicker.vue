@@ -363,11 +363,17 @@ export default {
             this.saveSecondDateHistory = ''
           }
         } else if (selectedDay.date > this.firstSelectedDate.date) {
-          // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
-          this.secondSelectedDate.selected = false
-          this.secondSelectedDate = selectedDay
-          this.secondSelectedDate.selected = true
-          this.saveSecondDateHistory = this.secondSelectedDate.date
+          if (selectedDay.date == this.secondSelectedDate.date) {
+            this.secondSelectedDate.selected = false
+            this.secondSelectedDate = { date: '' }
+            this.saveSecondDateHistory = ''
+          } else {
+            // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
+            this.secondSelectedDate.selected = false
+            this.secondSelectedDate = selectedDay
+            this.secondSelectedDate.selected = true
+            this.saveSecondDateHistory = this.secondSelectedDate.date
+          }
         }
       }
       this.emitDate('dateFirstSelected', this.firstSelectedDate)
