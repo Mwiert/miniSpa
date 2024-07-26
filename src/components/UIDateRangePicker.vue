@@ -187,12 +187,20 @@ export default {
       }
     },
     sendDateToParent() {
-      const dates = {
-        firstDate: this.firstSelectedDate.date,
-        secondDate: this.secondSelectedDate.date
+      if (this.firstSelectedDate.date==null) {
+        const dates = {
+          firstDate: this.sendInitialDates.firstInitialDate.date,
+          secondDate: this.sendInitialDates.secondInitialDate.date
+        }
+        this.$emit('update:modelValue', dates)
+      } else {
+        const dates = {
+          firstDate: this.firstSelectedDate.date,
+          secondDate: this.secondSelectedDate.date
+        }
+        //We are sending the selected date to the parent component with v-model implementation.
+        this.$emit('update:modelValue', dates)
       }
-      //We are sending the selected date to the parent component with v-model implementation.
-      this.$emit('update:modelValue', dates)
     },
     formatMonth(month) {
       //We are converting the month number to month name
@@ -345,6 +353,8 @@ export default {
   created() {
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
+    this.sendDateToParent()
+    
   }
 }
 </script>

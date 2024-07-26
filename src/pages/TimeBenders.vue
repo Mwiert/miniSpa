@@ -1,6 +1,6 @@
 <template>
   <div class="time-benders-c">
-    {{ selectDate.firstDate + ' ' + selectDate.secondDate }}
+    {{ selectDate}}
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
     <UIDateRangePicker
       v-model="selectDate"
@@ -20,10 +20,7 @@ export default {
   },
   data() {
     return {
-      selectDate: {
-        firstDate: null,
-        secondDate: null
-      }
+      selectDate: {}
     }
   }
 }
