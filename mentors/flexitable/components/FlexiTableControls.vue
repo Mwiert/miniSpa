@@ -11,7 +11,7 @@
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
         :placeHolder="flexi.options.UIDropdownOrderProp.placeHolder"
         :showAll="flexi.options.UIDropdownOrderProp.showAll" />
-
+      <!--Custom Dropdown-->
       <div class="dropdown">
         <div class="dropdown-icon" @click="Toggle">
           <SvgIcon name="eye" size="xs" />
@@ -61,10 +61,10 @@ export default {
     UIEnumDropdown
   },
   methods: {
+    // print method style not working
     triggerExportPrint() {
       const divToPrint = this.$parent.$refs.flexibody.$refs.print
       const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2
-      console.log(divToPrint)
       const newPrintWindow = window.open('', 'Print')
       newPrintWindow.document.write(
         `<html>
@@ -220,34 +220,17 @@ export default {
       newPrintWindow.print()
       //newPrintWindow.close()
     },
+    // status true for every column
     selectClear() {
       if (this.flexi.options.hiddenColumns.length != 0) {
-        this.flexi.options.columnSizes = []
         for (let i = 0; i < this.flexi.columns.length; i++) {
           this.flexi.columns[i].status = true
-          this.flexi.options.columnSizes[i] = this.flexi.options.columnSizeholder[i]
         }
       }
     },
+    // hide selected column
     selectHidden(index) {
       this.flexi.columns[index].status = !this.flexi.columns[index].status
-      if (this.flexi.columns[index].status === false) {
-        this.flexi.options.columnSizes.splice(index, 1)
-      } else {
-        this.flexi.options.columnSizes.splice(index, 0, this.flexi.options.columnSizeholder[index])
-      }
-      // if (this.flexi.columns[index].status === false) {
-      //   this.flexi.options.columnTemp.push({
-      //     index: index,
-      //     value: this.flexi.options.columnSizes[index]
-      //   })
-
-      //   this.flexi.options.columnSizes.splice(index, 1)
-      // } else {
-      //   const i = this.flexi.options.columnTemp.findIndex((col) => col.index == index)
-      //   this.flexi.options.columnSizes.splice(index, 0, this.flexi.options.columnTemp[i].value)
-      //   this.flexi.options.columnTemp.splice(i, 1)
-      // }
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show

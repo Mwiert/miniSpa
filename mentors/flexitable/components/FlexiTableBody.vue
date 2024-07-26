@@ -98,7 +98,6 @@ export default {
         return Object.values(row.row).some((col) => col.checkbox && col.value)
       })
       this.pushelements = !this.pushelements
-      console.log(this.selectedRows)
     }
   }
 }
