@@ -361,13 +361,12 @@ export default {
   width: 175px;
   label {
     font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
+    margin-top: 15px;
   }
   .date-picker-without-label {
     position: absolute;
     top: 50px;
-    left: 15px;
+    left: 10px;
     z-index: 1000;
   }
   .date-picker-with-label {
@@ -380,6 +379,7 @@ export default {
   //This is our button container
   .button {
     background: #f8f8f8;
+    z-index: 1001;
     box-shadow: 2px 2px 6px #5858581a;
     border: 1px solid #b6b6b6;
 
