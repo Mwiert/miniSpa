@@ -77,9 +77,11 @@ export default {
     }
   },
   props: {
-    yearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    backYearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    forwardYearRange: { type: Number, default: 99 },
     saveDate: { type: String, default: '' }, //This is for saving the date history
-    monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    backMonthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    forwardMonthRange: { type: Number, default: 99 },
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
     isDatePickerEnable: { type: Boolean }
@@ -87,33 +89,77 @@ export default {
   methods: {
     checkRange() {
       if (this.isPastValidation) {
-        if (this.monthRange !== 99) {
-          this.minDate = dayjs().subtract(this.monthRange, 'month').endOf('month').format('YYYY-MM-DD')
-        }
-        else {
-          this.minDate = dayjs().subtract(this.yearRange, 'year').endOf('month').format('YYYY-MM-DD')
+        if (this.backMonthRange !== 99) {
+          this.minDate = dayjs()
+            .subtract(this.backMonthRange, 'month')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+        } else {
+          this.minDate = dayjs()
+            .subtract(this.backYearRange, 'year')
+            .endOf('month')
+            .format('YYYY-MM-DD')
         }
 
         this.maxDate = dayjs().startOf('month').format('YYYY-MM-DD')
-      }
-      else if (this.isFutureValidation) {
+      } else if (this.isFutureValidation) {
         this.minDate = dayjs().endOf('month').format('YYYY-MM-DD')
 
-        if (this.monthRange !== 99) {
-          this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
+        if (this.forwardMonthRange !== 99) {
+          this.maxDate = dayjs()
+            .add(this.forwardMonthRange, 'month')
+            .startOf('month')
+            .format('YYYY-MM-DD')
+        } else {
+          this.maxDate = dayjs()
+            .add(this.forwardYearRange, 'year')
+            .startOf('month')
+            .format('YYYY-MM-DD')
         }
-        else {
-          this.maxDate = dayjs().add(this.yearRange, 'year').startOf('month').format('YYYY-MM-DD')
-        }
-      } 
-      else {
-        if (this.monthRange !== 99) {
-          this.minDate = dayjs().subtract(this.monthRange, 'month').endOf('month').format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
-        }
-        else {
-          this.minDate = dayjs().subtract(this.yearRange, 'year').endOf('month').format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(this.yearRange, 'year').startOf('month').format('YYYY-MM-DD')
+      } else {
+        if (this.backMonthRange !== 99) {
+          this.minDate = dayjs(this.saveDate)
+            .subtract(this.backMonthRange, 'month')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+          if (this.forwardMonthRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardMonthRange, 'month')
+              .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+          if (this.forwardYearRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardYearRange, 'year')
+              .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+        } else if (this.backYearRange !== 99) {
+          this.minDate = dayjs(this.saveDate)
+            .subtract(this.backYearRange, 'month')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+          if (this.forwardMonthRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardMonthRange, 'month')
+              .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+          if (this.forwardYearRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardYearRange, 'year')
+              .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+        } else {
+          this.minDate = dayjs(this.saveDate)
+            .subtract(this.forwardYearRange, 'year')
+            .endOf('month')
+            .format('YYYY-MM-DD')
+          this.maxDate = dayjs(this.saveDate)
+            .add(this.forwardYearRange, 'year')
+            .startOf('month')
+            .format('YYYY-MM-DD')
         }
       }
     },

@@ -4,7 +4,7 @@
 
     <!-- This is for opening and closing the calendar -->
     <div
-      class="button" 
+      class="button"
       @click="toggleDatePicker()"
       ref="dateRangePicker"
       :class="{ multi: isMultiDatePicker, single: isSingleDatePicker }">
@@ -88,29 +88,33 @@
         </div>
       </div>
     </div>
-    <div 
+    <div
       class="date-picker"
       ref="datePicker"
       :class="{ 'date-picker-with-label': label, 'date-picker-without-label': !label }">
-<!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
+      <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
       <div v-if="isSingleDatePicker">
         <UIDatePicker
           v-show="isSingleDatePickerEnable"
-          :yearRange="validateYear"
-          :monthRange="validateMonth"
+          :forwardYearRange="validateForwardYear"
+          :backYearRange="validateBackYear"
+          :forwardMonthRange="validateForwardMonth"
+          :backMonthRange="validateBackMonth"
           :saveDate="sendInitialDates.firstInitialDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
-          @dateSelected="handleFirstDateSelected" 
-          @click="sendDateToParent"/>
+          @dateSelected="handleFirstDateSelected"
+          @click="sendDateToParent" />
       </div>
       <div v-if="isMultiDatePicker">
         <UIMultiDatePicker
           v-show="isMultiDatePickerEnable"
-          :yearRange="validateYear"
-          :monthRange="validateMonth"
+          :forwardYearRange="validateForwardYear"
+          :backYearRange="validateBackYear"
+          :forwardMonthRange="validateForwardMonth"
+          :backMonthRange="validateBackMonth"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
@@ -118,8 +122,8 @@
           :isDatePickerEnable="isMultiDatePickerEnable"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
-          @resetBaseInitialDates="handleResetInitialDates" 
-          @click="sendDateToParent"/>
+          @resetBaseInitialDates="handleResetInitialDates"
+          @click="sendDateToParent" />
       </div>
     </div>
   </div>
@@ -141,12 +145,14 @@ export default {
   props: {
     label: {
       type: String,
-      default: '',
+      default: ''
     },
     isMultiDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
     isSingleDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
-    validateMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
-    validateYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    validateForwardMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    validateForwardYear: { type: Number, default: 99 },
+    validateBackYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
     value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
@@ -180,11 +186,11 @@ export default {
         }, 100)
       }
     },
-    sendDateToParent() {  
+    sendDateToParent() {
       const dates = {
         firstDate: this.firstSelectedDate.date,
         secondDate: this.secondSelectedDate.date
-      };
+      }
       //We are sending the selected date to the parent component with v-model implementation.
       this.$emit('update:modelValue', dates)
     },

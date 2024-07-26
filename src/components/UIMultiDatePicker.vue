@@ -124,8 +124,10 @@ export default {
     }
   },
   props: {
-    yearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
-    monthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    backYearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    forwardYearRange: { type: Number, default: 99 },
+    backMonthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    forwardMonthRange: { type: Number, default: 99 },
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
@@ -142,45 +144,64 @@ export default {
           */
 
       if (this.isPastValidation) {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
+        if (this.backYearRange !== 99) {
+          let day = this.backYearRange * 365
           this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
           this.maxDate = dayjs().format('YYYY-MM-DD')
         }
 
-        if (this.monthRange !== 99) {
+        if (this.backMonthRange !== 99) {
           this.minDate = dayjs()
-            .subtract(this.monthRange, 'month')
+            .subtract(this.backMonthRange, 'month')
             .endOf('month')
             .format('YYYY-MM-DD')
           this.maxDate = dayjs().add(1, 'month').format('YYYY-MM-DD')
         }
       } else if (this.isFutureValidation) {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
+        if (this.forwardYearRange !== 99) {
+          let day = this.forwardYearRange * 365
           this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
           this.minDate = dayjs().format('YYYY-MM-DD')
         }
-        if (this.monthRange !== 99) {
-          this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
+        if (this.forwardMonthRange !== 99) {
+          this.maxDate = dayjs()
+            .add(this.forwardMonthRange, 'month')
+            .startOf('month')
+            .format('YYYY-MM-DD')
           this.minDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD')
         }
       } else {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
+        if (this.backYearRange !== 99) {
+          let day = this.backYearRange * 365
           this.minDate = dayjs(this.initialDate).subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.initialDate).add(day, 'day').format('YYYY-MM-DD')
-        } else if (this.monthRange !== 99) {
+          if (this.forwardMonthRange !== 99) {
+            this.maxDate = dayjs(this.initialDate)
+              .add(this.forwardMonthRange, 'month')
+              .format('YYYY-MM-DD')
+          }
+          if (this.forwardMonthRange !== 99) {
+            this.maxDate = dayjs(this.initialDate)
+              .add(this.forwardMonthRange, 'year')
+              .format('YYYY-MM-DD')
+          }
+        } else if (this.backMonthRange !== 99) {
           this.minDate = dayjs(this.initialDate)
-            .subtract(this.monthRange + 1, 'month')
+            .subtract(this.backMonthRange + 1, 'month')
             .endOf('month')
             .format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.initialDate)
-            .add(this.monthRange, 'month')
-            .startOf('month')
-            .format('YYYY-MM-DD')
+
+          if (this.forwardMonthRange !== 99) {
+            this.maxDate = dayjs(this.initialDate)
+              .add(this.forwardMonthRange, 'month')
+              .format('YYYY-MM-DD')
+          }
+          if (this.forwardYearRange !== 99) {
+            this.maxDate = dayjs(this.initialDate)
+              .add(this.forwardYearRange, 'year')
+              .format('YYYY-MM-DD')
+          }
         } else {
-          let day = this.yearRange * 365
+          let day = this.forwardYearRange * 365
           this.minDate = dayjs(this.initialDate).subtract(day, 'day').format('YYYY-MM-DD')
           this.maxDate = dayjs(this.initialDate).add(day, 'day').format('YYYY-MM-DD')
         }
@@ -678,7 +699,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-top: 1.5rem; 
+    margin-top: 1.5rem;
 
     > div {
       display: flex;
