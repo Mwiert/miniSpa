@@ -1,6 +1,9 @@
 <template>
   <div class="flexi-table-page-c">
-    <FlexiTable />
+    <FlexiTable @update:selectedRows="updateSelectedRows" />
+    <div>
+      <pre>{{ selectedRows }}</pre>
+    </div>
   </div>
 </template>
 
@@ -16,7 +19,8 @@ export default {
   },
   provide() {
     return {
-      flexi: computed(() => this.flexiTableOptions)
+      flexi: computed(() => this.flexiTableOptions),
+      selectedRows: this.selectedRows // Provide selectedRows array
     }
   },
   data() {
@@ -50,7 +54,8 @@ export default {
           { id: 12, name: 'Email Adress', label: 'email' }
         ],
         rows: []
-      }
+      },
+      selectedRows: []
     }
   },
   created() {
@@ -59,8 +64,11 @@ export default {
       return {
         row: {
           id: {
+            // value: item.gender == 'Female' ? true : false,
             value: false,
-            checkbox: true
+            checkbox: true,
+            pushelements: false,
+            selectedRows: []
           },
           status: {
             value: item.status,
@@ -113,6 +121,16 @@ export default {
     // setTimeout(() => {
     //   this.flexiTableOptions.options.hiddenColumns.push('annualFee')
     // }, 3000)
+  },
+  methods: {
+    printSelectedRows() {
+      this.selectedRows.forEach((row, index) => {
+        console.log(`Row ${index + 1}:`, row)
+      })
+    },
+    updateSelectedRows(selectedRows) {
+      this.selectedRows = selectedRows
+    }
   }
 }
 </script>
