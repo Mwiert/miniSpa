@@ -678,6 +678,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
+    margin-top: 1.5rem; 
 
     > div {
       display: flex;
