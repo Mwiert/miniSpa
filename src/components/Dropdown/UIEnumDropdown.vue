@@ -1,31 +1,11 @@
 <template>
-  {{ getEnumFile() }}
-  <UIMultiDropdown
-    v-if="isMulti"
-    v-model="selectedItems"
-    :items="dropdownItems"
-    :fontSize="fontSize"
-    :label="label"
-    :dataSize="dataSize"
-    :searchable="searchable"
-    :maxVisibleItems="maxVisibleItems"
-    :hasActionBox="hasActionBox"
-    :sortField="sortField"
-    :sortByAscending="sortByAscending"
-    :maxItemThreshold="maxItemThreshold"
+  <UIMultiDropdown v-if="isMulti" v-model="selectedItems" :items="dropdownItems" :fontSize="fontSize" :label="label"
+    :dataSize="dataSize" :searchable="searchable" :maxVisibleItems="maxVisibleItems" :hasActionBox="hasActionBox"
+    :sortField="sortField" :sortByAscending="sortByAscending" :maxItemThreshold="maxItemThreshold"
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
-  <UIDropdown
-    v-else
-    v-model="selectedItem"
-    :items="dropdownItems"
-    :label="label"
-    :fontSize="fontSize"
-    :searchable="searchable"
-    :dataSize="dataSize"
-    :sortField="sortField"
-    :sortByAscending="sortByAscending"
-    :maxItemThreshold="maxItemThreshold"
-    @update:modelValue="($event) => $emit('update:modelValue', $event)" />
+  <UIDropdown v-else v-model="selectedItem" :items="dropdownItems" :label="label" :fontSize="fontSize"
+    :searchable="searchable" :dataSize="dataSize" :sortField="sortField" :sortByAscending="sortByAscending"
+    :maxItemThreshold="maxItemThreshold" @update:modelValue="($event) => $emit('update:modelValue', $event)" />
 </template>
 
 <script lang="ts">
@@ -39,7 +19,7 @@ export default {
     UIMultiDropdown
   },
   props: {
-    enumObj: { type: Object, default: () => {}, required: true },
+    enumObj: { type: Object, default: () => { }, required: true },
 
     dataSize: {
       // how many data will shown in the dropdown.
