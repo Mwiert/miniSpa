@@ -57,7 +57,11 @@ methods:
 
 - deactivateAllBetween(): Selected günler değiştiğinde önceki selected günlere göre yapılan between ayarını kaldırır. Bunu daysInMonth ve nextMonthDays dizilerini iki ayrı forEach döngüsü içinde gezip günlerin between ve active özelliklerini false yaparak sağlar.
 
-- updateBetweenDates():
+- updateBetweenDates(): Bu metot iki tarih arasındaki (firstSelectedDate ve secondSelectedDate) günlerin arka planının renklendirmek için kullanılır. Metot 2 tarih de seçiliyse çalışır. Eğer 2 tarih de seçili ise bu tarihlerin farklı aylarda veya aynı ayda oluşuna göre if else bloklarına girer. 
+if bloğu seçilen tarihler farklı aylardaysa çalışır. Burada iki for döngüsü bulunur. İlk for döngüsünde: ilk seçilen tarih soldaki takvimde ise takvimdeki ilk seçilen tarihin sağ tarafını renklendirir, ikinci seçilen tarih sol takvimde ise takvimdeki ikinci seçilen tarihin sol tarafını renklendirir veya iki seçilen de soldaki takvimde değil ise takvimin tamamını renklendirir. İkinci for döngüsünde:  ilk seçilen tarih sağdaki takvimde ise takvimdeki ilk seçilen tarihin sağ tarafını renklendirir, ikinci seçilen tarih sağ takvimde ise takvimdeki ikinci seçilen tarihin sol tarafını renklendirir veya iki seçilen de sağdaki takvimde değil ise takvimin tamamını renklendirir.
+else bloğu iki tarih de aynı aylardaysa çalışır. Yine içinde 2 for döngüsü bulunur. İlk for döngüsünde seçilen tarihler soldaki takvimde ise 2 tarih arasındaki günleri renklendirir. İkinci for döngüsünde seçilen tarihler sağdaki takvimde ise 2 tarih arasındaki günleri renklendirir. 
+
+
 
 - linedThroughDate(): UIDatePicker interface'indeki textDecoration özelliğini ayarlamak için kullanılır. Öncelikle isPast ve diğer validasyonlar için olmak üzere if else koşulu oluşturulur. isPast validasyonu varsa presentDate sağdaki takvimde gösteriliyor demektir. Bu yüzden nextMontDays dizisinin gezen bir for döngüsü içinde present date'ten sonraki ve varsa range'den önceki günlerin textDecoration özelliği true yapılır. Daha sonra daysInMonth için de aynısını yapar. Bu özelliği true olan günlerin üzeri çizilidir ve şeçilemezler. Diğer validasyonlarda da nextMontDays ve daysInMonth dizilerinin günlerini gezen iki ayrı for döngüsü içinde present date'ten önceki ve varsa range'den sonraki günlerin textDecoration özelliği true yapılır.
 
