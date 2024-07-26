@@ -1,6 +1,6 @@
 <template>
   <div class="time-benders-c">
-    {{ selectDate}}
+    {{ selectDate }}
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
     <UIDateRangePicker
       v-model="selectDate"
