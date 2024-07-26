@@ -371,7 +371,7 @@ export default {
   }
   .date-picker-with-label {
     position: absolute;
-    top: 85px;
+    top: 95px;
     left: 15px;
     z-index: 1000;
   }
