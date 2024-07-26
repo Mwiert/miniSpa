@@ -103,7 +103,8 @@
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
-          @dateSelected="handleFirstDateSelected" />
+          @dateSelected="handleFirstDateSelected" 
+          @click="sendDateToParent"/>
       </div>
       <div v-if="isMultiDatePicker">
         <UIMultiDatePicker
@@ -117,7 +118,8 @@
           :isDatePickerEnable="isMultiDatePickerEnable"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
-          @resetBaseInitialDates="handleResetInitialDates" />
+          @resetBaseInitialDates="handleResetInitialDates" 
+          @click="sendDateToParent"/>
       </div>
     </div>
   </div>
@@ -178,9 +180,13 @@ export default {
         }, 100)
       }
     },
-    sendDateToParent() {
+    sendDateToParent() {  
+      const dates = {
+        firstDate: this.firstSelectedDate.date,
+        secondDate: this.secondSelectedDate.date
+      };
       //We are sending the selected date to the parent component with v-model implementation.
-      this.$emit('update:modelValue', this.firstSelectedDate.date)
+      this.$emit('update:modelValue', dates)
     },
     formatMonth(month) {
       //We are converting the month number to month name
