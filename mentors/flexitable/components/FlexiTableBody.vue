@@ -91,7 +91,6 @@ export default {
         return Object.values(row.row).some((col) => col.checkbox && col.value)
       })
       this.pushelements = !this.pushelements
-      console.log(selected)
       this.selectedRows.length = 0
       this.selectedRows.push(...selected)
     }

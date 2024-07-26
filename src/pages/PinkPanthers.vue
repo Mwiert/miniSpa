@@ -32,7 +32,7 @@ export default {
           columnGap: '.5rem',
           EInternSingleComponentType: PageOrder,
 
-          //hiddenColumns: ['annualFee', 'city'],
+          hiddenColumns: ['annualFee', 'city'],
 
           //itemsPerPage: 5,
           stickyHeader: true,
