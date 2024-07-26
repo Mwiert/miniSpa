@@ -351,21 +351,21 @@ export default {
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = this.secondSelectedDate
             this.saveFirstDateHistory = this.firstSelectedDate.date
-            this.secondSelectedDate = { date: null }
+            this.secondSelectedDate = {}
             this.saveSecondDateHistory = ''
           } else {
             // Seçilen gün first'e eşitse gir (seçilenleri kaldırır)
             this.firstSelectedDate.selected = false
             this.secondSelectedDate.selected = false
-            this.firstSelectedDate = { date: null }
-            this.secondSelectedDate = { date: null }
+            this.firstSelectedDate = {}
+            this.secondSelectedDate = {}
             this.saveFirstDateHistory = ''
             this.saveSecondDateHistory = ''
           }
         } else if (selectedDay.date > this.firstSelectedDate.date) {
           if (selectedDay.date == this.secondSelectedDate.date) {
             this.secondSelectedDate.selected = false
-            this.secondSelectedDate = { date: null }
+            this.secondSelectedDate = {}
             this.saveSecondDateHistory = ''
           } else {
             // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
