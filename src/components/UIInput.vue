@@ -3,7 +3,10 @@
     <div
       class="input-wrapper"
       :class="[{ 'no-clear-button': !clearButton }, { disabled: disabled }]">
+      <!-- Wrapper for the icon, can be positioned left or right -->
       <div class="icon-wrapper" :class="{ 'icon-left': clearButton, 'icon-right': !clearButton }">
+        <!-- Icon component, can show an eye icon for password fields -->
+
         <SvgIcon
           v-if="icon"
           :key="computedIcon"
@@ -11,6 +14,7 @@
           :name="computedIcon"
           @click="togglePasswordVisibility" />
       </div>
+
       <input
         class="input-value"
         :class="[
@@ -28,6 +32,8 @@
         @input="$emit('update:modelValue', $event.target.value)"
         @focus="handleFocus"
         @blur="handleBlur" />
+      <!-- Label for the input, shrinks when the input is active -->
+
       <label
         v-if="label"
         class="label"
@@ -54,9 +60,9 @@ export default {
   },
   data() {
     return {
-      showPassword: false,
+      showPassword: false, // State to toggle password visibility
       inputValue: this.modelValue,
-      isFocused: false,
+      isFocused: false // State to track if the input is focused
     }
   },
   props: {
@@ -73,13 +79,13 @@ export default {
       required: false
     },
     maxLength: {
-      type: Number,
+      type: Number
     },
     minLength: {
-      type: Number,
+      type: Number
     },
     modelValue: {
-      type: String,
+      type: String
     },
     disabled: {
       type: Boolean,
@@ -92,7 +98,7 @@ export default {
     clearButton: {
       type: Boolean,
       default: false
-    },
+    }
   },
   computed: {
     isPassword() {
@@ -121,8 +127,7 @@ export default {
       if (this.modelValue === '') {
         this.isFocused = false
       }
-    },
-
+    }
   }
 }
 </script>
