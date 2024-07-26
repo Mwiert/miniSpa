@@ -86,63 +86,34 @@ export default {
   },
   methods: {
     checkRange() {
-      /*
-
-            Check the range of the year and month, if year is not 9999, update year range, if month is not 9999, update month range.
-            This is intended request.
-
-          */
-
       if (this.isPastValidation) {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().format('YYYY-MM-DD')
+        if (this.monthRange !== 99) {
+          this.minDate = dayjs().subtract(this.monthRange, 'month').endOf('month').format('YYYY-MM-DD')
+        }
+        else {
+          this.minDate = dayjs().subtract(this.yearRange, 'year').endOf('month').format('YYYY-MM-DD')
         }
 
-        if (this.monthRange !== 99) {
-          this.minDate = dayjs()
-            .subtract(this.monthRange, 'month')
-            .endOf('month')
-            .format('YYYY-MM-DD')
-          this.maxDate = dayjs().format('YYYY-MM-DD')
-        } else {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().format('YYYY-MM-DD')
-        }
-      } else if (this.isFutureValidation) {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
-          this.minDate = dayjs().format('YYYY-MM-DD')
-        }
+        this.maxDate = dayjs().startOf('month').format('YYYY-MM-DD')
+      }
+      else if (this.isFutureValidation) {
+        this.minDate = dayjs().endOf('month').format('YYYY-MM-DD')
+
         if (this.monthRange !== 99) {
           this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
-          this.minDate = dayjs().format('YYYY-MM-DD')
-        } else {
-          let day = this.yearRange * 365
-          this.minDate = dayjs().format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(day, 'day').format('YYYY-MM-DD')
         }
-      } else {
-        if (this.yearRange !== 99) {
-          let day = this.yearRange * 365
-          this.minDate = dayjs(this.saveDate).subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.saveDate).add(day, 'day').format('YYYY-MM-DD')
-        } else if (this.monthRange !== 99) {
-          this.minDate = dayjs(this.saveDate)
-            .subtract(this.monthRange, 'month')
-            .endOf('month')
-            .format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.saveDate)
-            .add(this.monthRange, 'month')
-            .startOf('month')
-            .format('YYYY-MM-DD')
-        } else {
-          let day = this.yearRange * 365
-          this.minDate = dayjs(this.saveDate).subtract(day, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.saveDate).add(day, 'day').format('YYYY-MM-DD')
+        else {
+          this.maxDate = dayjs().add(this.yearRange, 'year').startOf('month').format('YYYY-MM-DD')
+        }
+      } 
+      else {
+        if (this.monthRange !== 99) {
+          this.minDate = dayjs().subtract(this.monthRange, 'month').endOf('month').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.monthRange, 'month').startOf('month').format('YYYY-MM-DD')
+        }
+        else {
+          this.minDate = dayjs().subtract(this.yearRange, 'year').endOf('month').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.yearRange, 'year').startOf('month').format('YYYY-MM-DD')
         }
       }
     },

@@ -1,8 +1,10 @@
 <template>
   <div class="ui-date-range-picker-c">
+    <label v-if="label">{{ label }}</label>
+
     <!-- This is for opening and closing the calendar -->
     <div
-      class="button"
+      class="button" 
       @click="toggleDatePicker()"
       ref="dateRangePicker"
       :class="{ multi: isMultiDatePicker, single: isSingleDatePicker }">
@@ -86,8 +88,11 @@
         </div>
       </div>
     </div>
-    <div class="date-picker" ref="datePicker">
-      <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
+    <div 
+      class="date-picker"
+      ref="datePicker"
+      :class="{ 'date-picker-with-label': label, 'date-picker-without-label': !label }">
+<!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
       <div v-if="isSingleDatePicker">
         <UIDatePicker
           v-show="isSingleDatePickerEnable"
@@ -98,7 +103,8 @@
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
-          @dateSelected="handleFirstDateSelected" />
+          @dateSelected="handleFirstDateSelected" 
+          @click="sendDateToParent"/>
       </div>
       <div v-if="isMultiDatePicker">
         <UIMultiDatePicker
@@ -112,7 +118,8 @@
           :isDatePickerEnable="isMultiDatePickerEnable"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
-          @resetBaseInitialDates="handleResetInitialDates" />
+          @resetBaseInitialDates="handleResetInitialDates" 
+          @click="sendDateToParent"/>
       </div>
     </div>
   </div>
@@ -132,6 +139,10 @@ export default {
     UIMultiDatePicker
   },
   props: {
+    label: {
+      type: String,
+      default: '',
+    },
     isMultiDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
     isSingleDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
     validateMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
@@ -169,9 +180,13 @@ export default {
         }, 100)
       }
     },
-    sendDateToParent() {
+    sendDateToParent() {  
+      const dates = {
+        firstDate: this.firstSelectedDate.date,
+        secondDate: this.secondSelectedDate.date
+      };
       //We are sending the selected date to the parent component with v-model implementation.
-      this.$emit('update:modelValue', this.firstSelectedDate.date)
+      this.$emit('update:modelValue', dates)
     },
     formatMonth(month) {
       //We are converting the month number to month name
@@ -338,14 +353,29 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  display: flex;
-  flex-direction: column;
   align-self: center;
   text-align: center;
   padding: 1rem;
   gap: 0.75rem;
   position: relative;
   width: 175px;
+  label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  .date-picker-without-label {
+    position: absolute;
+    top: 50px;
+    left: 15px;
+    z-index: 1000;
+  }
+  .date-picker-with-label {
+    position: absolute;
+    top: 85px;
+    left: 15px;
+    z-index: 1000;
+  }
 
   //This is our button container
   .button {
@@ -436,12 +466,6 @@ export default {
         }
       }
     }
-  }
-  .date-picker {
-    position: absolute;
-    top: 75px;
-    left: 15px;
-    z-index: 1000;
   }
 }
 </style>
