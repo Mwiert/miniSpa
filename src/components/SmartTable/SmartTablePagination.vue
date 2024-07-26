@@ -1,10 +1,9 @@
 <template>
   <div class="smart-table-pagination-c" v-if="flexi.options.pagination">
-    <button 
+    <button
       @click="setPage(flexi.options.currentPage - 1)"
       class="prev-page-btn"
-      :class=" flexi.options.currentPage === 1 ? 'visibility' : '' "
-    >
+      :class="flexi.options.currentPage === 1 ? 'visibility' : ''">
       <SvgIcon :name="'arrow-left'" size="s" />
     </button>
 
@@ -12,23 +11,21 @@
       v-for="page in pagesToShow"
       :key="page"
       @click="setPage(page)"
-      :class="['page-btn', { active: page === flexi.options.currentPage }]"
-    >
+      :class="['page-btn', { active: page === flexi.options.currentPage }]">
       {{ page }}
     </button>
 
-    <button 
+    <button
       @click="setPage(flexi.options.currentPage + 1)"
       class="next-page-btn"
-      :class=" flexi.options.currentPage === totalPages ? 'visibility' : '' "
-    >
+      :class="flexi.options.currentPage === totalPages ? 'visibility' : ''">
       <SvgIcon :name="'arrow-right'" size="s" />
     </button>
   </div>
 </template>
 
 <script>
-import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin';
+import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin'
 
 export default {
   name: 'SmartTablePagination',
@@ -37,74 +34,73 @@ export default {
 
   computed: {
     totalPages() {
-      return this.flexi.options.pages.length;
+      return this.flexi.options.pages.length
     },
     pagesToShow() {
-  const currentPage = this.flexi.options.currentPage;
-  const totalPages = this.totalPages;
-  const pages = [];
+      const currentPage = this.flexi.options.currentPage
+      const totalPages = this.totalPages
+      const pages = []
 
-  if (totalPages === 1) {
-    pages.push(1);
-    return pages;
-  }
+      if (totalPages === 1) {
+        pages.push(1)
+        return pages
+      }
 
-  // Always show the first page
-  pages.push(1);
+      // Always show the first page
+      pages.push(1)
 
-  // Show the second page if there are at least two pages
-  if (totalPages >= 2) {
-    pages.push(2);
-  }
+      // Show the second page if there are at least two pages
+      if (totalPages >= 2) {
+        pages.push(2)
+      }
 
-  // Show ellipsis and middle pages if necessary
-  if (totalPages > 2) {
-    if (currentPage > 3) {
-      pages.push('...');
+      // Show ellipsis and middle pages if necessary
+      if (totalPages > 2) {
+        if (currentPage > 3) {
+          pages.push('...')
+        }
+
+        // Show current page in the middle if it's not one of the first two or last two pages
+        if (currentPage > 2 && currentPage < totalPages - 1) {
+          pages.push(currentPage)
+        }
+
+        // Show ellipsis if necessary before the last two pages
+        if (currentPage < totalPages - 2) {
+          pages.push('...')
+        }
+
+        // Always show the last two pages
+        if (totalPages - 1 > 2) {
+          pages.push(totalPages - 1)
+        }
+        pages.push(totalPages)
+      }
+
+      return pages
     }
-
-    // Show current page in the middle if it's not one of the first two or last two pages
-    if (currentPage > 2 && currentPage < totalPages - 1) {
-      pages.push(currentPage);
-    }
-
-    // Show ellipsis if necessary before the last two pages
-    if (currentPage < totalPages - 2) {
-      pages.push('...');
-    }
-
-    // Always show the last two pages
-    if (totalPages - 1 > 2) {
-      pages.push(totalPages - 1);
-    }
-    pages.push(totalPages);
-  }
-
-  return pages;
-}
-
-
-
   },
 
   methods: {
     setPage(page) {
-      if (page === '...' || page <= 0 || page > this.totalPages) return;
-      this.flexi.options.currentPage = page;
+      if (page === '...' || page <= 0 || page > this.totalPages) return
+      this.flexi.options.currentPage = page
     }
   },
 
   watch: {
-    "flexi.options.itemsPerPage": {
-      handler: function(val) {
-        console.log("itemsperpage", val);
-        this.GeneratePagination(val);
+    'flexi.options.itemsPerPage': {
+      handler: function (val) {
+        console.log('itemsperpage', val)
+        this.GeneratePagination(val)
       },
       immediate: true
-    },
-  },
-};
+    }
+  }
+}
 </script>
+
+>>>>>>>>> Temporary merge branch 2
 <style lang="scss">
 .smart-table-pagination-c {
   display: flex;
@@ -129,7 +125,8 @@ export default {
     &:hover {
       background-color: #f0f0f0;
     }
-    &.visibility { 
+
+    &.visibility {
       visibility: hidden;
     }
   }

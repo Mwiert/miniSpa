@@ -1,12 +1,11 @@
 <template>
-  <div class="flexi-table-body-c" ref="print">
-    <button @click="selectAllCheckboxes" style="margin-right: 100px">
-      {{ allSelected ? 'Deselect All' : 'Select All' }}
+  <div ref="tableContainer" class="flexi-table-body-c">
+    <button @click="pushtheArray" style="margin-right: 200px">
+      {{ pushelements ? 'Kaan False' : 'Kaan True' }}
     </button>
-    <button @click="pushtheArray">{{ pushelements ? 'Kaan False' : 'Kaan True' }}</button>
-
     <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
       <div
+        ref="tableContent"
         class="flexi-table-body-row-wrapper"
         :class="{ 'remove-radius': rowObj.details?.status }">
         <div
@@ -63,8 +62,13 @@ import flexiTableMixin from '../flexitableMixin'
 
 export default {
   name: 'FlexiTableBody',
-  inject: ['flexi'],
+  inject: ['flexi', 'selectedRows'],
   mixins: [flexiTableMixin],
+  data() {
+    return {
+      pushelements: false
+    }
+  },
   methods: {
     handlerGoToUrl(url) {
       if (url) {
@@ -82,22 +86,13 @@ export default {
       })
       this.flexi.rows[key].details.status = !this.flexi.rows[key].details.status
     },
-    selectAllCheckboxes() {
-      this.flexi.rows.forEach((row) => {
-        const columns = Array.isArray(row.row) ? row.row : Object.values(row.row)
-        columns.forEach((col) => {
-          if (col.checkbox) {
-            col.value = !col.value
-          }
-        })
-      })
-    },
     pushtheArray() {
-      // push the selected object to array
-      this.selectedRows = this.flexi.rows.filter((row) => {
+      const selected = this.flexi.rows.filter((row) => {
         return Object.values(row.row).some((col) => col.checkbox && col.value)
       })
       this.pushelements = !this.pushelements
+      this.selectedRows.length = 0
+      this.selectedRows.push(...selected)
     }
   }
 }

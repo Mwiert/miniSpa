@@ -18,7 +18,7 @@
           { 'no-clear-button': !clearButton },
           { disabled: disabled }
         ]"
-        :type="isPassword ? (showPassword ? 'text' : 'password') : text"
+        :type="isPassword ? (showPassword ? 'text' : 'password') : type"
         :id="id"
         :label="label"
         :maxLength="maxLength"
@@ -45,13 +45,9 @@
 </template>
 
 <script lang="ts">
-import SvgIcon from './SvgIcon.vue'
 
 export default {
   name: 'UIInput',
-  components: {
-    SvgIcon
-  },
   data() {
     return {
       showPassword: false,

@@ -12,6 +12,13 @@
           @click="handlerSortingColumn(column)">
           <span class="flexi-table-header-col-value"> {{ column.name }} </span>
 
+          <input
+            v-if="column.label === 'id'"
+            type="checkbox"
+            v-model="masterCheckbox"
+            @change="handleMasterCheckboxChange"
+            @click.stop="innerClick" />
+
           <template v-if="flexi.options.sortableColumns.includes(column.label)">
             <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
             <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
@@ -34,7 +41,8 @@ export default {
   data() {
     return {
       sortOrder: 1, // 1 for ascending, -1 for descending
-      sortedColumn: null
+      sortedColumn: null,
+      masterCheckbox: false
     }
   },
   computed: {
@@ -75,6 +83,15 @@ export default {
           return 0
         }
       })
+    },
+    handleMasterCheckboxChange() {
+      this.flexi.rows.forEach((row) => {
+        row.row.id.value = this.masterCheckbox
+      })
+      this.$emit(
+        'update:selectedRows',
+        this.flexi.rows.filter((row) => row.row.id.value)
+      )
     }
   }
 }
