@@ -1,40 +1,64 @@
 <template>
   <div class="input-box-c">
-    <div class="input-wrapper">
+    <div
+      class="input-wrapper"
+      :class="[{ 'no-clear-button': !clearButton }, { disabled: disabled }]">
+      <!-- Wrapper for the icon, can be positioned left or right -->
+      <div class="icon-wrapper" :class="{ 'icon-left': clearButton, 'icon-right': !clearButton }">
+        <!-- Icon component, can show an eye icon for password fields -->
+
+        <SvgIcon
+          v-if="icon"
+          :key="computedIcon"
+          class="icon"
+          :name="computedIcon"
+          @click="togglePasswordVisibility" />
+      </div>
+
       <input
         class="input-value"
-        :class="isFocused ? 'active': ''"
-        :type="type"
-        :placeholder="placeholder"
+        :class="[
+          { active: isFocused },
+          { 'no-clear-button': !clearButton },
+          { disabled: disabled }
+        ]"
+        :type="isPassword ? (showPassword ? 'text' : 'password') : type"
         :id="id"
         :label="label"
         :maxLength="maxLength"
         :minLength="minLength"
         :disabled="disabled"
         v-model="inputValue"
-        @input="handleInput"
+        @input="$emit('update:modelValue', $event.target.value)"
         @focus="handleFocus"
-        @blur="handleBlur"
-      />
-      <label v-if="label" class="label" :class="isFocused ? 'active': ''" :for="id"> {{ label }} </label>
-      <SvgIcon v-if="icon" class="icon" :name="icon"/>
-      <SvgIcon v-if="inputValue && clearButton" class="clear-btn" :name="'x'" :size="'s'" @click="clearInput" />
+        @blur="handleBlur" />
+      <!-- Label for the input, shrinks when the input is active -->
+
+      <label
+        v-if="label"
+        class="label"
+        :class="[{ active: isFocused }, { 'no-clear-button': !clearButton }]">
+        {{ label }}
+      </label>
+      <SvgIcon
+        v-if="inputValue && clearButton"
+        class="clear-btn"
+        :name="'x'"
+        :size="'s'"
+        @click="clearInput" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import SvgIcon from './SvgIcon.vue';
 
 export default {
   name: 'UIInput',
-  components: {
-    SvgIcon
-  },
   data() {
     return {
-      inputValue: this.value,
-      isFocused: false,
+      showPassword: false, // State to toggle password visibility
+      inputValue: this.modelValue,
+      isFocused: false // State to track if the input is focused
     }
   },
   props: {
@@ -42,30 +66,22 @@ export default {
       type: String,
       default: 'text'
     },
-
-    placeholder: {
-      type: String,
-      default: ''
-    },
     id: {
       type: String,
       required: true
     },
     label: {
       type: String,
-      required: true
+      required: false
     },
     maxLength: {
-      type: Number,
-      default: null
+      type: Number
     },
     minLength: {
-      type: Number,
-      default: null
+      type: Number
     },
-    value: {
-      type: String,
-      default: ''
+    modelValue: {
+      type: String
     },
     disabled: {
       type: Boolean,
@@ -81,27 +97,30 @@ export default {
     }
   },
   computed: {
+    isPassword() {
+      return this.id === 'password'
+    },
     computedIcon() {
-      return this.icon || null;
+      if (this.isPassword) {
+        return this.showPassword ? 'eye' : 'eye-off'
+      }
+      return this.icon
     }
   },
   methods: {
-    updateValue(newValue: String) {
-      this.$emit('update:value', newValue)
-    },
-    handleInput() {
-      this.updateValue(this.inputValue)
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword
     },
     clearInput() {
       this.inputValue = ''
-      this.updateValue('')
+      this.$emit('update:modelValue', '')
       this.isFocused = false
     },
     handleFocus() {
       this.isFocused = true
     },
     handleBlur() {
-      if(this.inputValue === '') {
+      if (this.modelValue === '') {
         this.isFocused = false
       }
     }
@@ -113,6 +132,7 @@ export default {
 @import '@/assets/css/main.scss';
 
 .input-box-c {
+  user-select: none;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -120,21 +140,50 @@ export default {
   border-radius: 8px;
   padding: 0.5rem;
   .input-wrapper {
-    width: fit-content;
+    width: 240px;
     display: flex;
     align-items: center;
     position: relative;
-    bottom: 8px;
     border: 1px solid #666666;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+    &.no-clear-button {
+      .input-value {
+        margin-inline-start: 2px;
+      }
+    }
 
     &:hover {
       border-color: #007bff;
     }
+    .icon-wrapper {
+      display: flex;
+      position: absolute;
+      top: 12px;
+      &.icon-left {
+        left: 6px;
+      }
+      &.icon-right {
+        right: 12px;
+      }
+      .icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        padding: 0px;
+        padding-left: 5px;
+        border-radius: 50%;
+        &.disabled {
+          cursor: not-allowed;
+        }
+      }
+    }
     .label {
       position: absolute;
-      left: 16px;
+      left: 46px;
       font-size: 1rem;
       font-weight: 100;
       color: grey;
@@ -142,10 +191,16 @@ export default {
       top: 50%;
       transform: translateY(-50%);
       transition: all 0.3s ease;
+
       &.active {
         transform: none;
-        top: 8px;
+        top: 6px;
         font-size: 12px;
+        right: 6px;
+      }
+
+      &.no-clear-button {
+        left: 16px;
       }
     }
     .clear-btn {
@@ -153,32 +208,22 @@ export default {
       background: none;
       border: none;
       cursor: pointer;
-      right: 32px;
+      right: 4px;
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      transition: transform 0.3s ease, filter 0.3s ease;
+      transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
       &:hover {
         transform: scale(1.2);
         filter: opacity(0.7);
       }
-      
-    }
-    .icon {
-      position: absolute;
-      background: none;
-      border: none;
-      cursor: pointer;
-      right: 8px;
-      width: 24px;
-      height: 24px;
-      padding: 0px;
-      padding-left: 5px;
-      border-radius: 50%;
     }
     //styling
     .input-value {
       font-size: 1rem;
+      margin-inline-start: 30px;
       outline: none;
       border: none;
       border-radius: 8px;
@@ -189,7 +234,17 @@ export default {
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
       }
+    }
   }
-}
+
+  .error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  .disabled {
+    background-color: rgb(195, 192, 192);
+    cursor: not-allowed;
+  }
 }
 </style>

@@ -1,17 +1,13 @@
 <template>
   <div class="flexi-table-page-c">
-    <FlexiTable @update:selectedRows="updateSelectedRows" />
-    <div>
-      <pre>{{ selectedRows }}</pre>
-    </div>
+    <FlexiTable />
   </div>
 </template>
 
 <script>
-import response from '../../mentors/flexitable/flexitableData'
-import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
+import response from './flexitableData.js'
+import FlexiTable from './components/FlexiTable.vue'
 import { computed } from 'vue'
-import PageOrder from '../../src/enum/PageOrder'
 export default {
   name: 'FlexiTablePage',
   components: {
@@ -19,8 +15,7 @@ export default {
   },
   provide() {
     return {
-      flexi: computed(() => this.flexiTableOptions),
-      selectedRows: this.selectedRows // Provide selectedRows array
+      flexi: computed(() => this.flexiTableOptions)
     }
   },
   data() {
@@ -28,47 +23,47 @@ export default {
       flexiTableOptions: {
         options: {
           columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
-
           columnGap: '.5rem',
-          EInternSingleComponentType: PageOrder,
+          // hiddenColumns: ['annualFee', 'email'],
+          
+          itemsPerPage: 30,
 
-          hiddenColumns: ['annualFee', 'city'],
-
-          //itemsPerPage: 5,
-          stickyHeader: true,
+          EInternComponentType: EInternComponentType,
+          EInternSingleComponentType: EInternSingleComponentType,
+          stickyHeader: true
           // disableSorting: true
-          show: false
         },
         columns: [
-          { id: 1, name: '#', label: 'id' },
-          { id: 2, name: 'Status', label: 'status' },
-          { id: 3, name: 'Name ', label: 'nameSurname' },
-          { id: 4, name: 'Student ID', label: 'studentNumber' },
-          { id: 5, name: 'Class', label: 'class' },
-          { id: 6, name: 'Birthdate', label: 'birthDate', type: 'date' },
-          { id: 7, name: 'Gender', label: 'gender' },
-          { id: 8, name: 'City', label: 'city' },
-          { id: 9, name: 'Department', label: 'department' },
-          { id: 10, name: 'GPA', label: 'gpa', class: 'txt-right ' },
-          { id: 11, name: 'Annual Fee', label: 'annualFee', class: 'txt-right ' },
-          { id: 12, name: 'Email Adress', label: 'email' }
+          { name: '#', label: 'id' },
+          { name: 'Status', label: 'status' },
+          { name: 'Name ', label: 'nameSurname' },
+          { name: 'Student ID', label: 'studentNumber' },
+          { name: 'Class', label: 'class' },
+          { name: 'Birthdate', label: 'birthDate', type: 'date' },
+          { name: 'Gender', label: 'gender' },
+          { name: 'City', label: 'city' },
+          { name: 'Department', label: 'department' },
+          { name: 'GPA', label: 'gpa', class: 'txt-right ' },
+          { name: 'Annual Fee', label: 'annualFee', class: 'txt-right ' },
+          { name: 'Email Adress', label: 'email' }
         ],
-        rows: []
-      },
-      selectedRows: []
+        rows: [],
+        selectedEnums: [
+        { id: -1, name: 'ALL' },
+        { id: 0, name: 'UNKNOWN' }
+      ],
+        selectedEnum: { id: 0, name: 'UNKNOWN' }
+      }
     }
   },
-  created() {
+  mounted() {
     // row mapper for FlexiTable
     this.flexiTableOptions.rows = response.map((item) => {
       return {
         row: {
           id: {
-            // value: item.gender == 'Female' ? true : false,
             value: false,
-            checkbox: true,
-            pushelements: false,
-            selectedRows: []
+            checkbox: true
           },
           status: {
             value: item.status,
@@ -121,16 +116,6 @@ export default {
     // setTimeout(() => {
     //   this.flexiTableOptions.options.hiddenColumns.push('annualFee')
     // }, 3000)
-  },
-  methods: {
-    printSelectedRows() {
-      this.selectedRows.forEach((row, index) => {
-        console.log(`Row ${index + 1}:`, row)
-      })
-    },
-    updateSelectedRows(selectedRows) {
-      this.selectedRows = selectedRows
-    }
   }
 }
 </script>

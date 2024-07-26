@@ -1,36 +1,37 @@
 <template>
   <div class="smart-table-body-c">
+    {{ this.deneme }}
     {{ this.hidecolumn }}
+
     <div class="export-buttons">
       <button class="pdf-button" @click="triggerExportPrint()">Print</button>
     </div>
     <div ref="print">
       <div class="smart-table-main-grid">
         <div class="grid-header" v-for="(header, index) in Columns" :key="index">
-          <span>{{ header.name }} </span>
-          <span v-if="header.sortable">
-            <SvgIcon
-              v-if="getSortIcon(header.label) === 'arrow-down'"
-              class="sort-button"
-              :name="'arrow-down'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null"
-            />
-            <SvgIcon
-              v-else-if="getSortIcon(header.label) === 'arrow-up'"
-              class="sort-button"
-              :name="'arrow-up'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null"
-            />
-            <SvgIcon
-              v-else
-              class="sort-button"
-              :name="'arrow-selector-v'"
-              size="s"
-              @click="header.sortable ? sort(header.label) : null"
-            />
-          </span>
+          <div v-if="HideColumn(header.label)">
+            <span>{{ header.name }} </span>
+            <span v-if="header.sortable">
+              <SvgIcon
+                v-if="getSortIcon(header.label) === 'arrow-down'"
+                class="sort-button"
+                :name="'arrow-down'"
+                size="s"
+                @click="header.sortable ? sort(header.label) : null" />
+              <SvgIcon
+                v-else-if="getSortIcon(header.label) === 'arrow-up'"
+                class="sort-button"
+                :name="'arrow-up'"
+                size="s"
+                @click="header.sortable ? sort(header.label) : null" />
+              <SvgIcon
+                v-else
+                class="sort-button"
+                :name="'arrow-selector-v'"
+                size="s"
+                @click="header.sortable ? sort(header.label) : null" />
+            </span>
+          </div>
         </div>
       </div>
 
@@ -43,20 +44,22 @@
         class="grid-row"
         :class="{ rowIndex }"
         v-for="(tableRow, rowIndex) in denemeRow"
-        :key="rowIndex"
-      >
+        :key="rowIndex">
         <div
           v-for="(cell, cellIndex) in tableRow"
           :key="cellIndex"
-          :class="[cell.class, 'grid-item']"
-        >
+          :class="[cell.class, 'grid-item']">
           <!-- getcellclass methodumuz class name belirlemeye yarıyor ki bu classlara göre status veya price gibi bilgileri alalım. -->
-          <template v-if="typeof cell == 'object'">
-            <span :class="cell?.class" @click="handlerUrl(cell?.url)">
-              {{ cell?.text ?? '' }}
-            </span>
-          </template>
-          <template v-else>{{ cell }}</template>
+          <div v-if="HideColumn(cellIndex)">
+            <div>
+              <template v-if="typeof cell == 'object'">
+                <span :class="cell?.class" @click="handlerUrl(cell?.url)">
+                  {{ cell?.text ?? '' }}
+                </span>
+              </template>
+              <template v-else>{{ cell }}</template>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -74,6 +77,8 @@ export default {
     activePage: Number,
     hidecolumn: Array,
     perPage: Number,
+    deneme: Array,
+    pat: Array,
 
     noItemsFound: {
       type: Boolean,
@@ -103,6 +108,7 @@ export default {
       // const sortEnd = 2
       // return this.tableRowData.slice(0,sortEnd)
     },
+
     visibleItems() {
       return this.items.slice(0, this.selectedOption)
     }
@@ -126,88 +132,91 @@ export default {
   // },
 
   methods: {
-    triggerExportPrint() {
-      const divToPrint = this.$parent.$refs.pinkpanthers.$refs.print
-      console.log(divToPrint)
-      const newPrintWindow = window.open('', 'Print')
-      newPrintWindow.document.write(
-        `<html>
-          <head>
-            <style>
-              .smart-table-body-c {
-                display: block;
-                margin: 20px 0;
-              }
-              .smart-table-main-grid {
-                display: grid;
-                grid-template-columns: repeat(${this.Columns.length}, 1fr);
-                width: 100%;
-                gap: 10px;
-              }
-              .grid-header {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-weight: bold;
-                color: black;
-                padding: 15px;
-                border-radius: 10px;
-                border: none;
-              }
-              .grid-row {
-                display: grid;
-                grid-template-columns: repeat(${this.Columns.length}, 1fr);
-                width: 100%;
-                gap: 5px;
-                margin-bottom: 10px;
-                border: 1px solid #ccc;
-                border-radius: 40px;
-                padding: 0.5px;
-              }
-              .no-grid-item {
-                padding: 28px;
-                border: 1px solid #ccc;
-                text-align: center;
-                font-weight: bold;
-                border-radius: 40px;
-                background-color: #ffffff;
-                grid-column: 1 / -1;
-              }
-              .grid-item {
-                padding: 15px;
-                border: 1px solid #ccc;
-                text-align: center;
-                justify-content: center;
-                align-items: center;
-                display: flex;
-                border-radius: 30px;
-              }
-              .grid-item.confirmed {
-                background-color: #ccffdd;
-                color: #1f9947;
-                border-color: #4deb81;
-              }
-              .grid-item.pending {
-                background-color: #ffe6cc;
-                color: #e87807;
-                border-color: #ee9c4b;
-              }
-              .grid-item.cancelled {
-                background-color: #ff6b6b;
-                color: #7e2323;
-                border-color: #ee3535;
-              }
-            </style>
-          </head>
-          <body>
-            ${divToPrint.outerHTML}
-          </body>
-        </html>`
-      )
-
-      newPrintWindow.print()
-      //newPrintWindow.close()
+    HideColumn(key) {
+      return !this.deneme?.includes(key)
     },
+    // triggerExportPrint() {
+    //   const divToPrint = this.$parent.$refs.pinkpanthers.$refs.print
+    //   console.log(divToPrint)
+    //   const newPrintWindow = window.open('', 'Print')
+    //   newPrintWindow.document.write(
+    //     `<html>
+    //       <head>
+    //         <style>
+    //           .smart-table-body-c {
+    //             display: block;
+    //             margin: 20px 0;
+    //           }
+    //           .smart-table-main-grid {
+    //             display: grid;
+    //             grid-template-columns: repeat(${this.Columns.length}, 1fr);
+    //             width: 100%;
+    //             gap: 10px;
+    //           }
+    //           .grid-header {
+    //             display: flex;
+    //             justify-content: center;
+    //             align-items: center;
+    //             font-weight: bold;
+    //             color: black;
+    //             padding: 15px;
+    //             border-radius: 10px;
+    //             border: none;
+    //           }
+    //           .grid-row {
+    //             display: grid;
+    //             grid-template-columns: repeat(${this.Columns.length}, 1fr);
+    //             width: 100%;
+    //             gap: 5px;
+    //             margin-bottom: 10px;
+    //             border: 1px solid #ccc;
+    //             border-radius: 40px;
+    //             padding: 0.5px;
+    //           }
+    //           .no-grid-item {
+    //             padding: 28px;
+    //             border: 1px solid #ccc;
+    //             text-align: center;
+    //             font-weight: bold;
+    //             border-radius: 40px;
+    //             background-color: #ffffff;
+    //             grid-column: 1 / -1;
+    //           }
+    //           .grid-item {
+    //             padding: 15px;
+    //             border: 1px solid #ccc;
+    //             text-align: center;
+    //             justify-content: center;
+    //             align-items: center;
+    //             display: flex;
+    //             border-radius: 30px;
+    //           }
+    //           .grid-item.confirmed {
+    //             background-color: #ccffdd;
+    //             color: #1f9947;
+    //             border-color: #4deb81;
+    //           }
+    //           .grid-item.pending {
+    //             background-color: #ffe6cc;
+    //             color: #e87807;
+    //             border-color: #ee9c4b;
+    //           }
+    //           .grid-item.cancelled {
+    //             background-color: #ff6b6b;
+    //             color: #7e2323;
+    //             border-color: #ee3535;
+    //           }
+    //         </style>
+    //       </head>
+    //       <body>
+    //         ${divToPrint.outerHTML}
+    //       </body>
+    //     </html>`
+    //   )
+
+    //   newPrintWindow.print()
+    //   //newPrintWindow.close()
+    // },
     getSortIcon(column: string) {
       if (this.lastSortedColumn === column) {
         return this.lastSortOrder === 'asc' ? 'arrow-down' : 'arrow-up'

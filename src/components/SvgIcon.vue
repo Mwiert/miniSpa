@@ -31,8 +31,8 @@ export default {
   border-radius: 0.5rem;
   display: inline-flex;
   &.icon-size-s {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
   }
   &.icon-size-m {
     width: 28px;
