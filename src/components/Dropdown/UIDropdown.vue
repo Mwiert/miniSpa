@@ -3,9 +3,7 @@
     <div class="ui-dropdown-c-wrapper">
       <label class="label" v-if="label?.length !== 0">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
-        <span
-          :class="{ 'placeholder-text-active': !selectedItem[displayField] }"
-          class="placeholder-text">
+        <span :class="{ 'placeholder-text-active': !selectedItem[displayField] }" class="placeholder-text">
           {{ isLongItem(selectedItem) || placeHolder }}
         </span>
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
@@ -13,43 +11,23 @@
       <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
         <div v-if="searchable" class="search-container">
           <div class="search-content-wrapper">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search..."
-              class="ui-dropdown-search" />
+            <input type="text" v-model="searchQuery" placeholder="Search..." class="ui-dropdown-search" />
             <span class="clear-search">
-              <SvgIcon
-                v-if="searchQuery"
-                @click.stop="clearSearch"
-                class="clear-search-img"
-                :name="'x'"
-                :size="'s'" />
+              <SvgIcon v-if="searchQuery" @click.stop="clearSearch" class="clear-search-img" :name="'x'" :size="'s'" />
             </span>
           </div>
         </div>
-        <div
-          class="ui-dropdown-content"
-          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
-          <div
-            v-for="item in filteredItems()"
-            :key="item[primaryKey]"
-            :ref="'item-' + item[primaryKey]"
-            class="ui-dropdown-item"
-            @click="selectItem(item)"
-            :class="{ selected: isSelected(item) }">
+        <div class="ui-dropdown-content" :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
+          <div v-for="item in filteredItems()" :key="item[primaryKey]" :ref="'item-' + item[primaryKey]"
+            class="ui-dropdown-item" @click="selectItem(item)" :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)" class="image-label-wrapper">
-              <div
-                class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+              <div class="dropdown-item-img" :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
                 <SvgIcon :name="item[iconImage]" :size="'s'" />
               </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
             <div v-else class="image-label-wrapper">
-              <div
-                class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+              <div class="dropdown-item-img" :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
                 <SvgIcon :name="item[iconImage]" :size="'s'" />
               </div>
               <span>{{ isLongItem(item) }}</span>
@@ -451,20 +429,24 @@ export default {
           &.selected {
             text-shadow: 0 0 0.75px black;
           }
+
           .image-label-wrapper {
             display: flex;
             align-items: center;
             justify-content: start;
+
             .dropdown-item-img {
               width: 16px;
               height: 16px;
               padding-right: 10px;
               display: none;
+
               .svg-icon-c {
                 width: 16px;
                 height: 16px;
                 padding: 0;
               }
+
               &.isVisible {
                 display: inline-block;
               }

@@ -9,18 +9,9 @@
       <div v-if="isOpen" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
         <div v-if="searchable" class="search-container">
           <div class="search-content-wrapper">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Search..."
-              class="ui-multi-dropdown-search" />
+            <input type="text" v-model="searchQuery" placeholder="Search..." class="ui-multi-dropdown-search" />
             <span class="clear-search">
-              <SvgIcon
-                v-if="searchQuery"
-                @click.stop="clearSearch"
-                class="clear-search-img"
-                :name="'x'"
-                :size="'s'" />
+              <SvgIcon v-if="searchQuery" @click.stop="clearSearch" class="clear-search-img" :name="'x'" :size="'s'" />
             </span>
           </div>
         </div>
@@ -28,20 +19,12 @@
           <span class="toggle" @click="selectAll">Select All</span>
           <span class="toggle" @click="dropAll">Drop All</span>
         </div>
-        <div
-          class="ui-multi-dropdown-content"
-          :style="{ fontSize: fontSize + 'px', height: dropdownListMaxHeight }">
-          <div
-            v-for="item in filteredItems()"
-            :key="item[primaryKey]"
-            class="ui-multi-dropdown-item"
-            @click.stop="selectItem(item)"
-            :class="{ selected: isSelected(item) }">
+        <div class="ui-multi-dropdown-content" :style="{ fontSize: fontSize + 'px', height: dropdownListMaxHeight }">
+          <div v-for="item in filteredItems()" :key="item[primaryKey]" class="ui-multi-dropdown-item"
+            @click.stop="selectItem(item)" :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)" class="item-container">
               <div class="image-label-wrapper">
-                <div
-                  class="dropdown-item-img"
-                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                <div class="dropdown-item-img" :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
                   <SvgIcon :name="item[iconImage]" :size="'s'" />
                 </div>
 
@@ -52,9 +35,7 @@
             </div>
             <div v-else class="item-container">
               <div class="image-label-wrapper">
-                <div
-                  class="dropdown-item-img"
-                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                <div class="dropdown-item-img" :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
                   <SvgIcon :name="item[iconImage]" :size="'s'" />
                 </div>
 
@@ -101,7 +82,7 @@ export default {
     },
     modelValue: {
       type: Array<Object>,
-      default: () => [{}]
+      default: () => []
     },
 
     label: {
@@ -169,7 +150,7 @@ export default {
     },
     //prints selected items on dropdown button
     labelDisplay(): String {
-      if (this.selectedItems.length === 0) {
+      if (this.selectedItems.length === 0 || this.selectedItems === undefined) {
         return this.placeHolder.toString()
       } else if (this.selectedItems.length > this.maxVisibleItems) {
         return this.selectedItems.length + ' items have been selected'
@@ -251,42 +232,14 @@ export default {
     },
     filteredItems(): Array<any> {
       let items = this.createItemDropdown()
-
       if (this.sortField !== undefined) {
         items = this.sortItems(items)
       }
+      let selectedItems = items.filter(item => this.isSelected(item))
+      let nonSelectedItems = items.filter(item => !this.isSelected(item))
 
-      // Filtering items based on the search query by checking if the displayField includes the search query
-      let filteredItems = items.filter((item) =>
-        String(item[this.displayField]).toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
-
-      if (this.selectedItems.length > 0) {
-        // Separate selected items that match the search query or when there's no search query
-        let selectedItemsMatchingSearch = this.selectedItems.filter(
-          (selectedItem) =>
-            this.searchQuery === '' ||
-            String(selectedItem[this.displayField])
-              .toLowerCase()
-              .includes(this.searchQuery.toLowerCase())
-        )
-
-        // Remove selected items from the filtered list to avoid duplication
-        filteredItems = filteredItems.filter(
-          (item) =>
-            !this.selectedItems.some(
-              (selectedItem) => item[this.primaryKey] === selectedItem[this.primaryKey]
-            )
-        )
-
-        // Add the selectedItemsMatchingSearch to the top of the list
-        items = [...selectedItemsMatchingSearch, ...filteredItems]
-      } else {
-        // If no items are selected, just use the filtered list
-        items = filteredItems
-      }
-
-      return items
+      // Concatenate selected items at the top
+      return [...selectedItems, ...nonSelectedItems]
     },
     //this method shortens the word if the word is too long and puts ... at the end
     isLongItem(item): string {
@@ -565,11 +518,13 @@ export default {
                 justify-self: end;
                 display: none;
                 align-items: center;
+
                 .svg-icon-c {
                   width: 16px;
                   height: 16px;
                   padding: 0;
                 }
+
                 &.isVisible {
                   display: inline-block;
                   align-items: center;
