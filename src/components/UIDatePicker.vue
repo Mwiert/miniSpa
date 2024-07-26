@@ -308,6 +308,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
+    margin-top: 1.5rem; 
     //This is the triangle for the calendar
     &::before {
       content: '';
