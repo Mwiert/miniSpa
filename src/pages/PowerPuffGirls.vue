@@ -7,8 +7,7 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="100"
-      v-model="valueTextArea"/>
-    <p>{{ valueTextArea }}</p>
+      v-model="valueTextArea"></UITextArea>
   </div>
   <div class="text-area-c">
     <UITextArea
@@ -18,8 +17,7 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
-      v-model="valueTextArea2"/>
-    <p>{{ valueTextArea2 }}</p>
+      v-model="valueTextArea2"></UITextArea>
   </div>
   <div class="text-area-c">
     <UITextArea
@@ -29,8 +27,7 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
-      v-model="valueTextArea3"/>
-    <p>{{ valueTextArea3 }}</p>
+      v-model="valueTextArea3"></UITextArea>
   </div>
   <div class="text-area-c">
     <UITextArea
@@ -39,8 +36,7 @@
       :cols="10"
       :placeholder="'Enter your address'"
       :maxLength="10"
-      v-model="valueTextArea4"/>
-    <p>{{ valueTextArea4 }}</p>
+      v-model="valueTextArea4"></UITextArea>
   </div>
 
   <div class="text-area-c">
@@ -50,8 +46,7 @@
       :cols="30"
       :placeholder="'Enter your address'"
       :maxLength="10"
-      v-model="valueTextArea5"/>
-    <p>{{ valueTextArea5 }}</p>
+      v-model="valueTextArea5"></UITextArea>
   </div>
 
   <div class="input-box">
@@ -61,7 +56,6 @@
       :icon="'mail'"
       :type="'email'"
       v-model="messageInput" />
-    <p>{{ messageInput }}</p>
   </div>
 
   <div class="input-box">
@@ -72,20 +66,28 @@
       :icon="'eye'"
       clearButton
       v-model="messageInputWithClearButton" />
-    <p>{{ messageInputWithClearButton }}</p>
   </div>
 
   <div class="input-box">
-    <UIInput :id="'tckno'" :label="'TCKNO'" :icon="'arrow-up'" :type="'text'" clearButton disabled />
+    <UIInput
+      :id="'tckno'"
+      :label="'TCKNO'"
+      :icon="'arrow-up'"
+      :type="'text'"
+      clearButton
+      disabled />
   </div>
   <div class="input-box">
-    <UIInput :id="'idNumber'" :label="'idNumber'" :icon="'mail'" :type="'text'" clearButton :disabled="true" />
+    <UIInput
+      :id="'idNumber'"
+      :label="'idNumber'"
+      :icon="'mail'"
+      :type="'text'"
+      clearButton
+      :disabled="true" />
   </div>
-  <!-- <button @click="submitForm">Submit</button> -->
 
   <div class="button-c">
-    <!-- UIButton component instances -->
-    <!-- <p>id:{{ clickedButton.id }}</p> -->
     <UIButton
       :id="'homebutton1'"
       text="Home"
@@ -103,7 +105,6 @@
       :isDisabled="loadingStates.flight.isDisabled"
       @click="setLoadingState('flight')"
       v-model="buttonValue" />
-    <p>{{ buttonValue }}</p>
 
     <UIButton
       :id="'hotelbutton1'"
@@ -147,14 +148,6 @@
       :isDisabled="loadingStates.disabledButton.isDisabled"
       @click="setLoadingState('disabledButton')" />
 
-    <!-- <div>
-      <h3>Button status:</h3>
-      <li v-for="(state, key) in loadingStates" :key="key">
-        Button ID: {{ key }}, Loading State: {{ state.isLoading }}
-      </li>
-    </div> -->
-
-    <!-- UIToggle component instances -->
     <div>
       <UIToggle
         :id="'powerpuffGirls'"
@@ -162,7 +155,6 @@
         v-model="powerpuffGirls.checked"
         :disabled="powerpuffGirls.disabled"
         @update:modelValue="toggleChange1" />
-        <p> Status: {{ powerpuffGirls.checked }}</p>
     </div>
 
     <div>
@@ -202,8 +194,7 @@
         :label="radio.label"
         :value="radio.value"
         v-model="pickedRadioHotel"
-        :disabled="radio.disabled"/>
-        <p>{{ pickedRadioHotel }}</p>
+        :disabled="radio.disabled" />
     </div>
     <!--Radio Buttons for flight-->
     <div class="flight-radio-buttons">
@@ -228,8 +219,7 @@
         :label="checkbox.label"
         :disabled="checkbox.disabled"
         v-model:checked="checkbox.checked"
-        @takeCheckedInfo="takeCheckedInfo"
-         />
+        @takeCheckedInfo="takeCheckedInfo" />
     </div>
 
     <!-- Checkboxes for flight -->
@@ -243,7 +233,6 @@
         after
         v-model:checked="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
-        <p>{{ checkboxFlight }}</p>
     </div>
     <!-- Example of a disabled checkbox -->
     <!-- <UICheckbox
@@ -381,12 +370,9 @@ export default {
 
     handlerSelectRadioButton(checked) {
       this.selectedId = checked
-      console.log('oldu')
     },
 
-    takeCheckedInfo(name: string, id: string, isChecked: boolean) {
-      console.log(name, id, isChecked)
-    }
+    takeCheckedInfo(name: string, id: string, isChecked: boolean) {}
   }
 }
 </script>
