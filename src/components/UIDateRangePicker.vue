@@ -120,10 +120,12 @@
           :initialDate="initialDate"
           :baseInitialDates="sendInitialDates"
           :isDatePickerEnable="isMultiDatePickerEnable"
+          :spaceBetweenDays="spaceBetweenDays"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
-          @click="sendDateToParent" />
+          @click="sendDateToParent" 
+          />
       </div>
     </div>
   </div>
@@ -156,7 +158,8 @@ export default {
     value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
-    initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') }
+    initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
+    spaceBetweenDays: { type: Number, default: 1 }
   },
   data() {
     return {
@@ -271,7 +274,7 @@ export default {
               date: dayjs(this.initialDate).format('YYYY-MM-DD')
             }
             this.sendInitialDates.secondInitialDate = dayjs(this.initialDate)
-              .add(3, 'day')
+              .add(this.spaceBetweenDays, 'day')
               .format('YYYY-MM-DD')
             this.sendInitialDates.secondInitialDate = {
               number: dayjs(this.sendInitialDates.secondInitialDate).format('DD'),

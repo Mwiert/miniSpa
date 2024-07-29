@@ -1,5 +1,13 @@
 <template>
   <div class="flexi-table-c">
+    {{ flexi.rows.length }}
+    {{ flexi.options.totalPages }}
+    {{ flexi.options.itemsPerPage }}
+
+    <!-- {{ flexi.columns }}
+    <br />
+    <br />
+    {{ flexi.options.columnSizes }} -->
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
@@ -7,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import FlexiTableControls from './FlexiTableControls.vue'
 import FlexiTableHeader from './FlexiTableHeader.vue'
 import FlexiTableBody from './FlexiTableBody.vue'
