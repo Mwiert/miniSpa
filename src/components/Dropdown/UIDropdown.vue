@@ -55,6 +55,8 @@
               </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
+            <SvgIcon v-if="unselectable && isSelected(item)" :name="'x'" :size="'s'" class="unselectable-icon" />
+
           </div>
         </div>
       </div>
@@ -127,6 +129,10 @@ export default {
     iconImage: {
       type: String,
       default: 'iconImage'
+    },
+    unselectable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -239,7 +245,7 @@ export default {
     },
 
     selectItem(item) {
-      if (this.isSelected(item)) {
+      if (this.isSelected(item) && this.unselectable) {
         this.selectedItem = {}
       } else {
         this.selectedItem = item
@@ -398,7 +404,6 @@ export default {
       overflow-y: auto;
       z-index: 1000;
       box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
-      top: 100%; /* dropdown menu will drop down by default. */
       bottom: auto;
 
       .search-container {
@@ -458,8 +463,11 @@ export default {
           padding: 8px;
           cursor: pointer;
           transition: background-color 0.3s;
-          justify-content: start;
-
+          justify-content: space-between;
+          .unselectable-icon {
+              width: 16px;
+              height: 16px;
+            }
           &:hover {
             background-color: #f3f3f3;
           }
