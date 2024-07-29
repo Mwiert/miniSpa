@@ -270,29 +270,20 @@ export default {
             dropdownMenu.style.bottom = 'auto'
           }
 
-          // if (this.sortField && this.sortByAscending) {
-          //   let itemsCopy = [...this.dropdownItems].sort().reverse()
-          //   let primaryKeys = []
-          //   for (let i = 0; i < itemsCopy.length; i++) {
-          //     primaryKeys.push(itemsCopy[i][this.primaryKey])
-          //   }
+          for (let i = 0; i < this.dropdownItems.length; i++) {
+            if (this.isSelected(this.dropdownItems[i])) {
+              const selectedItemRef = this.$refs['item-' + this.selectedItem[this.primaryKey]]
+              if (selectedItemRef && selectedItemRef[0]) {
+                selectedItemRef[0].scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                  inline: 'nearest'
+                })
+              }
+              break
+            }
+          }
 
-          //   const selectedIndex =
-          //     primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
-          //   const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-          //   if (selectedItemRef && selectedItemRef[0]) {
-          //     selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-          //   }
-          // } else if (this.sortField) {
-          //   let itemsCopy = [...this.dropdownItems].sort()
-          //   const selectedIndex = itemsCopy.indexOf(this.selectedItem)
-          //   const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-          //   if (selectedItemRef && selectedItemRef[0]) {
-          //     selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-          //   }
-          // }
         })
       } else {
         this.clearSearch()
