@@ -1,10 +1,10 @@
 <template>
   <div class="flexi-table-footer-c">
-    {{ 'Showing ' + this.flexi.rows.length + ' reservations' }}
+    {{ 'Showing ' + flexi.rows.length + ' reservations' }}
     <SmartTablePagination />
   </div>
 </template>
-<script>
+<script lang="ts">
 import SmartTablePagination from '../../../src/components/SmartTable/SmartTablePagination.vue'
 export default {
   name: 'FlexiTableFooter',
