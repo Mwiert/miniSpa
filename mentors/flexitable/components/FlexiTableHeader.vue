@@ -30,9 +30,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import dayjs from 'dayjs'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
+import customParseFormat from 'dayjs/plugin/customParseFormat' // dd/mm/yyyy dd.mm.yyyy
 import flexiTableMixin from '../flexitableMixin'
 export default {
   name: 'FlexiTableHeader',
@@ -88,10 +88,6 @@ export default {
       this.flexi.rows.forEach((row) => {
         row.row.id.value = this.masterCheckbox
       })
-      this.$emit(
-        'update:selectedRows',
-        this.flexi.rows.filter((row) => row.row.id.value)
-      )
     }
   }
 }
