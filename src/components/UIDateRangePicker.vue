@@ -1,5 +1,7 @@
 <template>
   <div class="ui-date-range-picker-c">
+    <label v-if="label">{{ label }}</label>
+
     <!-- This is for opening and closing the calendar -->
     <div
       class="button"
@@ -86,25 +88,33 @@
         </div>
       </div>
     </div>
-    <div class="date-picker" ref="datePicker">
+    <div
+      class="date-picker"
+      ref="datePicker"
+      :class="{ 'date-picker-with-label': label, 'date-picker-without-label': !label }">
       <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
       <div v-if="isSingleDatePicker">
         <UIDatePicker
           v-show="isSingleDatePickerEnable"
-          :yearRange="validateYear"
-          :monthRange="validateMonth"
+          :forwardYearRange="validateForwardYear"
+          :backYearRange="validateBackYear"
+          :forwardMonthRange="validateForwardMonth"
+          :backMonthRange="validateBackMonth"
           :saveDate="sendInitialDates.firstInitialDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
-          @dateSelected="handleFirstDateSelected" />
+          @dateSelected="handleFirstDateSelected"
+          @click="sendDateToParent" />
       </div>
       <div v-if="isMultiDatePicker">
         <UIMultiDatePicker
           v-show="isMultiDatePickerEnable"
-          :yearRange="validateYear"
-          :monthRange="validateMonth"
+          :forwardYearRange="validateForwardYear"
+          :backYearRange="validateBackYear"
+          :forwardMonthRange="validateForwardMonth"
+          :backMonthRange="validateBackMonth"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
@@ -112,7 +122,8 @@
           :isDatePickerEnable="isMultiDatePickerEnable"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
-          @resetBaseInitialDates="handleResetInitialDates" />
+          @resetBaseInitialDates="handleResetInitialDates"
+          @click="sendDateToParent" />
       </div>
     </div>
   </div>
@@ -132,10 +143,16 @@ export default {
     UIMultiDatePicker
   },
   props: {
+    label: {
+      type: String,
+      default: ''
+    },
     isMultiDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
     isSingleDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
-    validateMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
-    validateYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    validateForwardMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    validateForwardYear: { type: Number, default: 99 },
+    validateBackYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
     value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
@@ -170,8 +187,28 @@ export default {
       }
     },
     sendDateToParent() {
-      //We are sending the selected date to the parent component with v-model implementation.
-      this.$emit('update:modelValue', this.firstSelectedDate.date)
+      if (this.firstSelectedDate.date == null) {
+        const dates = {
+          firstDate: this.sendInitialDates.firstInitialDate.date,
+          secondDate: this.sendInitialDates.secondInitialDate.date
+        }
+        this.$emit('update:modelValue', dates)
+      } else {
+        const dates = {
+          firstDate: this.firstSelectedDate.date,
+          secondDate: this.secondSelectedDate.date
+        }
+        if (this.firstSelectedDate.date == '' && this.secondSelectedDate.date == '') {
+          const dates = {
+            firstDate: this.sendInitialDates.firstInitialDate.date,
+            secondDate: this.sendInitialDates.secondInitialDate.date
+          }
+          this.$emit('update:modelValue', dates)
+          return
+        }
+        //We are sending the selected date to the parent component with v-model implementation.
+        this.$emit('update:modelValue', dates)
+      }
     },
     formatMonth(month) {
       //We are converting the month number to month name
@@ -324,6 +361,7 @@ export default {
   created() {
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
+    this.sendDateToParent()
   }
 }
 </script>
@@ -338,18 +376,33 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  display: flex;
-  flex-direction: column;
   align-self: center;
   text-align: center;
   padding: 1rem;
   gap: 0.75rem;
   position: relative;
   width: 175px;
+  label {
+    font-size: 14px;
+    margin-top: 15px;
+  }
+  .date-picker-without-label {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    z-index: 1000;
+  }
+  .date-picker-with-label {
+    position: absolute;
+    top: 95px;
+    left: 15px;
+    z-index: 1000;
+  }
 
   //This is our button container
   .button {
     background: #f8f8f8;
+    z-index: 1001;
     box-shadow: 2px 2px 6px #5858581a;
     border: 1px solid #b6b6b6;
 
@@ -436,12 +489,6 @@ export default {
         }
       }
     }
-  }
-  .date-picker {
-    position: absolute;
-    top: 75px;
-    left: 15px;
-    z-index: 1000;
   }
 }
 </style>
