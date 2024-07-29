@@ -9,9 +9,18 @@
       <div v-if="isOpen" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
         <div v-if="searchable" class="search-container">
           <div class="search-content-wrapper">
-            <input type="text" v-model="searchQuery" placeholder="Search..." class="ui-multi-dropdown-search" />
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Search..."
+              class="ui-multi-dropdown-search" />
             <span class="clear-search">
-              <SvgIcon v-if="searchQuery" @click.stop="clearSearch" class="clear-search-img" :name="'x'" :size="'s'" />
+              <SvgIcon
+                v-if="searchQuery"
+                @click.stop="clearSearch"
+                class="clear-search-img"
+                :name="'x'"
+                :size="'s'" />
             </span>
           </div>
         </div>
@@ -19,12 +28,20 @@
           <span class="toggle" @click="selectAll">Select All</span>
           <span class="toggle" @click="dropAll">Drop All</span>
         </div>
-        <div class="ui-multi-dropdown-content" :style="{ fontSize: fontSize + 'px', height: dropdownListMaxHeight }">
-          <div v-for="item in filteredItems()" :key="item[primaryKey]" class="ui-multi-dropdown-item"
-            @click.stop="selectItem(item)" :class="{ selected: isSelected(item) }">
+        <div
+          class="ui-multi-dropdown-content"
+          :style="{ fontSize: fontSize + 'px', height: dropdownListMaxHeight }">
+          <div
+            v-for="item in filteredItems()"
+            :key="item[primaryKey]"
+            class="ui-multi-dropdown-item"
+            @click.stop="selectItem(item)"
+            :class="{ selected: isSelected(item) }">
             <div v-if="this.isSelected(item)" class="item-container">
               <div class="image-label-wrapper">
-                <div class="dropdown-item-img" :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                <div
+                  class="dropdown-item-img"
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
                   <SvgIcon :name="item[iconImage]" :size="'s'" />
                 </div>
 
@@ -35,7 +52,9 @@
             </div>
             <div v-else class="item-container">
               <div class="image-label-wrapper">
-                <div class="dropdown-item-img" :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+                <div
+                  class="dropdown-item-img"
+                  :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
                   <SvgIcon :name="item[iconImage]" :size="'s'" />
                 </div>
 
@@ -235,8 +254,8 @@ export default {
       if (this.sortField !== undefined) {
         items = this.sortItems(items)
       }
-      let selectedItems = items.filter(item => this.isSelected(item))
-      let nonSelectedItems = items.filter(item => !this.isSelected(item))
+      let selectedItems = items.filter((item) => this.isSelected(item))
+      let nonSelectedItems = items.filter((item) => !this.isSelected(item))
 
       // Concatenate selected items at the top
       return [...selectedItems, ...nonSelectedItems]
@@ -291,6 +310,22 @@ export default {
       this.isOpen = !this.isOpen
       if (this.isOpen) {
         this.clearSearch()
+
+        this.$nextTick(() => {
+          const dropdownMenu = this.$el.querySelector('.ui-multi-dropdown-menu')
+          const rect = dropdownMenu.getBoundingClientRect()
+          const windowHeight = window.innerHeight || document.documentElement.clientHeight
+          console.log(rect.bottom, windowHeight)
+          if (rect.bottom > windowHeight) {
+            // if the dropdown menu is out of the window, it will be shown above.
+            dropdownMenu.style.top = 'auto'
+            dropdownMenu.style.bottom = '100%'
+          } else {
+            // if the dropdown menu is in the window, it will be shown below.
+            dropdownMenu.style.top = '100%'
+            dropdownMenu.style.bottom = 'auto'
+          }
+        })
       }
 
       this.clearSearch()
@@ -343,7 +378,6 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 15px;
       font-size: 16px;
       font-weight: 70;
       color: #333;
@@ -392,6 +426,7 @@ export default {
       position: absolute;
       width: 10rem;
       top: 100%;
+      bottom: auto;
       left: 0;
       right: 0;
       margin-top: 0.2rem;
