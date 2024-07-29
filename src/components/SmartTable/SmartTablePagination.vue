@@ -18,7 +18,7 @@
     <button
       @click="setPage(flexi.options.currentPage + 1)"
       class="next-page-btn"
-      :class="flexi.options.currentPage === totalPages ? 'visibility' : ''">
+      :class="flexi.options.currentPage === flexi.options.pages.length ? 'visibility' : ''">
       <SvgIcon :name="'arrow-right'" size="s" />
     </button>
   </div>
@@ -33,12 +33,9 @@ export default {
   mixins: [flexiTableMixin],
 
   computed: {
-    totalPages() {
-      return this.flexi.options.pages.length
-    },
     pagesToShow() {
       const currentPage = this.flexi.options.currentPage
-      const totalPages = this.totalPages
+      const totalPages = this.flexi.options.pages.length
       const pages = []
 
       if (totalPages === 1) {
@@ -83,7 +80,7 @@ export default {
 
   methods: {
     setPage(page) {
-      if (page === '...' || page <= 0 || page > this.totalPages) return
+      if (page === '...' || page <= 0 || page > this.flexi.options.pages.length) return
       this.flexi.options.currentPage = page
     }
   },
@@ -95,6 +92,11 @@ export default {
         this.GeneratePagination(val)
       },
       immediate: true
+    },
+    'flexi.options.searchKeyWord': {
+      handler: function () {
+        this.GeneratePagination(this.flexi.options.itemsPerPage)
+      }
     }
   }
 }
