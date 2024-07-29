@@ -22,7 +22,15 @@ export default {
   },
   computed: {},
   methods: {},
-  watch: {}
+  watch: {
+    $route: {
+      handler: function (route) {
+        if (route.name == 'FlexiTablePage') {
+          document.body.style.margin = '2rem'
+        }
+      }
+    }
+  }
 }
 </script>
 
