@@ -30,7 +30,7 @@
         :minLength="minLength"
         :disabled="disabled"
         v-model="inputValue"
-        @input="$emit('update:modelValue', $event.target.value)"
+        @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur" />
       <!-- Label for the input, shrinks when the input is active -->
@@ -121,6 +121,12 @@ export default {
     handleBlur() {
       if (this.modelValue === '') {
         this.isFocused = false
+      }
+    },
+    handleInput(event: Event) {
+      const target = event.target as HTMLTextAreaElement | null
+      if (target) {
+        this.$emit('update:modelValue', target.value)
       }
     }
   }

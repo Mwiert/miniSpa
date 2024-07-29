@@ -13,7 +13,7 @@
         :maxlength="maxLength"
         :value="modelValue"
         class="text-area"
-        @input="$emit('update:modelValue', $event.target.value)"></textarea>
+        @input="handleInput"></textarea>
     </div>
   </div>
 </template>
@@ -31,6 +31,14 @@ export default {
     modelValue: { type: String },
     id: { type: String },
     name: { type: String }
+  },
+  methods: {
+    handleInput(event: Event) {
+      const target = event.target as HTMLTextAreaElement | null
+      if (target) {
+        this.$emit('update:modelValue', target.value)
+      }
+    }
   }
 }
 </script>
