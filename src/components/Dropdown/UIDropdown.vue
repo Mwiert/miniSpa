@@ -39,7 +39,7 @@
             class="ui-dropdown-item"
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }">
-            <div v-if="this.isSelected(item)" class="image-label-wrapper">
+            <div class="image-label-wrapper">
               <div
                 class="dropdown-item-img"
                 :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
@@ -47,21 +47,16 @@
               </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
-            <div v-else class="image-label-wrapper">
-              <div
-                class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
-                <SvgIcon :name="item[iconImage]" :size="'s'" />
-              </div>
-              <span>{{ isLongItem(item) }}</span>
-            </div>
-            <SvgIcon v-if="unselectable && isSelected(item)" :name="'x'" :size="'s'" class="unselectable-icon" />
 
+            <SvgIcon
+              v-if="unselectable && isSelected(item)"
+              :name="'x'"
+              :size="'s'"
+              class="unselectable-icon" />
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -264,38 +259,40 @@ export default {
           const rect = dropdownMenu.getBoundingClientRect()
           const windowHeight = window.innerHeight || document.documentElement.clientHeight
           console.log(rect.bottom, windowHeight)
-          
-          if (rect.bottom > windowHeight) { // if the dropdown menu is out of the window, it will be shown above.
+
+          if (rect.bottom > windowHeight) {
+            // if the dropdown menu is out of the window, it will be shown above.
             dropdownMenu.style.top = 'auto'
-            dropdownMenu.style.bottom = '100%'
-          } else { // if the dropdown menu is in the window, it will be shown below.
+            dropdownMenu.style.bottom = '80%'
+          } else {
+            // if the dropdown menu is in the window, it will be shown below.
             dropdownMenu.style.top = '100%'
             dropdownMenu.style.bottom = 'auto'
           }
 
-          if (this.sortField && this.sortByAscending) {
-            let itemsCopy = [...this.dropdownItems].sort().reverse()
-            let primaryKeys = []
-            for (let i = 0; i < itemsCopy.length; i++) {
-              primaryKeys.push(itemsCopy[i][this.primaryKey])
-            }
+          // if (this.sortField && this.sortByAscending) {
+          //   let itemsCopy = [...this.dropdownItems].sort().reverse()
+          //   let primaryKeys = []
+          //   for (let i = 0; i < itemsCopy.length; i++) {
+          //     primaryKeys.push(itemsCopy[i][this.primaryKey])
+          //   }
 
-            const selectedIndex =
-              primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
+          //   const selectedIndex =
+          //     primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
+          //   const selectedItemRef = this.$refs['item-' + selectedIndex]
 
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-            }
-          } else if (this.sortField) {
-            let itemsCopy = [...this.dropdownItems].sort()
-            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
+          //   if (selectedItemRef && selectedItemRef[0]) {
+          //     selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+          //   }
+          // } else if (this.sortField) {
+          //   let itemsCopy = [...this.dropdownItems].sort()
+          //   const selectedIndex = itemsCopy.indexOf(this.selectedItem)
+          //   const selectedItemRef = this.$refs['item-' + selectedIndex]
 
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-            }
-          }
+          //   if (selectedItemRef && selectedItemRef[0]) {
+          //     selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+          //   }
+          // }
         })
       } else {
         this.clearSearch()
@@ -465,9 +462,11 @@ export default {
           transition: background-color 0.3s;
           justify-content: space-between;
           .unselectable-icon {
-              width: 16px;
-              height: 16px;
-            }
+            width: 16px;
+            height: 16px;
+            position: relative;
+            right: -0.5rem;
+          }
           &:hover {
             background-color: #f3f3f3;
           }
