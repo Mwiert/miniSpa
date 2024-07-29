@@ -1,8 +1,8 @@
 <template>
   <div ref="tableContainer" class="flexi-table-body-c">
-    <button @click="pushtheArray" style="margin-right: 200px">
+    <!-- <button @click="pushtheArray" style="margin-right: 200px">
       {{ pushelements ? 'Kaan False' : 'Kaan True' }}
-    </button>
+    </button> -->
     <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
       <div
         ref="tableContent"
