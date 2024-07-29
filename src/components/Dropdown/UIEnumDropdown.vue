@@ -5,7 +5,8 @@
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
   <UIDropdown v-else v-model="selectedItem" :items="dropdownItems" :label="label" :fontSize="fontSize"
     :searchable="searchable" :dataSize="dataSize" :sortField="sortField" :sortByAscending="sortByAscending"
-    :maxItemThreshold="maxItemThreshold" @update:modelValue="($event) => $emit('update:modelValue', $event)" />
+    :maxItemThreshold="maxItemThreshold" :unselectable="unselectable" 
+    @update:modelValue="($event) => $emit('update:modelValue', $event)" />
 </template>
 
 <script lang="ts">
@@ -67,6 +68,11 @@ export default {
       // takes the name of the chosen id
       type: String,
       default: 'name'
+    },
+    unselectable: {
+      // if the dropdown is unselectable.
+      type: Boolean,
+      default: false
     },
 
     isMulti: { type: Boolean, default: false },
