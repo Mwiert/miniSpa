@@ -11,6 +11,7 @@
           v-if="icon"
           :key="computedIcon"
           class="icon"
+          :class="{ disabled: disabled }"
           :name="computedIcon"
           @click="togglePasswordVisibility" />
       </div>
@@ -51,7 +52,6 @@
 </template>
 
 <script lang="ts">
-
 export default {
   name: 'UIInput',
   data() {
@@ -62,26 +62,13 @@ export default {
     }
   },
   props: {
-    type: {
-      type: String,
-      default: 'text'
-    },
     id: {
       type: String,
       required: true
     },
-    label: {
+    type: {
       type: String,
-      required: false
-    },
-    maxLength: {
-      type: Number
-    },
-    minLength: {
-      type: Number
-    },
-    modelValue: {
-      type: String
+      default: 'text'
     },
     disabled: {
       type: Boolean,
@@ -94,13 +81,25 @@ export default {
     clearButton: {
       type: Boolean,
       default: false
+    },
+    label: {
+      type: String
+    },
+    maxLength: {
+      type: Number
+    },
+    minLength: {
+      type: Number
+    },
+    modelValue: {
+      type: String
     }
   },
   computed: {
-    isPassword() {
+    isPassword(): boolean {
       return this.id === 'password'
     },
-    computedIcon() {
+    computedIcon(): string {
       if (this.isPassword) {
         return this.showPassword ? 'eye' : 'eye-off'
       }
