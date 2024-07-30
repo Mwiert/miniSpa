@@ -1,7 +1,7 @@
 <template>
   <div class="text-area-c">
     <div class="text-area-wrapper">
-      <label v-if="label" :for="id">{{ label }}</label>
+      <label v-if="label" :for="id" class="label">{{ label }}</label>
       <textarea
         :class="{ disabled: disabled }"
         :name="name"
@@ -12,7 +12,8 @@
         :placeholder="placeholder"
         :maxlength="maxLength"
         :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"></textarea>
+        class="text-area"
+        @input="handleInput"></textarea>
     </div>
   </div>
 </template>
@@ -30,6 +31,14 @@ export default {
     modelValue: { type: String },
     id: { type: String },
     name: { type: String }
+  },
+  methods: {
+    handleInput(event: Event) {
+      const target = event.target as HTMLTextAreaElement | null
+      if (target) {
+        this.$emit('update:modelValue', target.value)
+      }
+    }
   }
 }
 </script>
@@ -40,11 +49,11 @@ export default {
   .text-area-wrapper {
     display: inline-flex;
     flex-direction: column;
-    label {
+    .label {
       font-size: 1.2rem;
       margin-bottom: 0.5rem;
     }
-    textarea {
+    .text-area {
       padding: 0.5rem;
       font-size: 1rem;
       border: 1px solid #ccc;

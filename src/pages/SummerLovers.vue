@@ -213,7 +213,21 @@
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
         :iconImage="'iconImage'"
-        primaryKey="id" />
+        primaryKey="id"
+        unselectable />
+        <UIMultiDropdown
+        v-model="selectedPets"
+        :items="pets"
+        :fontSize="fontSize"
+        displayField="name"
+        :sortField="sortField"
+        :label="'Multi dropdown without maxVisibleItem'"
+        :dataSize="dataSize"
+        searchable
+        primaryKey="id"
+        :sortByAscending="true"
+        :maxItemThreshold="maxItemThreshold"
+        :hasActionBox="true" />
 
       <UIDropdown
         v-model="selectedItem"
