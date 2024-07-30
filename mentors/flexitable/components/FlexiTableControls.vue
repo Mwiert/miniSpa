@@ -1,7 +1,6 @@
 <template>
   <div class="flexi-table-controls-c">
     <!-- Items Per Page -->
-
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
