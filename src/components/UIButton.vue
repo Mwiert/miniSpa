@@ -30,6 +30,7 @@
 export default {
   name: 'UIButton',
   props: {
+    // id is the unique identifier of the button
     id: {
       type: String,
       default: '',
@@ -69,12 +70,14 @@ export default {
       type: Boolean,
       default: false
     },
+    // Size of the button
     size: {
       type: String,
       default: 'large'
     },
+    //Status of the button
     modelValue: {
-      type: Boolean,
+      type: Boolean
     }
   },
   data() {
@@ -440,8 +443,8 @@ $flight-color-filter: invert(68%) sepia(10%) saturate(4826%) hue-rotate(182deg) 
     border: 4px solid rgba(58, 57, 57, 0.3);
     border-radius: 50%;
     border-top: 4px solid rgb(219, 219, 219);
-    width: 24px;
-    height: 24px;
+    width: 14px;
+    height: 14px;
     animation: spin 2s linear infinite; // Spinner animation
     position: absolute;
   }

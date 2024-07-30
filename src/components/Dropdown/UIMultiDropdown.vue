@@ -325,15 +325,13 @@ export default {
           const dropdownMenu = this.$el.querySelector('.ui-multi-dropdown-menu')
           const rect = dropdownMenu.getBoundingClientRect()
           const windowHeight = window.innerHeight || document.documentElement.clientHeight
-          console.log(rect.bottom, windowHeight)
+
           if (rect.bottom > windowHeight) {
             // if the dropdown menu is out of the window, it will be shown above.
-            dropdownMenu.style.top = 'auto'
-            dropdownMenu.style.bottom = '100%'
+            dropdownMenu.classList.add('above')
           } else {
             // if the dropdown menu is in the window, it will be shown below.
-            dropdownMenu.style.top = '100%'
-            dropdownMenu.style.bottom = 'auto'
+            dropdownMenu.classList.remove('above')
           }
         })
       }
@@ -448,6 +446,11 @@ export default {
       overflow-y: auto;
       z-index: 1000;
       box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
+
+      &.above {
+        top: auto;
+        bottom: 80%;
+      }
 
       .button-wrapper {
         display: flex;
