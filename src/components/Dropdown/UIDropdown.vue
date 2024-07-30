@@ -3,35 +3,56 @@
     <div class="ui-dropdown-c-wrapper">
       <label class="label" v-if="label?.length !== 0">{{ label }}</label>
       <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
-        <span :class="{ 'placeholder-text-active': !selectedItem[displayField] }" class="placeholder-text">
+        <span
+          :class="{ 'placeholder-text-active': !selectedItem[displayField] }"
+          class="placeholder-text">
           {{ isLongItem(selectedItem) || placeHolder }}
         </span>
         <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
       </button>
+
       <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
         <div v-if="searchable" class="search-container">
           <div class="search-content-wrapper">
-            <input type="text" v-model="searchQuery" placeholder="Search..." class="ui-dropdown-search" />
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Search..."
+              class="ui-dropdown-search" />
             <span class="clear-search">
-              <SvgIcon v-if="searchQuery" @click.stop="clearSearch" class="clear-search-img" :name="'x'" :size="'s'" />
+              <SvgIcon
+                v-if="searchQuery"
+                @click.stop="clearSearch"
+                class="clear-search-img"
+                :name="'x'"
+                :size="'s'" />
             </span>
           </div>
         </div>
-        <div class="ui-dropdown-content" :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
-          <div v-for="item in filteredItems()" :key="item[primaryKey]" :ref="'item-' + item[primaryKey]"
-            class="ui-dropdown-item" @click="selectItem(item)" :class="{ selected: isSelected(item) }">
-            <div v-if="this.isSelected(item)" class="image-label-wrapper">
-              <div class="dropdown-item-img" :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
+        <div
+          class="ui-dropdown-content"
+          :style="{ fontSize: fontSize + 'px', maxHeight: dropdownListMaxHeight }">
+          <div
+            v-for="item in filteredItems()"
+            :key="item[primaryKey]"
+            :ref="'item-' + item[primaryKey]"
+            class="ui-dropdown-item"
+            @click="selectItem(item)"
+            :class="{ selected: isSelected(item) }">
+            <div class="image-label-wrapper">
+              <div
+                class="dropdown-item-img"
+                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
                 <SvgIcon :name="item[iconImage]" :size="'s'" />
               </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
-            <div v-else class="image-label-wrapper">
-              <div class="dropdown-item-img" :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
-                <SvgIcon :name="item[iconImage]" :size="'s'" />
-              </div>
-              <span>{{ isLongItem(item) }}</span>
-            </div>
+
+            <SvgIcon
+              v-if="unselectable && isSelected(item)"
+              :name="'x'"
+              :size="'s'"
+              class="unselectable-icon" />
           </div>
         </div>
       </div>
@@ -103,6 +124,10 @@ export default {
     iconImage: {
       type: String,
       default: 'iconImage'
+    },
+    unselectable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -215,7 +240,7 @@ export default {
     },
 
     selectItem(item) {
-      if (this.isSelected(item)) {
+      if (this.isSelected(item) && this.unselectable) {
         this.selectedItem = {}
       } else {
         this.selectedItem = item
@@ -230,33 +255,39 @@ export default {
         this.clearSearch()
 
         this.$nextTick(() => {
-          if (this.sortField && this.sortByAscending) {
-            let itemsCopy = [...this.dropdownItems].sort().reverse()
-            let primaryKeys: string[] = []
-            for (let i = 0; i < itemsCopy.length; i++) {
-              primaryKeys.push(itemsCopy[i][this.primaryKey])
-            }
+          const dropdownMenu = this.$el.querySelector('.ui-dropdown-menu')
+          const rect = dropdownMenu.getBoundingClientRect()
+          const windowHeight = window.innerHeight || document.documentElement.clientHeight
+          console.log(rect.bottom, windowHeight)
 
-            const selectedIndex =
-              primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
+          if (rect.bottom > windowHeight) {
+            // if the dropdown menu is out of the window, it will be shown above.
+            dropdownMenu.style.top = 'auto'
+            dropdownMenu.style.bottom = '80%'
+          } else {
+            // if the dropdown menu is in the window, it will be shown below.
+            dropdownMenu.style.top = '100%'
+            dropdownMenu.style.bottom = 'auto'
+          }
 
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-            }
-          } else if (this.sortField) {
-            let itemsCopy = [...this.dropdownItems].sort()
-            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+          for (let i = 0; i < this.dropdownItems.length; i++) {
+            if (this.isSelected(this.dropdownItems[i])) {
+              const selectedItemRef = this.$refs['item-' + this.selectedItem[this.primaryKey]]
+              if (selectedItemRef && selectedItemRef[0]) {
+                selectedItemRef[0].scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                  inline: 'nearest'
+                })
+              }
+              break
             }
           }
-        })
-      }
 
-      this.clearSearch()
+        })
+      } else {
+        this.clearSearch()
+      }
     },
     clearSearch() {
       // clears the searchQuery
@@ -302,7 +333,6 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 15px;
       font-size: 16px;
       font-weight: 70;
       color: #333;
@@ -362,6 +392,7 @@ export default {
       overflow-y: auto;
       z-index: 1000;
       box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
+      bottom: auto;
 
       .search-container {
         background-color: #fff;
@@ -420,8 +451,13 @@ export default {
           padding: 8px;
           cursor: pointer;
           transition: background-color 0.3s;
-          justify-content: start;
-
+          justify-content: space-between;
+          .unselectable-icon {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            right: -0.5rem;
+          }
           &:hover {
             background-color: #f3f3f3;
           }

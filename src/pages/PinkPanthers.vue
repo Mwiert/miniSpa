@@ -1,28 +1,20 @@
 <template>
   <div class="flexi-table-page-c">
-    <FlexiTable @update:selectedRows="updateSelectedRows" />
-    <div>
-      <pre>{{ selectedRows }}</pre>
-    </div>
+    <FlexiTable :tableOptions="flexiTableOptions" />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import response from '../../mentors/flexitable/flexitableData'
 import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
-import { computed } from 'vue'
+
 import PageOrder from '../../src/enum/PageOrder'
 export default {
   name: 'FlexiTablePage',
   components: {
     FlexiTable
   },
-  provide() {
-    return {
-      flexi: computed(() => this.flexiTableOptions),
-      selectedRows: this.selectedRows // Provide selectedRows array
-    }
-  },
+
   data() {
     return {
       flexiTableOptions: {
@@ -53,9 +45,9 @@ export default {
           { id: 11, name: 'Annual Fee', label: 'annualFee', class: 'txt-right ' },
           { id: 12, name: 'Email Adress', label: 'email' }
         ],
-        rows: []
-      },
-      selectedRows: []
+        rows: [],
+        selectedRows: []
+      }
     }
   },
   created() {
@@ -127,9 +119,6 @@ export default {
       this.selectedRows.forEach((row, index) => {
         console.log(`Row ${index + 1}:`, row)
       })
-    },
-    updateSelectedRows(selectedRows) {
-      this.selectedRows = selectedRows
     }
   }
 }

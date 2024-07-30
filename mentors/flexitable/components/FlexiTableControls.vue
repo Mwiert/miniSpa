@@ -1,7 +1,6 @@
 <template>
   <div class="flexi-table-controls-c">
     <!-- Items Per Page -->
-
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
@@ -9,7 +8,6 @@
         :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
-        :placeHolder="flexi.options.UIDropdownOrderProp.placeHolder"
         :showAll="flexi.options.UIDropdownOrderProp.showAll" />
       <!--Custom Dropdown-->
       <div class="dropdown">
@@ -50,7 +48,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
 export default {

@@ -1,4 +1,5 @@
 <template>
+  {{ FlexiBodyItemsPerPage.length }}
   <div ref="tableContainer" class="flexi-table-body-c">
     <!-- <button @click="pushtheArray" style="margin-right: 200px">
       {{ pushelements ? 'Kaan False' : 'Kaan True' }}
@@ -56,13 +57,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineAsyncComponent } from 'vue'
 import flexiTableMixin from '../flexitableMixin'
 
 export default {
   name: 'FlexiTableBody',
-  inject: ['flexi', 'selectedRows'],
+  inject: ['flexi'],
   mixins: [flexiTableMixin],
   data() {
     return {
@@ -91,8 +92,8 @@ export default {
         return Object.values(row.row).some((col) => col.checkbox && col.value)
       })
       this.pushelements = !this.pushelements
-      this.selectedRows.length = 0
-      this.selectedRows.push(...selected)
+      this.flexi.selectedRows.length = 0
+      this.flexi.selectedRows.push(...selected)
     }
   }
 }

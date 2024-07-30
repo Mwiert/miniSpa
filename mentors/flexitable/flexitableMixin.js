@@ -4,13 +4,20 @@ export default {
       if (this.flexi.options.hideSearch) {
         return this.flexi.rows
       }
-      return this.flexi.rows.filter((item) =>
+
+      const search = this.flexi.rows.filter((item) =>
         JSON.stringify(item.row).toLowerCase().includes(this.flexi.options.searchKeyWord)
       )
+      this.flexi.options.totalPages = search.length
+
+      return search
     },
     FlexiBodyItemsPerPage() {
-      const itemsPerPage = parseInt(this.flexi.options.itemsPerPage) 
-      const currentPage = parseInt(this.flexi.options.currentPage) 
+      let itemsPerPage = parseInt(this.flexi.options.itemsPerPage)
+      if (itemsPerPage == -1) {
+        itemsPerPage = this.flexi.rows.length
+      }
+      const currentPage = parseInt(this.flexi.options.currentPage)
       const startIndex = (currentPage - 1) * itemsPerPage
       const endIndex = startIndex + itemsPerPage
       return this.SearchKey.slice(startIndex, endIndex)
@@ -33,26 +40,21 @@ export default {
     HideColumn(key) {
       return !this.flexi.options.hiddenColumns?.includes(key)
     },
-    GeneratePagination(itemsPerPage){
+    GeneratePagination(itemsPerPage) {
+      this.flexi.options.pages = []
       //pagination
       if (itemsPerPage == -1) {
-        this.flexi.options.pages = []
         this.flexi.options.currentPage = 1
-      itemsPerPage  = this.flexi.rows.length 
-      console.log("nazli",itemsPerPage)
-      this.flexi.options.pagination = false
-      
+        itemsPerPage = this.flexi.rows.length
+        this.flexi.options.pagination = false
+      } else {
+        this.flexi.options.pagination = true
+        this.flexi.options.currentPage = 1
+        const totalPageNum = Math.ceil(this.flexi.options.totalPages / parseInt(itemsPerPage))
+        for (let i = 1; i <= totalPageNum; i++) {
+          this.flexi.options.pages.push(i)
+        }
       }
-        else {
-          this.flexi.options.pagination = true
-            this.flexi.options.currentPage = 1
-            this.flexi.options.pages = []
-            const totalPageNum = Math.ceil(this.flexi.rows.length / parseInt(itemsPerPage))
-            for (let i=1; i <= totalPageNum ; i++){
-              this.flexi.options.pages.push(i)
-            }
-          }
-    },
-    
+    }
   }
 }
