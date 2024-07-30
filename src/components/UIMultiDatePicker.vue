@@ -132,7 +132,9 @@ export default {
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
-    isDatePickerEnable: { type: Boolean }
+    isDatePickerEnable: { type: Boolean },
+    backDayRange: { type: Number, default: 99 }, //This is for validating the day range by giving it 9999 as default value since this is one of the maximum value
+    forwardDayRange: { type: Number, default: 99 },
   },
   methods: {
     checkRange() {
@@ -140,7 +142,7 @@ export default {
 
             Check the range of the year and month, if year is not 9999, update year range, if month is not 9999, update month range.
             This is intended request.
-
+            güne göre validasyon yap
           */
 
       if (this.isPastValidation) {
@@ -157,6 +159,15 @@ export default {
             .format('YYYY-MM-DD')
           this.maxDate = dayjs().add(1, 'month').format('YYYY-MM-DD')
         }
+        if (this.backDayRange !== 99) {
+          this.minDate = dayjs()
+            .subtract(this.backDayRange, 'day')
+            .endOf('day')
+            .format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(1, 'day').format('YYYY-MM-DD')
+        }
+        
+        //is day validation ekle if e ve prop ekle 55 gün seç örnek
       } else if (this.isFutureValidation) {
         if (this.forwardYearRange !== 99) {
           let day = this.forwardYearRange * 365
@@ -169,6 +180,13 @@ export default {
             .startOf('month')
             .format('YYYY-MM-DD')
           this.minDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD')
+        }
+        if (this.forwardDayRange !== 99) {
+          this.maxDate = dayjs()
+            .add(this.forwardDayRange, 'day')
+            .startOf('day')
+            .format('YYYY-MM-DD')
+          this.minDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
         }
       } else {
         if (this.backYearRange !== 99) {
@@ -184,6 +202,11 @@ export default {
               .add(this.forwardMonthRange, 'year')
               .format('YYYY-MM-DD')
           }
+          if (this.forwardDayRange !== 99) {
+            this.maxDate = dayjs(this.initialDate)
+              .add(this.forwardDayRange, 'day')
+              .format('YYYY-MM-DD')
+          }
         } else if (this.backMonthRange !== 99) {
           this.minDate = dayjs(this.initialDate)
             .subtract(this.backMonthRange + 1, 'month')
@@ -193,6 +216,11 @@ export default {
           if (this.forwardMonthRange !== 99) {
             this.maxDate = dayjs(this.initialDate)
               .add(this.forwardMonthRange, 'month')
+              .format('YYYY-MM-DD')
+          }
+          if (this.forwardDayRange !== 99) {
+            this.maxDate = dayjs(this.initialDate)
+              .add(this.forwardDayRange, 'day')
               .format('YYYY-MM-DD')
           }
           if (this.forwardYearRange !== 99) {
@@ -643,7 +671,7 @@ export default {
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
         this.nextMonthDate = this.calendarDate.add(1, 'month').format('YYYY-MM-DD')
         this.prevMonthDate = this.calendarDate.subtract(1, 'month').format('YYYY-MM-DD')
-        this.populdateMonthDays()
+        // this.populdateMonthDays() gereksiz kullanım?
         this.checkDateHistory()
         this.updateBetweenDates()
         this.linedThroughDate() // Her iki takvim için geçerli
