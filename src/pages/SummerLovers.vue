@@ -267,6 +267,11 @@
         :iconImage="'iconImage'"
         primaryKey="id" />
     </div>
+    <div>
+      <MenuDropdown v-slot="{childClick}">
+        <button @click="childClick">menu dropdown</button>
+      </MenuDropdown>
+    </div>
   </div>
 </template>
 
@@ -276,12 +281,14 @@ import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
 import EInternComponentType from '../enum/EInternComponentType'
 import EInternSingleComponentType from '../enum/EInternSingleComponentType'
+import MenuDropdown from '../components/Dropdown/MenuDropdown.vue'
 export default {
   name: 'SummerLovers',
   components: {
     UIEnumDropdown,
     UIDropdown,
-    UIMultiDropdown
+    UIMultiDropdown,
+    MenuDropdown
   },
   data() {
     return {
