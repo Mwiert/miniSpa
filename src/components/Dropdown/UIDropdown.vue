@@ -258,7 +258,6 @@ export default {
           const dropdownMenu = this.$el.querySelector('.ui-dropdown-menu')
           const rect = dropdownMenu.getBoundingClientRect()
           const windowHeight = window.innerHeight || document.documentElement.clientHeight
-          console.log(rect.bottom, windowHeight)
 
           if (rect.bottom > windowHeight) {
             // if the dropdown menu is out of the window, it will be shown above.
