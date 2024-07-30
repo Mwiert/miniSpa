@@ -1,27 +1,20 @@
 <template>
   <div class="flexi-table-page-c">
-    <FlexiTable />
-    <div>
-      <pre>{{ flexiTableOptions.selectedRows }}</pre>
-    </div>
+    <FlexiTable :tableOptions="flexiTableOptions" />
   </div>
 </template>
 
 <script lang="ts">
 import response from '../../mentors/flexitable/flexitableData'
 import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
-import { computed } from 'vue'
+
 import PageOrder from '../../src/enum/PageOrder'
 export default {
   name: 'FlexiTablePage',
   components: {
     FlexiTable
   },
-  provide() {
-    return {
-      flexi: computed(() => this.flexiTableOptions)
-    }
-  },
+
   data() {
     return {
       flexiTableOptions: {
