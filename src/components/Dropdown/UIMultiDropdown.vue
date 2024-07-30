@@ -329,7 +329,7 @@ export default {
           if (rect.bottom > windowHeight) {
             // if the dropdown menu is out of the window, it will be shown above.
             dropdownMenu.style.top = 'auto'
-            dropdownMenu.style.bottom = '100%'
+            dropdownMenu.style.bottom = '80%'
           } else {
             // if the dropdown menu is in the window, it will be shown below.
             dropdownMenu.style.top = '100%'

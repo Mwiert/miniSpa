@@ -39,7 +39,7 @@
             class="ui-dropdown-item"
             @click="selectItem(item)"
             :class="{ selected: isSelected(item) }">
-            <div v-if="this.isSelected(item)" class="image-label-wrapper">
+            <div class="image-label-wrapper">
               <div
                 class="dropdown-item-img"
                 :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
@@ -47,19 +47,16 @@
               </div>
               <span>{{ isLongItem(item) }}</span>
             </div>
-            <div v-else class="image-label-wrapper">
-              <div
-                class="dropdown-item-img"
-                :class="{ isVisible: isImageAvailable, visibleIcon: !checkItem(item) }">
-                <SvgIcon :name="item[iconImage]" :size="'s'" />
-              </div>
-              <span>{{ isLongItem(item) }}</span>
-            </div>
+
+            <SvgIcon
+              v-if="unselectable && isSelected(item)"
+              :name="'x'"
+              :size="'s'"
+              class="unselectable-icon" />
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -127,6 +124,10 @@ export default {
     iconImage: {
       type: String,
       default: 'iconImage'
+    },
+    unselectable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -239,7 +240,7 @@ export default {
     },
 
     selectItem(item) {
-      if (this.isSelected(item)) {
+      if (this.isSelected(item) && this.unselectable) {
         this.selectedItem = {}
       } else {
         this.selectedItem = item
@@ -258,38 +259,31 @@ export default {
           const rect = dropdownMenu.getBoundingClientRect()
           const windowHeight = window.innerHeight || document.documentElement.clientHeight
           console.log(rect.bottom, windowHeight)
-          
-          if (rect.bottom > windowHeight) { // if the dropdown menu is out of the window, it will be shown above.
+
+          if (rect.bottom > windowHeight) {
+            // if the dropdown menu is out of the window, it will be shown above.
             dropdownMenu.style.top = 'auto'
-            dropdownMenu.style.bottom = '100%'
-          } else { // if the dropdown menu is in the window, it will be shown below.
+            dropdownMenu.style.bottom = '80%'
+          } else {
+            // if the dropdown menu is in the window, it will be shown below.
             dropdownMenu.style.top = '100%'
             dropdownMenu.style.bottom = 'auto'
           }
 
-          if (this.sortField && this.sortByAscending) {
-            let itemsCopy = [...this.dropdownItems].sort().reverse()
-            let primaryKeys = []
-            for (let i = 0; i < itemsCopy.length; i++) {
-              primaryKeys.push(itemsCopy[i][this.primaryKey])
-            }
-
-            const selectedIndex =
-              primaryKeys[primaryKeys.indexOf(this.selectedItem[this.primaryKey])]
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
-            }
-          } else if (this.sortField) {
-            let itemsCopy = [...this.dropdownItems].sort()
-            const selectedIndex = itemsCopy.indexOf(this.selectedItem)
-            const selectedItemRef = this.$refs['item-' + selectedIndex]
-
-            if (selectedItemRef && selectedItemRef[0]) {
-              selectedItemRef[0].scrollIntoView({ behavior: 'instant', block: 'center' })
+          for (let i = 0; i < this.dropdownItems.length; i++) {
+            if (this.isSelected(this.dropdownItems[i])) {
+              const selectedItemRef = this.$refs['item-' + this.selectedItem[this.primaryKey]]
+              if (selectedItemRef && selectedItemRef[0]) {
+                selectedItemRef[0].scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                  inline: 'nearest'
+                })
+              }
+              break
             }
           }
+
         })
       } else {
         this.clearSearch()
@@ -398,7 +392,6 @@ export default {
       overflow-y: auto;
       z-index: 1000;
       box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
-      top: 100%; /* dropdown menu will drop down by default. */
       bottom: auto;
 
       .search-container {
@@ -458,8 +451,13 @@ export default {
           padding: 8px;
           cursor: pointer;
           transition: background-color 0.3s;
-          justify-content: start;
-
+          justify-content: space-between;
+          .unselectable-icon {
+            width: 16px;
+            height: 16px;
+            position: relative;
+            right: -0.5rem;
+          }
           &:hover {
             background-color: #f3f3f3;
           }

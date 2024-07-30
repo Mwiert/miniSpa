@@ -4,21 +4,16 @@
     :class="[after ? 'after' : 'before', disabled ? 'disabled' : '']"
     :id="checkboxId"
     :name="name"
-    @click="handleClick"
-  >
-    <div
-      v-if="!checkboxChecked"
-      class="checkbox"
-      :class="checkboxClassName"
-    ></div>
-    <div v-else class="checkbox--checked" :class="checkboxClassName" >
+    @click="handleClick">
+    <div v-if="!checkboxChecked" class="checkbox" :class="checkboxClassName"></div>
+    <div v-else class="checkbox--checked" :class="checkboxClassName">
       <SvgIcon :name="'tick'" class="icon" />
     </div>
-    <div class="label" >{{ checkboxLabel }}</div>
+    <div class="label">{{ checkboxLabel }}</div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'UICheckBox',
   props: {
@@ -28,8 +23,7 @@ export default {
       type: String,
       default: ''
     },
-    //id is for each checkbox item to be marked with
-    id: String,
+
     //label is the text of the checkboxes
     label: {
       type: String,
@@ -54,6 +48,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    //id is for each checkbox item to be marked with
+    id: {
+      type: String
     }
   },
   data() {
@@ -68,8 +66,8 @@ export default {
   watch: {
     checked(newValue) {
       this.checkboxChecked = newValue
-      }
-    },
+    }
+  },
   methods: {
     //Emits true or false according to the checked state of the checkbox. Returns true if checked, false if unchecked
     handleClick() {

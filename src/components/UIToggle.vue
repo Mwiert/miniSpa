@@ -3,8 +3,7 @@
     <div
       class="reisetech-toggle-c"
       :class="{ labelAfter: after, disabled: disabled }"
-      @click="toggle"
-    >
+      @click="toggle">
       <div class="toggle-label">
         {{ label }}
       </div>
@@ -19,10 +18,6 @@
 export default {
   name: 'UIToggle',
   props: {
-    //ID for the toggle element
-    id: {
-      type: String
-    },
     //The text displayed next to the toggle switch
     label: {
       type: String,
@@ -41,6 +36,10 @@ export default {
     modelValue: {
       type: Boolean,
       default: false
+    },
+    //ID for the toggle element
+    id: {
+      type: String
     }
   },
   methods: {
@@ -64,7 +63,6 @@ export default {
 }
 
 .reisetech-toggle-c {
-
   display: flex;
   align-items: center;
   justify-content: space-between; // Ensures label and switch are on the same line
