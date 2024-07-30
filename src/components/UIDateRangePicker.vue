@@ -284,7 +284,7 @@ export default {
             }
           } else {
             this.sendInitialDates.firstInitialDate = dayjs(this.initialDate)
-              .subtract(3, 'day')
+              .subtract(this.spaceBetweenDays, 'day')
               .format('YYYY-MM-DD')
             this.sendInitialDates.firstInitialDate = {
               number: dayjs(this.sendInitialDates.firstInitialDate).format('DD'),
@@ -299,7 +299,7 @@ export default {
               date: dayjs(this.initialDate).format('YYYY-MM-DD')
             }
           }
-        } else {
+        } else {               //bu koşul hiç sağlanıyor mu ?
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs().format('DD'),

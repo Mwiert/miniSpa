@@ -7,7 +7,7 @@
       :isMultiDatePicker="true"
       :validateBackMonth="3"
       :validateForwardMonth="2" 
-      :spaceBetweenDays="10"
+      :spaceBetweenDays="4"
       />
   </div>
 </template>
