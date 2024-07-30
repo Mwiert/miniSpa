@@ -217,7 +217,7 @@
         :className="'hotel'"
         :label="checkbox.label"
         :disabled="checkbox.disabled"
-        v-model:checked="checkbox.checked"
+        v-model="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
     </div>
 
@@ -230,7 +230,7 @@
         :disabled="checkbox.disabled"
         :label="checkbox.label"
         after
-        v-model:checked="checkbox.checked"
+        v-model="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
     </div>
     <!-- Example of a disabled checkbox -->
@@ -331,7 +331,7 @@ export default {
         { label: 'Hotel 3', id: 'id3', disabled: true, checked: false }
       ],
       checkboxFlight: [
-        { label: 'Flight 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Flight 1', id: 'id1', disabled: false, checked: true },
         { label: 'Flight 2', id: 'id2', disabled: false, checked: false },
         { label: 'Flight 3', id: 'id3', disabled: false, checked: false }
       ]

@@ -1,0 +1,139 @@
+.flexi-table-header-c {
+  display: grid;
+
+  .sticky-header {
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.flexi-table-header-col-value,
+.flexi-table-body-col-value {
+  padding: 0.25rem 1rem;
+  color: #363636;
+  font-family: 'Roboto', sans-serif;
+}
+
+.flexi-table-header-col-wrapper {
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 1rem;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+
+  .flexi-table-header-col-wrapper:hover {
+    background-color: #f4f4f4;
+    border-radius: 1rem;
+  }
+
+  .flexi-table-header-col {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.flexi-table-body-row-wrapper {
+  border: 1.5px solid #e0e0e0;
+  margin: 0.45rem 0rem;
+  border-radius: 24rem;
+}
+.flexi-table-body-row {
+  display: grid;
+  flex-direction: row;
+  column-gap: 0.5rem;
+  padding: 0.5rem;
+}
+.flexi-table-body-c .flexi-table-body-row-wrapper.remove-radius {
+  border-radius: 1rem;
+}
+
+.flexi-table-body-c .flexi-table-body-row-wrapper:hover {
+  background-color: #f0f2f4 !important;
+}
+
+.flexi-table-body-c .flexi-table-body-row-wrapper:nth-child(even) {
+  background: #f5f7fa;
+}
+
+.flexi-table-body-c .flexi-table-body-row-wrapper:nth-child(odd) {
+  background: #ffff;
+}
+
+.flexi-table-body-c .flexi-table-body-row .flexi-table-body-col {
+  display: flex;
+  align-items: center;
+}
+
+.flexi-table-body-c .flexi-table-body-row .flexi-table-body-col img {
+  width: 42px;
+  flex-shrink: 0;
+}
+.custom-details {
+  margin: 0 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border: 2px dotted #ddd;
+  border-radius: 0.5rem;
+}
+.pointer {
+  cursor: pointer;
+}
+
+[class*='item-'] {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  text-align: center;
+  min-width: 90px;
+  font-weight: 500;
+  height: fit-content;
+}
+
+.item-active {
+  background: #ccffdd;
+  outline: 3px solid rgba(204, 255, 221, 0.5);
+  color: #339933;
+}
+
+.item-pending {
+  background: #ffebcc;
+  outline: 3px solid rgba(255, 235, 204, 0.5);
+  color: #cc9933;
+}
+
+.item-graduate {
+  background: #e8ccff;
+  outline: 3px solid rgba(232, 204, 255, 0.5);
+  color: #9933cc;
+}
+
+.txt-bold {
+  font-weight: 600;
+}
+
+.jc-center {
+  justify-content: center;
+}
+
+.student-photo-Male,
+.student-photo-Female {
+  border-radius: 50%;
+  width: 42px;
+  border: 1px solid #fff;
+}
+
+.student-photo-Male {
+  outline: 3px solid #b9ddff70;
+}
+
+.student-photo-Female {
+  outline: 3px solid #facfff70;
+}
