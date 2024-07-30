@@ -279,6 +279,8 @@ export default {
       messageInput: '',
       messageInputWithClearButton: '',
       buttonValue: '',
+      pickedRadioHotel: '',
+      pickedRadioFlight: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -310,8 +312,9 @@ export default {
       },
 
       // Initial states for radio buttons
-      pickedRadioHotel: '',
-      pickedRadioFlight: '',
+      // pickedRadioHotel: '',
+      // pickedRadioFlight: '',
+
       // Hotel radio button list
       radioButtonsHotel: [
         { label: 'Radio 1', value: 'radio1', disabled: true },
