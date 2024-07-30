@@ -63,8 +63,7 @@
       :type="'password'"
       :id="'password'"
       :label="'Password'"
-      :icon="'eye'"
-      clearButton
+      :clearButton="true"
       v-model="messageInputWithClearButton" />
   </div>
 
@@ -276,8 +275,8 @@ export default {
       valueTextArea3: '',
       valueTextArea4: '',
       valueTextArea5: '',
-      messageInput: '',
-      messageInputWithClearButton: '',
+      messageInput: 'fdasfsdafdas',
+      messageInputWithClearButton: 'fadsfdasfd',
       buttonValue: '',
 
       // Defining the initial loading and disabled states for different buttons

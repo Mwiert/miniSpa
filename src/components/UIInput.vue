@@ -1,5 +1,6 @@
 <template>
   <div class="input-box-c">
+    {{ clearButton }}
     <div
       class="input-wrapper"
       :class="[{ 'no-clear-button': !clearButton }, { disabled: disabled }]">
@@ -19,9 +20,9 @@
       <input
         class="input-value"
         :class="[
-          { active: isFocused },
-          { 'no-clear-button': !clearButton },
-          { disabled: disabled }
+          { active: isFocused && !this.checkLabel() },
+          { disabled: disabled },
+          { 'no-clear-button': !clearButton || !icon }
         ]"
         :type="isPassword ? (showPassword ? 'text' : 'password') : type"
         :id="id"
@@ -36,9 +37,8 @@
       <!-- Label for the input, shrinks when the input is active -->
 
       <label
-        v-if="label"
         class="label"
-        :class="[{ active: isFocused }, { 'no-clear-button': !clearButton }]">
+        :class="[{ active: isFocused }, { 'no-clear-button': !clearButton || !icon }]">
         {{ label }}
       </label>
       <SvgIcon
@@ -58,7 +58,7 @@ export default {
     return {
       showPassword: false, // State to toggle password visibility
       inputValue: this.modelValue,
-      isFocused: false // State to track if the input is focused
+      isFocused: this.modelValue?.length !== 0 // State to track if the input is focused
     }
   },
   props: {
@@ -107,6 +107,9 @@ export default {
     }
   },
   methods: {
+    checkLabel() {
+      return this.label?.length == 0 || this.label == undefined
+    },
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword
     },
@@ -238,6 +241,9 @@ export default {
       &.active {
         padding-top: 1.5rem;
         padding-bottom: 0.5rem;
+      }
+      &.no-clear-button {
+        margin-inline-start: 0px;
       }
     }
   }
