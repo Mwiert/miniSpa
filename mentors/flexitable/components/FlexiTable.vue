@@ -1,9 +1,5 @@
 <template>
   <div class="flexi-table-c">
-    {{ flexi.rows.length }}
-    {{ flexi.options.totalPages }}
-    {{ flexi.options.itemsPerPage }}
-
     <!-- {{ flexi.columns }}
     <br />
     <br />
@@ -21,36 +17,55 @@ import FlexiTableHeader from './FlexiTableHeader.vue'
 import FlexiTableBody from './FlexiTableBody.vue'
 import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
+import { computed } from 'vue'
 export default {
   name: 'FlexiTable',
-  inject: ['flexi'],
+  props: {
+    tableOptions: Object
+  },
+  provide() {
+    return {
+      flexi: computed(() => this.flexiTableOptions)
+    }
+  },
+
+  data() {
+    return {
+      flexiTableOptions: {}
+    }
+  },
   created() {
-    this.flexi.options = {
+    this.flexiTableOptions = this.tableOptions
+    this.flexiTableOptions.options = {
       ...flexiConfig,
-      ...this.flexi.options
+      ...this.tableOptions.options
     }
 
     //sortable Control
-    if (!this.flexi.options.disableSorting) {
-      const sortableParamsExist = this.flexi.columns.some((column) => column.sortable == true)
+    if (!this.flexiTableOptions.options.disableSorting) {
+      const sortableParamsExist = this.flexiTableOptions.columns.some(
+        (column) => column.sortable == true
+      )
       if (sortableParamsExist) {
-        this.flexi.options.sortableColumns = this.flexi.columns
+        this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns
           .filter((column) => column.sortable)
           .map((column) => {
             return column.sortable ? column.label : ''
           })
       } else {
-        this.flexi.options.sortableColumns = this.flexi.columns.map((column) => {
-          return column.label
-        })
+        this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns.map(
+          (column) => {
+            return column.label
+          }
+        )
       }
     }
     //Dropdown
-    this.flexi.columns = this.flexi.columns.map((col, index) => {
+    this.flexiTableOptions.columns = this.flexiTableOptions.columns.map((col, index) => {
       return {
         ...col,
-        status: !this.flexi.options.hiddenColumns.includes(col.label),
-        colSizes: this.flexi.options.columnSizes[index]
+        status: !this.flexiTableOptions.options.hiddenColumns.includes(col.label),
+        colSizes: this.flexiTableOptions.options.columnSizes[index]
       }
     })
   },
@@ -62,20 +77,22 @@ export default {
   },
 
   watch: {
-    'flexi.columns': {
+    'flexiTableOptions.columns': {
       handler: function () {
         const hidden = []
-        this.flexi.options.columnSizes = []
+        this.flexiTableOptions.options.columnSizes = []
         // The hiddenColumns and columnSizes arrays change according to the changes in the flex.columns array.
-        Object.keys(this.flexi.columns).forEach((column) => {
-          if (this.flexi.columns[column].status === true) {
-            this.flexi.options.columnSizes.push(this.flexi.columns[column].colSizes)
+        Object.keys(this.flexiTableOptions.columns).forEach((column) => {
+          if (this.flexiTableOptions.columns[column].status === true) {
+            this.flexiTableOptions.options.columnSizes.push(
+              this.flexiTableOptions.columns[column].colSizes
+            )
           } else {
-            hidden.push(this.flexi.columns[column].label)
+            hidden.push(this.flexiTableOptions.columns[column].label)
           }
         })
 
-        this.flexi.options.hiddenColumns = hidden
+        this.flexiTableOptions.options.hiddenColumns = hidden
       },
 
       deep: true
