@@ -258,16 +258,13 @@ export default {
           const dropdownMenu = this.$el.querySelector('.ui-dropdown-menu')
           const rect = dropdownMenu.getBoundingClientRect()
           const windowHeight = window.innerHeight || document.documentElement.clientHeight
-          console.log(rect.bottom, windowHeight)
 
           if (rect.bottom > windowHeight) {
             // if the dropdown menu is out of the window, it will be shown above.
-            dropdownMenu.style.top = 'auto'
-            dropdownMenu.style.bottom = '80%'
+            dropdownMenu.classList.add('above')
           } else {
             // if the dropdown menu is in the window, it will be shown below.
-            dropdownMenu.style.top = '100%'
-            dropdownMenu.style.bottom = 'auto'
+            dropdownMenu.classList.remove('above')
           }
 
           for (let i = 0; i < this.dropdownItems.length; i++) {
@@ -275,7 +272,7 @@ export default {
               const selectedItemRef = this.$refs['item-' + this.selectedItem[this.primaryKey]]
               if (selectedItemRef && selectedItemRef[0]) {
                 selectedItemRef[0].scrollIntoView({
-                  behavior: 'smooth',
+                  behavior: 'instant',
                   block: 'nearest',
                   inline: 'nearest'
                 })
@@ -393,6 +390,11 @@ export default {
       z-index: 1000;
       box-shadow: 8px 10px 8px rgba(0, 0, 0, 0.1);
       bottom: auto;
+
+      &.above {
+        top: auto;
+        bottom: 80%;
+      }
 
       .search-container {
         background-color: #fff;
