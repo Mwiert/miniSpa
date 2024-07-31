@@ -127,8 +127,7 @@ export default {
               .add(this.forwardMonthRange, 'month')
               .startOf('month')
               .format('YYYY-MM-DD')
-          }
-          if (this.forwardYearRange !== 99) {
+          } else {
             this.maxDate = dayjs(this.saveDate)
               .add(this.forwardYearRange, 'year')
               .startOf('month')
@@ -144,11 +143,42 @@ export default {
               .add(this.forwardMonthRange, 'month')
               .startOf('month')
               .format('YYYY-MM-DD')
-          }
-          if (this.forwardYearRange !== 99) {
+          } else {
             this.maxDate = dayjs(this.saveDate)
               .add(this.forwardYearRange, 'year')
               .startOf('month')
+              .format('YYYY-MM-DD')
+          }
+        } else if (this.forwardMonthRange !== 99) {
+          this.maxDate = dayjs(this.saveDate)
+            .add(this.forwardMonthRange, 'month')
+            .startOf('month')
+            .format('YYYY-MM-DD')
+          if (this.backMonthRange !== 99) {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backMonthRange, 'month')
+              .endOf('month')
+              .format('YYYY-MM-DD')
+          } else {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backYearRange, 'year')
+              .endOf('month')
+              .format('YYYY-MM-DD')
+          }
+        } else if (this.forwardYearhRange !== 99) {
+          this.maxDate = dayjs(this.saveDate)
+            .add(this.forwardYearRange, 'year')
+            .startOf('month')
+            .format('YYYY-MM-DD')
+          if (this.backMonthRange !== 99) {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backMonthRange, 'month')
+              .endOf('month')
+              .format('YYYY-MM-DD')
+          } else {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backYearRange, 'year')
+              .endOf('month')
               .format('YYYY-MM-DD')
           }
         } else {
@@ -162,6 +192,8 @@ export default {
             .format('YYYY-MM-DD')
         }
       }
+      console.log(this.minDate)
+      console.log(this.maxDate)
     },
     //This is where we create the calendar for a month
     totalDaysInMonth() {
@@ -354,7 +386,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-top: 1.5rem; 
+    margin-top: 1.5rem;
     //This is the triangle for the calendar
     &::before {
       content: '';
