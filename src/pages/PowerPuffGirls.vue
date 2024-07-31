@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>PowerPuffGirls</h1>
-    <UITooltip :icon="'x'" :size="'s'" :position="'bottom'" :label="'This is a tooltip'" />
+    <UITooltip :icon="'x'" :size="'s'" :position="'right'" :label="'This is a tooltip'" />
   </div>
   <div>Ayırıcı</div>
   <div class="text-area-c">

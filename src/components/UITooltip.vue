@@ -1,28 +1,12 @@
 <template>
   <div class="ui-tooltip-c">
-    <div class="ui-tooltip-wrapper-right" v-if="position === 'right'">
-      <SvgIcon :name="icon" :size="size" class="icon" />
-      <div class="ui-tooltip-content-container">
-        <div class="label">{{ label }}</div>
+    <div class="ui-tooltip-wrapper" :class="`ui-tooltip-wrapper-${position}`">
+      <div class="icon-container">
+        <SvgIcon :name="icon" :size="size" class="icon" />
+        <div class="ui-tooltip-content-container">
+          <div class="label">{{ label }}</div>
+        </div>
       </div>
-    </div>
-    <div class="ui-tooltip-wrapper-left" v-if="position === 'left'">
-      <div class="ui-tooltip-content-container">
-        <div class="label">{{ label }}</div>
-      </div>
-      <SvgIcon :name="icon" :size="size" />
-    </div>
-    <div class="ui-tooltip-wrapper-bottom" v-if="position === 'bottom'">
-      <SvgIcon :name="icon" :size="size" class="icon" />
-      <div class="ui-tooltip-content-container">
-        <div class="label">{{ label }}</div>
-      </div>
-    </div>
-    <div class="ui-tooltip-wrapper-top" v-if="position === 'top'">
-      <div class="ui-tooltip-content-container">
-        <div class="label">{{ label }}</div>
-      </div>
-      <SvgIcon :name="icon" :size="size" />
     </div>
   </div>
 </template>
@@ -53,113 +37,67 @@ export default {
   align-items: center;
   justify-content: center;
   position: relative;
-  .ui-tooltip-wrapper-right {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    .ui-tooltip-content-container {
-      height: 48px;
-      width: fit-content;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      background-color: #33b8ff;
-      border-radius: 4px;
 
-      .label {
-        padding: 8px;
+  .ui-tooltip-wrapper {
+    position: relative;
+
+    .icon-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      &:hover .ui-tooltip-content-container {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .ui-tooltip-content-container {
+        white-space: nowrap;
         display: flex;
-        justify-content: center;
         align-items: center;
-        color: white;
-        font-size: 12px;
-        font-weight: 500;
+        justify-content: center;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.2s;
+        position: absolute;
+        background-color: #33b8ff;
+        border-radius: 4px;
+        height: 48px;
+        width: fit-content;
+
+        .label {
+          padding: 8px;
+          color: white;
+          font-size: 12px;
+          text-align: center;
+          font-weight: 500;
+        }
       }
     }
   }
-  .ui-tooltip-wrapper-top {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .ui-tooltip-content-container {
-      height: 48px;
-      width: fit-content;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      background-color: #33b8ff;
-      border-radius: 4px;
 
-      .label {
-        padding: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-size: 12px;
-        font-weight: 500;
-      }
-    }
+  .ui-tooltip-wrapper-right .ui-tooltip-content-container {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
   }
-  .ui-tooltip-wrapper-bottom {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .ui-tooltip-content-container {
-      height: 48px;
-      width: fit-content;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      background-color: #33b8ff;
-      border-radius: 4px;
 
-      .label {
-        padding: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-size: 12px;
-        font-weight: 500;
-      }
-    }
+  .ui-tooltip-wrapper-left .ui-tooltip-content-container {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
   }
-  .ui-tooltip-wrapper-left {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    .ui-tooltip-content-container {
-      height: 48px;
-      width: fit-content;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      background-color: #33b8ff;
-      border-radius: 4px;
 
-      .label {
-        padding: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-size: 12px;
-        font-weight: 500;
-      }
-    }
+  .ui-tooltip-wrapper-top .ui-tooltip-content-container {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .ui-tooltip-wrapper-bottom .ui-tooltip-content-container {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 </style>
