@@ -1,7 +1,13 @@
 <template>
   <div>
     <h1>PowerPuffGirls</h1>
-    <UITooltip :icon="'x'" :size="'s'" :position="'right'" :label="'This is a tooltip'" />
+    <UITooltip
+      :icon="'x'"
+      :size="'s'"
+      :position="'top'"
+      :label="'This is a tooltip'"
+      :isHover="true"
+      :isOpen="false" />
   </div>
   <div>Ayırıcı</div>
   <div class="text-area-c">
