@@ -1,13 +1,13 @@
 <template>
   <div>
     <div>
-      <MenuDropdown>
+      <MenuDropdown :items="multiItems" primaryKey="id" displayField="name">
         <template #toggle>
           <div>
             <h5>Menu dropdown</h5>
           </div>
         </template>
-        <template v-slot="{ childClick }">
+        <template>
           <UIMultiDropdown
             v-model="selectedPets"
             :items="pets"
@@ -22,9 +22,6 @@
             :maxItemThreshold="maxItemThreshold"
             :hasActionBox="true" />
           <UIInput label="Deneme" clearButton :icon="'mail'" />
-          <a @click="childClick">menu dropdown</a>
-          <button @click="childClick">menu dropdown</button>
-          <button>exit</button>
         </template>
       </MenuDropdown>
     </div>
@@ -351,7 +348,7 @@ export default {
         {
           id: 5,
           iconImage: '',
-          name: 'ElephantElephantElephantElephantElephantElephantElephant',
+          name: 'Elephant',
           detail: 'd'
         },
         { id: 6, iconImage: '', name: 'Hawk', detail: 'c' },
@@ -373,6 +370,11 @@ export default {
         { id: 1, iconImage: '', name: 'Cat Toy', detail: 'l' },
         { id: 2, iconImage: '', name: 'Fish Toy', detail: 'm' },
         { id: 3, iconImage: '', name: 'Bird Toy', detail: 'n' }
+      ],
+      multiItems: [
+        { id: 0, name: 'Dashboard', func: () => {window.alert('parent comp')} },
+        { id: 0, name: 'Profile', func: () => {window.open('https://www.google.com')} },
+        { id: 0, name: 'Exit', func: () => {window.open('/')} } 
       ],
       items: [
         {
