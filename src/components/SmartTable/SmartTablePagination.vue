@@ -1,23 +1,16 @@
 <template>
   <div class="smart-table-pagination-c" v-if="flexi.options.pagination">
-    <button
-      @click="setPage(flexi.options.currentPage - 1)"
-      class="prev-page-btn"
+    <button @click="setPage(flexi.options.currentPage - 1)" class="prev-page-btn"
       :class="flexi.options.currentPage === 1 ? 'visibility' : ''">
       <SvgIcon :name="'arrow-left'" size="s" />
     </button>
 
-    <button
-      v-for="page in pagesToShow"
-      :key="page"
-      @click="setPage(page)"
+    <button v-for="page in pagesToShow" :key="page" @click="setPage(page)"
       :class="['page-btn', { active: page === flexi.options.currentPage }]">
       {{ page }}
     </button>
 
-    <button
-      @click="setPage(flexi.options.currentPage + 1)"
-      class="next-page-btn"
+    <button @click="setPage(flexi.options.currentPage + 1)" class="next-page-btn"
       :class="flexi.options.currentPage === flexi.options.pages.length ? 'visibility' : ''">
       <SvgIcon :name="'arrow-right'" size="s" />
     </button>
@@ -88,7 +81,6 @@ export default {
   watch: {
     'flexi.options.itemsPerPage': {
       handler: function (val) {
-        console.log('itemsperpage', val)
         this.GeneratePagination(val)
       },
       immediate: true
@@ -132,6 +124,7 @@ export default {
       visibility: hidden;
     }
   }
+
   .page-btn {
     height: 40px;
     width: 40px;
