@@ -5,10 +5,8 @@
     <UIDateRangePicker
       v-model="selectDate"
       :isMultiDatePicker="true"
-      :validateBackMonth="3"
-      :validateForwardMonth="2" 
-      :spaceBetweenDays="10"
-      />
+      :validateForwardMonth="3"
+      :validateBackMonth="2" />
   </div>
 </template>
 
