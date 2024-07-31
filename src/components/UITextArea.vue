@@ -58,7 +58,7 @@ export default {
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 5px;
-      resize: vertical;
+      resize: none;
       &:focus {
         outline: none;
         border: 1px solid #000;
@@ -66,7 +66,6 @@ export default {
       &.disabled {
         background-color: #f5f5f5;
         cursor: not-allowed;
-        resize: none;
       }
     }
   }
