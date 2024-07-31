@@ -1,11 +1,9 @@
 <template>
   <div>
     <div>
-      <MenuDropdown :items="multiItems" primaryKey="id" displayField="name">
+      <MenuDropdown class="menu" :items="multiItems" primaryKey="id" displayField="name" label="Menu Dropdown">
         <template #toggle>
-          <div>
-            <h5>Menu dropdown</h5>
-          </div>
+          <SvgIcon name="mail" size="s" />
         </template>
         <template>
           <UIMultiDropdown
@@ -21,9 +19,36 @@
             :sortByAscending="true"
             :maxItemThreshold="maxItemThreshold"
             :hasActionBox="true" />
-          <UIInput label="Deneme" clearButton :icon="'mail'" />
+            <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            label="Multi dropdown 2"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+            <hr />
         </template>
       </MenuDropdown>
+
+      <MenuDropdown
+      :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown"
+      >
+        <template #toggle>
+          <SvgIcon name="mail" size="s" />
+        </template>
+        <template>
+        </template>
+
+
+      </MenuDropdown>
+
+
     </div>
     <div>
       <h1>{{ 'Single Enum Dropdown' }}</h1>
@@ -302,7 +327,6 @@ import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
 import EInternComponentType from '../enum/EInternComponentType'
 import EInternSingleComponentType from '../enum/EInternSingleComponentType'
 import MenuDropdown from '../components/Dropdown/MenuDropdown.vue'
-import UIInput from '../components/UIInput.vue'
 export default {
   name: 'SummerLovers',
   components: {
@@ -310,7 +334,6 @@ export default {
     UIDropdown,
     UIMultiDropdown,
     MenuDropdown,
-    UIInput
   },
   data() {
     return {
@@ -373,8 +396,13 @@ export default {
       ],
       multiItems: [
         { id: 0, name: 'Dashboard', func: () => {window.alert('parent comp')} },
-        { id: 0, name: 'Profile', func: () => {window.open('https://www.google.com')} },
-        { id: 0, name: 'Exit', func: () => {window.open('/')} } 
+        { id: 1, name: 'Profile', func: () => {window.open('https://www.google.com')} },
+        { id: 2, name: 'Exit', func: () => {window.open('/')} } 
+      ],
+      multiItemsL : [
+        { id: 0, name: 'Turkish', iconImage: 'mail' },
+        { id: 1, name: 'English', iconImage: 'arrow-up'},
+        { id: 2, name: 'Indian', iconImage: 'arrow-down' } 
       ],
       items: [
         {
@@ -463,4 +491,20 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.menu{
+  margin-right: 20px;
+}
+
+      hr {
+        margin: 0;
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.75),
+          rgba(0, 0, 0, 0)
+        );
+      }
+      </style>
