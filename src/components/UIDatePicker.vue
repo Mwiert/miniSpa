@@ -10,7 +10,11 @@
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <button id="prev" class="nav-button" @click="onClickToLeft" v-show="minDate < prevDate">
+            <button
+              id="prev"
+              class="nav-button"
+              @click="onClickToLeft"
+              v-show="minDate < currentDate">
               <img src="../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{ dateHolder }}</span>
