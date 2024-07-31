@@ -4,9 +4,9 @@
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
     <UIDateRangePicker
       v-model="selectDate"
-      :isMultiDatePicker="true"
+      :isSingleDatePicker="true"
       isPast
-      :validateBackDay="50" />
+      :validateBackDay="40" />
   </div>
 </template>
 
