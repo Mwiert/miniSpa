@@ -20,7 +20,7 @@ export default {
   methods: {
     childClick() {
       window.alert('child click')
-    },
+    }
   },
   data() {
     return {
@@ -39,26 +39,40 @@ export default {
 
   .menu-dropdown-wrapper {
     .menu-dropdown-toggle {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       cursor: pointer;
       background-color: white;
       border-radius: 1rem;
       padding: 0.3rem 1rem;
       margin-bottom: 0.3rem;
       border: 1px solid black;
-        .svg-icon {
-            margin-left: 1rem;
-        }
+      .svg-icon {
+        margin-left: 1rem;
+      }
     }
     .menu-dropdown-content {
+      &::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 20px; // Adjust as needed
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid white;
+      }
       position: absolute;
       background-color: white;
       border-radius: 1rem;
       padding: 1rem;
       z-index: 99999;
-      border: 1px solid black;
+      box-shadow: 0 0 8px rgb(0, 0, 0);
+      min-width: 120px;
+      max-width: 2400px;
+      overflow-x: auto;
       .slot-item {
         > * {
           display: flex;
