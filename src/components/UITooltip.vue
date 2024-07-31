@@ -78,21 +78,21 @@ export default {
       align-items: center;
 
       &:hover .ui-tooltip-content-container {
-        opacity: 1;
+        display: flex;
+        animation: fadeIn 0.2s ease-in-out;
       }
 
       .ui-tooltip-content-container {
         white-space: nowrap;
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
-        opacity: 0;
+        opacity: 1;
         position: absolute;
         background-color: #33b8ff;
         border-radius: 2px;
         height: 36px;
         width: fit-content;
-        transition: opacity 0.3s;
 
         .label {
           padding: 8px;
@@ -115,7 +115,9 @@ export default {
       position: relative;
       display: flex;
       align-items: center;
-
+      .icon {
+        cursor: pointer;
+      }
       .ui-tooltip-content-container {
         white-space: nowrap;
         display: flex;

@@ -1,14 +1,70 @@
 <template>
-  <div>
-    <h1>PowerPuffGirls</h1>
-    <UITooltip
-      :icon="'x'"
-      :size="'s'"
-      :position="'right'"
-      :label="'This is a tooltip'"
-      :isHover="true"
-      :isOpen="false" />
-  </div>
+  <span>
+    <div>
+      <h1>Hover Tooltip</h1>
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'right'"
+        :label="'This is a tooltip'"
+        :isHover="true"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'left'"
+        :label="'This is a tooltip'"
+        :isHover="true"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'top'"
+        :label="'This is a tooltip'"
+        :isHover="true"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'bottom'"
+        :label="'This is a tooltip'"
+        :isHover="true"
+        :isOpen="false" />
+    </div>
+    <div>
+      <h1>Clickable Tooltip</h1>
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'right'"
+        :label="'This is a tooltip'"
+        :isHover="false"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'left'"
+        :label="'This is a tooltip'"
+        :isHover="false"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'top'"
+        :label="'This is a tooltip'"
+        :isHover="false"
+        :isOpen="false" />
+      <h3>Clickable Tooltips But Open On Start</h3>
+
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'bottom'"
+        :label="'This is a tooltip'"
+        :isHover="false"
+        :isOpen="true" />
+    </div>
+  </span>
   <div>Ayırıcı</div>
   <div class="text-area-c">
     <UITextArea
