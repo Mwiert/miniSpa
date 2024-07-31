@@ -14,20 +14,18 @@
             :fontSize="fontSize"
             displayField="name"
             :sortField="sortField"
-            :label="'Multi dropdown'"
+            label="Multi dropdown"
             :dataSize="dataSize"
             searchable
             primaryKey="id"
             :sortByAscending="true"
             :maxItemThreshold="maxItemThreshold"
             :hasActionBox="true" />
-          <UIInput :label="'Deneme'" clearButton :icon="'mail'" />
+          <UIInput label="Deneme" clearButton :icon="'mail'" />
           <a @click="childClick">menu dropdown</a>
           <button @click="childClick">menu dropdown</button>
           <button>exit</button>
-
         </template>
-        
       </MenuDropdown>
     </div>
     <div>
@@ -297,7 +295,6 @@
         :iconImage="'iconImage'"
         primaryKey="id" />
     </div>
-    
   </div>
 </template>
 
