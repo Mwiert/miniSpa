@@ -28,6 +28,7 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
+        <button class="pdf-button" @click="downloadExcel()">Excel</button>
       </div>
     </div>
 
@@ -59,6 +60,85 @@ export default {
     UIEnumDropdown
   },
   methods: {
+    downloadExcel() {
+      const self = this
+      const tableTitle = 'flexitable'
+      const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
+      const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
+      const combined = [headersContainer, divToPrint]
+      // const tableType = divToPrint.dataset.tabletype
+      const exportItemDetailsToExcel = self.exportItemDetailsToExcel
+      console.log(divToPrint)
+      console.log(headersContainer)
+      //let styleContent = ''
+
+      // switch (tableType) {
+      //   case 'INVOICE':
+      //     styleContent = Template.getInvoiceExcelTemplate()
+      //     break
+
+      //   default:
+      //     styleContent = ''
+      //     break
+      // }
+
+      //const vgtTableWrapper = divToPrint.querySelector('table#vgt-table')
+
+      const headerTableWrapper = headersContainer
+      // let cloneTable = divToPrint.cloneNode(true)
+      // let cloneHeaders = headerTableWrapper.cloneNode(true)
+
+      // if (!exportItemDetailsToExcel) {
+      //   const gTableItemDetails = cloneTable.querySelectorAll('td .g-table-item-details')
+
+      //   gTableItemDetails.forEach((detailDiv) => {
+      //     detailDiv.remove()
+      //   })
+      // }
+
+      // cloneTable = cleanTableElements(cloneTable)
+      // cloneHeaders = cleanTableElements(cloneHeaders)
+
+      let excelContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`
+      excelContent += `<head>`
+      excelContent += `<!--[if gte mso 9]>`
+      excelContent += `<xml>`
+      excelContent += `<x:ExcelWorkbook>`
+      excelContent += `<x:ExcelWorksheets>`
+      excelContent += `<x:ExcelWorksheet>`
+      excelContent += `<x:Name>${tableTitle}</x:Name>`
+      excelContent += `<x:WorksheetOptions>`
+      excelContent += `<x:DisplayGridlines/>`
+      excelContent += `</x:WorksheetOptions>`
+      excelContent += `</x:ExcelWorksheet>`
+      excelContent += `</x:ExcelWorksheets>`
+      excelContent += `</x:ExcelWorkbook>`
+      excelContent += `</xml>`
+      excelContent += `<![endif]-->`
+      excelContent += `<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>`
+      //excelContent += `<style>${styleContent}</style>`
+      excelContent += `</head>`
+      excelContent += `<body>`
+      excelContent += headersContainer.outerHTML
+      // excelContent += cloneTable.outerHTML
+      excelContent += `</body>`
+      excelContent += `</html>`
+
+      let csvContent = 'data:application/vnd.ms-excel,' + excelContent
+
+      var encodedUri = encodeURI(csvContent)
+      var link = document.createElement('a')
+      link.setAttribute('href', encodedUri)
+      link.setAttribute('download', `${tableTitle}`)
+      document.body.appendChild(link)
+      link.click()
+    },
+
+    cleanTableElements(table) {
+      table.querySelectorAll('script, style, link, meta').forEach((element) => element.remove())
+      return table
+    },
+
     // print method style not working
     triggerExportPrint() {
       const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer //bodyi kapsıyor
