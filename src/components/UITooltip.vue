@@ -7,8 +7,8 @@
           <div class="label">{{ label }}</div>
         </div>
       </div>
-      <div class="icon-container-click" @click="toggleTooltip()" v-else>
-        <SvgIcon :name="icon" :size="size" class="icon" />
+      <div class="icon-container-click" v-else>
+        <SvgIcon :name="icon" :size="size" class="icon" @click="toggleTooltip()" />
         <div class="ui-tooltip-content-container" v-if="isClicked">
           <div class="label">{{ label }}</div>
         </div>
