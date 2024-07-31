@@ -27,5 +27,6 @@
     "placeHolder": "hellooo",
     "fontSize": 12,
     "showAll": true
-  }
+  },
+  "hasDetails": false
 }
