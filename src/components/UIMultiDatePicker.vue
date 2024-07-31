@@ -409,7 +409,7 @@ export default {
     //This is for the right button to go to the next month
     onClickToRight() {
       this.nextMonthDate = this.calendarDate.add(2, 'month').endOf('month').format('YYYY-MM-DD')
-      this.prevMonthDate = this.calendarDate.format('YYYY-MM-DD')
+      this.prevMonthDate = this.calendarDate.startOf('month').format('YYYY-MM-DD')
       this.calendarDate = this.calendarDate.add(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the next month with manipulated date
@@ -423,7 +423,10 @@ export default {
     //This is for the left button to go to the next month
     onClickToLeft() {
       this.nextMonthDate = this.calendarDate.endOf('month').format('YYYY-MM-DD')
-      this.prevMonthDate = this.calendarDate.subtract(2, 'month').format('YYYY-MM-DD')
+      this.prevMonthDate = this.calendarDate
+        .subtract(2, 'month')
+        .startOf('month')
+        .format('YYYY-MM-DD')
       this.calendarDate = this.calendarDate.subtract(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the previous month with manipulated date
@@ -764,7 +767,10 @@ export default {
 
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
         this.nextMonthDate = this.calendarDate.add(1, 'month').endOf('month').format('YYYY-MM-DD')
-        this.prevMonthDate = this.calendarDate.subtract(1, 'month').format('YYYY-MM-DD')
+        this.prevMonthDate = this.calendarDate
+          .subtract(1, 'month')
+          .startOf('month')
+          .format('YYYY-MM-DD')
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
