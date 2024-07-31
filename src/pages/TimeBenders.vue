@@ -5,8 +5,8 @@
     <UIDateRangePicker
       v-model="selectDate"
       :isSingleDatePicker="true"
-      :validateForwardDay="2"
-      :validateBackDay="3" />
+      isPast
+      :validateBackDay="40" />
   </div>
 </template>
 
