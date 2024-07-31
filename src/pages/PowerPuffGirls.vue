@@ -1,4 +1,9 @@
 <template>
+  <div>
+    <h1>PowerPuffGirls</h1>
+    <UITooltip :icon="'x'" :size="'s'" :position="'bottom'" :label="'This is a tooltip'" />
+  </div>
+  <div>Ayırıcı</div>
   <div class="text-area-c">
     <UITextArea
       :label="'Address'"
@@ -253,6 +258,7 @@ import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
 import UITextArea from '../components/UITextArea.vue'
+import UITooltip from '../components/UITooltip.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -262,7 +268,8 @@ export default {
     UIRadioButton,
     UICheckbox,
     UIInput,
-    UITextArea
+    UITextArea,
+    UITooltip
   },
   data() {
     return {
