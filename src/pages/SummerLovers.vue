@@ -1,6 +1,36 @@
 <template>
   <div>
     <div>
+      <MenuDropdown>
+        <template #toggle>
+          <div>
+            <h5>Menu dropdown</h5>
+          </div>
+        </template>
+        <template v-slot="{ childClick }">
+          <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            :label="'Multi dropdown'"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+          <UIInput :label="'Deneme'" clearButton :icon="'mail'" />
+          <a @click="childClick">menu dropdown</a>
+          <button @click="childClick">menu dropdown</button>
+          <button>exit</button>
+
+        </template>
+        
+      </MenuDropdown>
+    </div>
+    <div>
       <h1>{{ 'Single Enum Dropdown' }}</h1>
 
       <UIEnumDropdown
@@ -215,7 +245,7 @@
         :iconImage="'iconImage'"
         primaryKey="id"
         unselectable />
-        <UIMultiDropdown
+      <UIMultiDropdown
         v-model="selectedPets"
         :items="pets"
         :fontSize="fontSize"
@@ -267,6 +297,7 @@
         :iconImage="'iconImage'"
         primaryKey="id" />
     </div>
+    
   </div>
 </template>
 
@@ -276,12 +307,16 @@ import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
 import EInternComponentType from '../enum/EInternComponentType'
 import EInternSingleComponentType from '../enum/EInternSingleComponentType'
+import MenuDropdown from '../components/Dropdown/MenuDropdown.vue'
+import UIInput from '../components/UIInput.vue'
 export default {
   name: 'SummerLovers',
   components: {
     UIEnumDropdown,
     UIDropdown,
-    UIMultiDropdown
+    UIMultiDropdown,
+    MenuDropdown,
+    UIInput
   },
   data() {
     return {

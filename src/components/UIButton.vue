@@ -33,8 +33,7 @@ export default {
     // id is the unique identifier of the button
     id: {
       type: String,
-      default: '',
-      required: true
+      default: ''
     },
     // Classes such as hotel and flight are derived from the .reisetech-btn class.
     className: {
