@@ -1,13 +1,13 @@
 <template>
   <div class="menu-dropdown-c">
-    <div class="menu-dropdown-wrapper" @mouseleave="isOpen = false">
-      <div class="menu-dropdown-toggle" @mouseover="isOpen = true">
+    <div class="menu-dropdown-wrapper" @mouseleave="handleMouseLeave">
+      <div class="menu-dropdown-toggle" @mouseover="handleMouseOver" @click="handleToggle">
         <slot name="toggle"></slot>
         <label v-if="label" class="menu-dropdown-label">{{ label }}</label>
         <SvgIcon class="svg-icon" :name="'arrow-down'" :size="'s'" />
       </div>
       <div v-if="isOpen" class="menu-dropdown-content-wrapper">
-        <div  class="menu-dropdown-content" :class="{ active: isOpen }">
+        <div class="menu-dropdown-content" :class="{ active: isOpen }">
           <div class="slot-item">
             <slot></slot>
           </div>
@@ -28,7 +28,8 @@ export default {
   name: 'MenuDropdown',
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      isClicked: false
     }
   },
   props: {
@@ -50,8 +51,20 @@ export default {
     }
   },
   methods: {
-    
-
+    handleMouseOver() {
+      if (!this.isClicked) {
+        this.isOpen = true
+      }
+    },
+    handleMouseLeave() {
+      if (!this.isClicked) {
+        this.isOpen = false
+      }
+    },
+    handleToggle() {
+      this.isClicked = !this.isClicked
+      this.isOpen = this.isClicked
+    }
   }
 }
 </script>
