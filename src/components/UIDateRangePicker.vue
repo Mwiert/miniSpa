@@ -100,6 +100,8 @@
           :backYearRange="validateBackYear"
           :forwardMonthRange="validateForwardMonth"
           :backMonthRange="validateBackMonth"
+          :forwardDayRange="validateForwardDay"
+          :backDayRange="validateBackDay"
           :saveDate="sendInitialDates.firstInitialDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
@@ -115,6 +117,8 @@
           :backYearRange="validateBackYear"
           :forwardMonthRange="validateForwardMonth"
           :backMonthRange="validateBackMonth"
+          :forwardDayRange="validateForwardDay"
+          :backDayRange="validateBackDay"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
@@ -124,8 +128,7 @@
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
-          @click="sendDateToParent" 
-          />
+          @click="sendDateToParent" />
       </div>
     </div>
   </div>
@@ -155,6 +158,8 @@ export default {
     validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateForwardYear: { type: Number, default: 99 },
     validateBackYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    validateForwardDay: { type: Number, default: 99 },
+    validateBackDay: { type: Number, default: 99 },
     value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
