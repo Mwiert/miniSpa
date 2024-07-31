@@ -4,7 +4,7 @@
     <UITooltip
       :icon="'x'"
       :size="'s'"
-      :position="'top'"
+      :position="'right'"
       :label="'This is a tooltip'"
       :isHover="true"
       :isOpen="false" />

@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      isClicked: this.isHover
+      isClicked: this.isOpen
     }
   },
   methods: {
@@ -60,6 +60,15 @@ export default {
   justify-content: center;
   position: relative;
 
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
   .ui-tooltip-wrapper {
     position: relative;
 
@@ -69,21 +78,21 @@ export default {
       align-items: center;
 
       &:hover .ui-tooltip-content-container {
-        display: flex;
         opacity: 1;
       }
+
       .ui-tooltip-content-container {
         white-space: nowrap;
         display: flex;
         align-items: center;
         justify-content: center;
-        display: none;
         opacity: 0;
         position: absolute;
         background-color: #33b8ff;
-        border-radius: 4px;
-        height: 48px;
+        border-radius: 2px;
+        height: 36px;
         width: fit-content;
+        transition: opacity 0.3s;
 
         .label {
           padding: 8px;
@@ -92,32 +101,46 @@ export default {
           text-align: center;
           font-weight: 500;
         }
+
+        &::before {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 0;
+          border-style: solid;
+        }
       }
     }
     .icon-container-click {
       position: relative;
       display: flex;
       align-items: center;
-      cursor: pointer;
 
       .ui-tooltip-content-container {
         white-space: nowrap;
         display: flex;
         align-items: center;
         justify-content: center;
-        opacity: 1;
         position: absolute;
         background-color: #33b8ff;
-        border-radius: 4px;
-        height: 48px;
+        border-radius: 2px;
+        height: 36px;
         width: fit-content;
-
+        animation: fadeIn 0.2s ease-in-out;
         .label {
           padding: 8px;
           color: white;
           font-size: 12px;
           text-align: center;
           font-weight: 500;
+        }
+
+        &::before {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 0;
+          border-style: solid;
         }
       }
     }
@@ -128,17 +151,24 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     &::before {
-      content: '';
-      position: absolute;
       top: 50%;
-      right: 95px;
+      right: -5px;
       transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-right: 10px solid #33b8ff;
-      border-left: 10px solid transparent;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent #33b8ff;
+    }
+  }
+
+  .ui-tooltip-wrapper-right .ui-tooltip-content-container {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    &::before {
+      top: 50%;
+      left: -5px;
+      transform: translateY(-50%);
+      border-width: 10px 10px 10px 0;
+      border-color: transparent #33b8ff transparent transparent;
     }
   }
 
@@ -147,17 +177,11 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     &::before {
-      content: '';
-      position: absolute;
       top: 50%;
-      right: -15px;
+      right: -5px;
       transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-right: 10px solid transparent;
-      border-left: 10px solid #33b8ff;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent #33b8ff;
     }
   }
 
@@ -166,17 +190,11 @@ export default {
     left: 50%;
     transform: translateX(-50%);
     &::before {
-      content: '';
-      position: absolute;
-      top: 53px;
-      right: 40%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-right: 10px solid transparent;
-      border-left: 10px solid transparent;
-      border-top: 10px solid #33b8ff;
-      border-bottom: 10px solid transparent;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px 10px 0 10px;
+      border-color: #33b8ff transparent transparent transparent;
     }
   }
 
@@ -185,17 +203,11 @@ export default {
     left: 50%;
     transform: translateX(-50%);
     &::before {
-      content: '';
-      position: absolute;
       top: -5px;
-      right: 40%;
-      transform: translateY(-50%);
-      width: 0;
-      height: 0;
-      border-right: 10px solid transparent;
-      border-left: 10px solid transparent;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid #33b8ff;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 0 10px 10px 10px;
+      border-color: transparent transparent #33b8ff transparent;
     }
   }
 }
