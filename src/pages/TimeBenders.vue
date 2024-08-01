@@ -2,17 +2,13 @@
   <div class="time-benders-c">
     {{ selectDate }}
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
-    <UIDateRangePicker
-      v-model="selectDate"
-      :isSingleDatePicker="true"
-      isPast
-      :validateBackDay="40" />
+    <UIDateRangePicker v-model="selectDate" :isSingleDatePicker="true" />
   </div>
 </template>
 
 <script lang="ts">
 //Imports the needed components and interfaces
-import UIDateRangePicker from '../components/UIDateRangePicker.vue'
+import UIDateRangePicker from '../components/DatePicker/UIDateRangePicker.vue'
 export default {
   name: 'TimeBenders',
   components: {

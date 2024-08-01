@@ -133,13 +133,12 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
-//Imports the needed components and interfaces
-import UIDatePicker from '../components/UIDatePicker.vue'
-import UIMultiDatePicker from '../components/UIMultiDatePicker.vue'
-import date from '../interface/IUIDatePicker'
+//Imports the need../../interface/IUIDatePickeres
+import date from '../../interface/IUIDatePicker'
 import dayjs from 'dayjs'
+import UIDatePicker from './UIDatePicker.vue'
+import UIMultiDatePicker from './UIMultiDatePicker.vue'
 
 export default {
   name: 'UIDateRangePicker',
@@ -376,8 +375,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variables.scss';
-@import '../assets/css/_fonts.scss';
+@import '../../assets/css/variables.scss';
+@import '../../assets/css/_fonts.scss';
 
 //This is main container
 .ui-date-range-picker-c {
