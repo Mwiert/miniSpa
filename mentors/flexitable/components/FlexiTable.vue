@@ -1,9 +1,9 @@
 <template>
-  <div class="flexi-table-c" v-if="Object.values(this.$attrs)[0]">
-    <!-- {{ flexi.columns }}
-    <br />
-    <br />
-    {{ flexi.options.columnSizes }} -->
+  <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
+    {{ isDataCorrect() }}
+    {{ Object.values(this.$attrs)[0].columns.length }}
+    {{ Object.values(this.$attrs)[0].columns[0] }}
+
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
@@ -22,6 +22,7 @@ import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
 import FlexiTableInfo from './FlexiTableInfo.vue'
 import { computed } from 'vue'
+import flexitableExceptionHandler from '../flexitableExceptionHandler'
 export default {
   name: 'FlexiTable',
   provide() {
@@ -29,29 +30,40 @@ export default {
       flexi: computed(() => this.flexiTableOptions)
     }
   },
+  mixins: [flexitableExceptionHandler],
   data() {
     return {
       flexiTableOptions: {}
     }
   },
   created() {
-    if (Object.values(this.$attrs)[0]) {
+    this.flexiTableOptions.errors = { message: '' }
+
+    if (
+      Object.values(this.$attrs)[0]?.columns &&
+      Object.values(this.$attrs)[0]?.rows &&
+      Object.values(this.$attrs)[0]?.selectedRows
+    ) {
       const tableOptions = Object.values(this.$attrs)[0]
       const { columns, selectedRows, rows, options } = tableOptions
       const hasDetails = rows[0]?.details ? true : false
       this.flexiTableOptions = {
         columns,
         selectedRows,
-        rows: rows[0]?.row
-          ? rows
-          : rows.map((item) => ({ row: item })),
+        errors: { message: '' },
+        rows: rows[0]?.row ? rows : rows.map((item) => ({ row: item })),
         options: {
           ...flexiConfig,
           ...options,
           hasDetails
         }
       }
-
+      console.log(this.flexiTableOptions.rows[0].row)
+      console.log(Object.values(this.$attrs)[0])
+      console.log(this.flexiTableOptions.columns.length)
+      console.log(Object.values(this.flexiTableOptions.rows[0].row).length)
+      // console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row))
+      //console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row).length)
 
       //sortable Control
       if (!this.flexiTableOptions.options.disableSorting) {
@@ -120,7 +132,8 @@ export default {
   color: #363636;
 
   ::v-deep {
-    div {}
+    div {
+    }
 
     .flexi-table-header-c,
     .flexi-table-body-row {

@@ -4,7 +4,7 @@
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
-        :enumObj="flexi.options.EInternSingleComponentType"
+        :enumObj="flexi.options.pageOrder"
         :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
