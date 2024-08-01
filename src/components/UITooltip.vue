@@ -2,14 +2,14 @@
   <div class="ui-tooltip-c">
     <div class="ui-tooltip-wrapper" :class="`ui-tooltip-wrapper-${position}`">
       <div class="icon-container-hover" v-if="isHover">
-        <SvgIcon :name="icon" :size="size" class="icon" />
         <div class="ui-tooltip-content-container">
+          <SvgIcon :name="icon" :size="size" class="icon" v-if="icon" />
           <div class="label">{{ label }}</div>
         </div>
       </div>
       <div class="icon-container-click" v-else>
-        <SvgIcon :name="icon" :size="size" class="icon" @click="toggleTooltip()" />
-        <div class="ui-tooltip-content-container" v-if="isClicked">
+        <div class="ui-tooltip-content-container" v-if="isOpen">
+          <SvgIcon :name="icon" :size="size" class="icon" v-if="icon" />
           <div class="label">{{ label }}</div>
         </div>
       </div>
@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import SvgIcon from './SvgIcon.vue'
+
 export default {
   name: 'UITooltip',
   components: {
@@ -26,25 +27,15 @@ export default {
   },
   props: {
     label: { type: String, default: '' },
-    icon: { type: String, default: '' },
+    icon: { type: String },
     position: { type: String, default: '' },
-    isHover: { type: Boolean, default: true },
+    type: { type: String, default: 'hover' },
     size: { type: String, default: '' },
     isOpen: { type: Boolean, default: false }
   },
-  data() {
-    return {
-      isClicked: this.isOpen
-    }
-  },
-  methods: {
-    toggleTooltip() {
-      this.isClicked = !this.isClicked
-    }
-  },
-  created() {
-    if (this.isOpen) {
-      this.isClicked = true
+  computed: {
+    isHover() {
+      return this.type === 'hover'
     }
   }
 }
@@ -52,8 +43,8 @@ export default {
 
 <style lang="scss" scoped>
 .ui-tooltip-c {
-  height: 100%;
-  width: 100%;
+  height: auto;
+  width: auto;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -93,7 +84,10 @@ export default {
         border-radius: 2px;
         height: 36px;
         width: fit-content;
-
+        .icon {
+          height: 16px;
+          width: 16px;
+        }
         .label {
           padding: 8px;
           color: white;
@@ -111,13 +105,12 @@ export default {
         }
       }
     }
+
     .icon-container-click {
       position: relative;
       display: flex;
       align-items: center;
-      .icon {
-        cursor: pointer;
-      }
+
       .ui-tooltip-content-container {
         white-space: nowrap;
         display: flex;
@@ -129,6 +122,12 @@ export default {
         height: 36px;
         width: fit-content;
         animation: fadeIn 0.2s ease-in-out;
+
+        .icon {
+          height: 16px;
+          width: 16px;
+        }
+
         .label {
           padding: 8px;
           color: white;
@@ -149,9 +148,7 @@ export default {
   }
 
   .ui-tooltip-wrapper-right .ui-tooltip-content-container {
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 36px;
     &::before {
       top: 50%;
       right: -5px;
@@ -161,10 +158,8 @@ export default {
     }
   }
 
-  .ui-tooltip-wrapper-right .ui-tooltip-content-container {
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
+  .ui-tooltip-wrapper-left .ui-tooltip-content-container {
+    left: 5px;
     &::before {
       top: 50%;
       left: -5px;
@@ -174,23 +169,9 @@ export default {
     }
   }
 
-  .ui-tooltip-wrapper-left .ui-tooltip-content-container {
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    &::before {
-      top: 50%;
-      right: -5px;
-      transform: translateY(-50%);
-      border-width: 10px 0 10px 10px;
-      border-color: transparent transparent transparent #33b8ff;
-    }
-  }
-
   .ui-tooltip-wrapper-top .ui-tooltip-content-container {
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 20px;
+    right: -66px;
     &::before {
       bottom: -5px;
       left: 50%;
@@ -201,9 +182,8 @@ export default {
   }
 
   .ui-tooltip-wrapper-bottom .ui-tooltip-content-container {
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 20px;
+    right: -66px;
     &::before {
       top: -5px;
       left: 50%;

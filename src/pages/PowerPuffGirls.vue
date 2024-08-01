@@ -1,69 +1,29 @@
 <template>
-  <span>
-    <div>
-      <h1>Hover Tooltip</h1>
-      <UITooltip
-        :icon="'x'"
+  <span class="tooltip-c">
+    <span class="tooltip-wrapper">
+      <SvgIcon
+        :name="'x'"
         :size="'s'"
-        :position="'right'"
-        :label="'This is a tooltip'"
-        :isHover="true"
-        :isOpen="false" />
+        :color="'#000'"
+        @mouseover="hoverComponent = true"
+        @mouseleave="hoverComponent = false"
+        class="icon" />
       <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'left'"
-        :label="'This is a tooltip'"
-        :isHover="true"
-        :isOpen="false" />
+        label="This is a funny tooltip"
+        icon="x"
+        position="left"
+        type="click"
+        :isOpen="hoverComponent" />
+    </span>
+    <span class="tooltip-wrapper">
+      <SvgIcon :name="'x'" :size="'s'" :color="'#000'" @click="toggleComponent" class="icon" />
       <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'top'"
-        :label="'This is a tooltip'"
-        :isHover="true"
-        :isOpen="false" />
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'bottom'"
-        :label="'This is a tooltip'"
-        :isHover="true"
-        :isOpen="false" />
-    </div>
-    <div>
-      <h1>Clickable Tooltip</h1>
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'right'"
-        :label="'This is a tooltip'"
-        :isHover="false"
-        :isOpen="false" />
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'left'"
-        :label="'This is a tooltip'"
-        :isHover="false"
-        :isOpen="false" />
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'top'"
-        :label="'This is a tooltip'"
-        :isHover="false"
-        :isOpen="false" />
-      <h3>Clickable Tooltips But Open On Start</h3>
-
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'bottom'"
-        :label="'This is a tooltip'"
-        :isHover="false"
-        :isOpen="true" />
-    </div>
+        label="This is a funny tooltip"
+        icon="x"
+        position="top"
+        type="click"
+        :isOpen="openComponent" />
+    </span>
   </span>
   <div>Ayırıcı</div>
   <div class="text-area-c">
@@ -321,6 +281,7 @@ import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
 import UITextArea from '../components/UITextArea.vue'
 import UITooltip from '../components/UITooltip.vue'
+import SvgIcon from '../components/SvgIcon.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -331,11 +292,14 @@ export default {
     UICheckbox,
     UIInput,
     UITextArea,
-    UITooltip
+    UITooltip,
+    SvgIcon
   },
   data() {
     return {
       inputValue: this.value,
+      openComponent: false,
+      hoverComponent: false,
       email: '',
       password: '',
       idNumber: '',
@@ -424,6 +388,10 @@ export default {
       //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
+    toggleComponent() {
+      this.openComponent = !this.openComponent
+    },
+
     toggleChange2(newChecked: boolean) {
       this.timeBenders.checked = newChecked
       this.summerLovers.disabled = false
@@ -481,6 +449,27 @@ export default {
     display: flex;
     justify-content: center;
     background-color: white;
+  }
+}
+.tooltip-c {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  .tooltip-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .svg-icon-c {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 16px;
+      width: 16px;
+    }
   }
 }
 </style>
