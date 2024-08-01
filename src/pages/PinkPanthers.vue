@@ -1,6 +1,6 @@
 <template>
   <div class="flexi-table-page-c">
-    <FlexiTable />
+    <FlexiTable :a="flexiTableOptions" />
   </div>
 </template>
 
