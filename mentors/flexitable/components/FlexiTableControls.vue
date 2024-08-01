@@ -69,12 +69,13 @@ export default {
   methods: {
     async downloadPdf(){
 
-     const headerElement = this.$parent.$refs.flexiheader.$refs.print2;
+    const headerElement = this.$parent.$refs.flexiheader.$refs.print2;
     const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer;
 
-      const connectedElement = document.createElement('div');
-     connectedElement.appendChild(headerElement.cloneNode(true));
-     connectedElement.appendChild(bodyElement.cloneNode(true));
+    const connectedElement = document.createElement('div');
+    [headerElement, bodyElement].forEach(element => {
+      connectedElement.appendChild(element.cloneNode(true));
+    });
 
      const options = {
         margin: [10, 10, 10, 10], // location
