@@ -41,7 +41,12 @@
         </template>
       </MenuDropdown>
 
-      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
+      <MenuDropdown
+        :className="'flight'"
+        :items="multiItemsL"
+        primaryKey="id"
+        displayField="name"
+        label="Menu Dropdown">
         <template #toggle>
           <SvgIcon name="mail" size="s" />
         </template>
