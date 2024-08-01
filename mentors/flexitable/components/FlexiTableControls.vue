@@ -28,7 +28,8 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
-        <button class="pdf-button" @click="downloadExcel()">Excel</button>
+        <button class="excel-button" @click="downloadExcel()">Excel</button>
+        <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
       </div>
     </div>
 
@@ -61,10 +62,28 @@ export default {
   },
   methods: {
     cleanColumnWithRegex(name) {
-      return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
+      if (typeof name === 'string') {
+        return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
+      } else {
+        return name !== undefined && name !== null ? String(name) : ''
+      }
     },
     cleanRowsWithRegex(name) {
-      return name.replace(/[^a-zA-Z0-9öÖıİşŞçÇğĞüÜ\s.,]/g, '')
+      if (typeof name === 'string') {
+        return name.replace(/[^a-zA-Z0-9öÖıİşŞçÇğĞüÜ\s.,]/g, '')
+      } else {
+        return name !== undefined && name !== null ? String(name) : ''
+      }
+    },
+
+    downloadAllExcel() {
+      const initialItemsPerPage = this.flexi.options.itemsPerPage
+
+      this.flexi.options.itemsPerPage = -1
+      this.$nextTick(() => {
+        this.downloadExcel()
+        this.flexi.options.itemsPerPage = initialItemsPerPage
+      })
     },
 
     downloadExcel() {
@@ -72,38 +91,6 @@ export default {
       const tableTitle = 'flexitable'
       const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
       const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
-      const combined = [headersContainer, divToPrint]
-      // const tableType = divToPrint.dataset.tabletype
-      const exportItemDetailsToExcel = self.exportItemDetailsToExcel
-
-      //let styleContent = ''
-
-      // switch (tableType) {
-      //   case 'INVOICE':
-      //     styleContent = Template.getInvoiceExcelTemplate()
-      //     break
-
-      //   default:
-      //     styleContent = ''
-      //     break
-      // }
-
-      //const vgtTableWrapper = divToPrint.querySelector('table#vgt-table')
-
-      const headerTableWrapper = headersContainer
-      // let cloneTable = divToPrint.cloneNode(true)
-      // let cloneHeaders = headerTableWrapper.cloneNode(true)
-
-      // if (!exportItemDetailsToExcel) {
-      //   const gTableItemDetails = cloneTable.querySelectorAll('td .g-table-item-details')
-
-      //   gTableItemDetails.forEach((detailDiv) => {
-      //     detailDiv.remove()
-      //   })
-      // }
-
-      // cloneTable = cleanTableElements(cloneTable)
-      // cloneHeaders = cleanTableElements(cloneHeaders)
 
       let excelContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`
       excelContent += `<head>`
@@ -122,7 +109,6 @@ export default {
       excelContent += `</xml>`
       excelContent += `<![endif]-->`
       excelContent += `<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>`
-      //excelContent += `<style>${styleContent}</style>`
       excelContent += `</head>`
       excelContent += `<body>`
       excelContent += '<table>'
@@ -152,14 +138,12 @@ export default {
           const cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
           //it forces the row content to be text to prevent problems previewing in excel
           excelContent += `<td style="mso-number-format:'\\@'">${cleanedRows}</td>`
-          console.log(cleanedRows)
         })
         excelContent += '</tr>'
       })
 
       excelContent += '</tbody>'
       excelContent += '</table>'
-      // excelContent += cloneTable.outerHTML
       excelContent += `</body>`
       excelContent += `</html>`
 
