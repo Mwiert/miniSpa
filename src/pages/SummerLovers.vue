@@ -50,9 +50,14 @@
       </MenuDropdown>
 
       <MenuDropdown
+       
+        :className="'flight'"
         :items="multiItems"
+       
         primaryKey="id"
+       
         displayField="name"
+       
         actionField="func"
         directRight>
         <template #toggle>

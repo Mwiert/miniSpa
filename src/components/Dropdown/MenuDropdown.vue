@@ -56,6 +56,10 @@ export default {
     actionField: {
       type: String,
       default: 'action'
+    },
+    className: {
+      type: String,
+      default: 'flight'
     },    
     directRight: {
       type: Boolean,
@@ -182,6 +186,25 @@ export default {
           border-radius: 0 1rem 1rem 1rem;
         }
 
+        &.hotel {
+          border: 1px solid $secondary-color;
+          .item {
+            color: #000000;
+            &:hover {
+              background-color: $secondary-color;
+            }
+          }
+        }
+        &.flight {
+          border: 1px solid $accent-primary-color;
+          .item {
+            color: #000000;
+            &:hover {
+              background-color: $accent-primary-color;
+            }
+          }
+        }
+
         .slot-item {
           > * {
             display: flex;
@@ -201,10 +224,6 @@ export default {
             transition:
               background-color 0.5s ease,
               color 0.5s ease;
-            &:hover {
-              background-color: $accent-primary-color;
-              color: white;
-            }
           }
         }
       }
