@@ -280,8 +280,6 @@ export default {
           this.maxDate = dayjs(this.initialDate).add(day, 'day').format('YYYY-MM-DD')
         }
       }
-      console.log('minDate: ', this.minDate)
-      console.log('maxDate: ', this.maxDate)
     },
     populdateMonthDays() {
       if (this.isPastValidation) {
