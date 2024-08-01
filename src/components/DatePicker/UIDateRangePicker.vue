@@ -155,6 +155,7 @@ export default {
     isSingleDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
     validateForwardMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
+    validateForwardDay: { type: Number, default: 99 }, //This is for validating the day range by giving it 9999 as default value since this is one of the maximum value
     validateForwardYear: { type: Number, default: 99 },
     validateBackYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
     validateForwardDay: { type: Number, default: 99 },
@@ -288,7 +289,7 @@ export default {
             }
           } else {
             this.sendInitialDates.firstInitialDate = dayjs(this.initialDate)
-              .subtract(3, 'day')
+              .subtract(this.spaceBetweenDays, 'day')
               .format('YYYY-MM-DD')
             this.sendInitialDates.firstInitialDate = {
               number: dayjs(this.sendInitialDates.firstInitialDate).format('DD'),
@@ -303,7 +304,7 @@ export default {
               date: dayjs(this.initialDate).format('YYYY-MM-DD')
             }
           }
-        } else {
+        } else {               //bu koşul hiç sağlanıyor mu ?
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs().format('DD'),
