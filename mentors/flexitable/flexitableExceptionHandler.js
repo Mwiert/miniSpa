@@ -20,10 +20,10 @@ export default {
     },
     isDataCorrect() {
       if (this.checkProp() === 'correct') {
-        if (Object.values(this.$attrs)[0].columns.length == 0) {
+        if (this.flexiTableOptions.columns.length == 0) {
           return (this.flexiTableOptions.errors.message = 'Prop fine columns are empty')
         }
-        if (Object.values(this.$attrs)[0].rows.length == 0) {
+        if (this.flexiTableOptions.rows.length == 0) {
           return (this.flexiTableOptions.errors.message = 'Prop fine rows are empty')
         }
         if (

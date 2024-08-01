@@ -1,6 +1,6 @@
 <template>
   <div class="flexi-table-page-c">
-    <FlexiTable :a="a" />
+    <FlexiTable :a="flexiTableOptions" />
   </div>
 </template>
 
@@ -16,6 +16,12 @@ export default {
 
   data() {
     return {
+      b: {
+        options: {},
+        columns: [{ id: 1, name: '#', label: 'id' }],
+        rows: [],
+        selectedRows: []
+      },
       a: {
         options: {},
         columns: [],
@@ -24,10 +30,8 @@ export default {
       },
       flexiTableOptions: {
         options: {
-          columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
-
           columnGap: '.5rem',
-
+          //columnSizes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
           hiddenColumns: ['annualFee', 'city'],
 
           //itemsPerPage: 5,
@@ -126,7 +130,7 @@ export default {
             pushelements: false,
             selectedRows: []
           },
-          status: {
+          statuss: {
             value: item.status,
             class: `item-${item.status}`,
             url: `?status=${item.status}`

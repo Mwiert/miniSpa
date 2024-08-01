@@ -1,9 +1,7 @@
 <template>
   <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
-    {{ isDataCorrect() }}
-    {{ Object.values(this.$attrs)[0].columns.length }}
-    {{ Object.values(this.$attrs)[0].columns[0] }}
-
+    {{ flexiTableOptions.options.columnSizes }}
+    {{ flexiTableOptions.options.columnSizes.length }}
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
@@ -55,13 +53,24 @@ export default {
         options: {
           ...flexiConfig,
           ...options,
-          hasDetails
+          hasDetails,
+          columnSizes: [
+            ...flexiConfig.columnSizes,
+            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
+          ]
         }
       }
-      console.log(this.flexiTableOptions.rows[0].row)
-      console.log(Object.values(this.$attrs)[0])
-      console.log(this.flexiTableOptions.columns.length)
-      console.log(Object.values(this.flexiTableOptions.rows[0].row).length)
+
+      // if (
+      //   this.flexiTableOptions.options.columnSizes.length < this.flexiTableOptions.columns.length
+      // ) {
+      //   const missingCount =
+      //     this.flexiTableOptions.columns.length - this.flexiTableOptions.options.columnSizes.length
+      //   for (let i = 0; i < missingCount; i++) {
+      //     this.flexiTableOptions.options.columnSizes.push(1)
+      //   }
+      // }
+
       // console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row))
       //console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row).length)
 
