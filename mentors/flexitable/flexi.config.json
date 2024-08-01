@@ -20,7 +20,12 @@
   "pages": [],
   "selected": { "id": 5, "name": "FIVE" },
   "show": false,
-
+  "pageOrder": {
+    "5": "FIVE",
+    "10": "TEN",
+    "30": "THIRTY",
+    "-1": "ALL"
+  },
   "UIDropdownOrderProp": {
     "label": "Select an Item",
     "dataSize": 5,
