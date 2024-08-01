@@ -304,7 +304,6 @@ export default {
             }
           }
         } else {
-          //bu koşul hiç sağlanıyor mu ?
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs().format('DD'),
