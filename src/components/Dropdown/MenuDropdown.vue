@@ -12,7 +12,7 @@
             <slot></slot>
           </div>
           <div class="array-item">
-            <div v-for="item in items" :key="item[primaryKey]" class="item" @click="item.func()">
+            <div v-for="item in items" :key="item[primaryKey]" class="item" @click="item[actionField]">
               <SvgIcon :name="item.iconImage" :size="'s'" v-if="item.iconImage" />
               <span> {{ item[displayField] }} </span>
             </div>
@@ -48,6 +48,10 @@ export default {
     label: {
       type: String,
       default: ''
+    },
+    actionField: {
+      type: String,
+      default: () => {}
     }
   },
   methods: {
