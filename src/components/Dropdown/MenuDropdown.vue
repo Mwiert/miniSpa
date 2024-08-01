@@ -62,27 +62,43 @@ export default {
       type: String,
       default: 'action'
     },
+    //styling color - hotel,flight
     className: {
       type: String,
       default: ''
     },
+    //if the dropdown opens to the right
+
     directRight: {
       type: Boolean,
       default: false
     }
   },
   methods: {
+    /**
+     * Method triggered when mouse hovers over the dropdown toggle.
+     * Opens the dropdown if it's not already clicked.
+     */
     handleMouseOver() {
       if (!this.isClicked) {
         this.isOpen = true
         this.windowOverflow()
       }
     },
+    /**
+     * Method triggered when mouse leaves the dropdown area.
+     * Closes the dropdown if it's not already clicked.
+     */
     handleMouseLeave() {
       if (!this.isClicked) {
         this.isOpen = false
       }
     },
+    /**
+     * Method triggered when the dropdown toggle is clicked.
+     * Toggles the state of the dropdown (open/close) and sets up a click listener
+     * to close the dropdown if clicked outside.
+     */
     handleToggle() {
       this.isClicked = !this.isClicked
       this.isOpen = this.isClicked
@@ -103,6 +119,10 @@ export default {
     beforeDestroy() {
       document.removeEventListener('click', this.handleOutsideClick)
     },
+    /**
+     * Method to adjust the dropdown position if it overflows the window boundaries.
+     * Checks if the dropdown content exceeds the viewport size and adjusts its position accordingly.
+     */
     windowOverflow() {
       this.$nextTick(() => {
         const dropdown = this.$el.querySelector('.menu-dropdown-content-wrapper')
@@ -114,7 +134,6 @@ export default {
         const windowHeight = window.innerHeight
         const overflowRight = windowWidth - dropdownRect.right
         const overflowDown = windowHeight - dropdownRect.bottom
-        console.log(overflowRight, overflowDown)
         if (overflowRight < 0) {
           dropdown.classList.add('direct-left-wrapper')
           dropdownContent.classList.add('direct-left')
@@ -177,7 +196,6 @@ export default {
         .svg-icon {
           color: rgb(255, 255, 255);
           fill: white;
-          //renk varken backgroundta label ve icon rengine karar verilecek
         }
       }
 
@@ -236,7 +254,6 @@ export default {
           border-top: 10px solid white;
           z-index: 999;
         }
-        //after çentiği gelecek
       }
       &.direct-right-wrapper {
         animation: droprightAnimation 0.3s ease-out;
@@ -287,7 +304,6 @@ export default {
               color: #ffffff;
               &:hover {
                 background-color: $accent-secondary-color;
-                //backgroundta renk varken hover rengine karar verilecek
                 color: white;
               }
             }
