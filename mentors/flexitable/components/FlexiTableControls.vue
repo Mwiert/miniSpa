@@ -4,7 +4,7 @@
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
-        :enumObj="flexi.options.EInternSingleComponentType"
+        :enumObj="flexi.options.pageOrder"
         :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
@@ -30,7 +30,6 @@
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
         <button class="pdf-button" @click="downloadExcel()">Excel</button>
         <button class="pdf-button" @click="downloadPdf()">create pdf</button>
-        
       </div>
     </div>
 
@@ -52,8 +51,6 @@
 </template>
 
 <script lang="ts">
-import html2pdf from 'html2pdf.js';
-
 // import the necessary libraries
 //import { jsPDF } from 'jspdf';
 //import html2canvas from 'html2canvas';
@@ -77,24 +74,21 @@ export default {
       connectedElement.appendChild(element.cloneNode(true));
     });
 
-     const options = {
+      const options = {
         margin: [10, 10, 10, 10], // location
         filename: 'download.pdf',
         image: { type: 'jpeg', quality: 1 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
+      }
 
       try {
         // use html2pdf.js to convert the combinedDiv to pdf
-        await html2pdf().from(connectedElement).set(options).save();
+        await html2pdf().from(connectedElement).set(options).save()
       } catch (error) {
-        console.error('Error generating PDF:', error);
+        console.error('Error generating PDF:', error)
       }
-
-
     },
-
 
     cleanColumnWithRegex(name) {
       return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
@@ -367,5 +361,4 @@ export default {
     }
   }
 }
-
 </style>
