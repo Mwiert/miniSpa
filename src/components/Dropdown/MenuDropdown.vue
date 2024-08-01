@@ -265,6 +265,9 @@ export default {
         &::before {
           display: none;
         }
+        &::after {
+          display: none;
+        }
         &.hotel {
           background-color: $secondary-color;
         }
