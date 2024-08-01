@@ -40,7 +40,7 @@ export default {
       default: ''
     },
     //if checkbox is checked the 'checked' prop will be true, otherwise and default is false
-    checked: {
+    modelValue: {
       type: Boolean,
       default: false
     },
@@ -59,7 +59,7 @@ export default {
       checkboxClassName: this.className,
       checkboxLabel: this.label,
       checkboxId: this.id,
-      checkboxChecked: this.checked,
+      checkboxChecked: this.modelValue,
       checkboxName: this.name
     }
   },
@@ -73,8 +73,7 @@ export default {
     handleClick() {
       if (this.disabled) return
       this.checkboxChecked = !this.checkboxChecked
-      this.$emit('update:checked', this.checkboxChecked)
-      this.$emit('takeCheckedInfo', this.checkboxChecked)
+      this.$emit('update:modelValue', this.checkboxChecked)
     }
   }
 }

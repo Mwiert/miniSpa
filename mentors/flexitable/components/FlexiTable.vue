@@ -1,9 +1,5 @@
 <template>
-  <div class="flexi-table-c" >
-    {{ flexi.rows.length }}
-    {{ flexi.options.totalPages }}
-    {{ flexi.options.itemsPerPage }}
-
+  <div class="flexi-table-c" v-if="Object.values(this.$attrs)[0]">
     <!-- {{ flexi.columns }}
     <br />
     <br />
@@ -13,6 +9,9 @@
     <FlexiTableBody ref="flexibody" />
     <FlexiTableFooter />
   </div>
+  <div v-else>
+    <FlexiTableInfo />
+  </div>
 </template>
 
 <script lang="ts">
@@ -21,61 +20,93 @@ import FlexiTableHeader from './FlexiTableHeader.vue'
 import FlexiTableBody from './FlexiTableBody.vue'
 import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
+import FlexiTableInfo from './FlexiTableInfo.vue'
+import { computed } from 'vue'
 export default {
   name: 'FlexiTable',
-  inject: ['flexi'],
+  provide() {
+    return {
+      flexi: computed(() => this.flexiTableOptions)
+    }
+  },
+  data() {
+    return {
+      flexiTableOptions: {}
+    }
+  },
   created() {
-    this.flexi.options = {
-      ...flexiConfig,
-      ...this.flexi.options
-    }
+    if (Object.values(this.$attrs)[0]) {
+      const tableOptions = Object.values(this.$attrs)[0]
+      const { columns, selectedRows, rows, options } = tableOptions
+      const hasDetails = rows[0]?.details ? true : false
+      this.flexiTableOptions = {
+        columns,
+        selectedRows,
+        rows: rows[0]?.row
+          ? rows
+          : rows.map((item) => ({ row: item })),
+        options: {
+          ...flexiConfig,
+          ...options,
+          hasDetails
+        }
+      }
 
-    //sortable Control
-    if (!this.flexi.options.disableSorting) {
-      const sortableParamsExist = this.flexi.columns.some((column) => column.sortable == true)
-      if (sortableParamsExist) {
-        this.flexi.options.sortableColumns = this.flexi.columns
-          .filter((column) => column.sortable)
-          .map((column) => {
-            return column.sortable ? column.label : ''
-          })
-      } else {
-        this.flexi.options.sortableColumns = this.flexi.columns.map((column) => {
-          return column.label
-        })
+
+      //sortable Control
+      if (!this.flexiTableOptions.options.disableSorting) {
+        const sortableParamsExist = this.flexiTableOptions.columns.some(
+          (column) => column.sortable == true
+        )
+        if (sortableParamsExist) {
+          this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns
+            .filter((column) => column.sortable)
+            .map((column) => {
+              return column.sortable ? column.label : ''
+            })
+        } else {
+          this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns.map(
+            (column) => {
+              return column.label
+            }
+          )
+        }
       }
+      //Dropdown
+      this.flexiTableOptions.columns = this.flexiTableOptions.columns.map((col, index) => {
+        return {
+          ...col,
+          status: !this.flexiTableOptions.options.hiddenColumns.includes(col.label),
+          colSizes: this.flexiTableOptions.options.columnSizes[index]
+        }
+      })
     }
-    //Dropdown
-    this.flexi.columns = this.flexi.columns.map((col, index) => {
-      return {
-        ...col,
-        status: !this.flexi.options.hiddenColumns.includes(col.label),
-        colSizes: this.flexi.options.columnSizes[index]
-      }
-    })
   },
   components: {
     FlexiTableControls,
     FlexiTableHeader,
     FlexiTableBody,
-    FlexiTableFooter
+    FlexiTableFooter,
+    FlexiTableInfo
   },
 
   watch: {
-    'flexi.columns': {
+    'flexiTableOptions.columns': {
       handler: function () {
         const hidden = []
-        this.flexi.options.columnSizes = []
+        this.flexiTableOptions.options.columnSizes = []
         // The hiddenColumns and columnSizes arrays change according to the changes in the flex.columns array.
-        Object.keys(this.flexi.columns).forEach((column) => {
-          if (this.flexi.columns[column].status === true) {
-            this.flexi.options.columnSizes.push(this.flexi.columns[column].colSizes)
+        Object.keys(this.flexiTableOptions.columns).forEach((column) => {
+          if (this.flexiTableOptions.columns[column].status === true) {
+            this.flexiTableOptions.options.columnSizes.push(
+              this.flexiTableOptions.columns[column].colSizes
+            )
           } else {
-            hidden.push(this.flexi.columns[column].label)
+            hidden.push(this.flexiTableOptions.columns[column].label)
           }
         })
 
-        this.flexi.options.hiddenColumns = hidden
+        this.flexiTableOptions.options.hiddenColumns = hidden
       },
 
       deep: true
@@ -89,8 +120,7 @@ export default {
   color: #363636;
 
   ::v-deep {
-    div {
-    }
+    div {}
 
     .flexi-table-header-c,
     .flexi-table-body-row {

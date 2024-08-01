@@ -1,6 +1,56 @@
 <template>
   <div>
     <div>
+      <MenuDropdown class="menu" :items="multiItems" primaryKey="id" displayField="name" label="Menu Dropdown">
+        <template #toggle>
+          <SvgIcon name="mail" size="s" />
+        </template>
+        <template>
+          <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            label="Multi dropdown"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+            <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            label="Multi dropdown 2"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+            <hr />
+        </template>
+      </MenuDropdown>
+
+      <MenuDropdown
+      :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown"
+      >
+        <template #toggle>
+          <SvgIcon name="mail" size="s" />
+        </template>
+        <template>
+        </template>
+
+
+      </MenuDropdown>
+
+
+    </div>
+    <div>
       <h1>{{ 'Single Enum Dropdown' }}</h1>
 
       <UIEnumDropdown
@@ -215,7 +265,7 @@
         :iconImage="'iconImage'"
         primaryKey="id"
         unselectable />
-        <UIMultiDropdown
+      <UIMultiDropdown
         v-model="selectedPets"
         :items="pets"
         :fontSize="fontSize"
@@ -276,12 +326,14 @@ import UIDropdown from '../components/Dropdown/UIDropdown.vue'
 import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
 import EInternComponentType from '../enum/EInternComponentType'
 import EInternSingleComponentType from '../enum/EInternSingleComponentType'
+import MenuDropdown from '../components/Dropdown/MenuDropdown.vue'
 export default {
   name: 'SummerLovers',
   components: {
     UIEnumDropdown,
     UIDropdown,
-    UIMultiDropdown
+    UIMultiDropdown,
+    MenuDropdown,
   },
   data() {
     return {
@@ -319,7 +371,7 @@ export default {
         {
           id: 5,
           iconImage: '',
-          name: 'ElephantElephantElephantElephantElephantElephantElephant',
+          name: 'Elephant',
           detail: 'd'
         },
         { id: 6, iconImage: '', name: 'Hawk', detail: 'c' },
@@ -341,6 +393,16 @@ export default {
         { id: 1, iconImage: '', name: 'Cat Toy', detail: 'l' },
         { id: 2, iconImage: '', name: 'Fish Toy', detail: 'm' },
         { id: 3, iconImage: '', name: 'Bird Toy', detail: 'n' }
+      ],
+      multiItems: [
+        { id: 0, name: 'Dashboard', func: () => {window.alert('parent comp')} },
+        { id: 1, name: 'Profile', func: () => {window.open('https://www.google.com')} },
+        { id: 2, name: 'Exit', func: () => {window.open('/')} } 
+      ],
+      multiItemsL : [
+        { id: 0, name: 'Turkish', iconImage: 'mail' },
+        { id: 1, name: 'English', iconImage: 'arrow-up'},
+        { id: 2, name: 'Indian', iconImage: 'arrow-down' } 
       ],
       items: [
         {
@@ -429,4 +491,20 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.menu{
+  margin-right: 20px;
+}
+
+      hr {
+        margin: 0;
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.75),
+          rgba(0, 0, 0, 0)
+        );
+      }
+      </style>

@@ -1,4 +1,71 @@
 <template>
+  <span>
+    <div>
+      <h1>Hover Tooltip</h1>
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'right'"
+        :label="'This is a tooltip'"
+        :isHover="true"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'left'"
+        :label="'This is a tooltip'"
+        :isHover="true"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'top'"
+        :label="'This is a tooltip'"
+        :isHover="true"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'bottom'"
+        :label="'This is a tooltip'"
+        :isHover="true"
+        :isOpen="false" />
+    </div>
+    <div>
+      <h1>Clickable Tooltip</h1>
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'right'"
+        :label="'This is a tooltip'"
+        :isHover="false"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'left'"
+        :label="'This is a tooltip'"
+        :isHover="false"
+        :isOpen="false" />
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'top'"
+        :label="'This is a tooltip'"
+        :isHover="false"
+        :isOpen="false" />
+      <h3>Clickable Tooltips But Open On Start</h3>
+
+      <UITooltip
+        :icon="'x'"
+        :size="'s'"
+        :position="'bottom'"
+        :label="'This is a tooltip'"
+        :isHover="false"
+        :isOpen="true" />
+    </div>
+  </span>
+  <div>Ayırıcı</div>
   <div class="text-area-c">
     <UITextArea
       :label="'Address'"
@@ -63,8 +130,7 @@
       :type="'password'"
       :id="'password'"
       :label="'Password'"
-      :icon="'eye'"
-      clearButton
+      :clearButton="true"
       v-model="messageInputWithClearButton" />
   </div>
 
@@ -218,7 +284,7 @@
         :className="'hotel'"
         :label="checkbox.label"
         :disabled="checkbox.disabled"
-        v-model:checked="checkbox.checked"
+        v-model="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
     </div>
 
@@ -231,7 +297,7 @@
         :disabled="checkbox.disabled"
         :label="checkbox.label"
         after
-        v-model:checked="checkbox.checked"
+        v-model="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
     </div>
     <!-- Example of a disabled checkbox -->
@@ -254,6 +320,7 @@ import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
 import UITextArea from '../components/UITextArea.vue'
+import UITooltip from '../components/UITooltip.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -263,7 +330,8 @@ export default {
     UIRadioButton,
     UICheckbox,
     UIInput,
-    UITextArea
+    UITextArea,
+    UITooltip
   },
   data() {
     return {
@@ -276,8 +344,8 @@ export default {
       valueTextArea3: '',
       valueTextArea4: '',
       valueTextArea5: '',
-      messageInput: '',
-      messageInputWithClearButton: '',
+      messageInput: 'fdasfsdafdas',
+      messageInputWithClearButton: 'fadsfdasfd',
       buttonValue: '',
 
       // Defining the initial loading and disabled states for different buttons
@@ -332,7 +400,7 @@ export default {
         { label: 'Hotel 3', id: 'id3', disabled: true, checked: false }
       ],
       checkboxFlight: [
-        { label: 'Flight 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Flight 1', id: 'id1', disabled: false, checked: true },
         { label: 'Flight 2', id: 'id2', disabled: false, checked: false },
         { label: 'Flight 3', id: 'id3', disabled: false, checked: false }
       ]
