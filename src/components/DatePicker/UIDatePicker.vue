@@ -15,7 +15,7 @@
               class="nav-button"
               @click="onClickToLeft"
               v-show="minDate < currentDate">
-              <img src="../assets/icons/arrow-left.svg" alt="" />
+              <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{ dateHolder }}</span>
             <button
@@ -23,7 +23,7 @@
               class="nav-button"
               @click="onClickToRight"
               v-show="currentDate < maxDate">
-              <img src="../assets/icons/arrow-right.svg" alt="" />
+              <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
           <!-- This is the weekdays section -->
@@ -59,7 +59,7 @@
 <script lang="ts">
 //Imports the needed components and interfaces
 import dayjs from 'dayjs'
-import date from '../interface/IUIDatePicker'
+import date from '../../interface/IUIDatePicker'
 export default {
   name: 'UIDatePicker',
   components: {},
@@ -422,8 +422,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variables.scss';
-@import '../assets/css/_fonts.scss';
+@import '../../assets/css/variables.scss';
+@import '../../assets/css/_fonts.scss';
 
 //This is the main container
 .ui-date-picker-c {
