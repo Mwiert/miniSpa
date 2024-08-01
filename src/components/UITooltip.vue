@@ -2,13 +2,18 @@
   <div class="ui-tooltip-c">
     <div class="ui-tooltip-wrapper" :class="`ui-tooltip-wrapper-${position}`">
       <div class="icon-container-hover" v-if="isHover">
+        <slot></slot>
+
         <div class="ui-tooltip-content-container">
           <SvgIcon :name="icon" :size="size" class="icon" v-if="icon" />
           <div class="label">{{ label }}</div>
         </div>
       </div>
       <div class="icon-container-click" v-else>
-        <div class="ui-tooltip-content-container" v-if="isOpen">
+        <div @click="toggleTooltip()">
+          <slot></slot>
+        </div>
+        <div class="ui-tooltip-content-container" v-if="openComponent">
           <SvgIcon :name="icon" :size="size" class="icon" v-if="icon" />
           <div class="label">{{ label }}</div>
         </div>
@@ -33,9 +38,20 @@ export default {
     size: { type: String, default: '' },
     isOpen: { type: Boolean, default: false }
   },
+
   computed: {
     isHover() {
       return this.type === 'hover'
+    }
+  },
+  data() {
+    return {
+      openComponent: this.isOpen
+    }
+  },
+  methods: {
+    toggleTooltip() {
+      this.openComponent = !this.openComponent
     }
   }
 }
@@ -43,8 +59,8 @@ export default {
 
 <style lang="scss" scoped>
 .ui-tooltip-c {
-  height: auto;
-  width: auto;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -131,7 +147,7 @@ export default {
           height: 16px;
           width: 16px;
           padding: 0;
-          margin-left: 5px;
+          margin-left: 10px;
         }
 
         .label {
@@ -154,7 +170,6 @@ export default {
   }
 
   .ui-tooltip-wrapper-right .ui-tooltip-content-container {
-    right: 36px;
     &::before {
       top: 50%;
       right: -5px;

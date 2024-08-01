@@ -1,27 +1,21 @@
 <template>
   <span class="tooltip-c">
     <span class="tooltip-wrapper">
-      <SvgIcon
-        :name="'x'"
-        :size="'s'"
-        :color="'#000'"
-        @mouseover="hoverComponent = true"
-        @mouseleave="hoverComponent = false"
-        class="icon" />
       <UITooltip
-        label="This is a funny tooltip"
-        position="left"
-        type="click"
-        :isOpen="hoverComponent" />
+        label="This is a funny tooltipasdggsdnıgdasnjgasdnhjgasdbhkgbsdah"
+        position="right"
+        type="hover">
+        <SvgIcon :name="'x'" :size="'s'" :color="'#000'" class="icon" />
+      </UITooltip>
     </span>
     <span class="tooltip-wrapper">
-      <SvgIcon :name="'x'" :size="'s'" :color="'#000'" @click="toggleComponent" class="icon" />
       <UITooltip
-        label="This is a funny tooltip"
+        label="This is a funny tooltipasdglnasdgjkhjıasdgbhıkasdghıdgbashasgdb"
         icon="x"
-        position="top"
-        type="click"
-        :isOpen="openComponent" />
+        position="bottom"
+        type="click">
+        <SvgIcon :name="'x'" :size="'s'" :color="'#000'" class="icon" />
+      </UITooltip>
     </span>
   </span>
   <div>Ayırıcı</div>
@@ -451,18 +445,24 @@ export default {
   }
 }
 .tooltip-c {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
   .tooltip-wrapper {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 
     .svg-icon-c {
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
