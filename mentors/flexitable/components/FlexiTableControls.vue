@@ -30,6 +30,9 @@
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
       </div>
+      <div class="export-buttons">
+        <button class="pdf-button" @click="triggerExportPrint2()">create pdf</button>
+      </div>
     </div>
 
     <!-- <button @click="toggleSelectAll">All</button> -->
@@ -50,6 +53,11 @@
 </template>
 
 <script lang="ts">
+import html2pdf from 'html2pdf.js';
+
+// import the necessary libraries
+//import { jsPDF } from 'jspdf';
+//import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
 export default {
@@ -60,6 +68,34 @@ export default {
     UIEnumDropdown
   },
   methods: {
+    async triggerExportPrint2() {
+    
+
+     const headerElement = this.$parent.$refs.flexiheader.$refs.print2;
+    const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer;
+     
+      const connectedElement = document.createElement('div');
+     connectedElement.appendChild(headerElement.cloneNode(true));
+     connectedElement.appendChild(bodyElement.cloneNode(true));
+     
+     const options = {
+        margin: [10, 10, 10, 10], // location
+        filename: 'download.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      try {
+        // use html2pdf.js to convert the combinedDiv to pdf
+        await html2pdf().from(connectedElement).set(options).save();
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
+
+    },
+
+    
     // print method style not working
     triggerExportPrint() {
       const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
@@ -352,4 +388,5 @@ export default {
     }
   }
 }
+
 </style>

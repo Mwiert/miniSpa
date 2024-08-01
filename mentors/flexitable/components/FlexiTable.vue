@@ -1,5 +1,5 @@
 <template>
-  <div class="flexi-table-c">
+  <div class="flexi-table-c" >
     {{ flexi.rows.length }}
     {{ flexi.options.totalPages }}
     {{ flexi.options.itemsPerPage }}
