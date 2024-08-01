@@ -1,124 +1,26 @@
 <template>
   <div class="ui-tooltip-c">
-    <div class="ui-wrapper">
-      <div
-        class="ui-tooltip-hover"
-        :class="{ vertical: isVertical }"
-        v-if="isHover && position === 'bottom'">
+    <div
+      class="ui-tooltip-wrapper"
+      :class="[`ui-tooltip-wrapper-${position}`, { vertical: isVertical }]">
+      <div class="icon-container-hover" :class="{ vertical: isVertical }" v-if="isHover">
         <div @mouseover="openComponent = true" @mouseleave="openComponent = false">
           <slot></slot>
         </div>
-        <div
-          class="ui-tooltip-content"
-          :class="[{ active: openComponent }, position]"
-          v-if="openComponent">
-          <SvgIcon v-if="icon" class="icon" />
-          <div>{{ label }}</div>
+
+        <div class="ui-tooltip-content-container" v-if="openComponent">
+          <SvgIcon :name="icon" :size="size" class="icon" v-if="icon" />
+          <div class="label">{{ label }}</div>
         </div>
       </div>
-      <div
-        class="ui-tooltip-hover"
-        :class="{ vertical: isVertical }"
-        v-if="isHover && position === 'top'">
-        <div @mouseover="openComponent = true" @mouseleave="openComponent = false">
-          <slot></slot>
-        </div>
-        <div
-          class="ui-tooltip-content"
-          :class="[{ active: openComponent }, position]"
-          v-if="openComponent">
-          <SvgIcon v-if="icon" class="icon" />
-          <div>{{ label }}</div>
-        </div>
-      </div>
-      <div
-        class="ui-tooltip-hover"
-        :class="{ vertical: isVertical }"
-        v-if="isHover && position === 'right'">
-        <div @mouseover="openComponent = true" @mouseleave="openComponent = false">
-          <slot></slot>
-        </div>
-        <div
-          class="ui-tooltip-content"
-          :class="[{ active: openComponent }, position]"
-          v-if="openComponent">
-          <SvgIcon v-if="icon" class="icon" />
-          <div>{{ label }}</div>
-        </div>
-      </div>
-      <div
-        class="ui-tooltip-hover"
-        :class="{ vertical: isVertical }"
-        v-if="isHover && position === 'left'">
-        <div @mouseover="openComponent = true" @mouseleave="openComponent = false">
-          <slot></slot>
-        </div>
-        <div
-          class="ui-tooltip-content"
-          :class="[{ active: openComponent }, position]"
-          v-if="openComponent">
-          <SvgIcon v-if="icon" class="icon" />
-          <div>{{ label }}</div>
-        </div>
-      </div>
-      <div
-        class="ui-tooltip-click"
-        :class="{ vertical: isVertical }"
-        v-if="!isHover && position === 'top'">
+
+      <div class="icon-container-click" :class="{ vertical: isVertical }" v-else>
         <div @click="toggleTooltip()">
           <slot></slot>
         </div>
-        <div
-          class="ui-tooltip-content"
-          :class="[{ active: openComponent }, position]"
-          v-if="openComponent">
-          <SvgIcon v-if="icon" class="icon" />
-          <div>{{ label }}</div>
-        </div>
-      </div>
-      <div
-        class="ui-tooltip-click"
-        :class="{ vertical: isVertical }"
-        v-if="!isHover && position === 'bottom'">
-        <div
-          class="ui-tooltip-content"
-          :class="[{ active: openComponent }, position]"
-          v-if="openComponent">
-          <SvgIcon v-if="icon" class="icon" />
-          <div>{{ label }}</div>
-        </div>
-        <div @click="toggleTooltip()">
-          <slot></slot>
-        </div>
-      </div>
-      <div
-        class="ui-tooltip-click"
-        :class="{ vertical: isVertical }"
-        v-if="!isHover && position === 'left'">
-        <div @click="toggleTooltip()">
-          <slot></slot>
-        </div>
-        <div
-          class="ui-tooltip-content"
-          :class="[{ active: openComponent }, position]"
-          v-if="openComponent">
-          <SvgIcon v-if="icon" class="icon" />
-          <div>{{ label }}</div>
-        </div>
-      </div>
-      <div
-        class="ui-tooltip-click"
-        :class="{ vertical: isVertical }"
-        v-if="!isHover && position === 'right'">
-        <div
-          class="ui-tooltip-content"
-          :class="[{ active: openComponent }, position]"
-          v-if="openComponent">
-          <SvgIcon v-if="icon" class="icon" />
-          <div>{{ label }}</div>
-        </div>
-        <div @click="toggleTooltip()">
-          <slot></slot>
+        <div class="ui-tooltip-content-container" v-if="openComponent">
+          <SvgIcon :name="icon" :size="size" class="icon" v-if="icon" />
+          <div class="label">{{ label }}</div>
         </div>
       </div>
     </div>
@@ -134,20 +36,20 @@ export default {
     SvgIcon
   },
   props: {
-    label: { type: String, default: '' },
-    icon: { type: String },
-    position: { type: String, default: '' },
-    type: { type: String, default: 'hover' },
-    size: { type: String, default: '' },
-    isOpen: { type: Boolean, default: false }
+    position: { type: String, default: 'left' }, //Defines the position of the slot we are sending in, default is left so that the tooltip is on the right side of the icon
+    type: { type: String, default: 'hover' }, //Defines the type of tooltip, default is hover and it can be click
+    size: { type: String, default: 's' }, //Defines the size of the icon
+    isOpen: { type: Boolean, default: false }, //Defines if the tooltip is open or not when type is click
+    label: { type: String }, //Defines the label of the tooltip if exist
+    icon: { type: String } //Defines the icon of the tooltip if exist
   },
 
   computed: {
     isHover() {
-      return this.type.toLowerCase() === 'hover'
+      return this.type === 'hover'
     },
     isVertical() {
-      return this.position.toLowerCase() === 'top' || this.position.toLowerCase() === 'bottom'
+      return this.position === 'top' || this.position === 'bottom'
     }
   },
   data() {
@@ -168,93 +70,167 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   position: relative;
 
   @keyframes fadeIn {
-    from {
+    0% {
       opacity: 0;
     }
-    to {
+    100% {
       opacity: 1;
     }
   }
 
-  .ui-wrapper {
+  .ui-tooltip-wrapper {
+    position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-
-    .ui-tooltip-hover,
-    .ui-tooltip-click {
+    &.vertical {
+      flex-direction: column;
+    }
+    .icon-container-hover {
+      position: relative;
       display: flex;
-      justify-content: center;
       align-items: center;
-
       &.vertical {
         flex-direction: column;
       }
 
-      .ui-tooltip-content {
+      .ui-tooltip-content-container {
+        white-space: nowrap;
         display: flex;
         align-items: center;
         justify-content: center;
+        position: absolute;
         background-color: #33b8ff;
         border-radius: 2px;
-        padding: 8px;
-        height: 28px;
+        height: 36px;
         width: fit-content;
-        position: relative;
+        animation: fadeIn 0.2s ease-in-out;
+        z-index: 1000;
 
-        &.active {
-          animation: fadeIn 0.2s ease-in-out;
+        .icon {
+          height: 16px;
+          width: 16px;
+        }
+        .svg-icon-c {
+          height: 16px;
+          width: 16px;
+          padding: 0;
+          margin-left: 10px;
+        }
+        .label {
+          padding: 8px;
+          color: white;
+          font-size: 12px;
+          text-align: center;
+          font-weight: 500;
         }
 
-        &.left::before,
-        &.right::before,
-        &.top::before,
-        &.bottom::before {
+        &::before {
           content: '';
           position: absolute;
           width: 0;
           height: 0;
           border-style: solid;
         }
+      }
+    }
 
-        &.left::before {
-          left: -6px;
-          top: 50%;
-          transform: translateY(-50%);
-          border-width: 12px 12px 12px 0;
-          border-color: transparent #33b8ff transparent transparent;
+    .icon-container-click {
+      position: relative;
+      display: flex;
+      align-items: center;
+      &.vertical {
+        flex-direction: column;
+      }
+      .ui-tooltip-content-container {
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        background-color: #33b8ff;
+        border-radius: 2px;
+        height: 36px;
+        width: fit-content;
+        animation: fadeIn 0.2s ease-in-out;
+        z-index: 1000;
+
+        .icon {
+          height: 16px;
+          width: 16px;
+        }
+        .svg-icon-c {
+          height: 16px;
+          width: 16px;
+          padding: 0;
+          margin-left: 10px;
         }
 
-        &.right::before {
-          right: -6px;
-          top: 50%;
-          transform: translateY(-50%);
-          border-width: 12px 0 12px 12px;
-          border-color: transparent transparent transparent #33b8ff;
+        .label {
+          padding: 8px;
+          color: white;
+          font-size: 12px;
+          text-align: center;
+          font-weight: 500;
         }
 
-        &.bottom::before {
-          bottom: -6px;
-          left: 50%;
-          transform: translateX(-50%);
-          border-width: 12px 12px 0 12px;
-          border-color: #33b8ff transparent transparent transparent;
-        }
-
-        &.top::before {
-          top: -6px;
-          left: 50%;
-          transform: translateX(-50%);
-          border-width: 0 12px 12px 12px;
-          border-color: transparent transparent #33b8ff transparent;
+        &::before {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 0;
+          border-style: solid;
         }
       }
+    }
+  }
+
+  .ui-tooltip-wrapper-right .ui-tooltip-content-container {
+    right: calc(100% + 10px);
+    &::before {
+      top: 50%;
+      right: -5px;
+      transform: translateY(-50%);
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent #33b8ff;
+    }
+  }
+
+  .ui-tooltip-wrapper-left .ui-tooltip-content-container {
+    left: calc(100% + 10px);
+    &::before {
+      top: 50%;
+      left: -5px;
+      transform: translateY(-50%);
+      border-width: 10px 10px 10px 0;
+      border-color: transparent #33b8ff transparent transparent;
+    }
+  }
+
+  .ui-tooltip-wrapper-bottom .ui-tooltip-content-container {
+    bottom: calc(100% + 10px);
+    &::before {
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px 10px 0 10px;
+      border-color: #33b8ff transparent transparent transparent;
+    }
+  }
+
+  .ui-tooltip-wrapper-top .ui-tooltip-content-container {
+    top: calc(100% + 10px);
+
+    &::before {
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 0 10px 10px 10px;
+      border-color: transparent transparent #33b8ff transparent;
     }
   }
 }
