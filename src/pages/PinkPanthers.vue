@@ -1,7 +1,6 @@
 <template>
   <div class="flexi-table-page-c">
-    <FlexiTable :tss="flexiTableOptionsWithoutRowAndDetails" />
-    {{ flexiTableOptionsWithoutRowAndDetails.selectedRows }}
+    <FlexiTable :a="flexiTableOptions" />
   </div>
 </template>
 
@@ -9,7 +8,6 @@
 import response from '../../mentors/flexitable/flexitableData'
 import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
 
-import PageOrder from '../../src/enum/PageOrder'
 export default {
   name: 'FlexiTablePage',
   components: {
@@ -18,13 +16,22 @@ export default {
 
   data() {
     return {
+      b: {
+        options: {},
+        columns: [{ id: 1, name: '#', label: 'id' }],
+        rows: [],
+        selectedRows: []
+      },
+      a: {
+        options: {},
+        columns: [],
+        rows: [],
+        selectedRows: []
+      },
       flexiTableOptions: {
         options: {
-          columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
-
           columnGap: '.5rem',
-          EInternSingleComponentType: PageOrder,
-
+          //columnSizes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
           hiddenColumns: ['annualFee', 'city'],
 
           //itemsPerPage: 5,
@@ -54,7 +61,6 @@ export default {
           columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
 
           columnGap: '.5rem',
-          EInternSingleComponentType: PageOrder,
 
           hiddenColumns: ['annualFee', 'city'],
 
@@ -85,7 +91,6 @@ export default {
           columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
 
           columnGap: '.5rem',
-          EInternSingleComponentType: PageOrder,
 
           hiddenColumns: ['annualFee', 'city'],
 
@@ -115,7 +120,7 @@ export default {
   },
   created() {
     // row mapper for FlexiTable
-    this.flexiTableOptions.rows = response.map((item) => {
+    ;(this.flexiTableOptions.rows = response.map((item) => {
       return {
         row: {
           id: {
@@ -125,7 +130,7 @@ export default {
             pushelements: false,
             selectedRows: []
           },
-          status: {
+          statuss: {
             value: item.status,
             class: `item-${item.status}`,
             url: `?status=${item.status}`
@@ -170,8 +175,8 @@ export default {
           check: true
         }
       }
-    }),
-      this.flexiTableOptionsWithoutRowAndDetails.rows = response.map((item) => {
+    })),
+      (this.flexiTableOptionsWithoutRowAndDetails.rows = response.map((item) => {
         return {
           id: {
             // value: item.gender == 'Female' ? true : false,
@@ -215,8 +220,8 @@ export default {
             class: 'email'
           }
         }
-      }),
-      this.flexiTableOptionsWithoutDetails.rows = response.map((item) => {
+      })),
+      (this.flexiTableOptionsWithoutDetails.rows = response.map((item) => {
         return {
           row: {
             id: {
@@ -262,7 +267,52 @@ export default {
             }
           }
         }
-      })
+      })),
+      (this.a.rows = response.map((item) => {
+        return {
+          id: {
+            // value: item.gender == 'Female' ? true : false,
+            value: false,
+            checkbox: true,
+            pushelements: false,
+            selectedRows: []
+          },
+          status: {
+            value: item.status,
+            class: `item-${item.status}`,
+            url: `?status=${item.status}`
+          },
+          nameSurname: {
+            img: item.photo,
+            imgClass: `student-photo-${item.gender}`,
+            value: item.nameSurname
+          },
+          studentNumber: {
+            value: item.studentID
+          },
+          class: {
+            value: item.class
+          },
+          birthDate: {
+            value: item.birthDate
+          },
+          gender: item.gender,
+          city: item.city,
+          department: item.department,
+          gpa: {
+            value: item.highSchoolGPA,
+            class: 'txt-right'
+          },
+          annualFee: {
+            value: item.annualFee,
+            class: 'txt-right txt-bold'
+          },
+          email: {
+            value: item.email,
+            class: 'email'
+          }
+        }
+      }))
     // hidden Columns Reactivity Test
     // setTimeout(() => {
     //   this.flexiTableOptions.options.hiddenColumns.push('annualFee')
