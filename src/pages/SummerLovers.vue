@@ -2,7 +2,6 @@
   <div>
     <div>
       <MenuDropdown
-        class="menu"
         :items="multiItems"
         primaryKey="id"
         displayField="name"
@@ -509,19 +508,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.menu {
-  margin-right: 20px;
-}
-
-hr {
-  margin: 0;
-  border: 0;
-  height: 1px;
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.75),
-    rgba(0, 0, 0, 0)
-  );
-}
+// hr {
+//   margin: 0;
+//   border: 0;
+//   height: 1px;
+//   background-image: linear-gradient(
+//     to right,
+//     rgba(0, 0, 0, 0),
+//     rgba(0, 0, 0, 0.75),
+//     rgba(0, 0, 0, 0)
+//   );
+// }
 </style>

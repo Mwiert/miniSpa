@@ -109,7 +109,6 @@ export default {
 
 .menu-dropdown-c {
   display: inline-flex;
-  margin: 5px;
   .menu-dropdown-wrapper {
     .menu-dropdown-toggle {
       display: flex;
