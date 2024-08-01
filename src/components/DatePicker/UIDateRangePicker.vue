@@ -1,6 +1,6 @@
 <template>
   <div class="ui-date-range-picker-c">
-    <label v-if="label">{{ label }}</label>
+    <label class="label" v-if="label">{{ label }}</label>
 
     <!-- This is for opening and closing the calendar -->
     <div
@@ -155,7 +155,6 @@ export default {
     isSingleDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
     validateForwardMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
-    validateForwardDay: { type: Number, default: 99 }, //This is for validating the day range by giving it 9999 as default value since this is one of the maximum value
     validateForwardYear: { type: Number, default: 99 },
     validateBackYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
     validateForwardDay: { type: Number, default: 99 },
@@ -304,7 +303,8 @@ export default {
               date: dayjs(this.initialDate).format('YYYY-MM-DD')
             }
           }
-        } else {               //bu koşul hiç sağlanıyor mu ?
+        } else {
+          //bu koşul hiç sağlanıyor mu ?
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs().format('DD'),
@@ -390,9 +390,11 @@ export default {
   gap: 0.75rem;
   position: relative;
   width: 175px;
-  label {
-    font-size: 14px;
-    margin-top: 15px;
+  .label {
+    font-size: 0.75rem;
+    display: flex;
+    text-align: left;
+    padding-left: 0.25rem;
   }
   .date-picker-without-label {
     position: absolute;
