@@ -1,9 +1,10 @@
 <template>
   <div class="menu-dropdown-c">
     <div class="menu-dropdown-wrapper" @mouseleave="handleMouseLeave">
-
-      <div :class="['menu-dropdown-toggle', `${className}-background`]" @mouseover="handleMouseOver" @click="handleToggle">
-
+      <div
+        :class="['menu-dropdown-toggle', `${className}-background`]"
+        @mouseover="handleMouseOver"
+        @click="handleToggle">
         <slot name="toggle"></slot>
         <label v-if="label" class="menu-dropdown-label">{{ label }}</label>
         <SvgIcon v-if="!directRight" class="svg-icon" :name="'arrow-down'" :size="'s'" />
@@ -156,6 +157,7 @@ export default {
   }
 }
 .menu-dropdown-c {
+  margin: 5px;
   position: relative;
   display: inline-flex;
   .menu-dropdown-wrapper {
@@ -240,7 +242,6 @@ export default {
         &.flight {
           background-color: $primary-color;
         }
-
       }
       &.direct-left-wrapper {
         right: 100%;
@@ -289,7 +290,6 @@ export default {
               }
             }
           }
-
         }
         &.hotel {
           border: 1px solid $secondary-color;
