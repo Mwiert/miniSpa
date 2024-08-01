@@ -127,6 +127,12 @@ export default {
           height: 16px;
           width: 16px;
         }
+        .svg-icon-c {
+          height: 16px;
+          width: 16px;
+          padding: 0;
+          margin-left: 5px;
+        }
 
         .label {
           padding: 8px;

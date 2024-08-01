@@ -10,7 +10,6 @@
         class="icon" />
       <UITooltip
         label="This is a funny tooltip"
-        icon="x"
         position="left"
         type="click"
         :isOpen="hoverComponent" />
