@@ -4,10 +4,10 @@
       <div class="menu-dropdown-toggle" @mouseover="handleMouseOver" @click="handleToggle">
         <slot name="toggle"></slot>
         <label v-if="label" class="menu-dropdown-label">{{ label }}</label>
-        <SvgIcon class="svg-icon" :name="'arrow-down'" :size="'s'" />
+        <SvgIcon v-if="!directRight" class="svg-icon" :name="'arrow-down'" :size="'s'" />
       </div>
-      <div v-if="isOpen" class="menu-dropdown-content-wrapper">
-        <div class="menu-dropdown-content" :class="{ active: isOpen }">
+      <div v-if="isOpen" :class="['menu-dropdown-content-wrapper', {'direct-right-wrapper': directRight}]">
+        <div :class="['menu-dropdown-content', {'direct-right': directRight}, className]">
           <div class="slot-item">
             <slot></slot>
           </div>
@@ -56,7 +56,16 @@ export default {
     actionField: {
       type: String,
       default: 'action'
-    }
+    },
+    className: {
+      type: String,
+      default: 'flight'
+    },    
+    directRight: {
+      type: Boolean,
+      default: false
+    },
+    
   },
   methods: {
     handleMouseOver() {
@@ -106,8 +115,18 @@ export default {
     transform: translateY(0);
   }
 }
-
+@keyframes droprightAnimation {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 .menu-dropdown-c {
+  position: relative;
   display: inline-flex;
   .menu-dropdown-wrapper {
     .menu-dropdown-toggle {
@@ -123,6 +142,7 @@ export default {
         margin-left: 1rem;
       }
     }
+
     .menu-dropdown-content-wrapper {
       position: absolute;
       z-index: 99;
@@ -140,14 +160,52 @@ export default {
         border-bottom: 10px solid white;
         z-index: 999;
       }
+
+      &.direct-right-wrapper {
+        animation: droprightAnimation 0.3s ease-out;
+        position: absolute;
+          top: 0;
+          left: 100%;
+
+          &::before {
+            display: none;
+          }
+      }
+
+
       .menu-dropdown-content {
         background-color: white;
         border-radius: 1rem;
         padding-bottom: 1rem;
         box-shadow: 0 0 6px rgb(0, 0, 0);
-        min-width: 180px;
-        max-width: 360px;
+        min-width: 240px;
+        max-width: 600px;
         overflow-x: auto;
+        overflow-y: hidden;
+
+        &.direct-right {
+          border-radius: 0 1rem 1rem 1rem;
+        }
+
+        &.hotel {
+          border: 1px solid $secondary-color;
+          .item {
+            color: #000000;
+            &:hover {
+              background-color: $secondary-color;
+            }
+          }
+        }
+        &.flight {
+          border: 1px solid $accent-primary-color;
+          .item {
+            color: #000000;
+            &:hover {
+              background-color: $accent-primary-color;
+            }
+          }
+        }
+
         .slot-item {
           > * {
             display: flex;
@@ -167,14 +225,11 @@ export default {
             transition:
               background-color 0.5s ease,
               color 0.5s ease;
-            &:hover {
-              background-color: $accent-primary-color;
-              color: white;
-            }
           }
         }
       }
-    }
+    }    
+
   }
 }
 </style>
