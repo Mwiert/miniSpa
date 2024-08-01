@@ -10,19 +10,11 @@
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <button
-              id="prev"
-              class="nav-button"
-              @click="onClickToLeft"
-              v-show="minDate < currentDate">
+            <button id="prev" class="nav-button" @click="onClickToLeft" v-show="prevDate">
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{ dateHolder }}</span>
-            <button
-              id="next"
-              class="nav-button"
-              @click="onClickToRight"
-              v-show="currentDate < maxDate">
+            <button id="next" class="nav-button" @click="onClickToRight" v-show="nextDate">
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
@@ -101,9 +93,9 @@ export default {
           this.minDate = dayjs().subtract(this.backYearRange, 'year').format('YYYY-MM-DD')
         }
 
-        this.maxDate = dayjs().startOf('month').format('YYYY-MM-DD')
+        this.maxDate = dayjs().format('YYYY-MM-DD')
       } else if (this.isFutureValidation) {
-        this.minDate = dayjs().endOf('month').format('YYYY-MM-DD')
+        this.minDate = dayjs().format('YYYY-MM-DD')
 
         if (this.forwardMonthRange !== 99) {
           this.maxDate = dayjs().add(this.forwardMonthRange, 'month').format('YYYY-MM-DD')
@@ -232,17 +224,17 @@ export default {
       const endOfMonth = this.calendarDate.endOf('month') // End of the month
 
       /*
-        Purpose of the below comments is to explain the logic of 
-        the offsetvalues where we empty the days regarding to months 
+        Purpose of the below comments is to explain the logic of
+        the offsetvalues where we empty the days regarding to months
         at the beginning and end of the month
         */
 
-      /*  
+      /*
           startOfMonth.day() gives the day of the week (0-6) for the first day of the month
           Adding 6 shifts the days so that Sunday (0) becomes the last day of the week
-          % 7 ensures the value stays within the range of 0-6                              
+          % 7 ensures the value stays within the range of 0-6
         */ const offsetValue = (startOfMonth.day() + 6) % 7
-      /*  
+      /*
           endOfMonth.date() gives the last day of the month (1-31)
           (offsetValue + endOfMonth.date()) % 7 gives the day of the week for the last day of the month
           % 7 ensures the value stays within the range of 0-6
@@ -282,24 +274,29 @@ export default {
       this.linedThroughDate() // Lining through the date
       this.checkDateHistory() // Checking the date history
     },
+
+    checkSkippability() {
+      this.prevDate =
+        dayjs(this.minDate).format('YYYY-MM') < dayjs(this.currentDate).format('YYYY-MM')
+      this.nextDate =
+        dayjs(this.maxDate).format('YYYY-MM') > dayjs(this.currentDate).format('YYYY-MM')
+    },
     //This is for the right button to go to the next month
     onClickToRight() {
-      this.prevDate = dayjs(this.calendarDate).startOf('month').format('YYYY-MM-DD')
-      this.nextDate = dayjs(this.calendarDate).endOf('month').format('YYYY-MM-DD')
       this.calendarDate = this.calendarDate.add(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the next month with manipulated date
       this.totalDaysInMonth()
+      this.checkSkippability()
     },
 
     //This is for the left button to go to the next month
     onClickToLeft() {
-      this.prevDate = dayjs(this.calendarDate).startOf('month').format('YYYY-MM-DD')
-      this.nextDate = dayjs(this.calendarDate).endOf('month').format('YYYY-MM-DD')
       this.calendarDate = this.calendarDate.subtract(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the previous month with manipulated date
       this.totalDaysInMonth()
+      this.checkSkippability()
     },
 
     //This is for getting the current month
@@ -403,11 +400,11 @@ export default {
   watch: {
     isDatePickerEnable(newVal) {
       if (newVal) {
-        this.prevDate = dayjs(this.calendarDate).startOf('month').format('YYYY-MM-DD')
-        this.nextDate = dayjs(this.calendarDate).endOf('month').format('YYYY-MM-DD')
         this.calendarDate = dayjs(this.saveDateHistory)
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
+
         this.totalDaysInMonth()
+        this.checkSkippability()
       }
     }
   },
@@ -417,6 +414,7 @@ export default {
     this.totalDaysInMonth()
     this.checkDateHistory()
     this.linedThroughDate()
+    this.checkSkippability()
   }
 }
 </script>
