@@ -1,20 +1,20 @@
 <template>
-  <span class="tooltip-c">
-    <span class="tooltip-wrapper">
+  <span>
+    <span>
       <UITooltip
         label="This is a funny tooltipasdggsdnıgdasnjgasdnhjgasdbhkgbsdah"
         position="right"
-        type="hover">
-        <SvgIcon :name="'x'" :size="'s'" :color="'#000'" class="icon" />
+        type="click">
+        <SvgIcon :name="'x'" :size="'s'" :color="'#000'" />
       </UITooltip>
     </span>
-    <span class="tooltip-wrapper">
+    <span>
       <UITooltip
         label="This is a funny tooltipasdglnasdgjkhjıasdgbhıkasdghıdgbashasgdb"
         icon="x"
-        position="bottom"
+        position="top"
         type="click">
-        <SvgIcon :name="'x'" :size="'s'" :color="'#000'" class="icon" />
+        <SvgIcon :name="'x'" :size="'s'" :color="'#000'" />
       </UITooltip>
     </span>
   </span>
@@ -442,33 +442,6 @@ export default {
     display: flex;
     justify-content: center;
     background-color: white;
-  }
-}
-.tooltip-c {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  .tooltip-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-
-    .svg-icon-c {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 16px;
-      width: 16px;
-    }
   }
 }
 </style>
