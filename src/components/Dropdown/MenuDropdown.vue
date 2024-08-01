@@ -1,7 +1,7 @@
 <template>
   <div class="menu-dropdown-c">
     <div class="menu-dropdown-wrapper" @mouseleave="handleMouseLeave">
-      <div class="menu-dropdown-toggle" @mouseover="handleMouseOver" @click="handleToggle">
+      <div :class="['menu-dropdown-toggle', `${className}-background`]" @mouseover="handleMouseOver" @click="handleToggle">
         <slot name="toggle"></slot>
         <label v-if="label" class="menu-dropdown-label">{{ label }}</label>
         <SvgIcon v-if="!directRight" class="svg-icon" :name="'arrow-down'" :size="'s'" />
@@ -61,7 +61,7 @@ export default {
     },
     className: {
       type: String,
-      default: 'flight'
+      default: ''
     },
     directRight: {
       type: Boolean,
@@ -115,11 +115,10 @@ export default {
         if (overflowRight < 0) {
           dropdown.classList.add('direct-left-wrapper')
           dropdownContent.classList.add('direct-left')
- 
         }
         if (overflowDown < 0) {
           dropdown.classList.add('above')
-          if(directRight || directLeft){
+          if (directRight || directLeft) {
             dropdown.classList.add('direct-r-above')
             directRight.classList.add('above')
             directLeft?.classList.add('above')
@@ -167,6 +166,27 @@ export default {
       border-left: 1px solid black;
       border-right: 1px solid black;
       padding: 0.5rem 1rem;
+      &.flight-background {
+        background-color: $primary-color;
+        border-color: $primary-color;
+        .menu-dropdown-label,
+        .svg-icon {
+          color: rgb(255, 255, 255);
+          fill: white;
+          //renk varken backgroundta label ve icon rengine karar verilecek
+        }
+      }
+
+      &.hotel-background {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+        .menu-dropdown-label,
+        .svg-icon {
+          color: rgb(0, 0, 0);
+          fill: white;
+        }
+      }
+
       .svg-icon {
         margin-left: 1rem;
       }
@@ -198,11 +218,9 @@ export default {
         top: auto;
         bottom: 100%;
         &::before {
-          top: auto;
-          bottom: -220px;
-          border-top: 10px solid white;
-          border-bottom: 0;
+          display: none;
         }
+        //after çentiği gelecek
       }
       &.direct-right-wrapper {
         animation: droprightAnimation 0.3s ease-out;
@@ -213,16 +231,22 @@ export default {
         &::before {
           display: none;
         }
+        &.hotel {
+          background-color: $secondary-color;
+        }
+        &.flight {
+          background-color: $primary-color;
+        }
+
       }
       &.direct-left-wrapper {
         right: 100%;
         left: auto;
-
       }
       &.direct-r-above {
-          top: auto;
-          bottom: 0%;
-        }
+        top: auto;
+        bottom: 0%;
+      }
 
       .menu-dropdown-content {
         background-color: white;
@@ -238,6 +262,47 @@ export default {
           border-radius: 0 1rem 1rem 1rem;
           &.above {
             border-radius: 1rem 1rem 1rem 0;
+          }
+          &.hotel {
+            background-color: $secondary-color;
+            .item {
+              color: #ffffff;
+              &:hover {
+                background-color: $accent-secondary-color;
+                //backgroundta renk varken hover rengine karar verilecek
+                color: white;
+              }
+            }
+          }
+          &.flight {
+            background-color: $primary-color;
+            .item {
+              color: #ffffff;
+              &:hover {
+                background-color: $accent-primary-color;
+                color: white;
+              }
+            }
+          }
+        }
+        &.hotel {
+          border: 1px solid $secondary-color;
+          .item {
+            color: #000000;
+            &:hover {
+              background-color: $secondary-color;
+              color: white;
+            }
+          }
+        }
+        &.flight {
+          border: 1px solid $primary-color;
+          .item {
+            color: #000000;
+            &:hover {
+              background-color: $primary-color;
+              color: white;
+            }
           }
         }
 
@@ -266,7 +331,13 @@ export default {
             }
           }
         }
-
+        .item {
+          color: #000000;
+          &:hover {
+            background-color: $accent-primary-color;
+            color: white;
+          }
+        }
         .slot-item {
           > * {
             display: flex;
@@ -292,5 +363,4 @@ export default {
     }
   }
 }
-
 </style>

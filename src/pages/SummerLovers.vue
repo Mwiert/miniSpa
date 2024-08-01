@@ -371,7 +371,7 @@
       </MenuDropdown>
       <MenuDropdown
        
-        :className="'flight'"
+        :className="'hotel'"
         :items="multiItems"
        
         primaryKey="id"
