@@ -9,6 +9,7 @@
       </MenuDropdown>
 
       <MenuDropdown
+        className="hotel"
         :items="multiItems"
         primaryKey="id"
         displayField="name"

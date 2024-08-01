@@ -7,7 +7,7 @@
         <SvgIcon v-if="!directRight" class="svg-icon" :name="'arrow-down'" :size="'s'" />
       </div>
       <div v-if="isOpen" :class="['menu-dropdown-content-wrapper', {'direct-right-wrapper': directRight}]">
-        <div :class="['menu-dropdown-content', {'direct-right': directRight}]">
+        <div :class="['menu-dropdown-content', {'direct-right': directRight}, className]">
           <div class="slot-item">
             <slot></slot>
           </div>
@@ -181,6 +181,7 @@ export default {
         min-width: 240px;
         max-width: 600px;
         overflow-x: auto;
+        overflow-y: hidden;
 
         &.direct-right {
           border-radius: 0 1rem 1rem 1rem;
