@@ -6,8 +6,10 @@
         <label v-if="label" class="menu-dropdown-label">{{ label }}</label>
         <SvgIcon v-if="!directRight" class="svg-icon" :name="'arrow-down'" :size="'s'" />
       </div>
-      <div v-if="isOpen" :class="['menu-dropdown-content-wrapper', {'direct-right-wrapper': directRight}]">
-        <div :class="['menu-dropdown-content', {'direct-right': directRight}, className]">
+      <div
+        v-if="isOpen"
+        :class="['menu-dropdown-content-wrapper', { 'direct-right-wrapper': directRight }]">
+        <div :class="['menu-dropdown-content', { 'direct-right': directRight }, className]">
           <div class="slot-item">
             <slot></slot>
           </div>
@@ -60,17 +62,17 @@ export default {
     className: {
       type: String,
       default: 'flight'
-    },    
+    },
     directRight: {
       type: Boolean,
       default: false
-    },
-    
+    }
   },
   methods: {
     handleMouseOver() {
       if (!this.isClicked) {
         this.isOpen = true
+        this.windowOverflow()
       }
     },
     handleMouseLeave() {
@@ -81,8 +83,8 @@ export default {
     handleToggle() {
       this.isClicked = !this.isClicked
       this.isOpen = this.isClicked
-
       if (this.isOpen) {
+        this.windowOverflow()
         document.addEventListener('click', this.handleOutsideClick)
       } else {
         document.removeEventListener('click', this.handleOutsideClick)
@@ -97,6 +99,33 @@ export default {
     },
     beforeDestroy() {
       document.removeEventListener('click', this.handleOutsideClick)
+    },
+    windowOverflow() {
+      this.$nextTick(() => {
+        const dropdown = this.$el.querySelector('.menu-dropdown-content-wrapper')
+        const dropdownContent = this.$el.querySelector('.menu-dropdown-content')
+        const directRight = this.$el.querySelector('.direct-right')
+        const directLeft = this.$el.querySelector('.direct-left')
+        const dropdownRect = dropdown.getBoundingClientRect()
+        const windowWidth = window.innerWidth
+        const windowHeight = window.innerHeight
+        const overflowRight = windowWidth - dropdownRect.right
+        const overflowDown = windowHeight - dropdownRect.bottom
+        console.log(overflowRight, overflowDown)
+        if (overflowRight < 0) {
+          dropdown.classList.add('direct-left-wrapper')
+          dropdownContent.classList.add('direct-left')
+ 
+        }
+        if (overflowDown < 0) {
+          dropdown.classList.add('above')
+          if(directRight || directLeft){
+            dropdown.classList.add('direct-r-above')
+            directRight.classList.add('above')
+            directLeft?.classList.add('above')
+          }
+        }
+      })
     }
   }
 }
@@ -146,8 +175,12 @@ export default {
     .menu-dropdown-content-wrapper {
       position: absolute;
       z-index: 99;
-      top: 3.2rem;
+      top: 70%;
+      bottom: auto;
+      margin: 0.5rem 0;
+
       animation: dropdownAnimation 0.3s ease-out;
+
       &::before {
         content: '';
         position: relative;
@@ -161,17 +194,35 @@ export default {
         z-index: 999;
       }
 
+      &.above {
+        top: auto;
+        bottom: 100%;
+        &::before {
+          top: auto;
+          bottom: -220px;
+          border-top: 10px solid white;
+          border-bottom: 0;
+        }
+      }
       &.direct-right-wrapper {
         animation: droprightAnimation 0.3s ease-out;
         position: absolute;
-          top: 0;
-          left: 100%;
-
-          &::before {
-            display: none;
-          }
+        top: 0;
+        left: 100%;
+        margin: 0;
+        &::before {
+          display: none;
+        }
       }
+      &.direct-left-wrapper {
+        right: 100%;
+        left: auto;
 
+      }
+      &.direct-r-above {
+          top: auto;
+          bottom: 0%;
+        }
 
       .menu-dropdown-content {
         background-color: white;
@@ -179,12 +230,22 @@ export default {
         padding-bottom: 1rem;
         box-shadow: 0 0 6px rgb(0, 0, 0);
         min-width: 240px;
-        max-width: 600px;
+        max-width: 360px;
         overflow-x: auto;
         overflow-y: hidden;
 
         &.direct-right {
           border-radius: 0 1rem 1rem 1rem;
+          &.above {
+            border-radius: 1rem 1rem 1rem 0;
+          }
+        }
+
+        &.direct-left {
+          border-radius: 1rem 0 1rem 1rem;
+          &.above {
+            border-radius: 1rem 1rem 0 1rem;
+          }
         }
 
         &.hotel {
@@ -228,8 +289,8 @@ export default {
           }
         }
       }
-    }    
-
+    }
   }
 }
+
 </style>
