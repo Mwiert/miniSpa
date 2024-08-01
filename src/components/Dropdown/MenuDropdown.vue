@@ -12,7 +12,11 @@
             <slot></slot>
           </div>
           <div class="array-item">
-            <div v-for="item in items" :key="item[primaryKey]" class="item" @click="item.func()">
+            <div
+              v-for="item in items"
+              :key="item[primaryKey]"
+              class="item"
+              @click="item[actionField]">
               <SvgIcon :name="item.iconImage" :size="'s'" v-if="item.iconImage" />
               <span> {{ item[displayField] }} </span>
             </div>
@@ -48,6 +52,10 @@ export default {
     label: {
       type: String,
       default: ''
+    },
+    actionField: {
+      type: String,
+      default: 'action'
     }
   },
   methods: {
@@ -87,6 +95,18 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../assets/css/variables.scss';
+
+@keyframes dropdownAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .menu-dropdown-c {
   display: inline-flex;
   margin: 5px;
@@ -108,6 +128,7 @@ export default {
       position: absolute;
       z-index: 99;
       top: 3.2rem;
+      animation: dropdownAnimation 0.3s ease-out;
       &::before {
         content: '';
         position: relative;
@@ -128,7 +149,6 @@ export default {
         min-width: 180px;
         max-width: 360px;
         overflow-x: auto;
-
         .slot-item {
           > * {
             display: flex;

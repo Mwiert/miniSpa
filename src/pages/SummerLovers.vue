@@ -1,7 +1,13 @@
 <template>
   <div>
     <div>
-      <MenuDropdown :items="multiItems" primaryKey="id" displayField="name" label="Menu Dropdown">
+      <MenuDropdown
+        class="menu"
+        :items="multiItems"
+        primaryKey="id"
+        displayField="name"
+        label="Menu Dropdown"
+        actionField="func">
         <template #toggle>
           <SvgIcon name="mail" size="s" />
         </template>
