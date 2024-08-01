@@ -1,18 +1,21 @@
 <template>
   <div class="time-benders-c">
     {{ selectDate }}
-    <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
+     selectedDate comes from UIDateRangePicker with v-model implementation 
     <UIDateRangePicker v-model="selectDate" :isSingleDatePicker="true" />
+    <UISlideDatePicker/> 
   </div>
 </template>
 
 <script lang="ts">
 //Imports the needed components and interfaces
 import UIDateRangePicker from '../components/DatePicker/UIDateRangePicker.vue'
+import UISlideDatePicker from '../components/DatePicker/UISlideDatePicker.vue';
 export default {
   name: 'TimeBenders',
   components: {
-    UIDateRangePicker
+    UIDateRangePicker,
+    UISlideDatePicker
   },
   data() {
     return {
