@@ -1,17 +1,17 @@
 <template>
     <div class="date-picker">
-      <div class="picker" ref="months" @wheel="scroll('months', $event)">
-        <div v-for="(month, index) in months" :key="index" :class="{ selected: selectedMonthIndex === index }" @click="selectMonth(index)">
+      <div class="picker" ref="months" @scroll="onScroll('months')">
+        <div v-for="(month, index) in months" :key="index" :class="{ selected: selectedMonthIndex === index }">
           {{ month }}
         </div>
       </div>
-      <div class="picker" ref="days" @wheel="scroll('days', $event)">
-        <div v-for="day in days" :key="day" :class="{ selected: selectedDay === day }" @click="selectDay(day)">
+      <div class="picker" ref="days" @scroll="onScroll('days')">
+        <div v-for="day in days" :key="day" :class="{ selected: selectedDay === day }">
           {{ day }}
         </div>
       </div>
-      <div class="picker" ref="years" @wheel="scroll('years', $event)">
-        <div v-for="year in years" :key="year" :class="{ selected: selectedYear === year }" @click="selectYear(year)">
+      <div class="picker" ref="years" @scroll="onScroll('years')">
+        <div v-for="year in years" :key="year" :class="{ selected: selectedYear === year }">
           {{ year }}
         </div>
       </div>
@@ -19,41 +19,50 @@
   </template>
   
   <script>
+import date from '../../interface/UISlideDatePicker'
   export default {
     props: {
       value: {
         type: Object,
         default: () => ({
-          month: 2,
-          day: 3,
+          month: 10,
+          day: 6,
           year: new Date().getFullYear(),
         }),
       },
     },
     data() {
       return {
-        months: [
-          "January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
-        ],
-        days: Array.from({ length: 31 }, (_, i) => i + 1),
-        years: Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i),
+        months: ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"] as date[], //Creating the days in month as date interface object
+        days: [Array.from({ length: 31 }, (_, i) => i + 1),] as date[], //Creating the next month's days
+        years: Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i)  as date[],
         selectedMonthIndex: this.value.month,
         selectedDay: this.value.day,
         selectedYear: this.value.year,
       };
     },
     methods: {
-      selectMonth(index) {
-        this.selectedMonthIndex = index;
-        this.emitChange();
+      onScroll(refName) {
+    
+        const element = this.$refs[refName];
+        const scrollHeight = element.scrollHeight;
+        const clientHeight = element.clientHeight;
+        const scrollTop = element.scrollTop;
+  
+        // Consider the bottom reached if scrolled within 1 pixel of the end
+        if (scrollTop + clientHeight >= scrollHeight - 1) {
+          this.selectLastVisibleItem(refName);
+        }
       },
-      selectDay(day) {
-        this.selectedDay = day;
-        this.emitChange();
-      },
-      selectYear(year) {
-        this.selectedYear = year;
+      selectLastVisibleItem(refName) {
+        if (refName === 'months') {
+          this.selectedMonthIndex = this.months.length - 1;
+        } else if (refName === 'days') {
+          this.selectedDay = this.days.length - 1;
+        } else if (refName === 'years') {
+          this.selectedYear = this.years.length - 1;
+        }
         this.emitChange();
       },
       emitChange() {
@@ -62,10 +71,6 @@
           day: this.selectedDay,
           year: this.selectedYear,
         });
-      },
-      scroll(refName, event) {
-        const element = this.$refs[refName];
-        element.scrollTop += event.deltaY;
       },
     },
     watch: {
@@ -90,7 +95,7 @@
   
   .picker {
     height: 200px;
-    overflow-y: hidden;
+    overflow-y: auto;
     position: relative;
     display: flex;
     flex-direction: column;
