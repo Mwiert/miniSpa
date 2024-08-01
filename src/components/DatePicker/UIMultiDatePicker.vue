@@ -191,7 +191,7 @@ export default {
           }
         } else if (this.backMonthRange !== 99) {
           this.minDate = dayjs(this.initialDate)
-            .subtract(this.backMonthRange, 'month')
+            .subtract(this.backMonthRange + 1, 'month')
             .format('YYYY-MM-DD')
 
           if (this.forwardMonthRange !== 99) {
@@ -263,7 +263,7 @@ export default {
 
           if (this.backMonthRange !== 99) {
             this.minDate = dayjs(this.initialDate)
-              .subtract(this.backMonthRange, 'month')
+              .subtract(this.backMonthRange + 1, 'month')
               .format('YYYY-MM-DD')
           } else if (this.backDayRange !== 99) {
             this.minDate = dayjs(this.initialDate)
@@ -378,9 +378,9 @@ export default {
           dayjs(this.maxDate).format('YYYY-MM') > dayjs(this.calendarDate).format('YYYY-MM')
       } else {
         this.prevDate =
-          dayjs(this.minDate).format('YYYY-MM') <= dayjs(this.prevMonthDate).format('YYYY-MM')
+          dayjs(this.minDate).format('YYYY-MM') < dayjs(this.prevMonthDate).format('YYYY-MM')
         this.nextDate =
-          dayjs(this.maxDate).format('YYYY-MM') >= dayjs(this.nextMonthDate).format('YYYY-MM')
+          dayjs(this.maxDate).format('YYYY-MM') > dayjs(this.nextMonthDate).format('YYYY-MM')
       }
     },
     //This is for the right button to go to the next month
@@ -563,35 +563,44 @@ export default {
       const startDateMonthIndex = dayjs(startDate.date).month()
       const endDateMonthIndex = dayjs(endDate.date).month()
 
+      const startDateYear = dayjs(startDate.date).year()
+      const endDateYear = dayjs(endDate.date).year()
+
       const leftCalendarMonthIndex = dayjs(this.daysInMonth[15].date).month()
       const rightCalendarMonthIndex = dayjs(this.nextMonthDays[15].date).month()
 
+      const leftCalendarYear = dayjs(this.daysInMonth[15].date).year()
+      const rightCalendarYear = dayjs(this.nextMonthDays[15].date).year()
+
       if (startDate.date && endDate.date) {
-        // seçilen iki tarih farklı aylardaysa
-        if (startDate.month !== endDate.month) {
+        // Seçilen iki tarih farklı yıllardaysa
+        if (startDateYear !== endDateYear || startDateMonthIndex !== endDateMonthIndex) {
           // soldaki takvim için
           this.daysInMonth.forEach((day) => {
-            if (
-              // firstSelectedDate, soldaki takvimde ise o takvimdeki sağdaki günlerin between'ini true yap
-              startDateMonthIndex == leftCalendarMonthIndex &&
-              day.number > startDate.number &&
-              day.number != 0
+            const dayDate = dayjs(day.date)
+            const dayMonthIndex = dayDate.month()
+            const dayYear = dayDate.year()
+
+            if (dayYear > startDateYear && dayYear < endDateYear) {
+              day.active = true
+              day.between = true
+            } else if (dayYear === startDateYear && dayMonthIndex > startDateMonthIndex) {
+              day.active = true
+              day.between = true
+            } else if (dayYear === endDateYear && dayMonthIndex < endDateMonthIndex) {
+              day.active = true
+              day.between = true
+            } else if (
+              dayYear === startDateYear &&
+              dayMonthIndex === startDateMonthIndex &&
+              day.number > startDate.number
             ) {
               day.active = true
               day.between = true
             } else if (
-              // secondSelectedDate, soldaki takvimde ise o takvimdeki soldaki günlerin between'ini true yap
-              endDateMonthIndex == leftCalendarMonthIndex &&
-              day.number < endDate.number &&
-              day.number != 0
-            ) {
-              day.active = true
-              day.between = true
-            } else if (
-              // iki tarihin ayı soldaki takvime ait değil ise soldaki takvimin tamamının between'ini true yap
-              startDateMonthIndex < leftCalendarMonthIndex &&
-              leftCalendarMonthIndex < endDateMonthIndex &&
-              day.number != 0
+              dayYear === endDateYear &&
+              dayMonthIndex === endDateMonthIndex &&
+              day.number < endDate.number
             ) {
               day.active = true
               day.between = true
@@ -600,39 +609,42 @@ export default {
 
           // sağdaki takvim için
           this.nextMonthDays.forEach((day) => {
-            if (
-              // firstSelectedDate, sağdaki takvimde ise o takvimdeki sağdaki günlerin between'ini true yap
-              startDateMonthIndex == rightCalendarMonthIndex &&
-              day.number > startDate.number &&
-              day.number != 0
+            const dayDate = dayjs(day.date)
+            const dayMonthIndex = dayDate.month()
+            const dayYear = dayDate.year()
+
+            if (dayYear > startDateYear && dayYear < endDateYear) {
+              day.active = true
+              day.between = true
+            } else if (dayYear === startDateYear && dayMonthIndex > startDateMonthIndex) {
+              day.active = true
+              day.between = true
+            } else if (dayYear === endDateYear && dayMonthIndex < endDateMonthIndex) {
+              day.active = true
+              day.between = true
+            } else if (
+              dayYear === startDateYear &&
+              dayMonthIndex === startDateMonthIndex &&
+              day.number > startDate.number
             ) {
               day.active = true
               day.between = true
             } else if (
-              // secondSelectedDate, sağdaki takvimde ise o takvimdeki soldaki günlerin between'ini true yap
-              endDateMonthIndex == rightCalendarMonthIndex &&
-              day.number < endDate.number &&
-              day.number != 0
-            ) {
-              day.active = true
-              day.between = true
-            } else if (
-              // iki tarihin ayı sağdaki takvime ait değil ise sağdaki takvimin tamamının between'ini true yap
-              startDateMonthIndex < rightCalendarMonthIndex &&
-              rightCalendarMonthIndex < endDateMonthIndex &&
-              day.number != 0
+              dayYear === endDateYear &&
+              dayMonthIndex === endDateMonthIndex &&
+              day.number < endDate.number
             ) {
               day.active = true
               day.between = true
             }
           })
-        }
-        // seçilen iki tarih aynı aylardaysa
-        else {
-          // seçilen iki tarih de soldaki takvimde ise tarihler arasındaki day'lerin between'ini true yap
+        } else {
+          // Seçilen iki tarih aynı ay ve yıldaysa
           if (
-            startDateMonthIndex == leftCalendarMonthIndex &&
-            endDateMonthIndex == leftCalendarMonthIndex
+            startDateYear === leftCalendarYear &&
+            startDateMonthIndex === leftCalendarMonthIndex &&
+            endDateYear === leftCalendarYear &&
+            endDateMonthIndex === leftCalendarMonthIndex
           ) {
             this.daysInMonth.forEach((day) => {
               if (day.number > startDate.number && day.number < endDate.number && day.number != 0) {
@@ -641,9 +653,10 @@ export default {
               }
             })
           } else if (
-            // seçilen iki tarih de sağdaki takvimde ise tarihler arasındaki day'lerin between'ini tru yap
-            startDateMonthIndex == rightCalendarMonthIndex &&
-            endDateMonthIndex == rightCalendarMonthIndex
+            startDateYear === rightCalendarYear &&
+            startDateMonthIndex === rightCalendarMonthIndex &&
+            endDateYear === rightCalendarYear &&
+            endDateMonthIndex === rightCalendarMonthIndex
           ) {
             this.nextMonthDays.forEach((day) => {
               if (day.number > startDate.number && day.number < endDate.number && day.number != 0) {
