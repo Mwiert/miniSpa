@@ -19,6 +19,7 @@
   </template>
   
   <script>
+import date from '../../interface/UISlideDatePicker'
   export default {
     props: {
       value: {
@@ -32,12 +33,10 @@
     },
     data() {
       return {
-        months: [
-          "January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"
-        ],
-        days: Array.from({ length: 31 }, (_, i) => i + 1),
-        years: Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i),
+        months: ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"] as date[], //Creating the days in month as date interface object
+        days: [Array.from({ length: 31 }, (_, i) => i + 1),] as date[], //Creating the next month's days
+        years: Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i)  as date[],
         selectedMonthIndex: this.value.month,
         selectedDay: this.value.day,
         selectedYear: this.value.year,
@@ -45,6 +44,7 @@
     },
     methods: {
       onScroll(refName) {
+    
         const element = this.$refs[refName];
         const scrollHeight = element.scrollHeight;
         const clientHeight = element.clientHeight;
