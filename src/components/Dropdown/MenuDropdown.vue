@@ -71,6 +71,18 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../assets/css/variables.scss';
+
+@keyframes dropdownAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .menu-dropdown-c {
   display: inline-flex;
 
@@ -92,6 +104,7 @@ export default {
       position: absolute;
       z-index: 99;
       top: 3.2rem;
+      animation: dropdownAnimation 0.3s ease-out;
       &::before {
         content: '';
         position: relative;
@@ -112,7 +125,6 @@ export default {
         min-width: 180px;
         max-width: 360px;
         overflow-x: auto;
-
         .slot-item {
           > * {
             display: flex;
