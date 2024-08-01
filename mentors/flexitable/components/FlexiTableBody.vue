@@ -6,7 +6,7 @@
     <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
       <div ref="tableContent" class="flexi-table-body-row-wrapper" :class="{ 'remove-radius': rowObj.details?.status }">
         <div class="flexi-table-body-row" :style="[gridTemplateColumns, ColumnGap]"
-          @click="handlerToggleDetails(rowobjKey)">
+          @click="handlerToggleDetails(rowObj)">
           <!-- Columns -->
           <template v-for="(col, key) in rowObj.row" :key="key">
             <div class="flexi-table-body-col" :class="{ 'jc-center': col.checkbox }" v-if="HideColumn(key)">
@@ -66,14 +66,9 @@ export default {
     getAsyncComponent(componentPath) {
       return defineAsyncComponent(() => import(`${componentPath}`))
     },
-    handlerToggleDetails(key) {
+    handlerToggleDetails(rowObj) {
       if (this.flexi.options.hasDetails) {
-        this.flexi.rows.forEach((row, index) => {
-          if (index !== key) {
-            row.details.status = false
-          }
-        })
-        this.flexi.rows[key].details.status = !this.flexi.rows[key].details.status
+        rowObj.details.status = !rowObj.details.status
       }
     },
     pushtheArray() {
