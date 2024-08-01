@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <MenuDropdown class="menu" :items="multiItems" primaryKey="id" displayField="name" label="Menu Dropdown">
+      <MenuDropdown :items="multiItems" primaryKey="id" displayField="name" label="Menu Dropdown">
         <template #toggle>
           <SvgIcon name="mail" size="s" />
         </template>
@@ -19,7 +19,7 @@
             :sortByAscending="true"
             :maxItemThreshold="maxItemThreshold"
             :hasActionBox="true" />
-            <UIMultiDropdown
+          <UIMultiDropdown
             v-model="selectedPets"
             :items="pets"
             :fontSize="fontSize"
@@ -32,23 +32,16 @@
             :sortByAscending="true"
             :maxItemThreshold="maxItemThreshold"
             :hasActionBox="true" />
-            <hr />
+          <hr />
         </template>
       </MenuDropdown>
 
-      <MenuDropdown
-      :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown"
-      >
+      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
         <template #toggle>
           <SvgIcon name="mail" size="s" />
         </template>
-        <template>
-        </template>
-
-
+        <template> </template>
       </MenuDropdown>
-
-
     </div>
     <div>
       <h1>{{ 'Single Enum Dropdown' }}</h1>
@@ -333,7 +326,7 @@ export default {
     UIEnumDropdown,
     UIDropdown,
     UIMultiDropdown,
-    MenuDropdown,
+    MenuDropdown
   },
   data() {
     return {
@@ -395,14 +388,32 @@ export default {
         { id: 3, iconImage: '', name: 'Bird Toy', detail: 'n' }
       ],
       multiItems: [
-        { id: 0, name: 'Dashboard', func: () => {window.alert('parent comp')} },
-        { id: 1, name: 'Profile', func: () => {window.open('https://www.google.com')} },
-        { id: 2, name: 'Exit', func: () => {window.open('/')} } 
+        {
+          id: 0,
+          name: 'Dashboard',
+          func: () => {
+            window.alert('parent comp')
+          }
+        },
+        {
+          id: 1,
+          name: 'Profile',
+          func: () => {
+            window.open('https://www.google.com')
+          }
+        },
+        {
+          id: 2,
+          name: 'Exit',
+          func: () => {
+            window.open('/')
+          }
+        }
       ],
-      multiItemsL : [
+      multiItemsL: [
         { id: 0, name: 'Turkish', iconImage: 'mail' },
-        { id: 1, name: 'English', iconImage: 'arrow-up'},
-        { id: 2, name: 'Indian', iconImage: 'arrow-down' } 
+        { id: 1, name: 'English', iconImage: 'arrow-up' },
+        { id: 2, name: 'Indian', iconImage: 'arrow-down' }
       ],
       items: [
         {
@@ -492,19 +503,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.menu{
+.menu {
   margin-right: 20px;
 }
 
-      hr {
-        margin: 0;
-        border: 0;
-        height: 1px;
-        background-image: linear-gradient(
-          to right,
-          rgba(0, 0, 0, 0),
-          rgba(0, 0, 0, 0.75),
-          rgba(0, 0, 0, 0)
-        );
-      }
-      </style>
+hr {
+  margin: 0;
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0)
+  );
+}
+</style>

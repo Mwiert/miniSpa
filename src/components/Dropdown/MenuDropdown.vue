@@ -64,6 +64,22 @@ export default {
     handleToggle() {
       this.isClicked = !this.isClicked
       this.isOpen = this.isClicked
+
+      if (this.isOpen) {
+        document.addEventListener('click', this.handleOutsideClick)
+      } else {
+        document.removeEventListener('click', this.handleOutsideClick)
+      }
+    },
+    handleOutsideClick(e) {
+      if (!this.$el.contains(e.target)) {
+        this.isOpen = false
+        this.isClicked = false
+        document.removeEventListener('click', this.handleOutsideClick)
+      }
+    },
+    beforeDestroy() {
+      document.removeEventListener('click', this.handleOutsideClick)
     }
   }
 }
@@ -73,7 +89,7 @@ export default {
 @import '../../assets/css/variables.scss';
 .menu-dropdown-c {
   display: inline-flex;
-
+  margin: 5px;
   .menu-dropdown-wrapper {
     .menu-dropdown-toggle {
       display: flex;
@@ -108,7 +124,7 @@ export default {
         background-color: white;
         border-radius: 1rem;
         padding-bottom: 1rem;
-        box-shadow: 0 0 8px rgb(0, 0, 0);
+        box-shadow: 0 0 6px rgb(0, 0, 0);
         min-width: 180px;
         max-width: 360px;
         overflow-x: auto;
