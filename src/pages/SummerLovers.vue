@@ -1,12 +1,20 @@
 <template>
   <div>
     <div>
+      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
+        <template #toggle>
+          <SvgIcon name="mail" size="s" />
+        </template>
+        <template> </template>
+      </MenuDropdown>
+
       <MenuDropdown
         :items="multiItems"
         primaryKey="id"
         displayField="name"
         label="Menu Dropdown"
-        actionField="func">
+        actionField="func"
+        >
         <template #toggle>
           <SvgIcon name="mail" size="s" />
         </template>
@@ -41,11 +49,44 @@
         </template>
       </MenuDropdown>
 
-      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
+      <MenuDropdown
+        :items="multiItems"
+        primaryKey="id"
+        displayField="name"
+        actionField="func"
+        directRight>
         <template #toggle>
           <SvgIcon name="mail" size="s" />
         </template>
-        <template> </template>
+        <template>
+          <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            label="Multi dropdown"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+          <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            label="Multi dropdown 2"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+          <hr />
+        </template>
       </MenuDropdown>
     </div>
     <div>
