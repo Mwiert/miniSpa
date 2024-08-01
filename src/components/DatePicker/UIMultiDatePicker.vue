@@ -128,9 +128,7 @@ export default {
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
-    isDatePickerEnable: { type: Boolean },
-    backDayRange: { type: Number, default: 99 }, //This is for validating the day range by giving it 9999 as default value since this is one of the maximum value
-    forwardDayRange: { type: Number, default: 99 },
+    isDatePickerEnable: { type: Boolean }
   },
   methods: {
     checkRange() {

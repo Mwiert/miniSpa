@@ -4,26 +4,17 @@
       <div
         v-for="(month, index) in months"
         :key="index"
-        :class="{ selected: selectedMonthIndex === index }"
-      >
+        :class="{ selected: selectedMonthIndex === index }">
         {{ month }}
       </div>
     </div>
     <div class="picker" ref="days" @scroll="onScroll('days')">
-      <div
-        v-for="day in days"
-        :key="day"
-        :class="{ selected: selectedDay === day }"
-      >
+      <div v-for="day in days" :key="day" :class="{ selected: selectedDay === day }">
         {{ day }}
       </div>
     </div>
     <div class="picker" ref="years" @scroll="onScroll('years')">
-      <div
-        v-for="year in years"
-        :key="year"
-        :class="{ selected: selectedYear === year }"
-      >
+      <div v-for="year in years" :key="year" :class="{ selected: selectedYear === year }">
         {{ year }}
       </div>
     </div>
@@ -31,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import DateModel from '../../interface/IUISlideDatePicker';
+import { defineComponent, PropType } from 'vue'
+import DateModel from '../../interface/IUISlideDatePicker'
 
 export default defineComponent({
   name: 'UISlideDatePicker',
@@ -42,72 +33,82 @@ export default defineComponent({
       default: () => ({
         month: '10',
         day: '6',
-        year: new Date().getFullYear().toString(),
-      }),
-    },
+        year: new Date().getFullYear().toString()
+      })
+    }
   },
   data() {
     return {
       months: [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December',
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
       ],
       days: Array.from({ length: 31 }, (_, i) => (i + 1).toString()),
       years: Array.from({ length: 10 }, (_, i) => (new Date().getFullYear() - 5 + i).toString()),
       selectedMonthIndex: parseInt(this.value.month) - 1,
       selectedDay: this.value.day,
-      selectedYear: this.value.year,
-    };
+      selectedYear: this.value.year
+    }
   },
   methods: {
     onScroll(refName: string) {
-      const element = this.$refs[refName] as HTMLElement;
-      const items = Array.from(element.children) as HTMLElement[];
-      const center = element.clientHeight / 2;
+      const element = this.$refs[refName] as HTMLElement
+      const items = Array.from(element.children) as HTMLElement[]
+      const center = element.clientHeight / 2
 
-      let closestIndex = 0;
-      let minDistance = Infinity;
+      let closestIndex = 0
+      let minDistance = Infinity
 
       items.forEach((item, index) => {
-        const itemRect = item.getBoundingClientRect();
-        const itemCenter = itemRect.top + itemRect.height / 2;
-        const distance = Math.abs(itemCenter - center);
+        const itemRect = item.getBoundingClientRect()
+        const itemCenter = itemRect.top + itemRect.height / 2
+        const distance = Math.abs(itemCenter - center)
 
         if (distance < minDistance) {
-          minDistance = distance;
-          closestIndex = index;
+          minDistance = distance
+          closestIndex = index
         }
-      });
+      })
 
       if (refName === 'months') {
-        this.selectedMonthIndex = closestIndex;
+        this.selectedMonthIndex = closestIndex
       } else if (refName === 'days') {
-        this.selectedDay = this.days[closestIndex];
+        this.selectedDay = this.days[closestIndex]
       } else if (refName === 'years') {
-        this.selectedYear = this.years[closestIndex];
+        this.selectedYear = this.years[closestIndex]
       }
 
-      this.emitChange();
+      this.emitChange()
     },
     emitChange() {
       this.$emit('input', {
         month: (this.selectedMonthIndex + 1).toString(),
         day: this.selectedDay,
-        year: this.selectedYear,
-      });
-    },
+        year: this.selectedYear
+      })
+    }
   },
   watch: {
     value: {
       deep: true,
       handler(newVal) {
-        this.selectedMonthIndex = parseInt(newVal.month) - 1;
-        this.selectedDay = newVal.day;
-        this.selectedYear = newVal.year;
-      },
-    },
-  },
-});
+        this.selectedMonthIndex = parseInt(newVal.month) - 1
+        this.selectedDay = newVal.day
+        this.selectedYear = newVal.year
+      }
+    }
+  }
+})
 </script>
 
 <style scoped>
@@ -140,7 +141,10 @@ export default defineComponent({
   scroll-snap-align: center;
   font-size: 18px;
   transform: rotateX(0deg) translateZ(100px);
-  transition: transform 0.3s, background-color 0.3s, opacity 0.3s;
+  transition:
+    transform 0.3s,
+    background-color 0.3s,
+    opacity 0.3s;
 }
 
 .picker div.selected {
@@ -159,7 +163,7 @@ export default defineComponent({
   transform: rotateX(30deg) translateZ(80px);
 }
 
-.picker div:nth-child(n+2):not(.selected) {
+.picker div:nth-child(n + 2):not(.selected) {
   transform: rotateX(60deg) translateZ(60px);
 }
 
@@ -173,7 +177,7 @@ export default defineComponent({
   opacity: 0.5;
 }
 
-.picker div:nth-child(-n+1):not(.selected) {
+.picker div:nth-child(-n + 1):not(.selected) {
   transform: rotateX(-30deg) translateZ(80px);
   opacity: 0.5;
 }

@@ -2,7 +2,7 @@
   <div class="time-benders-c">
     {{ selectDate }}
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
-    <UIDateRangePicker v-model="selectDate" :isSingleDatePicker="true" :validateBackDay="40" />
+    <UIDateRangePicker v-model="selectDate" :isMultiDatePicker="true" :validateBackDay="45" />
     <UISlideDatePicker />
   </div>
 </template>
