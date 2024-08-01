@@ -1,9 +1,7 @@
 <template>
-  <div class="flexi-table-c" v-if="Object.values(this.$attrs)[0]">
-    <!-- {{ flexi.columns }}
-    <br />
-    <br />
-    {{ flexi.options.columnSizes }} -->
+  <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
+    {{ flexiTableOptions.options.columnSizes }}
+    {{ flexiTableOptions.options.columnSizes.length }}
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
@@ -22,6 +20,7 @@ import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
 import FlexiTableInfo from './FlexiTableInfo.vue'
 import { computed } from 'vue'
+import flexitableExceptionHandler from '../flexitableExceptionHandler'
 export default {
   name: 'FlexiTable',
   provide() {
@@ -29,29 +28,51 @@ export default {
       flexi: computed(() => this.flexiTableOptions)
     }
   },
+  mixins: [flexitableExceptionHandler],
   data() {
     return {
       flexiTableOptions: {}
     }
   },
   created() {
-    if (Object.values(this.$attrs)[0]) {
+    this.flexiTableOptions.errors = { message: '' }
+
+    if (
+      Object.values(this.$attrs)[0]?.columns &&
+      Object.values(this.$attrs)[0]?.rows &&
+      Object.values(this.$attrs)[0]?.selectedRows
+    ) {
       const tableOptions = Object.values(this.$attrs)[0]
       const { columns, selectedRows, rows, options } = tableOptions
       const hasDetails = rows[0]?.details ? true : false
       this.flexiTableOptions = {
         columns,
         selectedRows,
-        rows: rows[0]?.row
-          ? rows
-          : rows.map((item) => ({ row: item })),
+        errors: { message: '' },
+        rows: rows[0]?.row ? rows : rows.map((item) => ({ row: item })),
         options: {
           ...flexiConfig,
           ...options,
-          hasDetails
+          hasDetails,
+          columnSizes: [
+            ...flexiConfig.columnSizes,
+            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
+          ]
         }
       }
 
+      // if (
+      //   this.flexiTableOptions.options.columnSizes.length < this.flexiTableOptions.columns.length
+      // ) {
+      //   const missingCount =
+      //     this.flexiTableOptions.columns.length - this.flexiTableOptions.options.columnSizes.length
+      //   for (let i = 0; i < missingCount; i++) {
+      //     this.flexiTableOptions.options.columnSizes.push(1)
+      //   }
+      // }
+
+      // console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row))
+      //console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row).length)
 
       //sortable Control
       if (!this.flexiTableOptions.options.disableSorting) {
@@ -120,7 +141,8 @@ export default {
   color: #363636;
 
   ::v-deep {
-    div {}
+    div {
+    }
 
     .flexi-table-header-c,
     .flexi-table-body-row {

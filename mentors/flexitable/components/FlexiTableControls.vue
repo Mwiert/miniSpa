@@ -4,7 +4,7 @@
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
-        :enumObj="flexi.options.EInternSingleComponentType"
+        :enumObj="flexi.options.pageOrder"
         :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
@@ -28,8 +28,13 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
+<<<<<<< HEAD
         <button class="excel-button" @click="downloadExcel()">Excel</button>
         <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
+=======
+        <button class="pdf-button" @click="downloadExcel()">Excel</button>
+        <button class="pdf-button" @click="downloadPdf()">create pdf</button>
+>>>>>>> b6e0e26abf05e505c1f8d1841e1144d150cecca5
       </div>
     </div>
 
@@ -51,6 +56,9 @@
 </template>
 
 <script lang="ts">
+// import the necessary libraries
+//import { jsPDF } from 'jspdf';
+//import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
 export default {
@@ -61,6 +69,32 @@ export default {
     UIEnumDropdown
   },
   methods: {
+    async downloadPdf(){
+
+    const headerElement = this.$parent.$refs.flexiheader.$refs.print2;
+    const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer;
+
+    const connectedElement = document.createElement('div');
+    [headerElement, bodyElement].forEach(element => {
+      connectedElement.appendChild(element.cloneNode(true));
+    });
+
+      const options = {
+        margin: [10, 10, 10, 10], // location
+        filename: 'download.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }
+
+      try {
+        // use html2pdf.js to convert the combinedDiv to pdf
+        await html2pdf().from(connectedElement).set(options).save()
+      } catch (error) {
+        console.error('Error generating PDF:', error)
+      }
+    },
+
     cleanColumnWithRegex(name) {
       if (typeof name === 'string') {
         return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
