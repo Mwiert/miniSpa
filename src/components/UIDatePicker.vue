@@ -73,7 +73,9 @@ export default {
       presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
-      saveDateHistory: this.saveDate //Saving the date history so we can see when we close calendar
+      saveDateHistory: this.saveDate, //Saving the date history so we can see when we close calendar
+      prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
+      nextDate: dayjs().endOf('month').format('YYYY-MM-DD')
     }
   },
   props: {
@@ -82,6 +84,8 @@ export default {
     saveDate: { type: String, default: '' }, //This is for saving the date history
     backMonthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     forwardMonthRange: { type: Number, default: 99 },
+    backDayRange: { type: Number, default: 99 }, //This is for validating the Day range by giving it 9999 as default value since this is one of the maximum value
+    forwardDayRange: { type: Number, default: 99 },
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
     isDatePickerEnable: { type: Boolean }
@@ -90,15 +94,11 @@ export default {
     checkRange() {
       if (this.isPastValidation) {
         if (this.backMonthRange !== 99) {
-          this.minDate = dayjs()
-            .subtract(this.backMonthRange, 'month')
-            .endOf('month')
-            .format('YYYY-MM-DD')
+          this.minDate = dayjs().subtract(this.backMonthRange, 'month').format('YYYY-MM-DD')
+        } else if (this.backDayRange !== 99) {
+          this.minDate = dayjs().subtract(this.backDayRange, 'day').format('YYYY-MM-DD')
         } else {
-          this.minDate = dayjs()
-            .subtract(this.backYearRange, 'year')
-            .endOf('month')
-            .format('YYYY-MM-DD')
+          this.minDate = dayjs().subtract(this.backYearRange, 'year').format('YYYY-MM-DD')
         }
 
         this.maxDate = dayjs().startOf('month').format('YYYY-MM-DD')
@@ -106,94 +106,124 @@ export default {
         this.minDate = dayjs().endOf('month').format('YYYY-MM-DD')
 
         if (this.forwardMonthRange !== 99) {
-          this.maxDate = dayjs()
-            .add(this.forwardMonthRange, 'month')
-            .startOf('month')
-            .format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.forwardMonthRange, 'month').format('YYYY-MM-DD')
+        } else if (this.forwardDayRange !== 99) {
+          this.maxDate = dayjs().add(this.forwardDayRange, 'day').format('YYYY-MM-DD')
         } else {
-          this.maxDate = dayjs()
-            .add(this.forwardYearRange, 'year')
-            .startOf('month')
-            .format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.forwardYearRange, 'year').format('YYYY-MM-DD')
         }
       } else {
         if (this.backMonthRange !== 99) {
           this.minDate = dayjs(this.saveDate)
             .subtract(this.backMonthRange, 'month')
-            .endOf('month')
             .format('YYYY-MM-DD')
           if (this.forwardMonthRange !== 99) {
             this.maxDate = dayjs(this.saveDate)
               .add(this.forwardMonthRange, 'month')
-              .startOf('month')
+              .format('YYYY-MM-DD')
+          } else if (this.forwardDayRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
             this.maxDate = dayjs(this.saveDate)
               .add(this.forwardYearRange, 'year')
-              .startOf('month')
               .format('YYYY-MM-DD')
           }
         } else if (this.backYearRange !== 99) {
           this.minDate = dayjs(this.saveDate)
             .subtract(this.backYearRange, 'month')
-            .endOf('month')
             .format('YYYY-MM-DD')
           if (this.forwardMonthRange !== 99) {
             this.maxDate = dayjs(this.saveDate)
               .add(this.forwardMonthRange, 'month')
-              .startOf('month')
+              .format('YYYY-MM-DD')
+          } else if (this.forwardDayRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
             this.maxDate = dayjs(this.saveDate)
               .add(this.forwardYearRange, 'year')
-              .startOf('month')
               .format('YYYY-MM-DD')
           }
         } else if (this.forwardMonthRange !== 99) {
           this.maxDate = dayjs(this.saveDate)
             .add(this.forwardMonthRange, 'month')
-            .startOf('month')
             .format('YYYY-MM-DD')
           if (this.backMonthRange !== 99) {
             this.minDate = dayjs(this.saveDate)
               .subtract(this.backMonthRange, 'month')
-              .endOf('month')
+              .format('YYYY-MM-DD')
+          } else if (this.backDayRange !== 99) {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
             this.minDate = dayjs(this.saveDate)
               .subtract(this.backYearRange, 'year')
-              .endOf('month')
               .format('YYYY-MM-DD')
           }
-        } else if (this.forwardYearhRange !== 99) {
+        } else if (this.forwardYearRange !== 99) {
           this.maxDate = dayjs(this.saveDate)
             .add(this.forwardYearRange, 'year')
-            .startOf('month')
             .format('YYYY-MM-DD')
           if (this.backMonthRange !== 99) {
             this.minDate = dayjs(this.saveDate)
               .subtract(this.backMonthRange, 'month')
-              .endOf('month')
+              .format('YYYY-MM-DD')
+          } else if (this.backDayRange !== 99) {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
             this.minDate = dayjs(this.saveDate)
               .subtract(this.backYearRange, 'year')
-              .endOf('month')
+              .format('YYYY-MM-DD')
+          }
+        } else if (this.backDayRange !== 99) {
+          this.minDate = dayjs(this.saveDate)
+            .subtract(this.backDayRange, 'day')
+            .format('YYYY-MM-DD')
+          if (this.forwardMonthRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardMonthRange, 'month')
+              .format('YYYY-MM-DD')
+          } else if (this.forwardDayRange !== 99) {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardDayRange, 'day')
+              .format('YYYY-MM-DD')
+          } else {
+            this.maxDate = dayjs(this.saveDate)
+              .add(this.forwardYearRange, 'year')
+              .format('YYYY-MM-DD')
+          }
+        } else if (this.forwardDayRange !== 99) {
+          this.maxDate = dayjs(this.saveDate).add(this.forwardDayRange, 'day').format('YYYY-MM-DD')
+          if (this.backMonthRange !== 99) {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backMonthRange, 'month')
+              .format('YYYY-MM-DD')
+          } else if (this.backDayRange !== 99) {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backDayRange, 'day')
+              .format('YYYY-MM-DD')
+          } else {
+            this.minDate = dayjs(this.saveDate)
+              .subtract(this.backYearRange, 'year')
               .format('YYYY-MM-DD')
           }
         } else {
           this.minDate = dayjs(this.saveDate)
             .subtract(this.forwardYearRange, 'year')
-            .endOf('month')
             .format('YYYY-MM-DD')
           this.maxDate = dayjs(this.saveDate)
             .add(this.forwardYearRange, 'year')
-            .startOf('month')
             .format('YYYY-MM-DD')
         }
       }
-      console.log(this.minDate)
-      console.log(this.maxDate)
+      console.log('minDate: ', this.minDate)
+      console.log('maxDate: ', this.maxDate)
     },
     //This is where we create the calendar for a month
     totalDaysInMonth() {
@@ -254,6 +284,8 @@ export default {
     },
     //This is for the right button to go to the next month
     onClickToRight() {
+      this.prevDate = dayjs(this.calendarDate).startOf('month').format('YYYY-MM-DD')
+      this.nextDate = dayjs(this.calendarDate).endOf('month').format('YYYY-MM-DD')
       this.calendarDate = this.calendarDate.add(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the next month with manipulated date
@@ -262,6 +294,8 @@ export default {
 
     //This is for the left button to go to the next month
     onClickToLeft() {
+      this.prevDate = dayjs(this.calendarDate).startOf('month').format('YYYY-MM-DD')
+      this.nextDate = dayjs(this.calendarDate).endOf('month').format('YYYY-MM-DD')
       this.calendarDate = this.calendarDate.subtract(1, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the previous month with manipulated date
@@ -300,40 +334,59 @@ export default {
     },
     linedThroughDate() {
       if (this.isPastValidation) {
-        for (let i = 0; i < this.daysInMonth.length; i++) {
-          if (
-            this.daysInMonth[i].date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
-            this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') &&
-            this.daysInMonth[i].number < dayjs(this.presentDate).date()
-          ) {
-            this.daysInMonth[i].textDecoration = true
-          }
+        if (this.backDayRange !== 99) {
+          for (let i = 0; i < this.daysInMonth.length; i++) {
+            if (
+              this.daysInMonth[i].date < dayjs(this.minDate).format('YYYY-MM-DD') &&
+              this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
+              this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') &&
+              this.daysInMonth[i].number < dayjs(this.minDate).date()
+            ) {
+              this.daysInMonth[i].textDecoration = true
+            }
 
-          if (
-            this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
-            this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
-          ) {
-            this.daysInMonth[i].textDecoration = true
+            if (
+              this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
+              this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
+              this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
+            ) {
+              this.daysInMonth[i].textDecoration = true
+            }
+          }
+        } else {
+          for (let i = 0; i < this.daysInMonth.length; i++) {
+            if (
+              this.daysInMonth[i].date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
+              this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
+              this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') &&
+              this.daysInMonth[i].number < dayjs(this.presentDate).date()
+            ) {
+              this.daysInMonth[i].textDecoration = true
+            }
+
+            if (
+              this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
+              this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
+              this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
+            ) {
+              this.daysInMonth[i].textDecoration = true
+            }
           }
         }
       } else {
         for (let i = 0; i < this.daysInMonth.length; i++) {
           if (
-            this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
+            this.daysInMonth[i].date > dayjs(this.maxDate).format('YYYY-MM-DD') &&
             this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY') &&
-            this.daysInMonth[i].number > dayjs(this.presentDate).date()
+            this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
           ) {
             this.daysInMonth[i].textDecoration = true
           }
 
           if (
-            this.daysInMonth[i].date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
+            this.daysInMonth[i].date < dayjs(this.minDate).format('YYYY-MM-DD') &&
             this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') &&
-            this.daysInMonth[i].number < dayjs(this.presentDate).date()
+            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY')
           ) {
             this.daysInMonth[i].textDecoration = true
           }
@@ -350,6 +403,8 @@ export default {
   watch: {
     isDatePickerEnable(newVal) {
       if (newVal) {
+        this.prevDate = dayjs(this.calendarDate).startOf('month').format('YYYY-MM-DD')
+        this.nextDate = dayjs(this.calendarDate).endOf('month').format('YYYY-MM-DD')
         this.calendarDate = dayjs(this.saveDateHistory)
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
         this.totalDaysInMonth()

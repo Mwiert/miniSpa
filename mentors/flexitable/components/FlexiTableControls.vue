@@ -60,6 +60,13 @@ export default {
     UIEnumDropdown
   },
   methods: {
+    cleanColumnWithRegex(name) {
+      return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
+    },
+    cleanRowsWithRegex(name) {
+      return name.replace(/[^a-zA-Z0-9öÖıİşŞçÇğĞüÜ\s.,]/g, '')
+    },
+
     downloadExcel() {
       const self = this
       const tableTitle = 'flexitable'
@@ -68,8 +75,7 @@ export default {
       const combined = [headersContainer, divToPrint]
       // const tableType = divToPrint.dataset.tabletype
       const exportItemDetailsToExcel = self.exportItemDetailsToExcel
-      console.log(divToPrint)
-      console.log(headersContainer)
+
       //let styleContent = ''
 
       // switch (tableType) {
@@ -119,7 +125,40 @@ export default {
       //excelContent += `<style>${styleContent}</style>`
       excelContent += `</head>`
       excelContent += `<body>`
-      excelContent += headersContainer.outerHTML
+      excelContent += '<table>'
+
+      //header start
+      excelContent += '<thead>'
+      excelContent += '<tr>'
+
+      const headerCells = headersContainer.querySelectorAll('.flexi-table-header-col-wrapper')
+
+      headerCells.forEach((headerCell) => {
+        const cleanedColumns = self.cleanColumnWithRegex(headerCell.innerText)
+        excelContent += `<th>${cleanedColumns}</th>`
+      })
+
+      excelContent += '</tr>'
+      excelContent += '</thead>'
+
+      //body start
+      excelContent += '<tbody>'
+      const rows = divToPrint.querySelectorAll('.flexi-table-body-row-wrapper')
+      rows.forEach((row) => {
+        excelContent += '<tr>'
+        const bodyCells = row.querySelectorAll('.flexi-table-body-col')
+
+        bodyCells.forEach((bodyCell) => {
+          const cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
+          //it forces the row content to be text to prevent problems previewing in excel
+          excelContent += `<td style="mso-number-format:'\\@'">${cleanedRows}</td>`
+          console.log(cleanedRows)
+        })
+        excelContent += '</tr>'
+      })
+
+      excelContent += '</tbody>'
+      excelContent += '</table>'
       // excelContent += cloneTable.outerHTML
       excelContent += `</body>`
       excelContent += `</html>`
