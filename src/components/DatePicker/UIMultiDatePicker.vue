@@ -128,7 +128,9 @@ export default {
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
-    isDatePickerEnable: { type: Boolean }
+    isDatePickerEnable: { type: Boolean },
+    backDayRange: { type: Number, default: 99 }, //This is for validating the day range by giving it 9999 as default value since this is one of the maximum value
+    forwardDayRange: { type: Number, default: 99 },
   },
   methods: {
     checkRange() {
@@ -136,7 +138,7 @@ export default {
 
             Check the range of the year and month, if year is not 9999, update year range, if month is not 9999, update month range.
             This is intended request.
-
+            güne göre validasyon yap
           */
 
       if (this.isPastValidation) {
