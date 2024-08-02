@@ -28,13 +28,8 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
-<<<<<<< HEAD
         <button class="excel-button" @click="downloadExcel()">Excel</button>
         <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
-=======
-        <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
-        <button class="pdf-button" @click="downloadExcel()">Excel</button>
->>>>>>> 24b60e87606226f1e12bf5405171a085c6a94b17
         <button class="pdf-button" @click="downloadPdf()">create pdf</button>
       </div>
     </div>
@@ -88,12 +83,8 @@ export default {
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       }
 
-      try {
-        // use html2pdf.js to convert the combinedDiv to pdf
-        await html2pdf().from(connectedElement).set(options).save()
-      } catch (error) {
-        console.error('Error generating PDF:', error)
-      }
+      // use html2pdf.js to convert the combinedDiv to pdf
+      await html2pdf().from(connectedElement).set(options).save()
     },
 
     cleanColumnWithRegex(name) {
@@ -263,6 +254,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .ftc-search-wrapper {
     height: 40px;
     width: 280px;
@@ -275,6 +267,7 @@ export default {
 
     input[type='text'] {
       padding: 10px 15px 10px 40px;
+      margin-right: 20px;
       font-size: 14px;
       border: none;
       border-radius: 5px;
@@ -307,14 +300,17 @@ export default {
       left: 0px;
     }
   }
+
   .ftc-select-wrapper,
   .dropdown {
     display: inline-flex;
     align-items: center;
   }
+
   .dropdown {
     display: flex;
     flex-direction: column;
+
     .dropdown-icon {
       cursor: pointer;
     }
@@ -351,9 +347,11 @@ export default {
         padding: 5px;
 
         cursor: pointer;
+
         &.selected {
           background-color: #2feb9c;
         }
+
         &.notselected {
           background-color: #ff5959;
         }

@@ -10,12 +10,12 @@
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <button id="prev" class="nav-button" @click="onClickToLeft" v-show="prevDate">
+            <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{ dateHolder }} </span>
 
-            <button id="next" class="nav-button" @click="onClickToRight" v-show="nextDate">
+            <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
@@ -281,19 +281,10 @@ export default {
         dayjs(this.maxDate).format('YYYY-MM') > dayjs(this.currentDate).format('YYYY-MM')
     },
     //This is for the right button to go to the next month
-    onClickToRight() {
-      this.calendarDate = this.calendarDate.add(1, 'month')
+    onClickToSkip(offset: number) {
+      this.calendarDate = this.calendarDate.add(offset, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the next month with manipulated date
-      this.totalDaysInMonth()
-      this.checkSkippability()
-    },
-
-    //This is for the left button to go to the next month
-    onClickToLeft() {
-      this.calendarDate = this.calendarDate.subtract(1, 'month')
-      this.currentDate = this.calendarDate.format('YYYY-MM-DD')
-      //This is for creating the days in the previous month with manipulated date
       this.totalDaysInMonth()
       this.checkSkippability()
     },
@@ -331,62 +322,62 @@ export default {
     linedThroughDate() {
       if (this.isPastValidation) {
         if (this.backDayRange !== 99) {
-          for (let i = 0; i < this.daysInMonth.length; i++) {
+          this.daysInMonth.forEach((day) => {
             if (
-              this.daysInMonth[i].date < dayjs(this.minDate).format('YYYY-MM-DD') &&
-              this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
-              this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') &&
-              this.daysInMonth[i].number < dayjs(this.minDate).date()
+              day.date < dayjs(this.minDate).format('YYYY-MM-DD') &&
+              day.month === dayjs(this.minDate).format('MM') &&
+              day.year === dayjs(this.minDate).format('YYYY') &&
+              day.number < dayjs(this.minDate).date()
             ) {
-              this.daysInMonth[i].textDecoration = true
+              day.textDecoration = true
             }
 
             if (
-              this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
-              this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
-              this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
+              day.date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
+              day.month === dayjs(this.maxDate).format('MM') &&
+              day.year === dayjs(this.maxDate).format('YYYY')
             ) {
-              this.daysInMonth[i].textDecoration = true
+              day.textDecoration = true
             }
-          }
+          })
         } else {
-          for (let i = 0; i < this.daysInMonth.length; i++) {
+          this.daysInMonth.forEach((day) => {
             if (
-              this.daysInMonth[i].date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
-              this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
-              this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY') &&
-              this.daysInMonth[i].number < dayjs(this.presentDate).date()
+              day.date < dayjs(this.presentDate).format('YYYY-MM-DD') &&
+              day.month === dayjs(this.minDate).format('MM') &&
+              day.year === dayjs(this.minDate).format('YYYY') &&
+              day.number < dayjs(this.presentDate).date()
             ) {
-              this.daysInMonth[i].textDecoration = true
+              day.textDecoration = true
             }
 
             if (
-              this.daysInMonth[i].date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
-              this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
-              this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
+              day.date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
+              day.month === dayjs(this.maxDate).format('MM') &&
+              day.year === dayjs(this.maxDate).format('YYYY')
             ) {
-              this.daysInMonth[i].textDecoration = true
+              day.textDecoration = true
             }
-          }
+          })
         }
       } else {
-        for (let i = 0; i < this.daysInMonth.length; i++) {
+        this.daysInMonth.forEach((day) => {
           if (
-            this.daysInMonth[i].date > dayjs(this.maxDate).format('YYYY-MM-DD') &&
-            this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
+            day.date > dayjs(this.maxDate).format('YYYY-MM-DD') &&
+            day.month === dayjs(this.maxDate).format('MM') &&
+            day.year === dayjs(this.maxDate).format('YYYY')
           ) {
-            this.daysInMonth[i].textDecoration = true
+            day.textDecoration = true
           }
 
           if (
-            this.daysInMonth[i].date < dayjs(this.minDate).format('YYYY-MM-DD') &&
-            this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY')
+            day.date < dayjs(this.minDate).format('YYYY-MM-DD') &&
+            day.month === dayjs(this.minDate).format('MM') &&
+            day.year === dayjs(this.minDate).format('YYYY')
           ) {
-            this.daysInMonth[i].textDecoration = true
+            day.textDecoration = true
           }
-        }
+        })
       }
     }
   },

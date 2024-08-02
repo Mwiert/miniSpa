@@ -1,6 +1,6 @@
 <template>
   <!-- Bu kısım değişecek tabiki de deneme maksatlı böyle duruyor.-->
-  <div>{{ flexi.errors.message }}</div>
+  <div v-html="flexi.errors.message"></div>
 </template>
 
 <script lang="ts">
