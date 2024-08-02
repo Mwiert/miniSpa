@@ -143,7 +143,6 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  margin-top: 1rem;
   border-radius: 8px;
   padding: 0.5rem;
   .input-wrapper {
