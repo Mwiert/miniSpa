@@ -5,8 +5,8 @@
         :icon="'x'"
         :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
         :position="'left'"
-        :type="'hover'">
-        <UIInput />
+        :type="'click'">
+        <SvgIcon :name="'x'" :size="'s'" class="icon" />
       </UITooltip>
     </span>
     <span class="tooltip-wrapper">
