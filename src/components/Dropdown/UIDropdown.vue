@@ -2,16 +2,25 @@
   <div class="ui-dropdown-c">
     <div class="ui-dropdown-c-wrapper">
       <label class="label" v-if="label?.length !== 0">{{ label }}</label>
-      <button @click="toggleDropdown" class="ui-dropdown-button" :class="{ active: isOpen }">
+      <div
+        @click="toggleDropdown"
+        class="ui-dropdown-button"
+        :class="{ active: isOpen && !disabled, disabled: disabled }">
         <span
-          :class="{ 'placeholder-text-active': !selectedItem[displayField] }"
           class="placeholder-text">
           {{ isLongItem(selectedItem) || placeHolder }}
         </span>
-        <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
-      </button>
+        <SvgIcon
+          class="arrow"
+          :class="{ up: isOpen && !disabled }"
+          :name="'arrow-down'"
+          :size="'s'" />
+      </div>
 
-      <div v-if="isOpen" class="ui-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
+      <div
+        v-if="isOpen && !disabled"
+        class="ui-dropdown-menu"
+        :style="{ fontSize: fontSize + 'px' }">
         <div v-if="searchable" class="search-container">
           <div class="search-content-wrapper">
             <input
@@ -126,6 +135,10 @@ export default {
       default: 'iconImage'
     },
     unselectable: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     }
@@ -251,7 +264,7 @@ export default {
     },
     toggleDropdown() {
       this.isOpen = !this.isOpen
-      if (this.isOpen) {
+      if (this.isOpen && !this.disabled) {
         this.clearSearch()
 
         this.$nextTick(() => {
@@ -280,7 +293,6 @@ export default {
               break
             }
           }
-
         })
       } else {
         this.clearSearch()
@@ -347,7 +359,12 @@ export default {
       justify-content: space-between;
       align-items: center;
       display: flex;
-
+      &.disabled {
+        cursor: not-allowed;
+        background-color: gray;
+        border: none;
+        opacity: 0.8;
+      }
       &.active {
         border: 1px solid #60acfe;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

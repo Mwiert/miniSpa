@@ -382,7 +382,8 @@
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
         :iconImage="'iconImage'"
-        primaryKey="id" />
+        primaryKey="id"
+        disabled />
     </div>
     <h1>{{ 'Menu Dropdown' }}</h1>
 
