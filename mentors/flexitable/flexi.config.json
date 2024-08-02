@@ -33,5 +33,7 @@
     "fontSize": 12,
     "showAll": true
   },
-  "hasDetails": false
+  "hasDetails": false,
+  "newPage": null,
+  "showPage": false
 }

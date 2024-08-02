@@ -28,13 +28,8 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
-<<<<<<< HEAD
         <button class="excel-button" @click="downloadExcel()">Excel</button>
         <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
-=======
-        <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
-        <button class="pdf-button" @click="downloadExcel()">Excel</button>
->>>>>>> 24b60e87606226f1e12bf5405171a085c6a94b17
         <button class="pdf-button" @click="downloadPdf()">create pdf</button>
       </div>
     </div>
