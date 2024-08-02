@@ -3,10 +3,18 @@
     <span class="tooltip-wrapper">
       <UITooltip
         :icon="'x'"
-        :label="'Naber Müdür'"
-        :position="'right'"
-        :type="'click'"
-        :isOpen="true">
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
+        :position="'left'"
+        :type="'click'">
+        <SvgIcon :name="'x'" :size="'s'" class="icon" />
+      </UITooltip>
+    </span>
+    <span class="tooltip-wrapper">
+      <UITooltip
+        :icon="'x'"
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
+        :position="'top'"
+        :type="'hover'">
         <SvgIcon :name="'x'" :size="'s'" class="icon" />
       </UITooltip>
     </span>
@@ -15,6 +23,8 @@
   <div class="text-area-c">
     <UITextArea
       :label="'Address'"
+      :resizeSize="300"
+      :resizeDirection="'vertical'"
       :disabled="false"
       :rows="10"
       :cols="30"
@@ -297,6 +307,8 @@ export default {
       messageInput: 'fdasfsdafdas',
       messageInputWithClearButton: 'fadsfdasfd',
       buttonValue: '',
+      pickedRadioHotel: '',
+      pickedRadioFlight: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -328,8 +340,9 @@ export default {
       },
 
       // Initial states for radio buttons
-      pickedRadioHotel: '',
-      pickedRadioFlight: '',
+      // pickedRadioHotel: '',
+      // pickedRadioFlight: '',
+
       // Hotel radio button list
       radioButtonsHotel: [
         { label: 'Radio 1', value: 'radio1', disabled: true },

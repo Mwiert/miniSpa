@@ -48,6 +48,7 @@ export default {
       return this.type === 'hover'
     },
     isVertical() {
+      //Defines if the tooltip is vertical or not, important for defining the direction of the tooltip
       return this.position === 'top' || this.position === 'bottom'
     }
   },
@@ -108,11 +109,12 @@ export default {
         height: 36px;
         width: fit-content;
         animation: fadeIn 0.2s ease-in-out;
-        z-index: 1000;
+        z-index: 9999;
 
         .icon {
           height: 16px;
           width: 16px;
+          filter: brightness(0) invert(1);
         }
         .svg-icon-c {
           height: 16px;
@@ -156,7 +158,7 @@ export default {
         height: 36px;
         width: fit-content;
         animation: fadeIn 0.2s ease-in-out;
-        z-index: 1000;
+        z-index: 9999;
 
         .icon {
           height: 16px;
@@ -189,17 +191,6 @@ export default {
   }
 
   .ui-tooltip-wrapper-right .ui-tooltip-content-container {
-    right: calc(100% + 10px);
-    &::before {
-      top: 50%;
-      right: -5px;
-      transform: translateY(-50%);
-      border-width: 10px 0 10px 10px;
-      border-color: transparent transparent transparent #33b8ff;
-    }
-  }
-
-  .ui-tooltip-wrapper-left .ui-tooltip-content-container {
     left: calc(100% + 10px);
     &::before {
       top: 50%;
@@ -210,26 +201,38 @@ export default {
     }
   }
 
+  .ui-tooltip-wrapper-left .ui-tooltip-content-container {
+    right: calc(100% + 10px);
+    &::before {
+      top: 50%;
+      right: -5px;
+      transform: translateY(-50%);
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent #33b8ff;
+    }
+  }
+
   .ui-tooltip-wrapper-bottom .ui-tooltip-content-container {
+    top: calc(100% + 10px);
+    &::before {
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      border-width: 0 10px 10px 10px;
+      border-color: transparent transparent #33b8ff transparent;
+    }
+  }
+
+  .ui-tooltip-wrapper-top .ui-tooltip-content-container {
     bottom: calc(100% + 10px);
+
     &::before {
       bottom: -5px;
       left: 50%;
       transform: translateX(-50%);
       border-width: 10px 10px 0 10px;
       border-color: #33b8ff transparent transparent transparent;
-    }
-  }
-
-  .ui-tooltip-wrapper-top .ui-tooltip-content-container {
-    top: calc(100% + 10px);
-
-    &::before {
-      top: -5px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 0 10px 10px 10px;
-      border-color: transparent transparent #33b8ff transparent;
     }
   }
 }
