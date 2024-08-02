@@ -1,6 +1,5 @@
 <template>
   <div class="input-box-c">
-    {{}}
     <div
       class="input-wrapper"
       :class="[{ 'no-clear-button': !clearButton }, { disabled: disabled }]">

@@ -3,10 +3,18 @@
     <span class="tooltip-wrapper">
       <UITooltip
         :icon="'x'"
-        :label="'Naber Müdür'"
-        :position="'right'"
-        :type="'click'"
-        :isOpen="true">
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
+        :position="'left'"
+        :type="'hover'">
+        <UIInput />
+      </UITooltip>
+    </span>
+    <span class="tooltip-wrapper">
+      <UITooltip
+        :icon="'x'"
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
+        :position="'top'"
+        :type="'hover'">
         <SvgIcon :name="'x'" :size="'s'" class="icon" />
       </UITooltip>
     </span>
