@@ -16,15 +16,21 @@ export default {
 
   data() {
     return {
-      b: {
+      d: {
         options: {},
+        columns: [],
+        rows: [],
+        selectedRows: []
+      },
+      c: {},
+      b: {
         columns: [{ id: 1, name: '#', label: 'id' }],
         rows: [{ id: 1 }, { id: 2 }],
         selectedRows: []
       },
       a: {
         options: {},
-        columns: [],
+        columns: [{ id: 1, name: '#', label: 'id' }],
         rows: [],
         selectedRows: []
       },
