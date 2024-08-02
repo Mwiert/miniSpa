@@ -9,7 +9,7 @@
         </div>
 
         <div class="ui-tooltip-content-container" v-if="openComponent">
-          <SvgIcon :name="icon" :size="size" class="icon" v-if="icon" />
+          <SvgIcon :name="icon" class="icon" v-if="icon" />
           <div class="label">{{ label }}</div>
         </div>
       </div>
@@ -19,7 +19,7 @@
           <slot></slot>
         </div>
         <div class="ui-tooltip-content-container" v-if="openComponent">
-          <SvgIcon :name="icon" :size="size" class="icon" v-if="icon" />
+          <SvgIcon :name="icon" class="icon" v-if="icon" />
           <div class="label">{{ label }}</div>
         </div>
       </div>
@@ -38,7 +38,6 @@ export default {
   props: {
     position: { type: String, default: 'left' }, //Defines the position of the slot we are sending in, default is left so that the tooltip is on the right side of the icon
     type: { type: String, default: 'hover' }, //Defines the type of tooltip, default is hover and it can be click
-    size: { type: String, default: 's' }, //Defines the size of the icon
     isOpen: { type: Boolean, default: false }, //Defines if the tooltip is open or not when type is click
     label: { type: String }, //Defines the label of the tooltip if exist
     icon: { type: String } //Defines the icon of the tooltip if exist

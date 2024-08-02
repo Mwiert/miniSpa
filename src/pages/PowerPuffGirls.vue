@@ -1,18 +1,12 @@
 <template>
   <span class="tooltip-c">
     <span class="tooltip-wrapper">
-      <UITooltip position="left" type="hover" size="s" label="Icon" icon="x">
-        <SvgIcon :name="'x'" :size="'s'" class="icon" />
-      </UITooltip>
-    </span>
-    <span class="tooltip-wrapper">
       <UITooltip
-        position="top"
-        type="click"
-        size="s"
-        label="Icon but clickable and adjustable width"
-        isOpen
-        icon="x">
+        :icon="'x'"
+        :label="'Naber Müdür'"
+        :position="'right'"
+        :type="'click'"
+        :isOpen="true">
         <SvgIcon :name="'x'" :size="'s'" class="icon" />
       </UITooltip>
     </span>
