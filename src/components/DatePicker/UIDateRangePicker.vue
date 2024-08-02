@@ -163,7 +163,7 @@ export default {
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
-    spaceBetweenDays: { type: Number, default: 1 }
+    spaceBetweenDays: { type: Number, default: 2 }
   },
   data() {
     return {
@@ -311,7 +311,9 @@ export default {
               year: dayjs().format('YYYY'),
               date: dayjs().format('YYYY-MM-DD')
             }
-            this.sendInitialDates.secondInitialDate = dayjs().add(3, 'day').format('YYYY-MM-DD')
+            this.sendInitialDates.secondInitialDate = dayjs()
+              .add(this.spaceBetweenDays, 'day')
+              .format('YYYY-MM-DD')
             this.sendInitialDates.secondInitialDate = {
               number: dayjs(this.sendInitialDates.secondInitialDate).format('DD'),
               month: dayjs(this.sendInitialDates.secondInitialDate).format('MM'),
@@ -325,7 +327,9 @@ export default {
               year: dayjs().format('YYYY'),
               date: dayjs().format('YYYY-MM-DD')
             }
-            this.sendInitialDates.firstInitialDate = dayjs().subtract(3, 'day').format('YYYY-MM-DD')
+            this.sendInitialDates.firstInitialDate = dayjs()
+              .subtract(this.spaceBetweenDays, 'day')
+              .format('YYYY-MM-DD')
             this.sendInitialDates.firstInitialDate = {
               number: dayjs(this.sendInitialDates.firstInitialDate).format('DD'),
               month: dayjs(this.sendInitialDates.firstInitialDate).format('MM'),
@@ -386,11 +390,11 @@ export default {
   align-self: center;
   text-align: center;
   padding: 1rem;
-  gap: 0.75rem;
+  gap: 0.5rem;
   position: relative;
   width: 175px;
   .label {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     display: flex;
     text-align: left;
     padding-left: 0.25rem;
@@ -403,7 +407,7 @@ export default {
   }
   .date-picker-with-label {
     position: absolute;
-    top: 95px;
+    top: 75px;
     left: 15px;
     z-index: 1000;
   }
