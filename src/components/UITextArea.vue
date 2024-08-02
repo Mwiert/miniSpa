@@ -12,6 +12,7 @@
         :placeholder="placeholder"
         :maxlength="maxLength"
         :value="modelValue"
+        :style="{ resize: resize }"
         class="text-area"
         @input="handleInput"></textarea>
     </div>
@@ -30,7 +31,8 @@ export default {
     maxLength: { type: Number },
     modelValue: { type: String },
     id: { type: String },
-    name: { type: String }
+    name: { type: String },
+    resize: { type: String, default: 'none' }
   },
   methods: {
     handleInput(event: Event) {
