@@ -28,13 +28,9 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
-<<<<<<< HEAD
         <button class="excel-button" @click="downloadExcel()">Excel</button>
         <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
-=======
-        <button class="pdf-button" @click="downloadExcel()">Excel</button>
         <button class="pdf-button" @click="downloadPdf()">create pdf</button>
->>>>>>> b6e0e26abf05e505c1f8d1841e1144d150cecca5
       </div>
     </div>
 
@@ -61,6 +57,7 @@
 //import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
+import html2pdf from 'html2pdf.js'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
@@ -69,15 +66,14 @@ export default {
     UIEnumDropdown
   },
   methods: {
-    async downloadPdf(){
+    async downloadPdf() {
+      const headerElement = this.$parent.$refs.flexiheader.$refs.print2
+      const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
 
-    const headerElement = this.$parent.$refs.flexiheader.$refs.print2;
-    const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer;
-
-    const connectedElement = document.createElement('div');
-    [headerElement, bodyElement].forEach(element => {
-      connectedElement.appendChild(element.cloneNode(true));
-    });
+      const connectedElement = document.createElement('div')
+      ;[headerElement, bodyElement].forEach((element) => {
+        connectedElement.appendChild(element.cloneNode(true))
+      })
 
       const options = {
         margin: [10, 10, 10, 10], // location
@@ -230,7 +226,18 @@ export default {
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show
+      if (this.flexi.options.show) {
+        document.addEventListener('click', this.closeDropdown)
+      } else {
+        document.removeEventListener('click', this.closeDropdown)
+      }
     },
+    closeDropdown(event) {
+      if (!event.target.closest('.dropdown')) {
+        this.flexi.options.show = false
+      }
+    },
+
     clearSearch() {
       this.flexi.options.searchKeyWord = ''
     }
