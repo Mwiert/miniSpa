@@ -23,7 +23,8 @@
   <div class="text-area-c">
     <UITextArea
       :label="'Address'"
-      :resize="'vertical'"
+      :resizeSize="300"
+      :resizeDirection="'vertical'"
       :disabled="false"
       :rows="10"
       :cols="30"
@@ -34,7 +35,6 @@
   <div class="text-area-c">
     <UITextArea
       :label="'text area length 10 '"
-      :resize="'none'"
       :disabled="false"
       :rows="10"
       :cols="30"
