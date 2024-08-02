@@ -45,6 +45,7 @@
 //import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
+import html2pdf from 'html2pdf.js'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
@@ -213,7 +214,18 @@ export default {
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show
+      if (this.flexi.options.show) {
+        document.addEventListener('click', this.closeDropdown)
+      } else {
+        document.removeEventListener('click', this.closeDropdown)
+      }
     },
+    closeDropdown(event) {
+      if (!event.target.closest('.dropdown')) {
+        this.flexi.options.show = false
+      }
+    },
+
     clearSearch() {
       this.flexi.options.searchKeyWord = ''
     }
