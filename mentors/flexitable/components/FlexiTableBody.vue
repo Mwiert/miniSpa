@@ -1,24 +1,15 @@
 <template>
-  {{ FlexiBodyItemsPerPage.length }}
   <div ref="tableContainer" class="flexi-table-body-c">
     <!-- <button @click="pushtheArray" style="margin-right: 200px">
       {{ pushelements ? 'Kaan False' : 'Kaan True' }}
     </button> -->
     <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
-      <div
-        ref="tableContent"
-        class="flexi-table-body-row-wrapper"
-        :class="{ 'remove-radius': rowObj.details?.status }">
-        <div
-          class="flexi-table-body-row"
-          :style="[gridTemplateColumns, ColumnGap]"
-          @click="handlerToggleDetails(rowobjKey)">
+      <div ref="tableContent" class="flexi-table-body-row-wrapper" :class="{ 'remove-radius': rowObj.details?.status }">
+        <div class="flexi-table-body-row" :style="[gridTemplateColumns, ColumnGap]"
+          @click="handlerToggleDetails(rowObj)">
           <!-- Columns -->
           <template v-for="(col, key) in rowObj.row" :key="key">
-            <div
-              class="flexi-table-body-col"
-              :class="{ 'jc-center': col.checkbox }"
-              v-if="HideColumn(key)">
+            <div class="flexi-table-body-col" :class="{ 'jc-center': col.checkbox }" v-if="HideColumn(key)">
               <!-- CHECKBOX Render -->
               <template v-if="col.checkbox">
                 <input type="checkbox" name="" id="" v-model="col.value" />
@@ -31,9 +22,7 @@
                 </template>
 
                 <!-- TEXT Render -->
-                <span
-                  class="flexi-table-body-col-value"
-                  :class="[col.class, { pointer: col.url }]"
+                <span class="flexi-table-body-col-value" :class="[col.class, { pointer: col.url }]"
                   @click="handlerGoToUrl(col.url)">
                   {{ col.value ?? col }}
                 </span>
@@ -46,9 +35,7 @@
 
         <template v-if="rowObj.details?.status">
           <div class="flexi-table-body-detail-wrapper">
-            <component
-              :is="getAsyncComponent(rowObj.details.componentPath)"
-              v-bind="rowObj.details.props">
+            <component :is="getAsyncComponent(rowObj.details.componentPath)" v-bind="rowObj.details.props">
             </component>
           </div>
         </template>
@@ -79,13 +66,10 @@ export default {
     getAsyncComponent(componentPath) {
       return defineAsyncComponent(() => import(`${componentPath}`))
     },
-    handlerToggleDetails(key) {
-      this.flexi.rows.forEach((row, index) => {
-        if (index !== key) {
-          row.details.status = false
-        }
-      })
-      this.flexi.rows[key].details.status = !this.flexi.rows[key].details.status
+    handlerToggleDetails(rowObj) {
+      if (this.flexi.options.hasDetails) {
+        rowObj.details.status = !rowObj.details.status
+      }
     },
     pushtheArray() {
       const selected = this.flexi.rows.filter((row) => {
@@ -105,6 +89,7 @@ export default {
     border: 1.5px solid #e0e0e0;
     margin: 0.45rem 0rem;
     border-radius: 24rem;
+
     // transition: border-radius 0.25s ease-in-out;
     &.remove-radius {
       border-radius: 1rem;
@@ -125,6 +110,7 @@ export default {
     &:nth-child(even) {
       background: #f5f7fa;
     }
+
     &:nth-child(odd) {
       background: #ffff;
     }
@@ -133,10 +119,12 @@ export default {
       // background: red;
       // height: 100px;
     }
+
     .flexi-table-body-row {
       .flexi-table-body-col {
         display: flex;
         align-items: center;
+
         // justify-content: center;
         img {
           width: 42px;
@@ -145,6 +133,7 @@ export default {
       }
     }
   }
+
   .pointer {
     cursor: pointer;
   }
@@ -161,6 +150,7 @@ export default {
   font-weight: 500;
   height: fit-content;
 }
+
 .item- {
   &active {
     $bg-color: #ccffdd;
@@ -168,12 +158,14 @@ export default {
     outline: 3px solid rgba($bg-color, 0.5);
     color: darken($bg-color, 60%);
   }
+
   &pending {
     $bg-color: #ffebcc;
     background: $bg-color;
     outline: 3px solid rgba($bg-color, 0.5);
     color: darken($bg-color, 45%);
   }
+
   &graduate {
     $bg-color: #e8ccff;
     background: $bg-color;
@@ -187,14 +179,17 @@ export default {
   width: 100%;
   display: block;
 }
+
 .txt-bold {
   font-weight: 600;
 }
+
 .email {
   font-size: 0.95rem;
   color: #5c4958;
   font-weight: 500;
 }
+
 .jc-center {
   justify-content: center;
 }
@@ -205,9 +200,11 @@ export default {
   width: 42px;
   border: 1px solid #fff;
 }
+
 .student-photo-Male {
   outline: 3px solid #b9ddff70;
 }
+
 .student-photo-Female {
   outline: 3px solid #facfff70;
 }

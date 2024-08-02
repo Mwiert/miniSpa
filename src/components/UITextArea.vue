@@ -66,7 +66,6 @@ export default {
       &.disabled {
         background-color: #f5f5f5;
         cursor: not-allowed;
-        // resize: none;
       }
     }
   }

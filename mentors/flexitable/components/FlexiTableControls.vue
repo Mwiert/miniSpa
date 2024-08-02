@@ -4,7 +4,7 @@
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
-        :enumObj="flexi.options.EInternSingleComponentType"
+        :enumObj="flexi.options.pageOrder"
         :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
@@ -28,6 +28,14 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
+<<<<<<< HEAD
+        <button class="excel-button" @click="downloadExcel()">Excel</button>
+        <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
+=======
+        <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
+        <button class="pdf-button" @click="downloadExcel()">Excel</button>
+>>>>>>> 24b60e87606226f1e12bf5405171a085c6a94b17
+        <button class="pdf-button" @click="downloadPdf()">create pdf</button>
       </div>
     </div>
 
@@ -49,8 +57,12 @@
 </template>
 
 <script lang="ts">
+// import the necessary libraries
+//import { jsPDF } from 'jspdf';
+//import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
+import html2pdf from 'html2pdf.js'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
@@ -59,160 +71,147 @@ export default {
     UIEnumDropdown
   },
   methods: {
+    async downloadPdf() {
+      const headerElement = this.$parent.$refs.flexiheader.$refs.print2
+      const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
+
+      const connectedElement = document.createElement('div')
+      ;[headerElement, bodyElement].forEach((element) => {
+        connectedElement.appendChild(element.cloneNode(true))
+      })
+
+      const options = {
+        margin: [10, 10, 10, 10], // location
+        filename: 'download.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }
+
+      try {
+        // use html2pdf.js to convert the combinedDiv to pdf
+        await html2pdf().from(connectedElement).set(options).save()
+      } catch (error) {
+        console.error('Error generating PDF:', error)
+      }
+    },
+
+    cleanColumnWithRegex(name) {
+      if (typeof name === 'string') {
+        return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
+      } else {
+        return name !== undefined && name !== null ? String(name) : ''
+      }
+    },
+    cleanRowsWithRegex(name) {
+      if (typeof name === 'string') {
+        return name.replace(/[^a-zA-Z0-9öÖıİşŞçÇğĞüÜ\s.,]/g, '')
+      } else {
+        return name !== undefined && name !== null ? String(name) : ''
+      }
+    },
+
+    downloadAllExcel() {
+      const initialItemsPerPage = this.flexi.options.itemsPerPage
+
+      this.flexi.options.itemsPerPage = -1
+      this.$nextTick(() => {
+        this.downloadExcel()
+        this.flexi.options.itemsPerPage = initialItemsPerPage
+      })
+    },
+
+    downloadExcel() {
+      const self = this
+      const tableTitle = 'flexitable'
+      const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
+      const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
+
+      let excelContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`
+      excelContent += `<head>`
+      excelContent += `<!--[if gte mso 9]>`
+      excelContent += `<xml>`
+      excelContent += `<x:ExcelWorkbook>`
+      excelContent += `<x:ExcelWorksheets>`
+      excelContent += `<x:ExcelWorksheet>`
+      excelContent += `<x:Name>${tableTitle}</x:Name>`
+      excelContent += `<x:WorksheetOptions>`
+      excelContent += `<x:DisplayGridlines/>`
+      excelContent += `</x:WorksheetOptions>`
+      excelContent += `</x:ExcelWorksheet>`
+      excelContent += `</x:ExcelWorksheets>`
+      excelContent += `</x:ExcelWorkbook>`
+      excelContent += `</xml>`
+      excelContent += `<![endif]-->`
+      excelContent += `<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>`
+      excelContent += `</head>`
+      excelContent += `<body>`
+      excelContent += '<table>'
+
+      //header start
+      excelContent += '<thead>'
+      excelContent += '<tr>'
+
+      const headerCells = headersContainer.querySelectorAll('.flexi-table-header-col-wrapper')
+
+      headerCells.forEach((headerCell) => {
+        const cleanedColumns = self.cleanColumnWithRegex(headerCell.innerText)
+        excelContent += `<th>${cleanedColumns}</th>`
+      })
+
+      excelContent += '</tr>'
+      excelContent += '</thead>'
+
+      //body start
+      excelContent += '<tbody>'
+      const rows = divToPrint.querySelectorAll('.flexi-table-body-row-wrapper')
+      rows.forEach((row) => {
+        excelContent += '<tr>'
+        const bodyCells = row.querySelectorAll('.flexi-table-body-col')
+
+        bodyCells.forEach((bodyCell) => {
+          const cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
+          //it forces the row content to be text to prevent problems previewing in excel
+          excelContent += `<td style="mso-number-format:'\\@'">${cleanedRows}</td>`
+        })
+        excelContent += '</tr>'
+      })
+
+      excelContent += '</tbody>'
+      excelContent += '</table>'
+      excelContent += `</body>`
+      excelContent += `</html>`
+
+      let csvContent = 'data:application/vnd.ms-excel,' + excelContent
+
+      var encodedUri = encodeURI(csvContent)
+      var link = document.createElement('a')
+      link.setAttribute('href', encodedUri)
+      link.setAttribute('download', `${tableTitle}`)
+      document.body.appendChild(link)
+      link.click()
+    },
+
+    cleanTableElements(table) {
+      table.querySelectorAll('script, style, link, meta').forEach((element) => element.remove())
+      return table
+    },
+
     // print method style not working
     triggerExportPrint() {
-      const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
-      const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2
+      const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer //bodyi kapsıyor
+      const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2 ///columları
       const newPrintWindow = window.open('', 'Print')
       newPrintWindow.document.write(
         `<html>
-          <head>
-            <style >
-            .flexi-table-header-c {
-  &.sticky-header {
-    background-color: #fff;
-    position: sticky;
-    top: 0;
-  }
-}
-.flexi-table-header-col-wrapper {
-  // width: fit-content;
-  cursor: pointer;
-  font-weight: 500;
-
-  // border: 1px solid #eee;
-
-  &:hover {
-    background-color: #f4f4f4;
-    border-radius: 1rem;
-  }
-
-  .flexi-table-header-col {
-    display: flex;
-    align-items: center;
-  }
-}
-.txt-right {
-  justify-content: flex-end;
-}
-              .flexi-table-body-c {
-  .flexi-table-body-row-wrapper {
-    border: 1.5px solid #e0e0e0;
-    margin: 0.45rem 0rem;
-    border-radius: 24rem;
-    // transition: border-radius 0.25s ease-in-out;
-    &.remove-radius {
-      border-radius: 1rem;
-      // background-color: azure !important;
-    }
-
-    &:hover {
-      // border-left: 1.5px solid #66fff7;
-      // transform: scale(1.01);
-      // background-color: #eee !important;
-      // background-color: #f6fefe !important;
-      background-color: #f0f2f4 !important;
-      // border-color: #fff !important;
-      // outline: 3px solid #a5ddfd;
-      // box-shadow: 0 0 4px #33ddff;
-    }
-
-    &:nth-child(even) {
-      background: #f5f7fa;
-    }
-    &:nth-child(odd) {
-      background: #ffff;
-    }
-
-    .flexi-table-body-detail-wrapper {
-      // background: red;
-      // height: 100px;
-    }
-    .flexi-table-body-row {
-      .flexi-table-body-col {
-        display: flex;
-        align-items: center;
-        // justify-content: center;
-        img {
-          width: 42px;
-          flex-shrink: 0;
-        }
-      }
-    }
-  }
-  .pointer {
-    cursor: pointer;
-  }
-}
-
-[class*='item-'] {
-  display: inline-block;
-  padding: 0.25rem 1rem;
-  border-radius: 1rem;
-  border: 1px solid #fff;
-  box-sizing: border-box;
-  text-align: center;
-  min-width: 90px;
-  font-weight: 500;
-  height: fit-content;
-}
-.item- {
-  &active {
-    $bg-color: #ccffdd;
-    background: $bg-color;
-    outline: 3px solid rgba($bg-color, 0.5);
-    color: darken($bg-color, 60%);
-  }
-  &pending {
-    $bg-color: #ffebcc;
-    background: $bg-color;
-    outline: 3px solid rgba($bg-color, 0.5);
-    color: darken($bg-color, 45%);
-  }
-  &graduate {
-    $bg-color: #e8ccff;
-    background: $bg-color;
-    outline: 3px solid rgba($bg-color, 0.5);
-    color: darken($bg-color, 30%);
-  }
-}
-
-.txt-right {
-  text-align: right;
-  width: 100%;
-  display: block;
-}
-.txt-bold {
-  font-weight: 600;
-}
-.email {
-  font-size: 0.95rem;
-  color: #5c4958;
-  font-weight: 500;
-}
-.jc-center {
-  justify-content: center;
-}
-
-.student-photo-Male,
-.student-photo-Female {
-  border-radius: 50%;
-  width: 42px;
-  border: 1px solid #fff;
-}
-.student-photo-Male {
-  outline: 3px solid #b9ddff70;
-}
-.student-photo-Female {
-  outline: 3px solid #facfff70;
-}
-            </style>
-          </head>
-          <body>
-             ${divToPrint2.outerHTML}
-            ${divToPrint.outerHTML}
-          </body>
-        </html>`
+      <head>
+        <link rel="stylesheet" type="text/css" href="../src/assets/css/FlexiTablePrint.css">
+      </head>
+      <body>
+        ${divToPrint2.outerHTML}
+        ${divToPrint.outerHTML}
+      </body>
+    </html>`
       )
 
       newPrintWindow.print()
@@ -232,7 +231,18 @@ export default {
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show
+      if (this.flexi.options.show) {
+        document.addEventListener('click', this.closeDropdown)
+      } else {
+        document.removeEventListener('click', this.closeDropdown)
+      }
     },
+    closeDropdown(event) {
+      if (!event.target.closest('.dropdown')) {
+        this.flexi.options.show = false
+      }
+    },
+
     clearSearch() {
       this.flexi.options.searchKeyWord = ''
     }

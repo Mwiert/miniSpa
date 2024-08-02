@@ -1,6 +1,6 @@
 <template>
   <div class="ui-date-range-picker-c">
-    <label v-if="label">{{ label }}</label>
+    <label class="label" v-if="label">{{ label }}</label>
 
     <!-- This is for opening and closing the calendar -->
     <div
@@ -100,6 +100,8 @@
           :backYearRange="validateBackYear"
           :forwardMonthRange="validateForwardMonth"
           :backMonthRange="validateBackMonth"
+          :forwardDayRange="validateForwardDay"
+          :backDayRange="validateBackDay"
           :saveDate="sendInitialDates.firstInitialDate.date"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
@@ -115,6 +117,8 @@
           :backYearRange="validateBackYear"
           :forwardMonthRange="validateForwardMonth"
           :backMonthRange="validateBackMonth"
+          :forwardDayRange="validateForwardDay"
+          :backDayRange="validateBackDay"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
@@ -124,19 +128,17 @@
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
-          @click="sendDateToParent" 
-          />
+          @click="sendDateToParent" />
       </div>
     </div>
   </div>
 </template>
-
 <script lang="ts">
-//Imports the needed components and interfaces
-import UIDatePicker from '../components/UIDatePicker.vue'
-import UIMultiDatePicker from '../components/UIMultiDatePicker.vue'
-import date from '../interface/IUIDatePicker'
+//Imports the need../../interface/IUIDatePickeres
+import date from '../../interface/IUIDatePicker'
 import dayjs from 'dayjs'
+import UIDatePicker from './UIDatePicker.vue'
+import UIMultiDatePicker from './UIMultiDatePicker.vue'
 
 export default {
   name: 'UIDateRangePicker',
@@ -155,6 +157,8 @@ export default {
     validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateForwardYear: { type: Number, default: 99 },
     validateBackYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    validateForwardDay: { type: Number, default: 99 },
+    validateBackDay: { type: Number, default: 99 },
     value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
@@ -284,7 +288,7 @@ export default {
             }
           } else {
             this.sendInitialDates.firstInitialDate = dayjs(this.initialDate)
-              .subtract(3, 'day')
+              .subtract(this.spaceBetweenDays, 'day')
               .format('YYYY-MM-DD')
             this.sendInitialDates.firstInitialDate = {
               number: dayjs(this.sendInitialDates.firstInitialDate).format('DD'),
@@ -370,8 +374,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variables.scss';
-@import '../assets/css/_fonts.scss';
+@import '../../assets/css/variables.scss';
+@import '../../assets/css/_fonts.scss';
 
 //This is main container
 .ui-date-range-picker-c {
@@ -385,9 +389,11 @@ export default {
   gap: 0.75rem;
   position: relative;
   width: 175px;
-  label {
-    font-size: 14px;
-    margin-top: 15px;
+  .label {
+    font-size: 0.75rem;
+    display: flex;
+    text-align: left;
+    padding-left: 0.25rem;
   }
   .date-picker-without-label {
     position: absolute;

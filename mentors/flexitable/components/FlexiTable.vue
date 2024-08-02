@@ -1,13 +1,12 @@
 <template>
-  <div class="flexi-table-c">
-    <!-- {{ flexi.columns }}
-    <br />
-    <br />
-    {{ flexi.options.columnSizes }} -->
+  <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
     <FlexiTableFooter />
+  </div>
+  <div v-else>
+    <FlexiTableInfo />
   </div>
 </template>
 
@@ -17,63 +16,97 @@ import FlexiTableHeader from './FlexiTableHeader.vue'
 import FlexiTableBody from './FlexiTableBody.vue'
 import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
+import FlexiTableInfo from './FlexiTableInfo.vue'
 import { computed } from 'vue'
+import flexitableExceptionHandler from '../flexitableExceptionHandler'
 export default {
   name: 'FlexiTable',
-  props: {
-    tableOptions: Object
-  },
   provide() {
     return {
       flexi: computed(() => this.flexiTableOptions)
     }
   },
-
+  mixins: [flexitableExceptionHandler],
   data() {
     return {
       flexiTableOptions: {}
     }
   },
   created() {
-    this.flexiTableOptions = this.tableOptions
-    this.flexiTableOptions.options = {
-      ...flexiConfig,
-      ...this.tableOptions.options
-    }
+    this.flexiTableOptions.errors = { message: '' }
 
-    //sortable Control
-    if (!this.flexiTableOptions.options.disableSorting) {
-      const sortableParamsExist = this.flexiTableOptions.columns.some(
-        (column) => column.sortable == true
-      )
-      if (sortableParamsExist) {
-        this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns
-          .filter((column) => column.sortable)
-          .map((column) => {
-            return column.sortable ? column.label : ''
-          })
-      } else {
-        this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns.map(
-          (column) => {
-            return column.label
-          }
+    if (
+      Object.values(this.$attrs)[0]?.columns &&
+      Object.values(this.$attrs)[0]?.rows &&
+      Object.values(this.$attrs)[0]?.selectedRows
+    ) {
+      const tableOptions = Object.values(this.$attrs)[0]
+      const { columns, selectedRows, rows, options } = tableOptions
+      const hasDetails = rows[0]?.details ? true : false
+      this.flexiTableOptions = {
+        columns,
+        selectedRows,
+        errors: { message: '' },
+        rows: rows[0]?.row ? rows : rows.map((item) => ({ row: item })),
+        options: {
+          ...flexiConfig,
+          ...options,
+          hasDetails,
+          columnSizes: [
+            ...flexiConfig.columnSizes,
+            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
+          ]
+        }
+      }
+
+      // if (
+      //   this.flexiTableOptions.options.columnSizes.length < this.flexiTableOptions.columns.length
+      // ) {
+      //   const missingCount =
+      //     this.flexiTableOptions.columns.length - this.flexiTableOptions.options.columnSizes.length
+      //   for (let i = 0; i < missingCount; i++) {
+      //     this.flexiTableOptions.options.columnSizes.push(1)
+      //   }
+      // }
+
+      // console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row))
+      //console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row).length)
+
+      //sortable Control
+      if (!this.flexiTableOptions.options.disableSorting) {
+        const sortableParamsExist = this.flexiTableOptions.columns.some(
+          (column) => column.sortable == true
         )
+        if (sortableParamsExist) {
+          this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns
+            .filter((column) => column.sortable)
+            .map((column) => {
+              return column.sortable ? column.label : ''
+            })
+        } else {
+          this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns.map(
+            (column) => {
+              return column.label
+            }
+          )
+        }
       }
+      //Dropdown
+      this.flexiTableOptions.columns = this.flexiTableOptions.columns.map((col, index) => {
+        return {
+          ...col,
+          status: !this.flexiTableOptions.options.hiddenColumns.includes(col.label),
+          colSizes: this.flexiTableOptions.options.columnSizes[index]
+        }
+      })
     }
-    //Dropdown
-    this.flexiTableOptions.columns = this.flexiTableOptions.columns.map((col, index) => {
-      return {
-        ...col,
-        status: !this.flexiTableOptions.options.hiddenColumns.includes(col.label),
-        colSizes: this.flexiTableOptions.options.columnSizes[index]
-      }
-    })
   },
   components: {
     FlexiTableControls,
     FlexiTableHeader,
     FlexiTableBody,
-    FlexiTableFooter
+    FlexiTableFooter,
+    FlexiTableInfo
   },
 
   watch: {

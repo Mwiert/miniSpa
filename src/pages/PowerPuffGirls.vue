@@ -1,4 +1,25 @@
 <template>
+  <span class="tooltip-c">
+    <span class="tooltip-wrapper">
+      <UITooltip
+        :icon="'x'"
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
+        :position="'left'"
+        :type="'hover'">
+        <UIInput />
+      </UITooltip>
+    </span>
+    <span class="tooltip-wrapper">
+      <UITooltip
+        :icon="'x'"
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
+        :position="'top'"
+        :type="'hover'">
+        <SvgIcon :name="'x'" :size="'s'" class="icon" />
+      </UITooltip>
+    </span>
+  </span>
+  <div>Ayırıcı</div>
   <div class="text-area-c">
     <UITextArea
       :label="'Address'"
@@ -63,8 +84,7 @@
       :type="'password'"
       :id="'password'"
       :label="'Password'"
-      :icon="'eye'"
-      clearButton
+      :clearButton="true"
       v-model="messageInputWithClearButton" />
   </div>
 
@@ -218,7 +238,7 @@
         :className="'hotel'"
         :label="checkbox.label"
         :disabled="checkbox.disabled"
-        v-model:checked="checkbox.checked"
+        v-model="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
     </div>
 
@@ -231,7 +251,7 @@
         :disabled="checkbox.disabled"
         :label="checkbox.label"
         after
-        v-model:checked="checkbox.checked"
+        v-model="checkbox.checked"
         @takeCheckedInfo="takeCheckedInfo" />
     </div>
     <!-- Example of a disabled checkbox -->
@@ -254,6 +274,8 @@ import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
 import UITextArea from '../components/UITextArea.vue'
+import UITooltip from '../components/UITooltip.vue'
+import SvgIcon from '../components/SvgIcon.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -263,11 +285,15 @@ export default {
     UIRadioButton,
     UICheckbox,
     UIInput,
-    UITextArea
+    UITextArea,
+    UITooltip,
+    SvgIcon
   },
   data() {
     return {
       inputValue: this.value,
+      openComponent: false,
+      hoverComponent: false,
       email: '',
       password: '',
       idNumber: '',
@@ -276,8 +302,8 @@ export default {
       valueTextArea3: '',
       valueTextArea4: '',
       valueTextArea5: '',
-      messageInput: '',
-      messageInputWithClearButton: '',
+      messageInput: 'fdasfsdafdas',
+      messageInputWithClearButton: 'fadsfdasfd',
       buttonValue: '',
       pickedRadioHotel: '',
       pickedRadioFlight: '',
@@ -335,7 +361,7 @@ export default {
         { label: 'Hotel 3', id: 'id3', disabled: true, checked: false }
       ],
       checkboxFlight: [
-        { label: 'Flight 1', id: 'id1', disabled: false, checked: false },
+        { label: 'Flight 1', id: 'id1', disabled: false, checked: true },
         { label: 'Flight 2', id: 'id2', disabled: false, checked: false },
         { label: 'Flight 3', id: 'id3', disabled: false, checked: false }
       ]
@@ -359,6 +385,10 @@ export default {
       //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
+    toggleComponent() {
+      this.openComponent = !this.openComponent
+    },
+
     toggleChange2(newChecked: boolean) {
       this.timeBenders.checked = newChecked
       this.summerLovers.disabled = false
@@ -416,6 +446,33 @@ export default {
     display: flex;
     justify-content: center;
     background-color: white;
+  }
+}
+.tooltip-c {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  .tooltip-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .svg-icon-c {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 16px;
+      width: 16px;
+    }
   }
 }
 </style>
