@@ -12,8 +12,10 @@
         :placeholder="placeholder"
         :maxlength="maxLength"
         :value="modelValue"
+        :style="textareaStyle"
         class="text-area"
-        @input="handleInput"></textarea>
+        @input="handleInput"
+        @mousedown="handleMouseDown"></textarea>
     </div>
   </div>
 </template>
@@ -30,13 +32,52 @@ export default {
     maxLength: { type: Number },
     modelValue: { type: String },
     id: { type: String },
-    name: { type: String }
+    name: { type: String },
+    resizeSize: { type: Number },
+    resizeDirection: { type: String, default: 'vertical' }
+  },
+  computed: {
+    textareaStyle() {
+      if (this.resizeSize === undefined) {
+        return {
+          resize: 'none'
+        }
+      }
+      const size = `${this.resizeSize}px`
+      return {
+        resize: this.resizeDirection,
+        maxWidth: size,
+        maxHeight: size
+      }
+    }
   },
   methods: {
     handleInput(event: Event) {
       const target = event.target as HTMLTextAreaElement | null
       if (target) {
         this.$emit('update:modelValue', target.value)
+      }
+    },
+    handleMouseDown(event: MouseEvent) {
+      if (this.resizeSize !== undefined) {
+        const target = event.target as HTMLTextAreaElement | null
+        if (target && this.resizeDirection !== 'none') {
+          const startY = event.clientY
+          const startHeight = target.offsetHeight
+
+          const onMouseMove = (moveEvent: MouseEvent) => {
+            const newHeight = Math.min(startHeight + (moveEvent.clientY - startY), this.resizeSize)
+            target.style.height = `${newHeight}px`
+          }
+
+          const onMouseUp = () => {
+            document.removeEventListener('mousemove', onMouseMove)
+            document.removeEventListener('mouseup', onMouseUp)
+          }
+
+          document.addEventListener('mousemove', onMouseMove)
+          document.addEventListener('mouseup', onMouseUp)
+        }
       }
     }
   }
@@ -58,7 +99,6 @@ export default {
       font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 5px;
-      resize: none;
       &:focus {
         outline: none;
         border: 1px solid #000;
@@ -66,6 +106,7 @@ export default {
       &.disabled {
         background-color: #f5f5f5;
         cursor: not-allowed;
+        resize: none !important;
       }
     }
   }
