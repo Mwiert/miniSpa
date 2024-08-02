@@ -3,11 +3,12 @@
     <div>
       <h1>{{ 'Menu Dropdown' }}</h1>
 
-      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
-        <template #toggle>
+      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown"
+      openOnClick>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
-        <template> </template>
+        
       </MenuDropdown>
 
       <MenuDropdown
@@ -17,7 +18,7 @@
         displayField="name"
         label="for Flight"
         actionField="func">
-        <template #toggle>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
         <template>
@@ -58,7 +59,7 @@
         displayField="name"
         label="for Hotel"
         actionField="func">
-        <template #toggle>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
         <template>
@@ -99,7 +100,7 @@
         displayField="name"
         actionField="func"
         directRight>
-        <template #toggle>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
       </MenuDropdown>
@@ -111,7 +112,7 @@
         displayField="name"
         actionField="func"
         directRight>
-        <template #toggle>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
       </MenuDropdown>
@@ -173,7 +174,8 @@
         :showUnknown="true"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
-        :enumObj="EInternSingleComponentType" />
+        :enumObj="EInternSingleComponentType"
+        disabled />
     </div>
     <div>
       <h1>{{ 'Multi Enum Dropdown' }}</h1>
@@ -312,7 +314,8 @@
         primaryKey="id"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
-        :hasActionBox="false" />
+        :hasActionBox="false"
+        disabled />
     </div>
     <div>
       <h1>{{ 'Single Dropdown' }}</h1>
@@ -381,15 +384,16 @@
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
         :iconImage="'iconImage'"
-        primaryKey="id" />
+        primaryKey="id"
+        disabled />
     </div>
     <h1>{{ 'Menu Dropdown' }}</h1>
 
     <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
-      <template> </template>
+      
     </MenuDropdown>
 
     <MenuDropdown
@@ -399,7 +403,7 @@
       displayField="name"
       label="for Flight"
       actionField="func">
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
       <template>
@@ -440,7 +444,7 @@
       displayField="name"
       label="for Hotel"
       actionField="func">
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
       <template>
@@ -481,7 +485,7 @@
       displayField="name"
       actionField="func"
       directRight>
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
     </MenuDropdown>
@@ -492,7 +496,7 @@
       displayField="name"
       actionField="func"
       directRight>
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
     </MenuDropdown>
@@ -578,21 +582,21 @@ export default {
           id: 0,
           name: 'Dashboard',
           func: () => {
-            window.alert('parent comp')
+            window.location.assign('/powerpuffgirls')
           }
         },
         {
           id: 1,
           name: 'Profile',
           func: () => {
-            window.open('https://www.google.com')
+            window.location.assign('/pinkpanthers')
           }
         },
         {
           id: 2,
           name: 'Exit',
           func: () => {
-            window.open('/')
+            window.location.assign('/')
           }
         }
       ],

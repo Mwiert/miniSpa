@@ -5,7 +5,7 @@
         :class="['menu-dropdown-toggle', `${className}-background`]"
         @mouseover="handleMouseOver"
         @click="handleToggle">
-        <slot name="toggle"></slot>
+        <slot name="labelSlot"></slot>
         <label v-if="label" class="menu-dropdown-label">{{ label }}</label>
         <SvgIcon v-if="!directRight" class="svg-icon" :name="'arrow-down'" :size="'s'" />
       </div>
@@ -38,7 +38,6 @@ export default {
   data() {
     return {
       isOpen: false,
-      isClicked: false
     }
   },
   props: {
@@ -72,6 +71,10 @@ export default {
     directRight: {
       type: Boolean,
       default: false
+    },
+    openOnClick: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -80,9 +83,9 @@ export default {
      * Opens the dropdown if it's not already clicked.
      */
     handleMouseOver() {
-      if (!this.isClicked) {
-        this.isOpen = true
-        this.windowOverflow()
+      if (!this.openOnClick) {
+          this.isOpen = true
+          this.windowOverflow()
       }
     },
     /**
@@ -90,8 +93,8 @@ export default {
      * Closes the dropdown if it's not already clicked.
      */
     handleMouseLeave() {
-      if (!this.isClicked) {
-        this.isOpen = false
+      if (!this.openOnClick) {
+          this.isOpen = false
       }
     },
     /**
@@ -100,19 +103,19 @@ export default {
      * to close the dropdown if clicked outside.
      */
     handleToggle() {
-      this.isClicked = !this.isClicked
-      this.isOpen = this.isClicked
-      if (this.isOpen) {
-        this.windowOverflow()
-        document.addEventListener('click', this.handleOutsideClick)
-      } else {
-        document.removeEventListener('click', this.handleOutsideClick)
+      if (this.openOnClick) {
+        this.isOpen = !this.isOpen
+        if (this.isOpen) {
+          this.windowOverflow()
+          document.addEventListener('click', this.handleOutsideClick)
+        } else {
+          document.removeEventListener('click', this.handleOutsideClick)
+        }
       }
     },
     handleOutsideClick(e) {
       if (!this.$el.contains(e.target)) {
         this.isOpen = false
-        this.isClicked = false
         document.removeEventListener('click', this.handleOutsideClick)
       }
     },
@@ -134,6 +137,7 @@ export default {
         const windowHeight = window.innerHeight
         const overflowRight = windowWidth - dropdownRect.right
         const overflowDown = windowHeight - dropdownRect.bottom
+        console.log(dropdownRect.right, windowWidth)
         if (overflowRight < 0) {
           dropdown.classList.add('direct-left-wrapper')
           dropdownContent.classList.add('direct-left')
@@ -180,15 +184,17 @@ export default {
   position: relative;
   display: inline-flex;
   .menu-dropdown-wrapper {
+    user-select: none;
     .menu-dropdown-toggle {
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
       background-color: white;
-      border-left: 1px solid black;
-      border-right: 1px solid black;
       padding: 0.5rem 1rem;
+      .menu-dropdown-label{
+        cursor: pointer;
+      }
       &.flight-background {
         background-color: $primary-color;
         border-color: $primary-color;
@@ -238,7 +244,7 @@ export default {
 
       &.above {
         top: auto;
-        bottom: 100%;
+        bottom: 70%;
         &::before {
           display: none;
         }
@@ -288,7 +294,8 @@ export default {
         background-color: white;
         border-radius: 1rem;
         padding-bottom: 1rem;
-        box-shadow: 0 0 6px rgb(0, 0, 0);
+        padding-top: 1rem;
+        box-shadow: 0 0 2px rgb(0, 0, 0);
         min-width: 240px;
         max-width: 360px;
         overflow-x: auto;
@@ -296,7 +303,8 @@ export default {
 
         &.direct-right {
           border-radius: 0 1rem 1rem 1rem;
-
+          padding-bottom: 0;
+          padding-top: 0;
           &.above {
             border-radius: 1rem 1rem 1rem 0;
           }
@@ -391,7 +399,7 @@ export default {
           .item {
             display: flex;
             align-items: center;
-            padding: 0.5rem 1rem;
+            padding: 0.8rem 1rem;
             cursor: pointer;
             font-size: 1rem;
             transition:

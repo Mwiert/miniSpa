@@ -1,33 +1,73 @@
 <template>
+    <div>
+    <MenuDropdown :items="items" label="Team Pages">
+        <template #labelSlot>
+          <SvgIcon name="eye" />
+        </template>
+      </MenuDropdown>
+      <MenuDropdown :items="items" directRight>
+        <template #labelSlot>
+          <SvgIcon name="eye" />
+        </template>
+      </MenuDropdown>
+  </div>
   <div class="button-grid-container">
     <div class="button-grid">
       <!-- Icon's name should be the name of the .svg file-->
-      <UIButton className="time-benders" text="Timebenders" :icon="'search'"
-        :isSpinnerActive="loadingStates.flight.isLoading" :isDisabled="loadingStates.flight.isDisabled"
-        @click="setLoadingState('flight')" :isRouter="true" routerUrl="/timebenders" />
+      <UIButton
+        className="time-benders"
+        text="Timebenders"
+        :icon="'search'"
+        :isSpinnerActive="loadingStates.flight.isLoading"
+        :isDisabled="loadingStates.flight.isDisabled"
+        @click="setLoadingState('flight')"
+        :isRouter="true"
+        routerUrl="/timebenders" />
 
-      <UIButton className="powerpuff-girls" text="PowerPuffGirls" :icon="'arrow-right'"
-        :isSpinnerActive="loadingStates.flight2.isLoading" :isDisabled="loadingStates.flight2.isDisabled"
-        @click="setLoadingState('flight2')" :isRouter="true" routerUrl="/powerpuffgirls" />
+      <UIButton
+        className="powerpuff-girls"
+        text="PowerPuffGirls"
+        :icon="'arrow-right'"
+        :isSpinnerActive="loadingStates.flight2.isLoading"
+        :isDisabled="loadingStates.flight2.isDisabled"
+        @click="setLoadingState('flight2')"
+        :isRouter="true"
+        routerUrl="/powerpuffgirls" />
 
-      <UIButton className="summer-lovers" text="SummerLovers" :icon="'arrow-selector-h'"
-        :isSpinnerActive="loadingStates.hotel.isLoading" :isDisabled="loadingStates.hotel.isDisabled"
-        @click="setLoadingState('hotel')" :isRouter="true" routerUrl="/summerLovers" />
+      <UIButton
+        className="summer-lovers"
+        text="SummerLovers"
+        :icon="'arrow-selector-h'"
+        :isSpinnerActive="loadingStates.hotel.isLoading"
+        :isDisabled="loadingStates.hotel.isDisabled"
+        @click="setLoadingState('hotel')"
+        :isRouter="true"
+        routerUrl="/summerLovers" />
 
-      <UIButton className="pink-panthers" text="PinkPanthers" :icon="'x'"
-        :isSpinnerActive="loadingStates.default.isLoading" :isDisabled="loadingStates.default.isDisabled"
-        @click="setLoadingState('default')" :isRouter="true" routerUrl="/pinkpanthers" />
+      <UIButton
+        className="pink-panthers"
+        text="PinkPanthers"
+        :icon="'x'"
+        :isSpinnerActive="loadingStates.default.isLoading"
+        :isDisabled="loadingStates.default.isDisabled"
+        @click="setLoadingState('default')"
+        :isRouter="true"
+        routerUrl="/pinkpanthers" />
+
     </div>
+
   </div>
+
 </template>
 
 <script lang="ts">
 import UIButton from '../components/UIButton.vue'
-
+import MenuDropdown from '../components/Dropdown/MenuDropdown.vue'
 export default {
   name: 'HomeView',
   components: {
-    UIButton
+    UIButton,
+    MenuDropdown
   },
   data() {
     return {
@@ -39,7 +79,37 @@ export default {
         flightOutline: { isLoading: false, isDisabled: false },
         hotelOutline: { isLoading: false, isDisabled: false },
         disabledButton: { isLoading: false, isDisabled: true }
-      }
+      },
+      items: [
+        {
+          name: 'Timebenders',
+          iconImage: 'search',
+          action: () => {
+            window.location.assign('/timebenders')
+          }
+        },
+        {
+          name: 'PowerPuffGirls',
+          iconImage: 'arrow-right',
+          action: () => {
+            window.location.assign('/powerpuffgirls')
+          }
+        },
+        {
+          name: 'SummerLovers',
+          iconImage: 'arrow-selector-h',
+          action: () => {
+            window.location.assign('/summerLovers')
+          }
+        },
+        {
+          name: 'PinkPanthers',
+          iconImage: 'x',
+          action: () => {
+            window.location.assign('/pinkpanthers')
+          }
+        }
+      ]
     }
   },
   methods: {
@@ -65,6 +135,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
 }
 </style>

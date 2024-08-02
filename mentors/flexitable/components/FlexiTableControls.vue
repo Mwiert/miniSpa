@@ -2,17 +2,25 @@
   <div class="flexi-table-controls-c">
     <!-- Items Per Page -->
     <div class="ftc-select-wrapper">
-      <UIEnumDropdown v-model="flexi.options.selected" :enumObj="flexi.options.pageOrder"
-        :label="flexi.options.UIDropdownOrderProp.label" :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
-        :fontSize="flexi.options.UIDropdownOrderProp.fontSize" :showAll="flexi.options.UIDropdownOrderProp.showAll" />
+      <UIEnumDropdown
+        v-model="flexi.options.selected"
+        :enumObj="flexi.options.pageOrder"
+        :label="flexi.options.UIDropdownOrderProp.label"
+        :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
+        :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
+        :showAll="flexi.options.UIDropdownOrderProp.showAll" />
       <!--Custom Dropdown-->
       <div class="dropdown">
         <div class="dropdown-icon" @click="Toggle">
           <SvgIcon name="eye" size="xs" />
         </div>
         <div class="multi" v-if="flexi.options.show">
-          <div class="option" :class="col.status === false ? 'notselected' : 'selected'"
-            v-for="(col, index) in flexi.columns" :key="index" @click="selectHidden(index)">
+          <div
+            class="option"
+            :class="col.status === false ? 'notselected' : 'selected'"
+            v-for="(col, index) in flexi.columns"
+            :key="index"
+            @click="selectHidden(index)">
             {{ col.name }}
           </div>
           <button class="clear-button" @click="selectClear">Clear/Select All</button>
@@ -20,10 +28,8 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
-
+        <button class="excel-button" @click="downloadExcel()">Excel</button>
         <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
-        <button class="pdf-button" @click="downloadExcel()">Excel</button>
-
         <button class="pdf-button" @click="downloadPdf()">create pdf</button>
       </div>
     </div>
@@ -34,7 +40,11 @@
     <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
       <SvgIcon :name="'search'" size="s" class="search" />
       <input type="text" v-model="flexi.options.searchKeyWord" />
-      <button type="button" class="clear-button" @click="clearSearch" v-if="flexi.options.searchKeyWord">
+      <button
+        type="button"
+        class="clear-button"
+        @click="clearSearch"
+        v-if="flexi.options.searchKeyWord">
         <SvgIcon :name="'x'" size="s" class="clear" />
       </button>
     </div>
@@ -61,9 +71,9 @@ export default {
       const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
 
       const connectedElement = document.createElement('div')
-        ;[headerElement, bodyElement].forEach((element) => {
-          connectedElement.appendChild(element.cloneNode(true))
-        })
+      ;[headerElement, bodyElement].forEach((element) => {
+        connectedElement.appendChild(element.cloneNode(true))
+      })
 
       const options = {
         margin: [10, 10, 10, 10], // location
@@ -73,11 +83,8 @@ export default {
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       }
 
-
       // use html2pdf.js to convert the combinedDiv to pdf
       await html2pdf().from(connectedElement).set(options).save()
-
-
     },
 
     cleanColumnWithRegex(name) {

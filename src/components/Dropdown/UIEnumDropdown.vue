@@ -1,11 +1,11 @@
 <template>
   <UIMultiDropdown v-if="isMulti" v-model="selectedItems" :items="dropdownItems" :fontSize="fontSize" :label="label"
     :dataSize="dataSize" :searchable="searchable" :maxVisibleItems="maxVisibleItems" :hasActionBox="hasActionBox"
-    :sortField="sortField" :sortByAscending="sortByAscending" :maxItemThreshold="maxItemThreshold"
+    :sortField="sortField" :sortByAscending="sortByAscending" :maxItemThreshold="maxItemThreshold" :disabled="disabled"
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
   <UIDropdown v-else v-model="selectedItem" :items="dropdownItems" :label="label" :fontSize="fontSize"
     :searchable="searchable" :dataSize="dataSize" :sortField="sortField" :sortByAscending="sortByAscending"
-    :maxItemThreshold="maxItemThreshold" :unselectable="unselectable" 
+    :maxItemThreshold="maxItemThreshold" :unselectable="unselectable" :disabled="disabled"
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
 </template>
 
@@ -80,7 +80,8 @@ export default {
     showUnknown: { type: Boolean, default: false },
     sortField: { type: String },
     sortByAscending: { type: Boolean, default: false },
-    maxItemThreshold: { type: Number, default: 15 }
+    maxItemThreshold: { type: Number, default: 15 },
+    disabled: { type: Boolean, default: false }
   },
   data() {
     return {
