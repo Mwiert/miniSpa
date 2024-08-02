@@ -201,8 +201,6 @@ export default {
       align-items: center;
       cursor: pointer;
       background-color: white;
-      border-left: 1px solid black;
-      border-right: 1px solid black;
       padding: 0.5rem 1rem;
       .menu-dropdown-label{
         cursor: pointer;
