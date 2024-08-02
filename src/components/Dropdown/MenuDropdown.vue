@@ -181,9 +181,9 @@ export default {
 }
 .menu-dropdown-c {
   margin: 5px;
-  position: relative;
   display: inline-flex;
   .menu-dropdown-wrapper {
+    position: relative;
     user-select: none;
     .menu-dropdown-toggle {
       display: flex;
