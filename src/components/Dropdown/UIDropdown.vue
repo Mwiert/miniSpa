@@ -374,11 +374,6 @@ export default {
         display: flex;
         font-size: 15px;
         // font-weight: bold;
-
-        &:active {
-          color: grey;
-          font-weight: normal;
-        }
       }
 
       .arrow {

@@ -8,7 +8,7 @@
         <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
-        <template> </template>
+        
       </MenuDropdown>
 
       <MenuDropdown
@@ -174,7 +174,8 @@
         :showUnknown="true"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
-        :enumObj="EInternSingleComponentType" />
+        :enumObj="EInternSingleComponentType"
+        disabled />
     </div>
     <div>
       <h1>{{ 'Multi Enum Dropdown' }}</h1>
@@ -313,7 +314,8 @@
         primaryKey="id"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
-        :hasActionBox="false" />
+        :hasActionBox="false"
+        disabled />
     </div>
     <div>
       <h1>{{ 'Single Dropdown' }}</h1>
@@ -391,7 +393,7 @@
       <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
-      <template> </template>
+      
     </MenuDropdown>
 
     <MenuDropdown

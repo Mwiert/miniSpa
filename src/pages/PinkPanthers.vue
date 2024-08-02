@@ -19,7 +19,7 @@ export default {
       b: {
         options: {},
         columns: [{ id: 1, name: '#', label: 'id' }],
-        rows: [],
+        rows: [{ id: 1 }, { id: 2 }],
         selectedRows: []
       },
       a: {
@@ -31,6 +31,7 @@ export default {
       flexiTableOptions: {
         options: {
           columnGap: '.5rem',
+          selected: { id: 5, name: "FIVE" },
           //columnSizes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
           hiddenColumns: ['annualFee', 'city'],
 
@@ -120,7 +121,7 @@ export default {
   },
   created() {
     // row mapper for FlexiTable
-    ;(this.flexiTableOptions.rows = response.map((item) => {
+    ; (this.flexiTableOptions.rows = response.map((item) => {
       return {
         row: {
           id: {
@@ -130,7 +131,7 @@ export default {
             pushelements: false,
             selectedRows: []
           },
-          statuss: {
+          status: {
             value: item.status,
             class: `item-${item.status}`,
             url: `?status=${item.status}`
