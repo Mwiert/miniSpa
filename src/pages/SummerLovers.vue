@@ -174,7 +174,8 @@
         :showUnknown="true"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
-        :enumObj="EInternSingleComponentType" />
+        :enumObj="EInternSingleComponentType"
+        disabled />
     </div>
     <div>
       <h1>{{ 'Multi Enum Dropdown' }}</h1>
@@ -313,7 +314,8 @@
         primaryKey="id"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
-        :hasActionBox="false" />
+        :hasActionBox="false"
+        disabled />
     </div>
     <div>
       <h1>{{ 'Single Dropdown' }}</h1>
