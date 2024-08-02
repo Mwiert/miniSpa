@@ -163,6 +163,7 @@ export default {
         .icon {
           height: 16px;
           width: 16px;
+          filter: brightness(0) invert(1);
         }
         .svg-icon-c {
           height: 16px;
