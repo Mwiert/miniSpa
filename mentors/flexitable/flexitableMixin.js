@@ -6,7 +6,9 @@ export default {
       }
 
       const search = this.flexi.rows.filter((item) =>
-        JSON.stringify(item.row).toLowerCase().includes(this.flexi.options.searchKeyWord)
+        JSON.stringify(item.row)
+          .toLowerCase()
+          .includes(this.flexi.options.searchKeyWord.toLowerCase())
       )
       this.flexi.options.totalPages = search.length
 

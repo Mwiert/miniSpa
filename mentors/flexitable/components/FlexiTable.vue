@@ -1,7 +1,6 @@
 <template>
   <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
-    {{ flexiTableOptions.options.columnSizes }}
-    {{ flexiTableOptions.options.columnSizes.length }}
+
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
@@ -57,22 +56,10 @@ export default {
           columnSizes: [
             ...flexiConfig.columnSizes,
             ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
-          ]
+          ],
+          itemsPerPage: options?.selected?.id ?? flexiConfig.selected.id
         }
       }
-
-      // if (
-      //   this.flexiTableOptions.options.columnSizes.length < this.flexiTableOptions.columns.length
-      // ) {
-      //   const missingCount =
-      //     this.flexiTableOptions.columns.length - this.flexiTableOptions.options.columnSizes.length
-      //   for (let i = 0; i < missingCount; i++) {
-      //     this.flexiTableOptions.options.columnSizes.push(1)
-      //   }
-      // }
-
-      // console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row))
-      //console.log(Object.values(Object.values(this.$attrs)[0].rows[0].row).length)
 
       //sortable Control
       if (!this.flexiTableOptions.options.disableSorting) {
@@ -141,8 +128,7 @@ export default {
   color: #363636;
 
   ::v-deep {
-    div {
-    }
+    div {}
 
     .flexi-table-header-c,
     .flexi-table-body-row {
