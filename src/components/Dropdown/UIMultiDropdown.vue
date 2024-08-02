@@ -2,11 +2,11 @@
   <div class="ui-multi-dropdown-c">
     <div class="ui-multi-dropdown-c-wrapper">
       <label class="label" v-if="label?.length !== 0">{{ label }}</label>
-      <button @click="toggleDropdown" class="ui-multi-dropdown-button" :class="{ active: isOpen }">
+      <button @click="toggleDropdown" class="ui-multi-dropdown-button" :class="{ active: isOpen && !disabled, disabled: disabled}">
         <div class="placeholder-text">{{ labelDisplay }}</div>
-        <SvgIcon class="arrow" :class="{ up: isOpen }" :name="'arrow-down'" :size="'s'" />
+        <SvgIcon class="arrow" :class="{ up: isOpen && !disabled }" :name="'arrow-down'" :size="'s'" />
       </button>
-      <div v-if="isOpen" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
+      <div v-if="isOpen && !disabled" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
         <div v-if="searchable" class="search-container">
           <div class="search-content-wrapper">
             <input
@@ -145,6 +145,10 @@ export default {
     iconImage: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -318,7 +322,7 @@ export default {
     },
     toggleDropdown() {
       this.isOpen = !this.isOpen
-      if (this.isOpen) {
+      if (this.isOpen && !this.disabled) {
         this.clearSearch()
 
         this.$nextTick(() => {
@@ -403,6 +407,12 @@ export default {
       justify-content: space-between;
       align-items: center;
       display: flex;
+      &.disabled {
+        cursor: not-allowed;
+        background-color: gray;
+        border: none;
+        opacity: 0.8;
+      }
 
       &.active {
         border: 1px solid #60acfe;
@@ -415,10 +425,6 @@ export default {
         font-size: 15px;
         // font-weight: bold;
 
-        &:active {
-          color: grey;
-          font-weight: normal;
-        }
       }
 
       .arrow {
