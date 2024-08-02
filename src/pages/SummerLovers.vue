@@ -3,8 +3,9 @@
     <div>
       <h1>{{ 'Menu Dropdown' }}</h1>
 
-      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
-        <template #toggle>
+      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown"
+      openOnClick>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
         <template> </template>
@@ -17,7 +18,7 @@
         displayField="name"
         label="for Flight"
         actionField="func">
-        <template #toggle>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
         <template>
@@ -58,7 +59,7 @@
         displayField="name"
         label="for Hotel"
         actionField="func">
-        <template #toggle>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
         <template>
@@ -99,7 +100,7 @@
         displayField="name"
         actionField="func"
         directRight>
-        <template #toggle>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
       </MenuDropdown>
@@ -111,7 +112,7 @@
         displayField="name"
         actionField="func"
         directRight>
-        <template #toggle>
+        <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
       </MenuDropdown>
@@ -386,7 +387,7 @@
     <h1>{{ 'Menu Dropdown' }}</h1>
 
     <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
       <template> </template>
@@ -399,7 +400,7 @@
       displayField="name"
       label="for Flight"
       actionField="func">
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
       <template>
@@ -440,7 +441,7 @@
       displayField="name"
       label="for Hotel"
       actionField="func">
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
       <template>
@@ -481,7 +482,7 @@
       displayField="name"
       actionField="func"
       directRight>
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
     </MenuDropdown>
@@ -492,7 +493,7 @@
       displayField="name"
       actionField="func"
       directRight>
-      <template #toggle>
+      <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
     </MenuDropdown>
@@ -578,21 +579,21 @@ export default {
           id: 0,
           name: 'Dashboard',
           func: () => {
-            window.alert('parent comp')
+            window.location.assign('/powerpuffgirls')
           }
         },
         {
           id: 1,
           name: 'Profile',
           func: () => {
-            window.open('https://www.google.com')
+            window.location.assign('/pinkpanthers')
           }
         },
         {
           id: 2,
           name: 'Exit',
           func: () => {
-            window.open('/')
+            window.location.assign('/')
           }
         }
       ],

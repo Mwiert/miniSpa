@@ -5,7 +5,7 @@
         :class="['menu-dropdown-toggle', `${className}-background`]"
         @mouseover="handleMouseOver"
         @click="handleToggle">
-        <slot name="toggle"></slot>
+        <slot name="labelSlot"></slot>
         <label v-if="label" class="menu-dropdown-label">{{ label }}</label>
         <SvgIcon v-if="!directRight" class="svg-icon" :name="'arrow-down'" :size="'s'" />
       </div>
@@ -72,6 +72,10 @@ export default {
     directRight: {
       type: Boolean,
       default: false
+    },
+    openOnClick: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -100,13 +104,15 @@ export default {
      * to close the dropdown if clicked outside.
      */
     handleToggle() {
-      this.isClicked = !this.isClicked
-      this.isOpen = this.isClicked
-      if (this.isOpen) {
-        this.windowOverflow()
-        document.addEventListener('click', this.handleOutsideClick)
-      } else {
-        document.removeEventListener('click', this.handleOutsideClick)
+      if (this.openOnClick) {
+        this.isClicked = !this.isClicked
+        this.isOpen = this.isClicked
+        if (this.isOpen) {
+          this.windowOverflow()
+          document.addEventListener('click', this.handleOutsideClick)
+        } else {
+          document.removeEventListener('click', this.handleOutsideClick)
+        }
       }
     },
     handleOutsideClick(e) {
@@ -238,7 +244,7 @@ export default {
 
       &.above {
         top: auto;
-        bottom: 100%;
+        bottom: 70%;
         &::before {
           display: none;
         }
@@ -296,7 +302,7 @@ export default {
 
         &.direct-right {
           border-radius: 0 1rem 1rem 1rem;
-
+          padding-bottom: 0;
           &.above {
             border-radius: 1rem 1rem 1rem 0;
           }
@@ -391,7 +397,7 @@ export default {
           .item {
             display: flex;
             align-items: center;
-            padding: 0.5rem 1rem;
+            padding: 0.8rem 1rem;
             cursor: pointer;
             font-size: 1rem;
             transition:
