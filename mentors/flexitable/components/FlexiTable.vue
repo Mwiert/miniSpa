@@ -1,7 +1,5 @@
 <template>
   <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
-    {{ flexiTableOptions.options.columnSizes }}
-    {{ flexiTableOptions.options.columnSizes.length }}
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
