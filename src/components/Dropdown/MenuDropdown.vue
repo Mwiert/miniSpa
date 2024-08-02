@@ -84,9 +84,11 @@ export default {
      * Opens the dropdown if it's not already clicked.
      */
     handleMouseOver() {
-      if (!this.isClicked) {
-        this.isOpen = true
-        this.windowOverflow()
+      if (!this.openOnClick) {
+        if (!this.isClicked) {
+          this.isOpen = true
+          this.windowOverflow()
+        }
       }
     },
     /**
@@ -94,8 +96,10 @@ export default {
      * Closes the dropdown if it's not already clicked.
      */
     handleMouseLeave() {
-      if (!this.isClicked) {
-        this.isOpen = false
+      if (!this.openOnClick) {
+        if (!this.isClicked) {
+          this.isOpen = false
+        }
       }
     },
     /**
@@ -113,6 +117,10 @@ export default {
         } else {
           document.removeEventListener('click', this.handleOutsideClick)
         }
+      }
+      else {
+        this.isOpen = !this.isOpen
+        this.isClicked = this.isOpen
       }
     },
     handleOutsideClick(e) {
@@ -186,6 +194,7 @@ export default {
   position: relative;
   display: inline-flex;
   .menu-dropdown-wrapper {
+    user-select: none;
     .menu-dropdown-toggle {
       display: flex;
       justify-content: space-between;
@@ -195,6 +204,9 @@ export default {
       border-left: 1px solid black;
       border-right: 1px solid black;
       padding: 0.5rem 1rem;
+      .menu-dropdown-label{
+        cursor: pointer;
+      }
       &.flight-background {
         background-color: $primary-color;
         border-color: $primary-color;
