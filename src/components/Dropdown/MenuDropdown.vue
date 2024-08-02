@@ -37,7 +37,7 @@ export default {
   name: 'MenuDropdown',
   data() {
     return {
-      isOpen: false,
+      isOpen: false
     }
   },
   props: {
@@ -84,8 +84,8 @@ export default {
      */
     handleMouseOver() {
       if (!this.openOnClick) {
-          this.isOpen = true
-          this.windowOverflow()
+        this.isOpen = true
+        this.windowOverflow()
       }
     },
     /**
@@ -94,7 +94,7 @@ export default {
      */
     handleMouseLeave() {
       if (!this.openOnClick) {
-          this.isOpen = false
+        this.isOpen = false
       }
     },
     /**
@@ -192,7 +192,7 @@ export default {
       cursor: pointer;
       background-color: white;
       padding: 0.5rem 1rem;
-      .menu-dropdown-label{
+      .menu-dropdown-label {
         cursor: pointer;
       }
       &.flight-background {
