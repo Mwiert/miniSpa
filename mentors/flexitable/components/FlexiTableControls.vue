@@ -95,7 +95,7 @@ export default {
 
     },
 
-    cleanColumnWithRegex(name) {
+    cleanColumnWithRegex(name) { 
       if (typeof name === 'string') {
         return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
       } else {
