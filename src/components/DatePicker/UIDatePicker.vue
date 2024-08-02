@@ -13,7 +13,7 @@
             <button id="prev" class="nav-button" @click="onClickToLeft" v-show="prevDate">
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
-            <span class="current-date" @click="slideToggle">{{ dateHolder }} </span>
+            <span class="current-date">{{ dateHolder }} </span>
 
             <button id="next" class="nav-button" @click="onClickToRight" v-show="nextDate">
               <img src="../../assets/icons/arrow-right.svg" alt="" />
@@ -53,15 +53,11 @@
 //Imports the needed components and interfaces
 import dayjs from 'dayjs'
 import date from '../../interface/IUIDatePicker'
-//import UISlideDatePicker from '../DatePicker/UISlideDatePicker.vue'
 export default {
   name: 'UIDatePicker',
-  components: {
-    // UISlideDatePicker
-  },
+
   data() {
     return {
-      isSlideVisible: false,
       weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], //Static weekdays
       calendarDate: dayjs(this.saveDate), //Creating the calendar date
       daysInMonth: [] as date[], //Creating the days in month as date interface object
@@ -88,9 +84,6 @@ export default {
     isDatePickerEnable: { type: Boolean }
   },
   methods: {
-    slideToggle() {
-      isSlideVisible = !isSlideVisible
-    },
     checkRange() {
       if (this.isPastValidation) {
         if (this.backMonthRange !== 99) {
@@ -222,8 +215,6 @@ export default {
             .format('YYYY-MM-DD')
         }
       }
-      console.log('minDate: ', this.minDate)
-      console.log('maxDate: ', this.maxDate)
     },
     //This is where we create the calendar for a month
     totalDaysInMonth() {

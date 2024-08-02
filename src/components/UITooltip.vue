@@ -1,15 +1,25 @@
 <template>
   <div class="ui-tooltip-c">
-    <div class="ui-tooltip-wrapper" :class="`ui-tooltip-wrapper-${position}`">
-      <div class="icon-container-hover" v-if="isHover">
-        <SvgIcon :name="icon" :size="size" class="icon" />
-        <div class="ui-tooltip-content-container">
+    <div
+      class="ui-tooltip-wrapper"
+      :class="[`ui-tooltip-wrapper-${position}`, { vertical: isVertical }]">
+      <div class="icon-container-hover" :class="{ vertical: isVertical }" v-if="isHover">
+        <div @mouseover="openComponent = true" @mouseleave="openComponent = false">
+          <slot></slot>
+        </div>
+
+        <div class="ui-tooltip-content-container" v-if="openComponent">
+          <SvgIcon :name="icon" class="icon" v-if="icon" />
           <div class="label">{{ label }}</div>
         </div>
       </div>
-      <div class="icon-container-click" @click="toggleTooltip()" v-else>
-        <SvgIcon :name="icon" :size="size" class="icon" />
-        <div class="ui-tooltip-content-container" v-if="isClicked">
+
+      <div class="icon-container-click" :class="{ vertical: isVertical }" v-else>
+        <div @click="toggleTooltip()">
+          <slot></slot>
+        </div>
+        <div class="ui-tooltip-content-container" v-if="openComponent">
+          <SvgIcon :name="icon" class="icon" v-if="icon" />
           <div class="label">{{ label }}</div>
         </div>
       </div>
@@ -19,32 +29,36 @@
 
 <script lang="ts">
 import SvgIcon from './SvgIcon.vue'
+
 export default {
   name: 'UITooltip',
   components: {
     SvgIcon
   },
   props: {
-    label: { type: String, default: '' },
-    icon: { type: String, default: '' },
-    position: { type: String, default: '' },
-    isHover: { type: Boolean, default: true },
-    size: { type: String, default: '' },
-    isOpen: { type: Boolean, default: false }
+    position: { type: String, default: 'left' }, //Defines the position of the slot we are sending in, default is left so that the tooltip is on the right side of the icon
+    type: { type: String, default: 'hover' }, //Defines the type of tooltip, default is hover and it can be click
+    isOpen: { type: Boolean, default: false }, //Defines if the tooltip is open or not when type is click
+    label: { type: String }, //Defines the label of the tooltip if exist
+    icon: { type: String } //Defines the icon of the tooltip if exist
+  },
+
+  computed: {
+    isHover() {
+      return this.type === 'hover'
+    },
+    isVertical() {
+      return this.position === 'top' || this.position === 'bottom'
+    }
   },
   data() {
     return {
-      isClicked: this.isOpen
+      openComponent: this.isOpen
     }
   },
   methods: {
     toggleTooltip() {
-      this.isClicked = !this.isClicked
-    }
-  },
-  created() {
-    if (this.isOpen) {
-      this.isClicked = true
+      this.openComponent = !this.openComponent
     }
   }
 }
@@ -71,29 +85,41 @@ export default {
 
   .ui-tooltip-wrapper {
     position: relative;
-
+    display: flex;
+    &.vertical {
+      flex-direction: column;
+    }
     .icon-container-hover {
       position: relative;
       display: flex;
       align-items: center;
-
-      &:hover .ui-tooltip-content-container {
-        display: flex;
-        animation: fadeIn 0.2s ease-in-out;
+      &.vertical {
+        flex-direction: column;
       }
 
       .ui-tooltip-content-container {
         white-space: nowrap;
-        display: none;
+        display: flex;
         align-items: center;
         justify-content: center;
-        opacity: 1;
         position: absolute;
         background-color: #33b8ff;
         border-radius: 2px;
         height: 36px;
         width: fit-content;
+        animation: fadeIn 0.2s ease-in-out;
+        z-index: 1000;
 
+        .icon {
+          height: 16px;
+          width: 16px;
+        }
+        .svg-icon-c {
+          height: 16px;
+          width: 16px;
+          padding: 0;
+          margin-left: 10px;
+        }
         .label {
           padding: 8px;
           color: white;
@@ -111,12 +137,13 @@ export default {
         }
       }
     }
+
     .icon-container-click {
       position: relative;
       display: flex;
       align-items: center;
-      .icon {
-        cursor: pointer;
+      &.vertical {
+        flex-direction: column;
       }
       .ui-tooltip-content-container {
         white-space: nowrap;
@@ -129,6 +156,19 @@ export default {
         height: 36px;
         width: fit-content;
         animation: fadeIn 0.2s ease-in-out;
+        z-index: 1000;
+
+        .icon {
+          height: 16px;
+          width: 16px;
+        }
+        .svg-icon-c {
+          height: 16px;
+          width: 16px;
+          padding: 0;
+          margin-left: 10px;
+        }
+
         .label {
           padding: 8px;
           color: white;
@@ -149,9 +189,7 @@ export default {
   }
 
   .ui-tooltip-wrapper-right .ui-tooltip-content-container {
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
+    right: calc(100% + 10px);
     &::before {
       top: 50%;
       right: -5px;
@@ -161,10 +199,8 @@ export default {
     }
   }
 
-  .ui-tooltip-wrapper-right .ui-tooltip-content-container {
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
+  .ui-tooltip-wrapper-left .ui-tooltip-content-container {
+    left: calc(100% + 10px);
     &::before {
       top: 50%;
       left: -5px;
@@ -174,23 +210,8 @@ export default {
     }
   }
 
-  .ui-tooltip-wrapper-left .ui-tooltip-content-container {
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    &::before {
-      top: 50%;
-      right: -5px;
-      transform: translateY(-50%);
-      border-width: 10px 0 10px 10px;
-      border-color: transparent transparent transparent #33b8ff;
-    }
-  }
-
-  .ui-tooltip-wrapper-top .ui-tooltip-content-container {
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+  .ui-tooltip-wrapper-bottom .ui-tooltip-content-container {
+    bottom: calc(100% + 10px);
     &::before {
       bottom: -5px;
       left: 50%;
@@ -200,10 +221,9 @@ export default {
     }
   }
 
-  .ui-tooltip-wrapper-bottom .ui-tooltip-content-container {
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+  .ui-tooltip-wrapper-top .ui-tooltip-content-container {
+    top: calc(100% + 10px);
+
     &::before {
       top: -5px;
       left: 50%;
