@@ -38,7 +38,6 @@ export default {
   data() {
     return {
       isOpen: false,
-      isClicked: false
     }
   },
   props: {
@@ -85,10 +84,8 @@ export default {
      */
     handleMouseOver() {
       if (!this.openOnClick) {
-        if (!this.isClicked) {
           this.isOpen = true
           this.windowOverflow()
-        }
       }
     },
     /**
@@ -97,9 +94,7 @@ export default {
      */
     handleMouseLeave() {
       if (!this.openOnClick) {
-        if (!this.isClicked) {
           this.isOpen = false
-        }
       }
     },
     /**
@@ -109,8 +104,7 @@ export default {
      */
     handleToggle() {
       if (this.openOnClick) {
-        this.isClicked = !this.isClicked
-        this.isOpen = this.isClicked
+        this.isOpen = !this.isOpen
         if (this.isOpen) {
           this.windowOverflow()
           document.addEventListener('click', this.handleOutsideClick)
@@ -118,15 +112,10 @@ export default {
           document.removeEventListener('click', this.handleOutsideClick)
         }
       }
-      else {
-        this.isOpen = !this.isOpen
-        this.isClicked = this.isOpen
-      }
     },
     handleOutsideClick(e) {
       if (!this.$el.contains(e.target)) {
         this.isOpen = false
-        this.isClicked = false
         document.removeEventListener('click', this.handleOutsideClick)
       }
     },
@@ -148,6 +137,7 @@ export default {
         const windowHeight = window.innerHeight
         const overflowRight = windowWidth - dropdownRect.right
         const overflowDown = windowHeight - dropdownRect.bottom
+        console.log(dropdownRect.right, windowWidth)
         if (overflowRight < 0) {
           dropdown.classList.add('direct-left-wrapper')
           dropdownContent.classList.add('direct-left')
@@ -304,7 +294,8 @@ export default {
         background-color: white;
         border-radius: 1rem;
         padding-bottom: 1rem;
-        box-shadow: 0 0 6px rgb(0, 0, 0);
+        padding-top: 1rem;
+        box-shadow: 0 0 2px rgb(0, 0, 0);
         min-width: 240px;
         max-width: 360px;
         overflow-x: auto;
@@ -313,6 +304,7 @@ export default {
         &.direct-right {
           border-radius: 0 1rem 1rem 1rem;
           padding-bottom: 0;
+          padding-top: 0;
           &.above {
             border-radius: 1rem 1rem 1rem 0;
           }

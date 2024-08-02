@@ -8,7 +8,7 @@
         <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
-        <template> </template>
+        
       </MenuDropdown>
 
       <MenuDropdown
@@ -393,7 +393,7 @@
       <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
-      <template> </template>
+      
     </MenuDropdown>
 
     <MenuDropdown
