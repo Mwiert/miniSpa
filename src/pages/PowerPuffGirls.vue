@@ -1,74 +1,30 @@
 <template>
-  <span>
-    <div>
-      <h1>Hover Tooltip</h1>
+  <span class="tooltip-c">
+    <span class="tooltip-wrapper">
       <UITooltip
         :icon="'x'"
-        :size="'s'"
-        :position="'right'"
-        :label="'This is a tooltip'"
-        :isHover="true"
-        :isOpen="false" />
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
         :position="'left'"
-        :label="'This is a tooltip'"
-        :isHover="true"
-        :isOpen="false" />
+        :type="'click'">
+        <SvgIcon :name="'x'" :size="'s'" class="icon" />
+      </UITooltip>
+    </span>
+    <span class="tooltip-wrapper">
       <UITooltip
         :icon="'x'"
-        :size="'s'"
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
         :position="'top'"
-        :label="'This is a tooltip'"
-        :isHover="true"
-        :isOpen="false" />
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'bottom'"
-        :label="'This is a tooltip'"
-        :isHover="true"
-        :isOpen="false" />
-    </div>
-    <div>
-      <h1>Clickable Tooltip</h1>
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'right'"
-        :label="'This is a tooltip'"
-        :isHover="false"
-        :isOpen="false" />
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'left'"
-        :label="'This is a tooltip'"
-        :isHover="false"
-        :isOpen="false" />
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'top'"
-        :label="'This is a tooltip'"
-        :isHover="false"
-        :isOpen="false" />
-      <h3>Clickable Tooltips But Open On Start</h3>
-
-      <UITooltip
-        :icon="'x'"
-        :size="'s'"
-        :position="'bottom'"
-        :label="'This is a tooltip'"
-        :isHover="false"
-        :isOpen="true" />
-    </div>
+        :type="'hover'">
+        <SvgIcon :name="'x'" :size="'s'" class="icon" />
+      </UITooltip>
+    </span>
   </span>
   <div>Ayırıcı</div>
   <div class="text-area-c">
     <UITextArea
       :label="'Address'"
+      :resizeSize="300"
+      :resizeDirection="'vertical'"
       :disabled="false"
       :rows="10"
       :cols="30"
@@ -321,6 +277,7 @@ import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
 import UITextArea from '../components/UITextArea.vue'
 import UITooltip from '../components/UITooltip.vue'
+import SvgIcon from '../components/SvgIcon.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -331,11 +288,14 @@ export default {
     UICheckbox,
     UIInput,
     UITextArea,
-    UITooltip
+    UITooltip,
+    SvgIcon
   },
   data() {
     return {
       inputValue: this.value,
+      openComponent: false,
+      hoverComponent: false,
       email: '',
       password: '',
       idNumber: '',
@@ -347,6 +307,8 @@ export default {
       messageInput: 'fdasfsdafdas',
       messageInputWithClearButton: 'fadsfdasfd',
       buttonValue: '',
+      pickedRadioHotel: '',
+      pickedRadioFlight: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -378,8 +340,9 @@ export default {
       },
 
       // Initial states for radio buttons
-      pickedRadioHotel: '',
-      pickedRadioFlight: '',
+      // pickedRadioHotel: '',
+      // pickedRadioFlight: '',
+
       // Hotel radio button list
       radioButtonsHotel: [
         { label: 'Radio 1', value: 'radio1', disabled: true },
@@ -424,6 +387,10 @@ export default {
       //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
+    toggleComponent() {
+      this.openComponent = !this.openComponent
+    },
+
     toggleChange2(newChecked: boolean) {
       this.timeBenders.checked = newChecked
       this.summerLovers.disabled = false
@@ -481,6 +448,33 @@ export default {
     display: flex;
     justify-content: center;
     background-color: white;
+  }
+}
+.tooltip-c {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  .tooltip-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .svg-icon-c {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 16px;
+      width: 16px;
+    }
   }
 }
 </style>
