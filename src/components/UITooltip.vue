@@ -10,7 +10,7 @@
 
         <div class="ui-tooltip-content-container" v-if="openComponent">
           <SvgIcon :name="icon" class="icon" v-if="icon" />
-          <div class="label">{{ label }}</div>
+          <div class="label" v-html="label"></div>
         </div>
       </div>
 
@@ -20,7 +20,7 @@
         </div>
         <div class="ui-tooltip-content-container" v-if="openComponent">
           <SvgIcon :name="icon" class="icon" v-if="icon" />
-          <div class="label">{{ label }}</div>
+          <div class="label" v-html="label"></div>
         </div>
       </div>
     </div>
@@ -99,15 +99,17 @@ export default {
       }
 
       .ui-tooltip-content-container {
-        white-space: nowrap;
         display: flex;
         align-items: center;
         justify-content: center;
         position: absolute;
         background-color: #33b8ff;
         border-radius: 2px;
-        height: 36px;
-        width: fit-content;
+        max-width: 400px;
+        width: auto;
+        height: auto;
+        padding: 8px;
+        box-sizing: border-box;
         animation: fadeIn 0.2s ease-in-out;
         z-index: 9999;
 
@@ -128,6 +130,8 @@ export default {
           font-size: 12px;
           text-align: center;
           font-weight: 500;
+          white-space: normal;
+          overflow-wrap: break-word;
         }
 
         &::before {
@@ -148,36 +152,42 @@ export default {
         flex-direction: column;
       }
       .ui-tooltip-content-container {
-        white-space: nowrap;
         display: flex;
         align-items: center;
         justify-content: center;
         position: absolute;
         background-color: #33b8ff;
         border-radius: 2px;
-        height: 36px;
-        width: fit-content;
+        max-width: 400px;
+        width: auto;
+        height: auto;
+        padding: 8px;
+        box-sizing: border-box;
         animation: fadeIn 0.2s ease-in-out;
         z-index: 9999;
 
         .icon {
-          height: 16px;
           width: 16px;
+          height: 16px;
           filter: brightness(0) invert(1);
         }
         .svg-icon-c {
-          height: 16px;
           width: 16px;
+          height: 16px;
           padding: 0;
           margin-left: 10px;
         }
 
         .label {
+          width: 90%;
+          height: 90%;
           padding: 8px;
           color: white;
           font-size: 12px;
           text-align: center;
           font-weight: 500;
+          white-space: normal;
+          overflow-wrap: break-word;
         }
 
         &::before {

@@ -13,8 +13,8 @@
       <UITooltip
         :icon="'x'"
         :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
-        :position="'top'"
-        :type="'hover'">
+        :position="'bottom'"
+        :type="'click'">
         <SvgIcon :name="'x'" :size="'s'" class="icon" />
       </UITooltip>
     </span>
