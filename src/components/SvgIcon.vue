@@ -30,6 +30,7 @@ export default {
   padding: 0.5rem;
   border-radius: 0.5rem;
   display: inline-flex;
+
   &.icon-size-s {
     width: 22px;
     height: 22px;
@@ -41,6 +42,10 @@ export default {
   &.icon-size-l {
     width: 32px;
     height: 32px;
+  }
+
+  &:hover {
+    background: #e6e8ec;
   }
 }
 </style>
