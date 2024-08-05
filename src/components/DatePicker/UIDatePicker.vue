@@ -416,6 +416,7 @@ export default {
 //This is the main container
 .ui-date-picker-c {
   align-self: center;
+
   //This is the main calendar wrapper
   .ui-date-picker-wrapper {
     background: #ffffff;
@@ -430,6 +431,7 @@ export default {
     align-items: center;
     position: relative;
     margin-top: 1.5rem;
+    z-index: 1000;
     //This is the triangle for the calendar
     &::before {
       content: '';
@@ -446,6 +448,7 @@ export default {
     .calendar {
       padding-top: 1.2rem;
       width: 100%;
+
       //This is the header section
       .header {
         position: relative;
