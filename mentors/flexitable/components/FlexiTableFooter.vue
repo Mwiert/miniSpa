@@ -9,7 +9,6 @@ import flexitableMixin from '../flexitableMixin.js'
 export default {
   name: 'FlexiTableFooter',
   inject: ['flexi'],
-  mixins: [flexitableMixin],
   components: {
     SmartTablePagination
   }
