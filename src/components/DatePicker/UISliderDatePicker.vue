@@ -1,23 +1,23 @@
 <template>
   <div class="ui-slider-date-picker-c">
-    <div class="day" @mousedown="startScroll($event, 'day')">
+    <div class="day">
       <span v-for="day in days" :key="day" :class="{ selected: day === selectedDay }" @click="selectDay(day)">
         {{ day }}
       </span>
     </div>
-    <div class="month" @mousedown="startScroll($event, 'month')">
-      <span v-for="(month, index) in months" :key="month" :class="{ selected: index === selectedMonth }"
-        @click="selectMonth(index)">
+    <div class="month">
+      <span v-for="(month, index) in months" :key="month" :class="{ selected: index === selectedMonth }" @click="selectMonth(index)">
         {{ month }}
       </span>
     </div>
-    <div class="year" @mousedown="startScroll($event, 'year')">
+    <div class="year">
       <span v-for="year in years" :key="year" :class="{ selected: year === selectedYear }" @click="selectYear(year)">
         {{ year }}
       </span>
     </div>
   </div>
 </template>
+
 
 
 <script lang="ts">
@@ -60,9 +60,6 @@ export default {
       if (this.selectedDay > daysInMonth) {
         this.selectedDay = daysInMonth
       }
-      this.$nextTick(() => {
-        this.scrollToSelected('day')
-      })
     },
     generateMonths() {
       const months: string[] = []
@@ -81,56 +78,15 @@ export default {
     },
     selectDay(day: number) {
       this.selectedDay = day
-      this.$nextTick(() => {
-        this.scrollToSelected('day')
-      })
     },
     selectMonth(index: number) {
       this.selectedMonth = index
-      this.$nextTick(() => {
-        this.scrollToSelected('month')
-      })
     },
     selectYear(year: number) {
       this.selectedYear = year
-      this.$nextTick(() => {
-        this.scrollToSelected('year')
-      })
     },
     updateDays() {
       this.generateDays()
-    },
-    scrollToSelected(category: 'day' | 'month' | 'year') {
-      const container = this.$el.querySelector(`.${category} span.selected`)
-      if (container) {
-        container.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center'
-        })
-      }
-    },
-    startScroll(e: MouseEvent, category: 'day' | 'month' | 'year') {
-      this.isScrolling = true
-      this.startY = e.clientY
-      this.scrollTop = this.$el.querySelector(`.${category}`)!.scrollTop
-
-      const onMouseMove = (moveEvent: MouseEvent) => {
-        if (this.isScrolling) {
-          const deltaY = moveEvent.clientY - this.startY
-          const container = this.$el.querySelector(`.${category}`) as HTMLElement
-          container.scrollTop = this.scrollTop - deltaY
-        }
-      }
-
-      const onMouseUp = () => {
-        this.isScrolling = false
-        document.removeEventListener('mousemove', onMouseMove)
-        document.removeEventListener('mouseup', onMouseUp)
-      }
-
-      document.addEventListener('mousemove', onMouseMove)
-      document.addEventListener('mouseup', onMouseUp)
     }
   }
 }
@@ -153,7 +109,7 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow: hidden;
+    overflow-y: scroll; /* Scrollbar ekler */
     scroll-snap-type: y mandatory;
     align-items: center;
     position: relative;
