@@ -1,6 +1,5 @@
 <template>
   <div class="flexi-table-controls-c">
-    {{ flexi.options.tableTitle }}
     <!-- Items Per Page -->
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
