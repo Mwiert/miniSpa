@@ -36,8 +36,9 @@ export default {
       },
       flexiTableOptions: {
         options: {
+          tableTitle: 'Hakan Calhanoglu burda on numara her yerde eller havada',
           columnGap: '.5rem',
-          selected: { id: 5, name: "FIVE" },
+          selected: { id: 5, name: 'FIVE' },
           //columnSizes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
           hiddenColumns: ['annualFee', 'city'],
 
@@ -71,9 +72,7 @@ export default {
 
           hiddenColumns: ['annualFee', 'city'],
 
-          //itemsPerPage: 5,
           stickyHeader: true,
-          // disableSorting: true
           show: false
         },
         columns: [
@@ -100,10 +99,7 @@ export default {
           columnGap: '.5rem',
 
           hiddenColumns: ['annualFee', 'city'],
-
-          //itemsPerPage: 5,
           stickyHeader: true,
-          // disableSorting: true
           show: false
         },
         columns: [
@@ -127,7 +123,7 @@ export default {
   },
   created() {
     // row mapper for FlexiTable
-    ; (this.flexiTableOptions.rows = response.map((item) => {
+    ;(this.flexiTableOptions.rows = response.map((item) => {
       return {
         row: {
           id: {

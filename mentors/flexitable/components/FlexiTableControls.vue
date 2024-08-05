@@ -1,6 +1,9 @@
 <template>
   <div class="flexi-table-controls-c">
     <!-- Items Per Page -->
+    <div v-if="showSpinner" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
@@ -10,28 +13,48 @@
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
         :showAll="flexi.options.UIDropdownOrderProp.showAll" />
       <!--Custom Dropdown-->
-      <SvgIcon name="excel" size="xs" />
-      <div class="dropdown">
-        <div class="dropdown-icon" @click="Toggle">
-          <SvgIcon name="eye" size="xs" />
-        </div>
-        <div class="multi" v-if="flexi.options.show">
-          <div
-            class="option"
-            :class="col.status === false ? 'notselected' : 'selected'"
-            v-for="(col, index) in flexi.columns"
-            :key="index"
-            @click="selectHidden(index)">
-            {{ col.name }}
-          </div>
-          <button class="clear-button" @click="selectClear">Clear/Select All</button>
-        </div>
-      </div>
+
       <div class="export-buttons">
-        <button class="pdf-button" @click="triggerExportPrint()">Print</button>
-        <button class="excel-button" @click="downloadExcel()">Excel</button>
-        <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
-        <button class="pdf-button" @click="downloadPdf()">create pdf</button>
+        <div
+          class="excel-selector"
+          @mouseover="openComponent = true"
+          @mouseleave="openComponent = false">
+          <SvgIcon name="excel" size="xs" class="excel-button" />
+          <div class="excel-wrapper" v-if="openComponent">
+            <div class="excel-text" @click="downloadExcel()">Download Excel</div>
+            <div class="excel-text" @click="downloadAllExcel()">Download All Excel</div>
+          </div>
+        </div>
+        <SvgIcon name="pdf" size="xs" class="pdf-button" @click="downloadPdf()"></SvgIcon>
+        <SvgIcon
+          name="print"
+          size="xs"
+          class="print-button"
+          @click="triggerExportPrint()"></SvgIcon>
+        <div class="dropdown">
+          <div class="dropdown-icon" @click="Toggle">
+            <SvgIcon name="columns" size="xs" />
+          </div>
+
+          <div class="multi" v-if="flexi.options.show">
+            <div
+              class="option"
+              :class="col.status === false ? 'notselected' : 'selected'"
+              v-for="(col, index) in flexi.columns"
+              :key="index"
+              @click="selectHidden(index)">
+              <div class="option-text" :class="col.status === false ? 'notselected' : 'selected'">
+                {{ col.name }}
+              </div>
+              <div class="tick-wrapper">
+                <SvgIcon name="tick" size="xs" v-if="col.status === true" />
+              </div>
+            </div>
+            <button class="clear-button" @click="selectClear">Clear/Select All</button>
+          </div>
+        </div>
+        <SvgIcon name="freeze" size="xs" class="freeze-button"></SvgIcon>
+        <SvgIcon name="refresh" size="xs" class="refresh-button"></SvgIcon>
       </div>
     </div>
 
@@ -66,26 +89,39 @@ export default {
   components: {
     UIEnumDropdown
   },
+  data() {
+    return {
+      openComponent: false,
+      showSpinner: false
+    }
+  },
   methods: {
     async downloadPdf() {
-      const headerElement = this.$parent.$refs.flexiheader.$refs.print2
-      const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
+      this.showSpinner = true
+      try {
+        const headerElement = this.$parent.$refs.flexiheader.$refs.print2
+        const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
 
-      const connectedElement = document.createElement('div')
-      ;[headerElement, bodyElement].forEach((element) => {
-        connectedElement.appendChild(element.cloneNode(true))
-      })
+        const connectedElement = document.createElement('div')
+        ;[headerElement, bodyElement].forEach((element) => {
+          connectedElement.appendChild(element.cloneNode(true))
+        })
 
-      const options = {
-        margin: [10, 10, 10, 10], // location
-        filename: 'download.pdf',
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        const options = {
+          margin: [10, 10, 10, 10], // location
+          filename: this.flexi.options.tableTitle + '.pdf',
+          image: { type: 'jpeg', quality: 1 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }
+
+        // use html2pdf.js to convert the combinedDiv to pdf
+        await html2pdf().from(connectedElement).set(options).save()
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.showSpinner = false
       }
-
-      // use html2pdf.js to convert the combinedDiv to pdf
-      //await html2pdf().from(connectedElement).set(options).save()
     },
 
     cleanColumnWithRegex(name) {
@@ -114,76 +150,88 @@ export default {
     },
 
     downloadExcel() {
-      const self = this
-      const tableTitle = 'flexitable'
-      const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
-      const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
+      try {
+        const self = this
+        const tableTitle = this.flexi.options.tableTitle
+        const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
+        const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
 
-      let excelContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`
-      excelContent += `<head>`
-      excelContent += `<!--[if gte mso 9]>`
-      excelContent += `<xml>`
-      excelContent += `<x:ExcelWorkbook>`
-      excelContent += `<x:ExcelWorksheets>`
-      excelContent += `<x:ExcelWorksheet>`
-      excelContent += `<x:Name>${tableTitle}</x:Name>`
-      excelContent += `<x:WorksheetOptions>`
-      excelContent += `<x:DisplayGridlines/>`
-      excelContent += `</x:WorksheetOptions>`
-      excelContent += `</x:ExcelWorksheet>`
-      excelContent += `</x:ExcelWorksheets>`
-      excelContent += `</x:ExcelWorkbook>`
-      excelContent += `</xml>`
-      excelContent += `<![endif]-->`
-      excelContent += `<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>`
-      excelContent += `</head>`
-      excelContent += `<body>`
-      excelContent += '<table>'
+        let excelContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`
+        excelContent += `<head>`
+        excelContent += `<!--[if gte mso 9]>`
+        excelContent += `<xml>`
+        excelContent += `<x:ExcelWorkbook>`
+        excelContent += `<x:ExcelWorksheets>`
+        excelContent += `<x:ExcelWorksheet>`
+        excelContent += `<x:Name>${tableTitle}</x:Name>`
+        excelContent += `<x:WorksheetOptions>`
+        excelContent += `<x:DisplayGridlines/>`
+        excelContent += `</x:WorksheetOptions>`
+        excelContent += `</x:ExcelWorksheet>`
+        excelContent += `</x:ExcelWorksheets>`
+        excelContent += `</x:ExcelWorkbook>`
+        excelContent += `</xml>`
+        excelContent += `<![endif]-->`
+        excelContent += `<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>`
+        excelContent += `</head>`
+        excelContent += `<body>`
+        excelContent += '<table>'
 
-      //header start
-      excelContent += '<thead>'
-      excelContent += '<tr>'
-
-      const headerCells = headersContainer.querySelectorAll('.flexi-table-header-col-wrapper')
-
-      headerCells.forEach((headerCell) => {
-        const cleanedColumns = self.cleanColumnWithRegex(headerCell.innerText)
-        excelContent += `<th>${cleanedColumns}</th>`
-      })
-
-      excelContent += '</tr>'
-      excelContent += '</thead>'
-
-      //body start
-      excelContent += '<tbody>'
-      const rows = divToPrint.querySelectorAll('.flexi-table-body-row-wrapper')
-      rows.forEach((row) => {
+        //header start
+        excelContent += '<thead>'
         excelContent += '<tr>'
-        const bodyCells = row.querySelectorAll('.flexi-table-body-col')
 
-        bodyCells.forEach((bodyCell) => {
-          const cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
-          //it forces the row content to be text to prevent problems previewing in excel
-          excelContent += `<td style="mso-number-format:'\\@'">${cleanedRows}</td>`
+        const headerCells = headersContainer.querySelectorAll('.flexi-table-header-col-wrapper')
+
+        headerCells.forEach((headerCell) => {
+          const cleanedColumns = self.cleanColumnWithRegex(headerCell.innerText)
+          excelContent += `<th>${cleanedColumns}</th>`
         })
+
         excelContent += '</tr>'
-      })
+        excelContent += '</thead>'
 
-      excelContent += '</tbody>'
-      excelContent += '</table>'
-      excelContent += `</body>`
-      excelContent += `</html>`
+        //body start
+        excelContent += '<tbody>'
+        const rows = divToPrint.querySelectorAll('.flexi-table-body-row-wrapper')
+        rows.forEach((row) => {
+          excelContent += '<tr>'
+          const bodyCells = row.querySelectorAll('.flexi-table-body-col')
+          bodyCells.forEach((bodyCell) => {
+            const cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
+            if (!isNaN(cleanedRows) && cleanedRows.trim() !== '') {
+              const floatingPoint = cleanedRows.split('.')[1]?.length || 0
+              let numberFormat = ''
+              if (floatingPoint > 0) {
+                numberFormat = `0.${'0'.repeat(floatingPoint) || ''}`
+              } else {
+                numberFormat = '0'
+              }
+              excelContent += `<td style="mso-number-format:'${numberFormat}'">${cleanedRows}</td>`
+            } else {
+              excelContent += `<td style="mso-number-format:'\\@''">${cleanedRows}</td>`
+            }
+          })
+          excelContent += '</tr>'
+        })
 
-      let csvContent = 'data:application/vnd.ms-excel,' + excelContent
+        excelContent += '</tbody>'
+        excelContent += '</table>'
+        excelContent += `</body>`
+        excelContent += `</html>`
 
-      var encodedUri = encodeURI(csvContent)
-      var link = document.createElement('a')
-      link.setAttribute('href', encodedUri)
-      link.setAttribute('download', `${tableTitle}`)
-      document.body.appendChild(link)
-      link.click()
+        let csvContent = 'data:application/vnd.ms-excel,' + excelContent
+
+        var encodedUri = encodeURI(csvContent)
+        var link = document.createElement('a')
+        link.setAttribute('href', encodedUri)
+        link.setAttribute('download', `${tableTitle}`)
+        document.body.appendChild(link)
+        link.click()
+      } catch (e) {
+        console.log(e)
+      }
     },
-
     cleanTableElements(table) {
       table.querySelectorAll('script, style, link, meta').forEach((element) => element.remove())
       return table
@@ -215,6 +263,10 @@ export default {
         for (let i = 0; i < this.flexi.columns.length; i++) {
           this.flexi.columns[i].status = true
         }
+      } else {
+        for (let i = 0; i < this.flexi.columns.length; i++) {
+          this.flexi.columns[i].status = false
+        }
       }
     },
     // hide selected column
@@ -223,16 +275,6 @@ export default {
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show
-      if (this.flexi.options.show) {
-        document.addEventListener('click', this.closeDropdown)
-      } else {
-        document.removeEventListener('click', this.closeDropdown)
-      }
-    },
-    closeDropdown(event) {
-      if (!event.target.closest('.dropdown')) {
-        this.flexi.options.show = false
-      }
     },
 
     clearSearch() {
@@ -255,6 +297,34 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    .spinner {
+      border: 16px solid #f3f3f3;
+      border-top: 16px solid #2feb9c;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 2s linear infinite;
+    }
+  }
 
   .ftc-search-wrapper {
     height: 40px;
@@ -302,59 +372,122 @@ export default {
     }
   }
 
-  .ftc-select-wrapper,
-  .dropdown {
+  .ftc-select-wrapper {
     display: inline-flex;
     align-items: center;
-  }
 
-  .dropdown {
-    display: flex;
-    flex-direction: column;
-
-    .dropdown-icon {
-      cursor: pointer;
-    }
-
-    .multi {
-      border: 2px solid black;
-      border-radius: 25px;
-      background-color: rgb(255, 255, 255);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(3, auto);
+    .export-buttons {
+      display: flex;
+      align-items: center;
       gap: 10px;
-      padding: 10px;
-      position: absolute;
-      z-index: 999;
-      left: 2%;
-      top: 25%;
 
-      .clear-button {
-        cursor: pointer;
-        border: 2px solid black;
-        border-radius: 25px;
-        grid-column: 4;
-        padding: 10px;
-        background-color: aqua;
-      }
-
-      .option {
+      .excel-selector {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 2px solid black;
-        border-radius: 25px;
-        padding: 5px;
+        flex-direction: column;
+        position: relative;
 
-        cursor: pointer;
+        .excel-wrapper {
+          width: max-content;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          gap: 10px;
 
-        &.selected {
-          background-color: #2feb9c;
+          background-color: white;
+          border: 1px solid black;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+          align-items: center;
+          padding: 10px;
+          z-index: 999;
+          .excel-text {
+            width: 100%;
+            cursor: pointer;
+            &:hover {
+              color: #2feb9c;
+            }
+          }
         }
+      }
+      .dropdown {
+        display: flex;
+        flex-direction: column;
 
-        &.notselected {
-          background-color: #ff5959;
+        .dropdown-icon {
+          cursor: pointer;
+        }
+        .multi {
+          position: absolute;
+          top: 10%;
+          background-color: white;
+          border-radius: 1rem;
+          padding: 12px 8px;
+          box-shadow: 0 0 2px rgb(0, 0, 0);
+          width: fit-content;
+          overflow-x: hidden;
+          overflow-y: auto;
+          z-index: 99999;
+
+          .clear-button {
+            cursor: pointer;
+            margin-top: 4px;
+
+            border-radius: 8px;
+            grid-column: 4;
+            padding: 10px;
+            border: none;
+            &:hover {
+              background-color: #ecfcca;
+            }
+          }
+
+          .option {
+            margin-top: 4px;
+            display: flex;
+            height: 24px;
+            width: 136px;
+            justify-content: space-between;
+            align-items: center;
+            background: #f7f7f7 0% 0% no-repeat padding-box;
+            border-radius: 8px;
+            padding: 5px;
+
+            cursor: pointer;
+            .tick-wrapper {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              :hover {
+                background-color: #ecfcca;
+              }
+            }
+            .option-text {
+              &.selected {
+                text-align: left;
+                font: normal normal normal 13px/20px Inter;
+                letter-spacing: 0px;
+                opacity: 1;
+                font-weight: 500;
+              }
+
+              &.notselected {
+                text-align: left;
+                font: normal normal normal 13px/20px Inter;
+                letter-spacing: 0px;
+                opacity: 0.5;
+              }
+            }
+
+            &.selected {
+              background-color: #ecfcca;
+            }
+
+            &.notselected {
+              background-color: #f7f7f7;
+            }
+          }
         }
       }
     }
