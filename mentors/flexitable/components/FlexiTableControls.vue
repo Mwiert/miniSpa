@@ -160,11 +160,20 @@ export default {
       rows.forEach((row) => {
         excelContent += '<tr>'
         const bodyCells = row.querySelectorAll('.flexi-table-body-col')
-
         bodyCells.forEach((bodyCell) => {
           const cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
-          //it forces the row content to be text to prevent problems previewing in excel
-          excelContent += `<td style="mso-number-format:'\\@'">${cleanedRows}</td>`
+          if (!isNaN(cleanedRows) && cleanedRows.trim() !== '') {
+            const floatingPoint = cleanedRows.split('.')[1]?.length || 0
+            let numberFormat = ''
+            if (floatingPoint > 0) {
+              numberFormat = `0.${'0'.repeat(floatingPoint) || ''}`
+            } else {
+              numberFormat = '0'
+            }
+            excelContent += `<td style="mso-number-format:'${numberFormat}'">${cleanedRows}</td>`
+          } else {
+            excelContent += `<td style="mso-number-format:'\\@''">${cleanedRows}</td>`
+          }
         })
         excelContent += '</tr>'
       })
