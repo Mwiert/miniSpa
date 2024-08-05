@@ -1,8 +1,5 @@
 <template>
   <div class="flexi-table-footer-c">
-    {{ 'Showing ' + this.flexi.options.showCount +
-      ' out of ' + this.flexi.options.totalPages +
-      ' reservations' }}
     <SmartTablePagination />
   </div>
 </template>
@@ -20,5 +17,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.flexi-table-footer-c {}
+.flexi-table-footer-c {
+}
 </style>
