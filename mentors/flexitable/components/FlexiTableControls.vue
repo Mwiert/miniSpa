@@ -1,5 +1,6 @@
 <template>
   <div class="flexi-table-controls-c">
+    {{ flexi.options.tableTitle }}
     <!-- Items Per Page -->
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
@@ -77,7 +78,7 @@ export default {
 
       const options = {
         margin: [10, 10, 10, 10], // location
-        filename: 'download.pdf',
+        filename: this.flexi.options.tableTitle + '.pdf',
         image: { type: 'jpeg', quality: 1 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -114,7 +115,7 @@ export default {
 
     downloadExcel() {
       const self = this
-      const tableTitle = 'flexitable'
+      const tableTitle = this.flexi.options.tableTitle
       const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
       const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
 

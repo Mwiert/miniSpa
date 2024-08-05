@@ -9,6 +9,7 @@
     { "id": 2, "name": "30" },
     { "id": 3, "name": "50" }
   ],
+  "tableTitle": "Easter Egg",
   "totalPages": 1,
   "hiddenColumns": [],
   "hideSearch": false,
