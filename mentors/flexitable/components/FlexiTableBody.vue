@@ -1,8 +1,8 @@
 <template>
   <div ref="tableContainer" class="flexi-table-body-c">
-    <button @click="pushtheArray" style="margin-right: 200px">
+    <!-- <button @click="pushtheArray" style="margin-right: 200px">
       {{ pushelements ? 'Kaan False' : 'Kaan True' }}
-    </button>
+    </button> -->
     <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
       <div ref="tableContent" class="flexi-table-body-row-wrapper" :class="{ 'remove-radius': rowObj.details?.status }">
         <div class="flexi-table-body-row" :style="[gridTemplateColumns, ColumnGap]"
