@@ -1,34 +1,24 @@
 <template>
   <div class="ui-slider-date-picker-c">
-    <div class="day">
-      <span
-        v-for="day in days"
-        :key="day"
-        :class="{ selected: day === selectedDay }"
-        @click="selectDay(day)">
+    <div class="day" @mousedown="startScroll($event, 'day')">
+      <span v-for="day in days" :key="day" :class="{ selected: day === selectedDay }" @click="selectDay(day)">
         {{ day }}
       </span>
     </div>
-    <div class="month">
-      <span
-        v-for="(month, index) in months"
-        :key="month"
-        :class="{ selected: index === selectedMonth }"
+    <div class="month" @mousedown="startScroll($event, 'month')">
+      <span v-for="(month, index) in months" :key="month" :class="{ selected: index === selectedMonth }"
         @click="selectMonth(index)">
         {{ month }}
       </span>
     </div>
-    <div class="year">
-      <span
-        v-for="year in years"
-        :key="year"
-        :class="{ selected: year === selectedYear }"
-        @click="selectYear(year)">
+    <div class="year" @mousedown="startScroll($event, 'year')">
+      <span v-for="year in years" :key="year" :class="{ selected: year === selectedYear }" @click="selectYear(year)">
         {{ year }}
       </span>
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import dayjs from 'dayjs'
@@ -67,7 +57,6 @@ export default {
       }
       this.days = days
 
-      // Adjust selectedDay if it's out of range
       if (this.selectedDay > daysInMonth) {
         this.selectedDay = daysInMonth
       }
@@ -120,6 +109,28 @@ export default {
           inline: 'center'
         })
       }
+    },
+    startScroll(e: MouseEvent, category: 'day' | 'month' | 'year') {
+      this.isScrolling = true
+      this.startY = e.clientY
+      this.scrollTop = this.$el.querySelector(`.${category}`)!.scrollTop
+
+      const onMouseMove = (moveEvent: MouseEvent) => {
+        if (this.isScrolling) {
+          const deltaY = moveEvent.clientY - this.startY
+          const container = this.$el.querySelector(`.${category}`) as HTMLElement
+          container.scrollTop = this.scrollTop - deltaY
+        }
+      }
+
+      const onMouseUp = () => {
+        this.isScrolling = false
+        document.removeEventListener('mousemove', onMouseMove)
+        document.removeEventListener('mouseup', onMouseUp)
+      }
+
+      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', onMouseUp)
     }
   }
 }
@@ -142,9 +153,11 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow-y: auto;
+    overflow: hidden;
     scroll-snap-type: y mandatory;
     align-items: center;
+    position: relative;
+    scroll-behavior: smooth;
   }
 
   .day span,
