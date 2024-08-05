@@ -44,23 +44,30 @@ export default {
       const tableOptions = Object.values(this.$attrs)[0]
       const { columns, selectedRows, rows, options } = tableOptions
       const hasDetails = rows[0]?.details ? true : false
+
+      const sizes = options.columnSizes ? [...options.columnSizes,
+      ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)] : [...flexiConfig.columnSizes,
+      ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)]
       this.flexiTableOptions = {
         columns,
         selectedRows,
         errors: { message: '' },
-        rows: rows[0]?.row ? rows : rows.map((item) => ({ row: item })),
+        rows: rows.map((item) => {
+          let newRow = item.row ? item : { row: item }
+          newRow.row = Object.entries(newRow.row).reduce((valToMap, [key, value]) => {
+            valToMap[key] = typeof value === 'string' || typeof value === 'number' ? { value: value || null } : value
+            return valToMap
+          }, {})
+          return newRow
+        }),
         options: {
           ...flexiConfig,
           ...options,
           hasDetails,
-          columnSizes: [
-            ...flexiConfig.columnSizes,
-            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
-          ],
+          columnSizes: sizes,
           itemsPerPage: options?.selected?.id ?? flexiConfig.selected.id
         }
       }
-
       //sortable Control
       if (!this.flexiTableOptions.options.disableSorting) {
         const sortableParamsExist = this.flexiTableOptions.columns.some(

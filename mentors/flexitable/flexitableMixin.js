@@ -4,29 +4,19 @@ export default {
       if (this.flexi.options.hideSearch) {
         return this.flexi.rows
       }
-      // console.log(this.flexi.rows)
       const searchResults = this.flexi.rows.filter((item) => {
         const rowValues = Object.values(item.row)
         return rowValues.some((val) => {
-          const value = val.value ? val.value : val
           return (
-            (typeof value === 'string' || typeof value === 'number') &&
-            JSON.stringify(value)
+            (typeof val.value === 'string' || typeof val.value === 'number') &&
+            JSON.stringify(val.value)
               .toLowerCase()
               .includes(this.flexi.options.searchKeyWord.toLowerCase())
           )
         })
       })
-      // console.log(searchResults)
-      const search = searchResults.map((result) => ({
-        row: result.row,
-        details: result.details,
-        check: result.check
-      }))
-
-      this.flexi.options.totalPages = search.length
-      //console.log(search)
-      return search
+      this.flexi.options.totalPages = searchResults.length
+      return searchResults
     },
     FlexiBodyItemsPerPage() {
       let itemsPerPage = parseInt(this.flexi.options.itemsPerPage)
