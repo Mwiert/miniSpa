@@ -1,7 +1,7 @@
 <template>
   <div class="flexi-table-footer-c">
-    {{ 'Showing ' + FlexiBodyItemsPerPage.length +
-      ' out of ' + SearchKey.length +
+    {{ 'Showing ' + this.flexi.options.showCount +
+      ' out of ' + this.flexi.options.totalPages +
       ' reservations' }}
 
     <SmartTablePagination />
