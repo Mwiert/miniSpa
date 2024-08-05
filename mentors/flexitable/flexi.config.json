@@ -2,6 +2,7 @@
   "itemsPerPage": 5,
   "columnSizes": [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.3],
   "currentPage": 1,
+  "tableTitle": "Easter Egg",
   "totalPages": 1,
   "hiddenColumns": [],
   "hideSearch": false,

@@ -36,6 +36,7 @@ export default {
       },
       flexiTableOptions: {
         options: {
+          tableTitle: 'Hakan Calhanoglu burda on numara her yerde eller havada',
           columnGap: '.5rem',
           selected: { id: 5, name: 'FIVE' },
           //columnSizes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
