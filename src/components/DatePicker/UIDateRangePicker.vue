@@ -7,7 +7,7 @@
       class="button"
       @click="toggleDatePicker()"
       ref="dateRangePicker"
-      :class="{ multi: isMultiDatePicker, single: isSingleDatePicker }">
+      :class="{ multi: isMulti, single: isSingle }">
       <div class="button-items">
         <!-- This is where we are checking if it is single calendar or multi calendar -->
         <div class="is-single-date">
@@ -45,7 +45,7 @@
               </span>
             </div>
           </div>
-          <div class="single-date-box divider" v-if="isMultiDatePicker">
+          <div class="single-date-box divider" v-if="isMulti">
             <span class="day">
               <!-- This is where we are getting the day -->
 
@@ -93,7 +93,7 @@
       ref="datePicker"
       :class="{ 'date-picker-with-label': label, 'date-picker-without-label': !label }">
       <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
-      <div v-if="isSingleDatePicker">
+      <div v-if="isSingle">
         <UIDatePicker
           v-show="isSingleDatePickerEnable"
           :forwardYearRange="validateForwardYear"
@@ -110,7 +110,7 @@
           @dateSelected="handleFirstDateSelected"
           @click="sendDateToParent" />
       </div>
-      <div v-if="isMultiDatePicker">
+      <div v-if="isMulti">
         <UIMultiDatePicker
           v-show="isMultiDatePickerEnable"
           :forwardYearRange="validateForwardYear"
@@ -151,8 +151,8 @@ export default {
       type: String,
       default: ''
     },
-    isMultiDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
-    isSingleDatePicker: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
+    isMulti: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
+    isSingle: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
     validateForwardMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateForwardYear: { type: Number, default: 99 },
@@ -247,7 +247,7 @@ export default {
     toggleDatePicker() {
       this.test1 = !this.test1
       //If the single date picker is enabled on TimeBenders, we are toggling the single date picker
-      if (this.isSingleDatePicker === true) {
+      if (this.isSingle === true) {
         //We can implement it by this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable; but it will create problem in muldi date picker implementation
         if (this.isSingleDatePickerEnable === false) {
           this.isSingleDatePickerEnable = true
@@ -257,7 +257,7 @@ export default {
       }
 
       //If the multi date picker is enabled on TimeBenders, we are toggling the multi date picker with related single date picker logic
-      if (this.isMultiDatePicker === true) {
+      if (this.isMulti === true) {
         this.isSingleDatePickerEnable = false
         if (this.isMultiDatePickerEnable === false) {
           this.isMultiDatePickerEnable = true
@@ -268,7 +268,7 @@ export default {
     },
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
-      if (this.isMultiDatePicker) {
+      if (this.isMulti) {
         if (this.initialDate) {
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
@@ -403,19 +403,16 @@ export default {
     position: absolute;
     top: 50px;
     left: 10px;
-    z-index: 1000;
   }
   .date-picker-with-label {
     position: absolute;
     top: 75px;
     left: 15px;
-    z-index: 1000;
   }
 
   //This is our button container
   .button {
     background: #f8f8f8;
-    z-index: 1001;
     box-shadow: 2px 2px 6px #5858581a;
     border: 1px solid #b6b6b6;
 
