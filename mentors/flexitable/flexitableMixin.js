@@ -25,7 +25,7 @@ export default {
       }))
 
       this.flexi.options.totalPages = search.length
-      console.log(search)
+      //console.log(search)
       return search
     },
     FlexiBodyItemsPerPage() {
