@@ -1,17 +1,29 @@
 <template>
   <div class="ui-slider-date-picker-c">
-    <div class="day">
-      <span v-for="day in days" :key="day" :class="{ selected: day === selectedDay }" @click="selectDay(day)">
+    <div class="day" @mousedown="startDrag($event, 'y')">
+      <span
+        v-for="day in days"
+        :key="day"
+        :class="{ selected: day === selectedDay }"
+        @click="selectDay(day)">
         {{ day }}
       </span>
     </div>
-    <div class="month">
-      <span v-for="(month, index) in months" :key="month" :class="{ selected: index === selectedMonth }" @click="selectMonth(index)">
+    <div class="month" @mousedown="startDrag($event, 'y')">
+      <span
+        v-for="(month, index) in months"
+        :key="month"
+        :class="{ selected: index === selectedMonth }"
+        @click="selectMonth(index)">
         {{ month }}
       </span>
     </div>
-    <div class="year">
-      <span v-for="year in years" :key="year" :class="{ selected: year === selectedYear }" @click="selectYear(year)">
+    <div class="year" @mousedown="startDrag($event, 'y')">
+      <span
+        v-for="year in years"
+        :key="year"
+        :class="{ selected: year === selectedYear }"
+        @click="selectYear(year)">
         {{ year }}
       </span>
     </div>
@@ -87,6 +99,25 @@ export default {
     },
     updateDays() {
       this.generateDays()
+    },
+    startDrag(event: MouseEvent, axis: 'y' | 'x') {
+      event.preventDefault()
+      const start = axis === 'y' ? event.clientY : event.clientX
+      const target = event.currentTarget as HTMLElement
+      const sensitivity = 0.4
+
+      const onDrag = (e: MouseEvent) => {
+        const move = (axis === 'y' ? start - e.clientY : start - e.clientX) * sensitivity
+        target.scrollTop += move
+      }
+
+      const onEndDrag = () => {
+        document.removeEventListener('mousemove', onDrag)
+        document.removeEventListener('mouseup', onEndDrag)
+      }
+
+      document.addEventListener('mousemove', onDrag)
+      document.addEventListener('mouseup', onEndDrag)
     }
   }
 }
@@ -109,11 +140,12 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow-y: scroll; /* Scrollbar ekler */
+    overflow-y: hidden;
     scroll-snap-type: y mandatory;
     align-items: center;
     position: relative;
     scroll-behavior: smooth;
+    user-select: none;
   }
 
   .day span,
