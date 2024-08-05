@@ -5,7 +5,9 @@
     <!-- This is where we work with our calendar -->
 
     <div class="ui-date-picker-wrapper">
-      <div>
+      <UISliderDatePicker v-if="true"/>
+
+      <div v-else>
         <!-- This is the main calendar -->
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
@@ -53,9 +55,12 @@
 //Imports the needed components and interfaces
 import dayjs from 'dayjs'
 import date from '../../interface/IUIDatePicker'
+import UISliderDatePicker from '../DatePicker/UISliderDatePicker.vue'
 export default {
   name: 'UIDatePicker',
-
+  components: {
+    UISliderDatePicker
+  },
   data() {
     return {
       weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], //Static weekdays
