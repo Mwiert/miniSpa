@@ -1,7 +1,6 @@
 <template>
   <div class="ui-date-range-picker-c">
     <label class="label" v-if="label">{{ label }}</label>
-
     <!-- This is for opening and closing the calendar -->
     <div
       class="button"
@@ -125,10 +124,12 @@
           :baseInitialDates="sendInitialDates"
           :isDatePickerEnable="isMultiDatePickerEnable"
           :spaceBetweenDays="spaceBetweenDays"
+          :maxSelectibleDay="maxSelectibleDay"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
-          @click="sendDateToParent" />
+          @click="sendDateToParent"
+          />
       </div>
     </div>
   </div>
@@ -163,8 +164,9 @@ export default {
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
-    spaceBetweenDays: { type: Number, default: 2 }
-  },
+    spaceBetweenDays: { type: Number, default: 2 },
+    maxSelectibleDay: { type: Number, default: 0 }
+    },
   data() {
     return {
       firstSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
