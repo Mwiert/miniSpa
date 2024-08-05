@@ -26,7 +26,6 @@ export default {
       const currentPage = parseInt(this.flexi.options.currentPage)
       const startIndex = (currentPage - 1) * itemsPerPage
       const endIndex = startIndex + itemsPerPage
-      this.flexi.options.showCount = this.SearchKey.slice(startIndex, endIndex).length
       return this.SearchKey.slice(startIndex, endIndex)
     },
 
