@@ -3,7 +3,6 @@
     {{ 'Showing ' + this.flexi.options.showCount +
       ' out of ' + this.flexi.options.totalPages +
       ' reservations' }}
-
     <SmartTablePagination />
   </div>
 </template>
