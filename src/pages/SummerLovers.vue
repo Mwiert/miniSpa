@@ -3,12 +3,15 @@
     <div>
       <h1>{{ 'Menu Dropdown' }}</h1>
 
-      <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown"
-      openOnClick>
+      <MenuDropdown
+        :items="multiItemsL"
+        primaryKey="id"
+        displayField="name"
+        label="Menu Dropdown"
+        openOnClick>
         <template #labelSlot>
           <SvgIcon name="mail" size="s" />
         </template>
-        
       </MenuDropdown>
 
       <MenuDropdown
@@ -393,7 +396,6 @@
       <template #labelSlot>
         <SvgIcon name="mail" size="s" />
       </template>
-      
     </MenuDropdown>
 
     <MenuDropdown
