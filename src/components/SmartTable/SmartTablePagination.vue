@@ -89,13 +89,16 @@ export default {
     },
 
     paginationText() {
-      const start = (this.flexi.options.currentPage - 1) * this.FlexiBodyItemsPerPage.length + 1
-      const end = Math.min(
-        this.flexi.options.currentPage * this.FlexiBodyItemsPerPage.length,
-        this.SearchKey.length
-      )
-      return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${this.SearchKey.length}</strong>`
+      const itemsPerPage = this.flexi.options.itemsPerPage
+      const currentPage = this.flexi.options.currentPage
+      const totalItems = this.SearchKey.length
+
+      const start = (currentPage - 1) * itemsPerPage + 1
+      const end = Math.min(currentPage * itemsPerPage, totalItems)
+
+      return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${totalItems}</strong>`
     },
+
     paginationTrigger() {
       return {
         itemsPerPage: this.flexi.options.itemsPerPage,
