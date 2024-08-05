@@ -4,15 +4,16 @@
     <!-- selectedDate comes from UIDateRangePicker with v-model implementation -->
     <UIDateRangePicker
       v-model="selectDate"
-      :isSingleDatePicker="true"
-      :validateForwardDay="2"
-      :validateBackDay="3" />
+      :isMulti="true"
+      :validateBackMonth="10"
+      :validateForwardMonth="7"
+      label="Date Picker" />
   </div>
 </template>
 
 <script lang="ts">
 //Imports the needed components and interfaces
-import UIDateRangePicker from '../components/UIDateRangePicker.vue'
+import UIDateRangePicker from '../components/DatePicker/UIDateRangePicker.vue'
 export default {
   name: 'TimeBenders',
   components: {

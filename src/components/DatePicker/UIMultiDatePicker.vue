@@ -3,25 +3,13 @@
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
-      {{ prevMonthDate }}
-      {{ minDate }}
-      {{ prevMonthDate > minDate }}
-      <br />
-      {{ nextMonthDate }}
-      {{ maxDate }}
-      {{ nextMonthDate < maxDate }}
-
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <button
-              id="prev"
-              class="nav-button"
-              @click="onClickToLeft"
-              v-show="prevMonthDate > minDate">
-              <img src="../assets/icons/arrow-left.svg" alt="" />
+            <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
+              <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date">{{
               daysInMonth[15]?.fullDateFormatted.split('-')[1] +
@@ -65,12 +53,8 @@
               ' ' +
               nextMonthDays[15]?.fullDateFormatted.split('-')[0]
             }}</span>
-            <button
-              id="next"
-              class="nav-button"
-              @click="onClickToRight"
-              v-show="nextMonthDate < maxDate">
-              <img src="../assets/icons/arrow-right.svg" alt="" />
+            <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
+              <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
           <!-- This is the weekdays section -->
@@ -108,7 +92,7 @@
 <script lang="ts">
 //Imports the needed components and interfaces
 import dayjs from 'dayjs'
-import date from '../interface/IUIDatePicker'
+import date from '../../interface/IUIDatePicker'
 
 export default {
   name: 'UIMultiDatePicker',
@@ -122,13 +106,13 @@ export default {
       firstSelectedDate: {}, //Getting first selected date as type of date interface object
       secondSelectedDate: {},
       currentDate: dayjs(this.initialDate).format('YYYY-MM-DD'), //Manipulated date for left calendar
-      nextMonthDate: dayjs(this.initialDate).add(1, 'month').format('YYYY-MM-DD'), //Manipulated date for right calendar
-      prevMonthDate: dayjs(this.initialDate).subtract(1, 'month').format('YYYY-MM-DD'),
       presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
       saveFirstDateHistory: '', //Saving the date history so we can see when we close calendar
-      saveSecondDateHistory: '' //Saving the date history so we can see when we close calendar
+      saveSecondDateHistory: '', //Saving the date history so we can see when we close calendar
+      prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
+      nextDate: dayjs().endOf('month').format('YYYY-MM-DD')
     }
   },
   props: {
@@ -142,9 +126,7 @@ export default {
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
-    isDatePickerEnable: { type: Boolean },
-    backDayRange: { type: Number, default: 99 }, //This is for validating the day range by giving it 9999 as default value since this is one of the maximum value
-    forwardDayRange: { type: Number, default: 99 },
+    isDatePickerEnable: { type: Boolean }
   },
   methods: {
     checkRange() {
@@ -163,20 +145,14 @@ export default {
         }
 
         if (this.backMonthRange !== 99) {
-          this.minDate = dayjs()
-            .subtract(this.backMonthRange, 'month')
-            .endOf('month')
-            .format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(1, 'month').format('YYYY-MM-DD')
+          this.minDate = dayjs().subtract(this.backMonthRange, 'month').format('YYYY-MM-DD')
+          this.maxDate = dayjs().format('YYYY-MM-DD')
         } else if (this.backDayRange !== 99) {
           this.minDate = dayjs().subtract(this.backDayRange, 'day').format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(1, 'month').format('YYYY-MM-DD')
+          this.maxDate = dayjs().format('YYYY-MM-DD')
         } else {
-          this.minDate = dayjs()
-            .subtract(this.backYearRange, 'month')
-            .endOf('month')
-            .format('YYYY-MM-DD')
-          this.maxDate = dayjs().add(1, 'month').format('YYYY-MM-DD')
+          this.minDate = dayjs().subtract(this.backYearRange, 'month').format('YYYY-MM-DD')
+          this.maxDate = dayjs().format('YYYY-MM-DD')
         }
       } else if (this.isFutureValidation) {
         if (this.forwardYearRange !== 99) {
@@ -185,20 +161,14 @@ export default {
           this.minDate = dayjs().format('YYYY-MM-DD')
         }
         if (this.forwardMonthRange !== 99) {
-          this.maxDate = dayjs()
-            .add(this.forwardMonthRange, 'month')
-            .startOf('month')
-            .format('YYYY-MM-DD')
-          this.minDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.forwardMonthRange, 'month').format('YYYY-MM-DD')
+          this.minDate = dayjs().format('YYYY-MM-DD')
         } else if (this.forwardDayRange !== 99) {
           this.maxDate = dayjs().add(this.forwardDayRange, 'day').format('YYYY-MM-DD')
-          this.minDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD')
+          this.minDate = dayjs().format('YYYY-MM-DD')
         } else {
-          this.maxDate = dayjs()
-            .add(this.forwardYearRange, 'year')
-            .startOf('month')
-            .format('YYYY-MM-DD')
-          this.minDate = dayjs().subtract(1, 'month').format('YYYY-MM-DD')
+          this.maxDate = dayjs().add(this.forwardYearRange, 'year').format('YYYY-MM-DD')
+          this.minDate = dayjs().format('YYYY-MM-DD')
         }
       } else {
         if (this.backYearRange !== 99) {
@@ -207,12 +177,10 @@ export default {
           if (this.forwardMonthRange !== 99) {
             this.maxDate = dayjs(this.initialDate)
               .add(this.forwardMonthRange, 'month')
-              .startOf('month')
               .format('YYYY-MM-DD')
           } else if (this.forwardDayRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.initialDate)
               .add(this.forwardDayRange, 'day')
-              .startOf('month')
               .format('YYYY-MM-DD')
           } else {
             this.maxDate = dayjs(this.initialDate)
@@ -221,17 +189,15 @@ export default {
           }
         } else if (this.backMonthRange !== 99) {
           this.minDate = dayjs(this.initialDate)
-            .subtract(this.backMonthRange + 1, 'month')
-            .endOf('month')
+            .subtract(this.backMonthRange, 'month')
             .format('YYYY-MM-DD')
 
           if (this.forwardMonthRange !== 99) {
             this.maxDate = dayjs(this.initialDate)
               .add(this.forwardMonthRange, 'month')
-              .startOf('month')
               .format('YYYY-MM-DD')
           } else if (this.forwardDayRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.initialDate)
               .add(this.forwardDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
@@ -242,15 +208,13 @@ export default {
         } else if (this.forwardMonthRange !== 99) {
           this.maxDate = dayjs(this.initialDate)
             .add(this.forwardMonthRange, 'month')
-            .startOf('month')
             .format('YYYY-MM-DD')
           if (this.backMonthRange !== 99) {
             this.minDate = dayjs(this.initialDate)
-              .subtract(this.backMonthRange + 1, 'month')
-              .endOf('month')
+              .subtract(this.backMonthRange, 'month')
               .format('YYYY-MM-DD')
           } else if (this.backDayRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.initialDate)
               .subtract(this.backDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
@@ -263,11 +227,10 @@ export default {
             .format('YYYY-MM-DD')
           if (this.backMonthRange !== 99) {
             this.minDate = dayjs(this.initialDate)
-              .subtract(this.backMonthRange + 1, 'month')
-              .endOf('month')
+              .subtract(this.backMonthRange, 'month')
               .format('YYYY-MM-DD')
           } else if (this.backDayRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.initialDate)
               .subtract(this.backDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
@@ -275,40 +238,38 @@ export default {
             this.minDate = dayjs(this.initialDate).subtract(day, 'day').format('YYYY-MM-DD')
           }
         } else if (this.backDayRange !== 99) {
-          this.minDate = dayjs(this.saveDate)
+          this.minDate = dayjs(this.initialDate)
             .subtract(this.backDayRange, 'day')
             .format('YYYY-MM-DD')
           if (this.forwardMonthRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.initialDate)
               .add(this.forwardMonthRange, 'month')
-              .startOf('month')
               .format('YYYY-MM-DD')
           } else if (this.forwardDayRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.initialDate)
               .add(this.forwardDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.initialDate)
               .add(this.forwardYearRange, 'year')
-              .startOf('month')
               .format('YYYY-MM-DD')
           }
         } else if (this.forwardDayRange !== 99) {
-          this.maxDate = dayjs(this.saveDate).add(this.forwardDayRange, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs(this.initialDate)
+            .add(this.forwardDayRange, 'day')
+            .format('YYYY-MM-DD')
 
           if (this.backMonthRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.initialDate)
               .subtract(this.backMonthRange, 'month')
-              .endOf('month')
               .format('YYYY-MM-DD')
           } else if (this.backDayRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.initialDate)
               .subtract(this.backDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.initialDate)
               .subtract(this.backYearRange, 'year')
-              .endOf('month')
               .format('YYYY-MM-DD')
           }
         } else {
@@ -317,8 +278,6 @@ export default {
           this.maxDate = dayjs(this.initialDate).add(day, 'day').format('YYYY-MM-DD')
         }
       }
-      console.log('minDate: ', this.minDate)
-      console.log('maxDate: ', this.maxDate)
     },
     populdateMonthDays() {
       if (this.isPastValidation) {
@@ -334,6 +293,11 @@ export default {
         }
         this.daysInMonth = this.totalDaysInMonth(-1)
         this.nextMonthDays = this.totalDaysInMonth(0)
+        return
+      }
+      if (this.forwardDayRange !== 99) {
+        this.daysInMonth = this.totalDaysInMonth(0)
+        this.nextMonthDays = this.totalDaysInMonth(1)
         return
       }
       if (dayjs(this.calendarDate).format('YYYY-MM') == dayjs(this.maxDate).format('YYYY-MM')) {
@@ -407,33 +371,37 @@ export default {
       this.checkDateHistory() //Checking the date history
       return daysInWholeMonth
     },
-
+    checkSkippability() {
+      if (this.isPastValidation) {
+        this.prevDate =
+          dayjs(this.minDate).format('YYYY-MM') <
+          dayjs(this.calendarDate).subtract(1, 'month').format('YYYY-MM')
+        this.nextDate =
+          dayjs(this.maxDate).format('YYYY-MM') > dayjs(this.calendarDate).format('YYYY-MM')
+      } else if (this.isFutureValidation) {
+        this.prevDate =
+          dayjs(this.minDate).format('YYYY-MM') < dayjs(this.calendarDate).format('YYYY-MM')
+        this.nextDate =
+          dayjs(this.maxDate).format('YYYY-MM') >
+          dayjs(this.calendarDate).add(1, 'month').format('YYYY-MM')
+      } else {
+        this.prevDate =
+          dayjs(this.minDate).format('YYYY-MM') < dayjs(this.calendarDate).format('YYYY-MM')
+        this.nextDate =
+          dayjs(this.maxDate).subtract(1, 'month').format('YYYY-MM') >
+          dayjs(this.calendarDate).format('YYYY-MM')
+      }
+    },
     //This is for the right button to go to the next month
-    onClickToRight() {
-      this.nextMonthDate = this.calendarDate.add(2, 'month').endOf('month').format('YYYY-MM-DD')
-      this.prevMonthDate = this.calendarDate.format('YYYY-MM-DD')
-      this.calendarDate = this.calendarDate.add(1, 'month')
+    onClickToSkip(offset: number) {
+      this.calendarDate = this.calendarDate.add(offset, 'month')
       this.currentDate = this.calendarDate.format('YYYY-MM-DD')
       //This is for creating the days in the next month with manipulated date
       this.populdateMonthDays()
-
       this.checkDateHistory()
       this.updateBetweenDates()
       this.linedThroughDate()
-    },
-
-    //This is for the left button to go to the next month
-    onClickToLeft() {
-      this.nextMonthDate = this.calendarDate.endOf('month').format('YYYY-MM-DD')
-      this.prevMonthDate = this.calendarDate.subtract(2, 'month').format('YYYY-MM-DD')
-      this.calendarDate = this.calendarDate.subtract(1, 'month')
-      this.currentDate = this.calendarDate.format('YYYY-MM-DD')
-      //This is for creating the days in the previous month with manipulated date
-      this.populdateMonthDays()
-
-      this.checkDateHistory()
-      this.updateBetweenDates()
-      this.linedThroughDate()
+      this.checkSkippability()
     },
     selectDate(selectedDay: date) {
       if (this.baseInitialDates.firstInitialDate) {
@@ -582,13 +550,10 @@ export default {
     updateBetweenDates() {
       const startDate = this.firstSelectedDate
       const endDate = this.secondSelectedDate
-
-      const startDateMonthIndex = dayjs(startDate.date).month()
-      const endDateMonthIndex = dayjs(endDate.date).month()
-
-      const leftCalendarMonthIndex = dayjs(this.daysInMonth[15].date).month()
-      const rightCalendarMonthIndex = dayjs(this.nextMonthDays[15].date).month()
-
+      const startDateIndex = dayjs(startDate.date).format('YYYY-MM')
+      const endDateIndex = dayjs(endDate.date).format('YYYY-MM')
+      const leftCalendarIndex = dayjs(this.daysInMonth[15].date).format('YYYY-MM')
+      const rightCalendarIndex = dayjs(this.nextMonthDays[15].date).format('YYYY-MM')
       if (startDate.date && endDate.date) {
         // seçilen iki tarih farklı aylardaysa
         if (startDate.month !== endDate.month) {
@@ -596,7 +561,7 @@ export default {
           this.daysInMonth.forEach((day) => {
             if (
               // firstSelectedDate, soldaki takvimde ise o takvimdeki sağdaki günlerin between'ini true yap
-              startDateMonthIndex == leftCalendarMonthIndex &&
+              startDateIndex == leftCalendarIndex &&
               day.number > startDate.number &&
               day.number != 0
             ) {
@@ -604,7 +569,7 @@ export default {
               day.between = true
             } else if (
               // secondSelectedDate, soldaki takvimde ise o takvimdeki soldaki günlerin between'ini true yap
-              endDateMonthIndex == leftCalendarMonthIndex &&
+              endDateIndex == leftCalendarIndex &&
               day.number < endDate.number &&
               day.number != 0
             ) {
@@ -612,20 +577,19 @@ export default {
               day.between = true
             } else if (
               // iki tarihin ayı soldaki takvime ait değil ise soldaki takvimin tamamının between'ini true yap
-              startDateMonthIndex < leftCalendarMonthIndex &&
-              leftCalendarMonthIndex < endDateMonthIndex &&
+              startDateIndex < leftCalendarIndex &&
+              leftCalendarIndex < endDateIndex &&
               day.number != 0
             ) {
               day.active = true
               day.between = true
             }
           })
-
           // sağdaki takvim için
           this.nextMonthDays.forEach((day) => {
             if (
               // firstSelectedDate, sağdaki takvimde ise o takvimdeki sağdaki günlerin between'ini true yap
-              startDateMonthIndex == rightCalendarMonthIndex &&
+              startDateIndex == rightCalendarIndex &&
               day.number > startDate.number &&
               day.number != 0
             ) {
@@ -633,7 +597,7 @@ export default {
               day.between = true
             } else if (
               // secondSelectedDate, sağdaki takvimde ise o takvimdeki soldaki günlerin between'ini true yap
-              endDateMonthIndex == rightCalendarMonthIndex &&
+              endDateIndex == rightCalendarIndex &&
               day.number < endDate.number &&
               day.number != 0
             ) {
@@ -641,8 +605,8 @@ export default {
               day.between = true
             } else if (
               // iki tarihin ayı sağdaki takvime ait değil ise sağdaki takvimin tamamının between'ini true yap
-              startDateMonthIndex < rightCalendarMonthIndex &&
-              rightCalendarMonthIndex < endDateMonthIndex &&
+              startDateIndex < rightCalendarIndex &&
+              rightCalendarIndex < endDateIndex &&
               day.number != 0
             ) {
               day.active = true
@@ -653,10 +617,7 @@ export default {
         // seçilen iki tarih aynı aylardaysa
         else {
           // seçilen iki tarih de soldaki takvimde ise tarihler arasındaki day'lerin between'ini true yap
-          if (
-            startDateMonthIndex == leftCalendarMonthIndex &&
-            endDateMonthIndex == leftCalendarMonthIndex
-          ) {
+          if (startDateIndex == leftCalendarIndex && endDateIndex == leftCalendarIndex) {
             this.daysInMonth.forEach((day) => {
               if (day.number > startDate.number && day.number < endDate.number && day.number != 0) {
                 day.active = true
@@ -665,8 +626,8 @@ export default {
             })
           } else if (
             // seçilen iki tarih de sağdaki takvimde ise tarihler arasındaki day'lerin between'ini tru yap
-            startDateMonthIndex == rightCalendarMonthIndex &&
-            endDateMonthIndex == rightCalendarMonthIndex
+            startDateIndex == rightCalendarIndex &&
+            endDateIndex == rightCalendarIndex
           ) {
             this.nextMonthDays.forEach((day) => {
               if (day.number > startDate.number && day.number < endDate.number && day.number != 0) {
@@ -682,76 +643,80 @@ export default {
     },
     linedThroughDate() {
       if (this.isPastValidation) {
-        for (let i = 0; i < this.nextMonthDays.length; i++) {
+        this.nextMonthDays.forEach((day) => {
           if (
             // monthRange ay önceki tarihin solundaki günler çizilir
-            this.nextMonthDays[i].date < dayjs(this.minDate).format('YYYY-MM-DD') &&
-            this.nextMonthDays[i].month === dayjs(this.minDate).format('MM') &&
-            this.nextMonthDays[i].year === dayjs(this.minDate).format('YYYY') &&
-            this.nextMonthDays[i].number < dayjs(this.minDate).date()
+            day.date < dayjs(this.minDate).format('YYYY-MM-DD') &&
+            day.month === dayjs(this.minDate).format('MM') &&
+            day.year === dayjs(this.minDate).format('YYYY') &&
+            day.number < dayjs(this.minDate).date()
           ) {
-            this.nextMonthDays[i].textDecoration = true
+            day.textDecoration = true
           }
 
           if (
             // bulunulan tarihin sağındaki günler çizilir
-            this.nextMonthDays[i].date > dayjs(this.maxDate).format('YYYY-MM-DD') &&
-            this.nextMonthDays[i].month === dayjs(this.maxDate).subtract(1, 'month').format('MM') &&
-            this.nextMonthDays[i].year === dayjs(this.maxDate).subtract(1, 'month').format('YYYY')
+            day.date > dayjs(this.presentDate).format('YYYY-MM-DD') &&
+            day.month === dayjs(this.maxDate).format('MM') &&
+            day.year === dayjs(this.maxDate).format('YYYY')
           ) {
-            this.nextMonthDays[i].textDecoration = true
+            day.textDecoration = true
           }
-        }
-        for (let i = 0; i < this.daysInMonth.length; i++) {
+        })
+        this.daysInMonth.forEach((day) => {
           if (this.backDayRange !== 99) {
-            if (this.daysInMonth[i].date < dayjs(this.minDate).format('YYYY-MM-DD')) {
-              this.daysInMonth[i].textDecoration = true
+            if (day.date < dayjs(this.minDate).format('YYYY-MM-DD')) {
+              day.textDecoration = true
             }
           }
           if (
-            this.daysInMonth[i].date < dayjs(this.minDate).format('YYYY-MM-DD') &&
-            this.daysInMonth[i].month === dayjs(this.minDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.minDate).format('YYYY')
+            day.date < dayjs(this.minDate).format('YYYY-MM-DD') &&
+            day.month === dayjs(this.minDate).format('MM') &&
+            day.year === dayjs(this.minDate).format('YYYY')
           ) {
-            this.daysInMonth[i].textDecoration = true
+            day.textDecoration = true
           }
-        }
+        })
       } else {
-        for (let i = 0; i < this.daysInMonth.length; i++) {
+        this.daysInMonth.forEach((day) => {
           if (this.backDayRange !== 99) {
-            if (this.daysInMonth[i].date < dayjs(this.minDate).format('YYYY-MM-DD')) {
-              this.daysInMonth[i].textDecoration = true
+            if (day.date < dayjs(this.minDate).format('YYYY-MM-DD')) {
+              day.textDecoration = true
             }
           }
           if (
             // bulunulan tarihin solundaki günler çizilir
-            this.daysInMonth[i].date < dayjs(this.initialDate).format('YYYY-MM-DD') &&
-            this.daysInMonth[i].month === dayjs(this.minDate).add(1, 'month').format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.minDate).add(1, 'month').format('YYYY')
+            day.date < dayjs(this.minDate).format('YYYY-MM-DD') &&
+            day.month === dayjs(this.minDate).format('MM') &&
+            day.year === dayjs(this.minDate).format('YYYY')
           ) {
-            console.log(this.minDate)
-            this.daysInMonth[i].textDecoration = true
+            day.textDecoration = true
           }
 
           if (
             // monthRange ay sonraki tarihin sağındaki günler çizilir
-            this.daysInMonth[i].date > dayjs(this.maxDate).format('YYYY-MM-DD') &&
-            this.daysInMonth[i].month === dayjs(this.maxDate).format('MM') &&
-            this.daysInMonth[i].year === dayjs(this.maxDate).format('YYYY')
+            day.date > dayjs(this.maxDate).format('YYYY-MM-DD') &&
+            day.month === dayjs(this.maxDate).format('MM') &&
+            day.year === dayjs(this.maxDate).format('YYYY')
           ) {
-            this.daysInMonth[i].textDecoration = true
+            day.textDecoration = true
           }
-        }
-        for (let i = 0; i < this.nextMonthDays.length; i++) {
+        })
+        this.nextMonthDays.forEach((day) => {
+          if (this.forwardDayRange !== 99) {
+            if (day.date > dayjs(this.maxDate).format('YYYY-MM-DD')) {
+              day.textDecoration = true
+            }
+          }
           if (
             // bulunulan tarihin sağındaki günler çizilir
-            this.nextMonthDays[i].date > dayjs(this.maxDate).format('YYYY-MM-DD') &&
-            this.nextMonthDays[i].month === dayjs(this.maxDate).format('MM') &&
-            this.nextMonthDays[i].year === dayjs(this.maxDate).format('YYYY')
+            day.date > dayjs(this.maxDate).format('YYYY-MM-DD') &&
+            day.month === dayjs(this.maxDate).format('MM') &&
+            day.year === dayjs(this.maxDate).format('YYYY')
           ) {
-            this.nextMonthDays[i].textDecoration = true
+            day.textDecoration = true
           }
-        }
+        })
       }
     }
   },
@@ -765,12 +730,11 @@ export default {
         }
 
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
-        this.nextMonthDate = this.calendarDate.add(1, 'month').endOf('month').format('YYYY-MM-DD')
-        this.prevMonthDate = this.calendarDate.subtract(1, 'month').format('YYYY-MM-DD')
-        // this.populdateMonthDays() gereksiz kullanım?
+        this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
         this.linedThroughDate() // Her iki takvim için geçerli
+        this.checkSkippability()
       }
     },
     saveFirstDateHistory(newVal) {
@@ -806,13 +770,14 @@ export default {
 
     this.checkDateHistory()
     this.linedThroughDate()
+    this.checkSkippability()
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variables.scss';
-@import '../assets/css/_fonts.scss';
+@import '../../assets/css/variables.scss';
+@import '../../assets/css/_fonts.scss';
 
 // This is the main container
 .ui-date-picker-c {
@@ -830,6 +795,7 @@ export default {
     align-items: center;
     position: relative;
     margin-top: 1.5rem;
+    z-index: 1000;
 
     > div {
       display: flex;

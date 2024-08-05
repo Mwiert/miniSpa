@@ -1,33 +1,123 @@
 <template>
   <div>
     <div>
-      <MenuDropdown>
-        <template #toggle>
-          <div>
-            <h5>Menu dropdown</h5>
-          </div>
+      <h1>{{ 'Menu Dropdown' }}</h1>
+
+      <MenuDropdown
+        :items="multiItemsL"
+        primaryKey="id"
+        displayField="name"
+        label="Menu Dropdown"
+        openOnClick>
+        <template #labelSlot>
+          <SvgIcon name="mail" size="s" />
         </template>
-        <template v-slot="{ childClick }">
+      </MenuDropdown>
+
+      <MenuDropdown
+        className="flight"
+        :items="multiItems"
+        primaryKey="id"
+        displayField="name"
+        label="for Flight"
+        actionField="func">
+        <template #labelSlot>
+          <SvgIcon name="mail" size="s" />
+        </template>
+        <template>
           <UIMultiDropdown
             v-model="selectedPets"
             :items="pets"
             :fontSize="fontSize"
             displayField="name"
             :sortField="sortField"
-            :label="'Multi dropdown'"
+            label="Multi dropdown"
             :dataSize="dataSize"
             searchable
             primaryKey="id"
             :sortByAscending="true"
             :maxItemThreshold="maxItemThreshold"
             :hasActionBox="true" />
-          <UIInput :label="'Deneme'" clearButton :icon="'mail'" />
-          <a @click="childClick">menu dropdown</a>
-          <button @click="childClick">menu dropdown</button>
-          <button>exit</button>
-
+          <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            label="Multi dropdown 2"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+          <hr />
         </template>
-        
+      </MenuDropdown>
+
+      <MenuDropdown
+        className="hotel"
+        :items="multiItems"
+        primaryKey="id"
+        displayField="name"
+        label="for Hotel"
+        actionField="func">
+        <template #labelSlot>
+          <SvgIcon name="mail" size="s" />
+        </template>
+        <template>
+          <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            label="Multi dropdown"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+          <UIMultiDropdown
+            v-model="selectedPets"
+            :items="pets"
+            :fontSize="fontSize"
+            displayField="name"
+            :sortField="sortField"
+            label="Multi dropdown 2"
+            :dataSize="dataSize"
+            searchable
+            primaryKey="id"
+            :sortByAscending="true"
+            :maxItemThreshold="maxItemThreshold"
+            :hasActionBox="true" />
+          <hr />
+        </template>
+      </MenuDropdown>
+
+      <MenuDropdown
+        :className="'flight'"
+        :items="multiItems"
+        primaryKey="id"
+        displayField="name"
+        actionField="func"
+        directRight>
+        <template #labelSlot>
+          <SvgIcon name="mail" size="s" />
+        </template>
+      </MenuDropdown>
+
+      <MenuDropdown
+        :className="'hotel'"
+        :items="multiItems"
+        primaryKey="id"
+        displayField="name"
+        actionField="func"
+        directRight>
+        <template #labelSlot>
+          <SvgIcon name="mail" size="s" />
+        </template>
       </MenuDropdown>
     </div>
     <div>
@@ -87,7 +177,8 @@
         :showUnknown="true"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
-        :enumObj="EInternSingleComponentType" />
+        :enumObj="EInternSingleComponentType"
+        disabled />
     </div>
     <div>
       <h1>{{ 'Multi Enum Dropdown' }}</h1>
@@ -226,7 +317,8 @@
         primaryKey="id"
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
-        :hasActionBox="false" />
+        :hasActionBox="false"
+        disabled />
     </div>
     <div>
       <h1>{{ 'Single Dropdown' }}</h1>
@@ -295,9 +387,121 @@
         :sortByAscending="true"
         :maxItemThreshold="maxItemThreshold"
         :iconImage="'iconImage'"
-        primaryKey="id" />
+        primaryKey="id"
+        disabled />
     </div>
-    
+    <h1>{{ 'Menu Dropdown' }}</h1>
+
+    <MenuDropdown :items="multiItemsL" primaryKey="id" displayField="name" label="Menu Dropdown">
+      <template #labelSlot>
+        <SvgIcon name="mail" size="s" />
+      </template>
+    </MenuDropdown>
+
+    <MenuDropdown
+      className="flight"
+      :items="multiItems"
+      primaryKey="id"
+      displayField="name"
+      label="for Flight"
+      actionField="func">
+      <template #labelSlot>
+        <SvgIcon name="mail" size="s" />
+      </template>
+      <template>
+        <UIMultiDropdown
+          v-model="selectedPets"
+          :items="pets"
+          :fontSize="fontSize"
+          displayField="name"
+          :sortField="sortField"
+          label="Multi dropdown"
+          :dataSize="dataSize"
+          searchable
+          primaryKey="id"
+          :sortByAscending="true"
+          :maxItemThreshold="maxItemThreshold"
+          :hasActionBox="true" />
+        <UIMultiDropdown
+          v-model="selectedPets"
+          :items="pets"
+          :fontSize="fontSize"
+          displayField="name"
+          :sortField="sortField"
+          label="Multi dropdown 2"
+          :dataSize="dataSize"
+          searchable
+          primaryKey="id"
+          :sortByAscending="true"
+          :maxItemThreshold="maxItemThreshold"
+          :hasActionBox="true" />
+        <hr />
+      </template>
+    </MenuDropdown>
+
+    <MenuDropdown
+      className="hotel"
+      :items="multiItems"
+      primaryKey="id"
+      displayField="name"
+      label="for Hotel"
+      actionField="func">
+      <template #labelSlot>
+        <SvgIcon name="mail" size="s" />
+      </template>
+      <template>
+        <UIMultiDropdown
+          v-model="selectedPets"
+          :items="pets"
+          :fontSize="fontSize"
+          displayField="name"
+          :sortField="sortField"
+          label="Multi dropdown"
+          :dataSize="dataSize"
+          searchable
+          primaryKey="id"
+          :sortByAscending="true"
+          :maxItemThreshold="maxItemThreshold"
+          :hasActionBox="true" />
+        <UIMultiDropdown
+          v-model="selectedPets"
+          :items="pets"
+          :fontSize="fontSize"
+          displayField="name"
+          :sortField="sortField"
+          label="Multi dropdown 2"
+          :dataSize="dataSize"
+          searchable
+          primaryKey="id"
+          :sortByAscending="true"
+          :maxItemThreshold="maxItemThreshold"
+          :hasActionBox="true" />
+        <hr />
+      </template>
+    </MenuDropdown>
+
+    <MenuDropdown
+      :className="'flight'"
+      :items="multiItems"
+      primaryKey="id"
+      displayField="name"
+      actionField="func"
+      directRight>
+      <template #labelSlot>
+        <SvgIcon name="mail" size="s" />
+      </template>
+    </MenuDropdown>
+    <MenuDropdown
+      :className="'hotel'"
+      :items="multiItems"
+      primaryKey="id"
+      displayField="name"
+      actionField="func"
+      directRight>
+      <template #labelSlot>
+        <SvgIcon name="mail" size="s" />
+      </template>
+    </MenuDropdown>
   </div>
 </template>
 
@@ -308,15 +512,13 @@ import UIMultiDropdown from '../components/Dropdown/UIMultiDropdown.vue'
 import EInternComponentType from '../enum/EInternComponentType'
 import EInternSingleComponentType from '../enum/EInternSingleComponentType'
 import MenuDropdown from '../components/Dropdown/MenuDropdown.vue'
-import UIInput from '../components/UIInput.vue'
 export default {
   name: 'SummerLovers',
   components: {
     UIEnumDropdown,
     UIDropdown,
     UIMultiDropdown,
-    MenuDropdown,
-    UIInput
+    MenuDropdown
   },
   data() {
     return {
@@ -354,7 +556,7 @@ export default {
         {
           id: 5,
           iconImage: '',
-          name: 'ElephantElephantElephantElephantElephantElephantElephant',
+          name: 'Elephant',
           detail: 'd'
         },
         { id: 6, iconImage: '', name: 'Hawk', detail: 'c' },
@@ -376,6 +578,34 @@ export default {
         { id: 1, iconImage: '', name: 'Cat Toy', detail: 'l' },
         { id: 2, iconImage: '', name: 'Fish Toy', detail: 'm' },
         { id: 3, iconImage: '', name: 'Bird Toy', detail: 'n' }
+      ],
+      multiItems: [
+        {
+          id: 0,
+          name: 'Dashboard',
+          func: () => {
+            window.location.assign('/powerpuffgirls')
+          }
+        },
+        {
+          id: 1,
+          name: 'Profile',
+          func: () => {
+            window.location.assign('/pinkpanthers')
+          }
+        },
+        {
+          id: 2,
+          name: 'Exit',
+          func: () => {
+            window.location.assign('/')
+          }
+        }
+      ],
+      multiItemsL: [
+        { id: 0, name: 'Turkish', iconImage: 'mail' },
+        { id: 1, name: 'English', iconImage: 'arrow-up' },
+        { id: 2, name: 'Indian', iconImage: 'arrow-down' }
       ],
       items: [
         {
@@ -463,5 +693,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped></style>

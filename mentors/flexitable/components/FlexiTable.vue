@@ -1,9 +1,6 @@
 <template>
-  <div class="flexi-table-c" v-if="Object.values(this.$attrs)[0]">
-    <!-- {{ flexi.columns }}
-    <br />
-    <br />
-    {{ flexi.options.columnSizes }} -->
+  <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
+
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
@@ -22,6 +19,7 @@ import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
 import FlexiTableInfo from './FlexiTableInfo.vue'
 import { computed } from 'vue'
+import flexitableExceptionHandler from '../flexitableExceptionHandler'
 export default {
   name: 'FlexiTable',
   provide() {
@@ -29,29 +27,39 @@ export default {
       flexi: computed(() => this.flexiTableOptions)
     }
   },
+  mixins: [flexitableExceptionHandler],
   data() {
     return {
       flexiTableOptions: {}
     }
   },
   created() {
-    if (Object.values(this.$attrs)[0]) {
+    this.flexiTableOptions.errors = { message: '' }
+
+    if (
+      Object.values(this.$attrs)[0]?.columns &&
+      Object.values(this.$attrs)[0]?.rows &&
+      Object.values(this.$attrs)[0]?.selectedRows
+    ) {
       const tableOptions = Object.values(this.$attrs)[0]
       const { columns, selectedRows, rows, options } = tableOptions
       const hasDetails = rows[0]?.details ? true : false
       this.flexiTableOptions = {
         columns,
         selectedRows,
-        rows: rows[0]?.row
-          ? rows
-          : rows.map((item) => ({ row: item })),
+        errors: { message: '' },
+        rows: rows[0]?.row ? rows : rows.map((item) => ({ row: item })),
         options: {
           ...flexiConfig,
           ...options,
-          hasDetails
+          hasDetails,
+          columnSizes: [
+            ...flexiConfig.columnSizes,
+            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
+          ],
+          itemsPerPage: options?.selected?.id ?? flexiConfig.selected.id
         }
       }
-
 
       //sortable Control
       if (!this.flexiTableOptions.options.disableSorting) {

@@ -1,7 +1,30 @@
 <template>
+  <span class="tooltip-c">
+    <span class="tooltip-wrapper">
+      <UITooltip
+        :icon="'x'"
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
+        :position="'left'"
+        :type="'click'">
+        <SvgIcon :name="'x'" :size="'s'" class="icon" />
+      </UITooltip>
+    </span>
+    <span class="tooltip-wrapper">
+      <UITooltip
+        :icon="'x'"
+        :label="'Saafsnfsjanjgkasdbnjısdgnjngsdajngdjasngjasdnjgdnsjkgsdnajkngsdajkngasdjkngjkdsanjkgdasn'"
+        :position="'bottom'"
+        :type="'click'">
+        <SvgIcon :name="'x'" :size="'s'" class="icon" />
+      </UITooltip>
+    </span>
+  </span>
+  <div>Ayırıcı</div>
   <div class="text-area-c">
     <UITextArea
       :label="'Address'"
+      :resizeSize="300"
+      :resizeDirection="'vertical'"
       :disabled="false"
       :rows="10"
       :cols="30"
@@ -253,6 +276,8 @@ import UIRadioButton from '../components/UIRadioButton.vue'
 import UICheckbox from '../components/UICheckbox.vue'
 import UIInput from '../components/UIInput.vue'
 import UITextArea from '../components/UITextArea.vue'
+import UITooltip from '../components/UITooltip.vue'
+import SvgIcon from '../components/SvgIcon.vue'
 
 export default {
   name: 'PowerPuffGirls',
@@ -262,11 +287,15 @@ export default {
     UIRadioButton,
     UICheckbox,
     UIInput,
-    UITextArea
+    UITextArea,
+    UITooltip,
+    SvgIcon
   },
   data() {
     return {
       inputValue: this.value,
+      openComponent: false,
+      hoverComponent: false,
       email: '',
       password: '',
       idNumber: '',
@@ -278,6 +307,8 @@ export default {
       messageInput: 'fdasfsdafdas',
       messageInputWithClearButton: 'fadsfdasfd',
       buttonValue: '',
+      pickedRadioHotel: '',
+      pickedRadioFlight: '',
 
       // Defining the initial loading and disabled states for different buttons
       loadingStates: {
@@ -309,8 +340,9 @@ export default {
       },
 
       // Initial states for radio buttons
-      pickedRadioHotel: '',
-      pickedRadioFlight: '',
+      // pickedRadioHotel: '',
+      // pickedRadioFlight: '',
+
       // Hotel radio button list
       radioButtonsHotel: [
         { label: 'Radio 1', value: 'radio1', disabled: true },
@@ -355,6 +387,10 @@ export default {
       //Enables the second toggle switch (timeBenders)
       this.timeBenders.disabled = false
     },
+    toggleComponent() {
+      this.openComponent = !this.openComponent
+    },
+
     toggleChange2(newChecked: boolean) {
       this.timeBenders.checked = newChecked
       this.summerLovers.disabled = false
@@ -412,6 +448,33 @@ export default {
     display: flex;
     justify-content: center;
     background-color: white;
+  }
+}
+.tooltip-c {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  .tooltip-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .svg-icon-c {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 16px;
+      width: 16px;
+    }
   }
 }
 </style>

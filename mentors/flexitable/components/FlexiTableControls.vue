@@ -4,12 +4,13 @@
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
-        :enumObj="flexi.options.EInternSingleComponentType"
+        :enumObj="flexi.options.pageOrder"
         :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
         :showAll="flexi.options.UIDropdownOrderProp.showAll" />
       <!--Custom Dropdown-->
+      <SvgIcon name="excel" size="xs" />
       <div class="dropdown">
         <div class="dropdown-icon" @click="Toggle">
           <SvgIcon name="eye" size="xs" />
@@ -28,7 +29,9 @@
       </div>
       <div class="export-buttons">
         <button class="pdf-button" @click="triggerExportPrint()">Print</button>
-        <button class="pdf-button" @click="downloadExcel()">Excel</button>
+        <button class="excel-button" @click="downloadExcel()">Excel</button>
+        <button class="excel-button" @click="downloadAllExcel()">Excel All</button>
+        <button class="pdf-button" @click="downloadPdf()">create pdf</button>
       </div>
     </div>
 
@@ -50,8 +53,12 @@
 </template>
 
 <script lang="ts">
+// import the necessary libraries
+//import { jsPDF } from 'jspdf';
+//import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
+import html2pdf from 'html2pdf.js'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
@@ -60,44 +67,57 @@ export default {
     UIEnumDropdown
   },
   methods: {
+    async downloadPdf() {
+      const headerElement = this.$parent.$refs.flexiheader.$refs.print2
+      const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
+
+      const connectedElement = document.createElement('div')
+      ;[headerElement, bodyElement].forEach((element) => {
+        connectedElement.appendChild(element.cloneNode(true))
+      })
+
+      const options = {
+        margin: [10, 10, 10, 10], // location
+        filename: 'download.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }
+
+      // use html2pdf.js to convert the combinedDiv to pdf
+      await html2pdf().from(connectedElement).set(options).save()
+    },
+
+    cleanColumnWithRegex(name) {
+      if (typeof name === 'string') {
+        return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
+      } else {
+        return name !== undefined && name !== null ? String(name) : ''
+      }
+    },
+    cleanRowsWithRegex(name) {
+      if (typeof name === 'string') {
+        return name.replace(/[^a-zA-Z0-9öÖıİşŞçÇğĞüÜ\s.,]/g, '')
+      } else {
+        return name !== undefined && name !== null ? String(name) : ''
+      }
+    },
+
+    downloadAllExcel() {
+      const initialItemsPerPage = this.flexi.options.itemsPerPage
+
+      this.flexi.options.itemsPerPage = -1
+      this.$nextTick(() => {
+        this.downloadExcel()
+        this.flexi.options.itemsPerPage = initialItemsPerPage
+      })
+    },
+
     downloadExcel() {
       const self = this
       const tableTitle = 'flexitable'
       const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
       const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
-      const combined = [headersContainer, divToPrint]
-      // const tableType = divToPrint.dataset.tabletype
-      const exportItemDetailsToExcel = self.exportItemDetailsToExcel
-      console.log(divToPrint)
-      console.log(headersContainer)
-      //let styleContent = ''
-
-      // switch (tableType) {
-      //   case 'INVOICE':
-      //     styleContent = Template.getInvoiceExcelTemplate()
-      //     break
-
-      //   default:
-      //     styleContent = ''
-      //     break
-      // }
-
-      //const vgtTableWrapper = divToPrint.querySelector('table#vgt-table')
-
-      const headerTableWrapper = headersContainer
-      // let cloneTable = divToPrint.cloneNode(true)
-      // let cloneHeaders = headerTableWrapper.cloneNode(true)
-
-      // if (!exportItemDetailsToExcel) {
-      //   const gTableItemDetails = cloneTable.querySelectorAll('td .g-table-item-details')
-
-      //   gTableItemDetails.forEach((detailDiv) => {
-      //     detailDiv.remove()
-      //   })
-      // }
-
-      // cloneTable = cleanTableElements(cloneTable)
-      // cloneHeaders = cleanTableElements(cloneHeaders)
 
       let excelContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`
       excelContent += `<head>`
@@ -116,11 +136,41 @@ export default {
       excelContent += `</xml>`
       excelContent += `<![endif]-->`
       excelContent += `<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>`
-      //excelContent += `<style>${styleContent}</style>`
       excelContent += `</head>`
       excelContent += `<body>`
-      excelContent += headersContainer.outerHTML
-      // excelContent += cloneTable.outerHTML
+      excelContent += '<table>'
+
+      //header start
+      excelContent += '<thead>'
+      excelContent += '<tr>'
+
+      const headerCells = headersContainer.querySelectorAll('.flexi-table-header-col-wrapper')
+
+      headerCells.forEach((headerCell) => {
+        const cleanedColumns = self.cleanColumnWithRegex(headerCell.innerText)
+        excelContent += `<th>${cleanedColumns}</th>`
+      })
+
+      excelContent += '</tr>'
+      excelContent += '</thead>'
+
+      //body start
+      excelContent += '<tbody>'
+      const rows = divToPrint.querySelectorAll('.flexi-table-body-row-wrapper')
+      rows.forEach((row) => {
+        excelContent += '<tr>'
+        const bodyCells = row.querySelectorAll('.flexi-table-body-col')
+
+        bodyCells.forEach((bodyCell) => {
+          const cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
+          //it forces the row content to be text to prevent problems previewing in excel
+          excelContent += `<td style="mso-number-format:'\\@'">${cleanedRows}</td>`
+        })
+        excelContent += '</tr>'
+      })
+
+      excelContent += '</tbody>'
+      excelContent += '</table>'
       excelContent += `</body>`
       excelContent += `</html>`
 
@@ -173,7 +223,18 @@ export default {
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show
+      if (this.flexi.options.show) {
+        document.addEventListener('click', this.closeDropdown)
+      } else {
+        document.removeEventListener('click', this.closeDropdown)
+      }
     },
+    closeDropdown(event) {
+      if (!event.target.closest('.dropdown')) {
+        this.flexi.options.show = false
+      }
+    },
+
     clearSearch() {
       this.flexi.options.searchKeyWord = ''
     }
@@ -194,6 +255,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   .ftc-search-wrapper {
     height: 40px;
     width: 280px;
@@ -206,6 +268,7 @@ export default {
 
     input[type='text'] {
       padding: 10px 15px 10px 40px;
+      margin-right: 20px;
       font-size: 14px;
       border: none;
       border-radius: 5px;
@@ -238,14 +301,17 @@ export default {
       left: 0px;
     }
   }
+
   .ftc-select-wrapper,
   .dropdown {
     display: inline-flex;
     align-items: center;
   }
+
   .dropdown {
     display: flex;
     flex-direction: column;
+
     .dropdown-icon {
       cursor: pointer;
     }
@@ -282,9 +348,11 @@ export default {
         padding: 5px;
 
         cursor: pointer;
+
         &.selected {
           background-color: #2feb9c;
         }
+
         &.notselected {
           background-color: #ff5959;
         }

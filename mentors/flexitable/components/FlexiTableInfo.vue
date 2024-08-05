@@ -1,11 +1,14 @@
 <template>
-    <!-- Bu kısım değişecek tabiki de deneme maksatlı böyle duruyor.-->
-    <div> NO </div>
+  <!-- Bu kısım değişecek tabiki de deneme maksatlı böyle duruyor.-->
+  <div v-html="flexi.errors.message"></div>
 </template>
 
 <script lang="ts">
+import flexitableExceptionHandler from '../flexitableExceptionHandler'
 export default {
-    name: 'FlexiTableInfo'
+  name: 'FlexiTableInfo',
+  mixins: [flexitableExceptionHandler],
+  inject: ['flexi']
 }
 </script>
 
