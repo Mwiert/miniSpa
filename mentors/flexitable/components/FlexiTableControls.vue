@@ -10,6 +10,7 @@
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
         :showAll="flexi.options.UIDropdownOrderProp.showAll" />
       <!--Custom Dropdown-->
+      <SvgIcon name="excel" size="xs" />
       <div class="dropdown">
         <div class="dropdown-icon" @click="Toggle">
           <SvgIcon name="eye" size="xs" />
