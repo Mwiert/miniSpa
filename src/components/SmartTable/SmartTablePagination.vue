@@ -89,12 +89,12 @@ export default {
     },
 
     paginationText() {
-      const start = (this.flexi.options.currentPage - 1) * this.FlexiBodyItemsPerPage.length + 1
+      const start = (this.flexi.options.currentPage - 1) * this.flexi.options.showCount + 1
       const end = Math.min(
-        this.flexi.options.currentPage * this.FlexiBodyItemsPerPage.length,
-        this.SearchKey.length
+        this.flexi.options.currentPage * this.flexi.options.showCount,
+        this.flexi.options.totalPages
       )
-      return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${this.SearchKey.length}</strong>`
+      return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${this.flexi.options.totalPages}</strong>`
     },
     paginationTrigger() {
       return {
@@ -145,7 +145,7 @@ export default {
   .show{
     margin-right: auto;
   }
-  
+
   .smart-table-pagination-goto {
     background:#F7F8FA 0% 0% no-repeat padding-box;
     border: 1px solid #DFE0E6;
