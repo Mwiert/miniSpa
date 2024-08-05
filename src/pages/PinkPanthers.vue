@@ -72,9 +72,7 @@ export default {
 
           hiddenColumns: ['annualFee', 'city'],
 
-          //itemsPerPage: 5,
           stickyHeader: true,
-          // disableSorting: true
           show: false
         },
         columns: [
@@ -101,10 +99,7 @@ export default {
           columnGap: '.5rem',
 
           hiddenColumns: ['annualFee', 'city'],
-
-          //itemsPerPage: 5,
           stickyHeader: true,
-          // disableSorting: true
           show: false
         },
         columns: [
