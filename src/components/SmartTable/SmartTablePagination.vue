@@ -90,7 +90,13 @@ export default {
   }
 
   return pages
-}
+  },
+  paginationTrigger() {
+    return {
+      itemsPerPage: this.flexi.options.itemsPerPage,
+      searchKeyWord: this.flexi.options.searchKeyWord
+    };
+  }
   },
 
   methods: {
@@ -107,20 +113,18 @@ export default {
       this.flexi.options.showPage = false
       this.flexi.options.newPage = null
     },
+    isValidPage(page) {
+      return page > 0 && page <= this.flexi.options.pages.length;
+    }
   },
 
   watch: {
-    'flexi.options.itemsPerPage': {
-      handler: function (val) {
-        this.GeneratePagination(val)
-      },
-      immediate: true
+    paginationTrigger: {
+    handler() {
+      this.GeneratePagination(this.flexi.options.itemsPerPage)
     },
-    'flexi.options.searchKeyWord': {
-      handler: function () {
-        this.GeneratePagination(this.flexi.options.itemsPerPage)
-      }
-    }
+    immediate: true
+  }
   }
 }
 </script>
