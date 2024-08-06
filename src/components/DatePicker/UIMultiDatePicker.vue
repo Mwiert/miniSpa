@@ -87,6 +87,10 @@
           </ul>
         </div>
       </div>
+      {{ firstSelectedDate }}
+      {{ secondSelectedDate }}
+      base
+      {{ baseInitialDates }}
     </div>
   </div>
 </template>
@@ -130,7 +134,8 @@ export default {
     baseInitialDates: { type: Object },
     isDatePickerEnable: { type: Boolean },
     positionToRight: { type: Boolean, default: false },
-    positionToLeft: { type: Boolean, default: false }
+    positionToLeft: { type: Boolean, default: false },
+    newSelectedDays: { type: Object, default: null }
   },
   methods: {
     checkRange() {
@@ -350,7 +355,7 @@ export default {
       for (let i = 0; i < endOfMonth.date(); i++) {
         const dateSender = date.startOf('month').add(i, 'day')
         const getDate = dayjs(dateSender).format('YYYY-MM-DD')
-        const test = dayjs(dateSender).format('YYYY-MMMM-DD')
+        const formattedDate = dayjs(dateSender).format('YYYY-MMMM-DD')
 
         daysInWholeMonth.push({
           date: getDate,
@@ -363,7 +368,7 @@ export default {
           year: dayjs(dateSender).format('YYYY'),
           firstInitialDate: getDate == this.baseInitialDates.firstInitialDate.date ? true : false,
           secondInitialDate: getDate == this.baseInitialDates.secondInitialDate.date ? true : false,
-          fullDateFormatted: test
+          fullDateFormatted: formattedDate
         })
       }
 
@@ -465,8 +470,20 @@ export default {
           }
         }
       }
-      this.emitDate('dateFirstSelected', this.firstSelectedDate)
-      this.emitDate('dateSecondSelected', this.secondSelectedDate)
+      const FDate = {
+        number: this.firstSelectedDate.number,
+        month: this.firstSelectedDate.month,
+        year: this.firstSelectedDate.year,
+        date: this.firstSelectedDate.date
+      }
+      const SDate = {
+        number: this.secondSelectedDate.number,
+        month: this.secondSelectedDate.month,
+        year: this.secondSelectedDate.year,
+        date: this.secondSelectedDate.date
+      }
+      this.emitDate('dateFirstSelected', FDate)
+      this.emitDate('dateSecondSelected', SDate)
       this.deactivateAllBetween()
       this.updateBetweenDates()
     },
@@ -725,6 +742,26 @@ export default {
     }
   },
   watch: {
+    newSelectedDays: {
+      handler(newVal) {
+        console.log(newVal)
+
+        this.saveFirstDateHistory =
+          newVal.firstSelectedDate.year +
+          '-' +
+          newVal.firstSelectedDate.month +
+          '-' +
+          newVal.firstSelectedDate.number
+
+        this.saveSecondDateHistory =
+          newVal.secondSelectedDate.year +
+          '-' +
+          newVal.secondSelectedDate.month +
+          '-' +
+          newVal.secondSelectedDate.number
+      },
+      deep: true
+    },
     isDatePickerEnable(newVal) {
       if (newVal) {
         if (!this.saveFirstDateHistory) {
