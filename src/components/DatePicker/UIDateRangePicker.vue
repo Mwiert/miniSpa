@@ -147,6 +147,7 @@
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :baseInitialDates="sendInitialDates"
+          :maxSelectibleDay="maxSelectibleDay"
           :isDatePickerEnable="isMultiDatePickerEnable"
           :spaceBetweenDays="spaceBetweenDays"
           :maxSelectibleDay="maxSelectibleDay"
@@ -191,7 +192,7 @@ export default {
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     spaceBetweenDays: { type: Number, default: 2 },
     maxSelectibleDay: { type: Number, default: 0 }
-    },
+  },
   data() {
     return {
       userSelectedDates: {

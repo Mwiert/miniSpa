@@ -130,7 +130,8 @@ export default {
     baseInitialDates: { type: Object },
     isDatePickerEnable: { type: Boolean },
     maxSelectibleDay: { type: Number, default: 0 },
-    userSelectedDates: { type: Object, default: null }
+    positionToRight: { type: Boolean, default: false },
+    positionToLeft: { type: Boolean, default: false },
   },
   methods: {
     checkRange() {
