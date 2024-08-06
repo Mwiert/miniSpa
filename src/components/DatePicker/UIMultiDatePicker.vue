@@ -413,12 +413,12 @@ export default {
         if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
           if( condition ) {
-            this.firstSelectedDate = day
+            this.secondSelectedDate = day
             return
           }
           else  {
-            this.secondSelectedDate = day
-            return
+            this.firstSelectedDate = day
+            return 
           }
         }
       })
@@ -426,11 +426,11 @@ export default {
         if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
           if( condition ) {
-            this.firstSelectedDate = day
+            this.secondSelectedDate = day
             return
           }
           else  {
-            this.secondSelectedDate = day
+            this.firstSelectedDate = day
             return
           }
         }
@@ -452,7 +452,6 @@ export default {
           // Seçilen gün first'ten küçükse gir
           if (!this.secondSelectedDate.date) {
             // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
-            console.log(selectedDay.date)
             this.secondSelectedDate = this.firstSelectedDate
             this.firstSelectedDate = selectedDay
             this.rearrangeController(temp)
@@ -516,14 +515,16 @@ export default {
       
       if(condition) {
         if(ifValidate > this.maxSelectibleDay) {
-          const newDate = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
+          this.secondSelectedDate.selected = false
+          const newDate = dayjs(this.secondSelectedDate.date).subtract(ifValidate - this.maxSelectibleDay, 'day')
           this.rearrangeSelects(newDate , condition)
         }
       }
       else  {
         if(ifValidate > this.maxSelectibleDay) {
-          const newDate2 = dayjs(this.secondSelectedDate.date).subtract(ifValidate - this.maxSelectibleDay, 'day')
-          this.rearrangeSelects(newDate2 , condition)
+          this.firstSelectedDate.selected = false
+          const newDate2 = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
+          this.rearrangeSelects(newDate2)
         }
       }
     },
