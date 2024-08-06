@@ -108,23 +108,26 @@ export default {
   },
 
   methods: {
-  setPage(page) {
-    if (page <= 0 || page > this.flexi.options.pages.length) return
-    if (page === '...') {
-      this.flexi.options.showPage = true
-      return
+    setPage(page) {
+      if (page <= 0 || page > this.flexi.options.pages.length) return
+      if (page === '...') {
+        this.flexi.options.showPage = true
+        return
+      }
+      this.flexi.options.currentPage = page
+    },
+    goPage() {
+      this.flexi.options.currentPage = this.flexi.options.currentPage = parseInt(
+        this.flexi.options.newPage,
+        10
+      )
+      this.flexi.options.showPage = false
+      this.flexi.options.newPage = null
+    },
+    isValidPage(page) {
+      return page > 0 && page <= this.flexi.options.pages.length
     }
-    this.flexi.options.currentPage = page
   },
-  goPage() {
-    this.flexi.options.currentPage = this.flexi.options.currentPage = parseInt(this.flexi.options.newPage, 10)
-    this.flexi.options.showPage = false
-    this.flexi.options.newPage = null
-  },
-  isValidPage(page) {
-    return page > 0 && page <= this.flexi.options.pages.length
-  }
-},
 
   watch: {
     paginationTrigger: {
@@ -145,13 +148,13 @@ export default {
   padding: 1rem;
   display: flex;
   flex-direction: row;
-  .show{
+  .show {
     margin-right: auto;
   }
-  
+
   .smart-table-pagination-goto {
-    background:#F7F8FA 0% 0% no-repeat padding-box;
-    border: 1px solid #DFE0E6;
+    background: #f7f8fa 0% 0% no-repeat padding-box;
+    border: 1px solid #dfe0e6;
     border-radius: 8px;
 
     width: 48px;
@@ -160,17 +163,16 @@ export default {
     text-align: left;
     font: normal normal normal 14px/17px Inter;
     letter-spacing: 0px;
-    color: #1F2126;
+    color: #1f2126;
     opacity: 1;
     gap: 100px;
     .gotoLabel {
       text-align: left;
       font: normal normal medium 13px/16px Inter;
       letter-spacing: 0.52px;
-      color: #292D32;
+      color: #292d32;
       opacity: 1;
     }
-    
   }
   .buttons {
     display: flex;
