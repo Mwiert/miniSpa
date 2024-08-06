@@ -32,8 +32,8 @@
           class="print-button"
           @click="triggerExportPrint()"></SvgIcon>
         <div class="dropdown">
-          <div class="dropdown-icon" @click="Toggle">
-            <SvgIcon name="columns" size="xs" />
+          <div class="dropdown-icon" @click="Toggle()">
+            <SvgIcon class="dropdown-icon" name="columns" size="xs" />
           </div>
 
           <div class="multi" v-if="flexi.options.show">
@@ -46,8 +46,8 @@
               <div class="option-text" :class="col.status === false ? 'notselected' : 'selected'">
                 {{ col.name }}
               </div>
-              <div class="tick-wrapper">
-                <SvgIcon name="tick" size="xs" v-if="col.status === true" />
+              <div class="tick-wrapper" :class="col.status === false ? 'notselected' : 'selected'">
+                <SvgIcon name="tick" size="xs" />
               </div>
             </div>
             <button class="clear-button" @click="selectClear">Clear/Select All</button>
@@ -82,6 +82,7 @@
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
 import html2pdf from 'html2pdf.js'
+import dayjs from 'dayjs'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
@@ -92,7 +93,8 @@ export default {
   data() {
     return {
       openComponent: false,
-      showSpinner: false
+      showSpinner: false,
+      dayjs: dayjs()
     }
   },
   methods: {
@@ -126,17 +128,41 @@ export default {
 
     cleanColumnWithRegex(name) {
       if (typeof name === 'string') {
-        return name.replace(/[^a-zA-ZöÖıİşŞçÇğĞüÜ\s]/g, '')
+        return name.replace(/[^a-zA-Z0-9öÖıİşŞçÇğĞüÜ\s.,/:\-\\]/g, '')
       } else {
         return name !== undefined && name !== null ? String(name) : ''
       }
     },
     cleanRowsWithRegex(name) {
       if (typeof name === 'string') {
-        return name.replace(/[^a-zA-Z0-9öÖıİşŞçÇğĞüÜ\s.,]/g, '')
+        return name.replace(/[^a-zA-Z0-9öÖıİşŞçÇğĞüÜ\s.,/:\-\\]/g, '')
       } else {
         return name !== undefined && name !== null ? String(name) : ''
       }
+    },
+
+    isValidDate(date) {
+      const formats = [
+        'YYYY/MM/DD',
+        'YYYY/MM/DD HH:mm:ss',
+        'DD/MM/YYYY',
+        'DD/MM/YYYY HH:mm:ss',
+        'DD/MM/YYYY HH:mm',
+        'YYYY.MM.DD',
+        'YYYY.MM.DD HH:mm:ss',
+        'DD.MM.YYYY',
+        'DD.MM.YYYY HH:mm:ss',
+        'DD.MM.YYYY HH:mm',
+        'YYYY-MM-DD',
+        'YYYY-MM-DD HH:mm:ss',
+        'DD-MM-YYYY',
+        'DD-MM-YYYY HH:mm:ss',
+        'DD-MM-YYYY HH:mm',
+        'HH:mm'
+      ]
+      const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/
+
+      return formats.some((format) => dayjs(date, format, true).isValid()) || timeRegex.test(date)
     },
 
     downloadAllExcel() {
@@ -198,7 +224,7 @@ export default {
           excelContent += '<tr>'
           const bodyCells = row.querySelectorAll('.flexi-table-body-col')
           bodyCells.forEach((bodyCell) => {
-            const cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
+            let cleanedRows = self.cleanRowsWithRegex(bodyCell.innerText)
             if (!isNaN(cleanedRows) && cleanedRows.trim() !== '') {
               const floatingPoint = cleanedRows.split('.')[1]?.length || 0
               let numberFormat = ''
@@ -207,7 +233,21 @@ export default {
               } else {
                 numberFormat = '0'
               }
+
               excelContent += `<td style="mso-number-format:'${numberFormat}'">${cleanedRows}</td>`
+            } else if (isNaN(cleanedRows) && this.isValidDate(cleanedRows)) {
+              if (cleanedRows.includes(':')) {
+                if (cleanedRows.length === 5) {
+                  cleanedRows += ':00'
+                  excelContent += `<td style="mso-number-format:'HH:mm:ss'">${cleanedRows}</td>`
+                } else if (cleanedRows.length === 8) {
+                  excelContent += `<td style="mso-number-format:'HH:mm:ss'">${cleanedRows}</td>`
+                } else {
+                  excelContent += `<td style="mso-number-format:'dd/MM/yyyy HH:mm:ss'">${cleanedRows}</td>`
+                }
+              } else {
+                excelContent += `<td style="mso-number-format:'dd/MM/yyyy'">${cleanedRows}</td>`
+              }
             } else {
               excelContent += `<td style="mso-number-format:'\\@''">${cleanedRows}</td>`
             }
@@ -275,8 +315,22 @@ export default {
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show
+      this.$nextTick(() => {
+        if (this.flexi.options.show) {
+          document.addEventListener('click', this.handleClickOutside)
+        } else {
+          document.removeEventListener('click', this.handleClickOutside)
+        }
+      })
     },
+    handleClickOutside(event) {
+      const dropdown = this.$el.querySelector('.dropdown')
 
+      if (!dropdown.contains(event.target)) {
+        this.flexi.options.show = false
+        document.removeEventListener('click', this.handleClickOutside)
+      }
+    },
     clearSearch() {
       this.flexi.options.searchKeyWord = ''
     }
@@ -419,8 +473,8 @@ export default {
         }
         .multi {
           position: absolute;
-          top: 10%;
           background-color: white;
+          margin-top: 3rem;
           border-radius: 1rem;
           padding: 12px 8px;
           box-shadow: 0 0 2px rgb(0, 0, 0);
@@ -443,10 +497,10 @@ export default {
           }
 
           .option {
-            margin-top: 4px;
             display: flex;
             height: 24px;
             width: 136px;
+            margin-top: 4px;
             justify-content: space-between;
             align-items: center;
             background: #f7f7f7 0% 0% no-repeat padding-box;
@@ -458,6 +512,15 @@ export default {
               display: flex;
               justify-content: center;
               align-items: center;
+
+              &.selected {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+              &.notselected {
+                display: none;
+              }
 
               :hover {
                 background-color: #ecfcca;
