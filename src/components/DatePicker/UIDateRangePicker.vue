@@ -91,7 +91,11 @@
     <div
       class="date-picker"
       ref="datePicker"
-      :class="{ 'date-picker-with-label': label, 'date-picker-without-label': !label }">
+      :class="{
+        'date-picker-with-label': label,
+        'date-picker-without-label': !label,
+        isMulti: isMulti
+      }">
       <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
       <div v-if="isSingle">
         <UIDatePicker
@@ -380,19 +384,26 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/variables.scss';
 @import '../../assets/css/_fonts.scss';
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'small' {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+}
 
 //This is main container
 .ui-date-range-picker-c {
   user-select: none;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   justify-content: space-around;
   align-self: center;
   text-align: center;
   padding: 1rem;
   gap: 0.5rem;
+  width: auto;
   position: relative;
-  width: 175px;
   .label {
     font-size: 0.85rem;
     display: flex;
@@ -402,12 +413,22 @@ export default {
   .date-picker-without-label {
     position: absolute;
     top: 50px;
-    left: 10px;
+    left: 10%;
+
   }
   .date-picker-with-label {
     position: absolute;
     top: 75px;
-    left: 15px;
+    left: 10%;
+
+  }
+  .isMulti {
+    left: -89%;
+    transition: all 0.3s;
+
+    @include respond-to(small) {
+      left: -26%;
+    }
   }
 
   //This is our button container
