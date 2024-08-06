@@ -9,9 +9,11 @@
             @change="handleMasterCheckboxChange" @click.stop="innerClick" />
 
           <template v-if="flexi.options.sortableColumns.includes(column.label)">
-            <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
-            <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
-            <SvgIcon name="filter-desc" size="xs" v-else />
+            <div class="icon-c">
+              <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
+              <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
+              <SvgIcon name="filter-desc" size="xs" v-else />
+            </div>
           </template>
         </div>
       </div>
@@ -100,6 +102,11 @@ export default {
     height: 40px;
     border-right: 1px solid rgba(112, 112, 112, 0.14);
 
+
+    // &:last-child {
+    //   border-right: none;
+    // }
+
     // border: 1px solid #eee;
 
     // &:hover {
@@ -111,13 +118,28 @@ export default {
       display: flex;
       align-items: center;
       height: 40px;
+      justify-content: space-between;
+
+      .icon-c {
+        background-color: rgba(36, 55, 89, 0.06);
+        width: 16px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 8px;
+
+        .svg-icon-c {
+          padding: 0;
+
+          &:hover {
+            background: rgba(36, 55, 89, 0.06);
+
+          }
+        }
+
+      }
     }
   }
-}
-
-
-
-.txt-right {
-  justify-content: flex-end;
 }
 </style>

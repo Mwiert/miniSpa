@@ -39,16 +39,16 @@ export default {
           tableTitle: 'Hakan Calhanoglu burda on numara her yerde eller havada',
           columnGap: '.5rem',
           selected: { id: 5, name: 'FIVE' },
-          //columnSizes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-          hiddenColumns: ['annualFee', 'city'],
+          // columnSizes: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+          // hiddenColumns: ['annualFee', 'city'],
 
           //itemsPerPage: 5,
           stickyHeader: true,
-          // disableSorting: true
+          // disableSorting: true,
           show: false
         },
         columns: [
-          { id: 1, name: '#', label: 'id' },
+          { id: 1, name: '#', label: 'id', sortable: false },
           { id: 2, name: 'Status', label: 'status' },
           { id: 3, name: 'Name ', label: 'nameSurname' },
           { id: 4, name: 'Student ID', label: 'studentNumber' },
