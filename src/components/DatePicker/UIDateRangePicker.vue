@@ -12,6 +12,7 @@
         <div class="is-single-date">
           <div class="single-date-box">
             <span class="day">
+              
               <!-- This is where we are getting the day -->
               <input class="day" v-model="firstSelectedDate.number">
               </input>

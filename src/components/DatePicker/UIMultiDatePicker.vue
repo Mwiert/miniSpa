@@ -87,10 +87,12 @@
           </ul>
         </div>
       </div>
+      First
       {{ firstSelectedDate }}
+      <br />
+      <br />
+      second
       {{ secondSelectedDate }}
-      base
-      {{ baseInitialDates }}
     </div>
   </div>
 </template>
@@ -413,6 +415,11 @@ export default {
       this.checkSkippability()
     },
     selectDate(selectedDay: date) {
+      if (this.baseInitialDates.firstInitialDate.date == this.firstSelectedDate.date) {
+        this.firstSelectedDate = {}
+        this.secondSelectedDate = {}
+      }
+
       if (this.baseInitialDates.firstInitialDate) {
         this.emitResetInitialDates() // turuncu baslangic degerlerini ilk tiklamada emit edip false olmasini saglar
       }
@@ -471,13 +478,19 @@ export default {
         }
       }
       const FDate = {
-        number: this.firstSelectedDate.number,
+        number:
+          this.firstSelectedDate.number < 10
+            ? '0' + this.firstSelectedDate.number
+            : this.firstSelectedDate.number,
         month: this.firstSelectedDate.month,
         year: this.firstSelectedDate.year,
         date: this.firstSelectedDate.date
       }
       const SDate = {
-        number: this.secondSelectedDate.number,
+        number:
+          this.secondSelectedDate.number < 10
+            ? '0' + this.secondSelectedDate.number
+            : this.secondSelectedDate.number,
         month: this.secondSelectedDate.month,
         year: this.secondSelectedDate.year,
         date: this.secondSelectedDate.date
@@ -744,8 +757,6 @@ export default {
   watch: {
     newSelectedDays: {
       handler(newVal) {
-        console.log(newVal)
-
         this.saveFirstDateHistory =
           newVal.firstSelectedDate.year +
           '-' +
@@ -759,6 +770,12 @@ export default {
           newVal.secondSelectedDate.month +
           '-' +
           newVal.secondSelectedDate.number
+
+        this.populdateMonthDays()
+        this.checkDateHistory()
+        this.updateBetweenDates()
+        this.linedThroughDate() // Her iki takvim için geçerli
+        this.checkSkippability()
       },
       deep: true
     },
