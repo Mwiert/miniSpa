@@ -5,7 +5,7 @@
     <!-- This is where we work with our calendar -->
 
     <div class="ui-date-picker-wrapper">
-      <UISliderDatePicker v-if="true"/>
+      <UISliderDatePicker v-if="true" />
 
       <div v-else>
         <!-- This is the main calendar -->

@@ -4,8 +4,7 @@
       <span
         v-for="day in days"
         :key="day"
-        :class="{ selected: day === selectedDay }"
-        @click="selectDay(day)">
+        :class="{ selected: day === selectedDay }">
         {{ day }}
       </span>
     </div>
@@ -13,8 +12,7 @@
       <span
         v-for="(month, index) in months"
         :key="month"
-        :class="{ selected: index === selectedMonth }"
-        @click="selectMonth(index)">
+        :class="{ selected: index === selectedMonth }">
         {{ month }}
       </span>
     </div>
@@ -22,14 +20,12 @@
       <span
         v-for="year in years"
         :key="year"
-        :class="{ selected: year === selectedYear }"
-        @click="selectYear(year)">
+        :class="{ selected: year === selectedYear }">
         {{ year }}
       </span>
     </div>
   </div>
 </template>
-
 
 <script lang="ts">
 import dayjs from 'dayjs'
@@ -43,7 +39,8 @@ export default {
       years: [] as number[],
       selectedDay: dayjs().date(),
       selectedMonth: dayjs().month(),
-      selectedYear: dayjs().year()
+      selectedYear: dayjs().year(),
+      scrolling: false
     }
   },
   created() {
@@ -105,15 +102,6 @@ export default {
 
       this.years = years
     },
-    selectDay(day: number) {
-      this.selectedDay = day
-    },
-    selectMonth(index: number) {
-      this.selectedMonth = index
-    },
-    selectYear(year: number) {
-      this.selectedYear = year
-    },
     updateDays() {
       this.generateDays()
     },
@@ -146,20 +134,68 @@ export default {
       const onDrag = (e: MouseEvent) => {
         const move = (axis === 'y' ? start - e.clientY : start - e.clientX) * sensitivity
         target.scrollTop += move
+        this.scrolling = true
       }
 
       const onEndDrag = () => {
         document.removeEventListener('mousemove', onDrag)
         document.removeEventListener('mouseup', onEndDrag)
+        this.scrolling = false
+        this.$nextTick(() => {
+          this.selectCenteredItem()
+        })
       }
 
       document.addEventListener('mousemove', onDrag)
       document.addEventListener('mouseup', onEndDrag)
+    },
+    selectCenteredItem() {
+      if (this.scrolling) return
+
+      const dayContainer = this.$refs.dayContainer as HTMLElement
+      const monthContainer = this.$refs.monthContainer as HTMLElement
+      const yearContainer = this.$refs.yearContainer as HTMLElement
+
+      const centerItem = (container: HTMLElement, type: 'day' | 'month' | 'year') => {
+        const items = Array.from(container.children) as HTMLElement[]
+        const containerHeight = container.clientHeight
+        const containerTop = container.scrollTop
+        const centerPosition = containerHeight / 2 + containerTop
+
+        let closestElement: HTMLElement | null = null
+        let closestDistance = Infinity
+
+        for (const item of items) {
+          const itemTop = item.offsetTop
+          const itemBottom = itemTop + item.clientHeight
+          const itemCenter = (itemTop + itemBottom) / 2
+          const distance = Math.abs(itemCenter - centerPosition)
+
+          if (distance < closestDistance) {
+            closestDistance = distance
+            closestElement = item
+          }
+        }
+
+        if (closestElement) {
+          const centeredText = closestElement.textContent?.trim()
+          if (type === 'day' && centeredText) {
+            this.selectedDay = parseInt(centeredText, 10)
+          } else if (type === 'month' && centeredText) {
+            this.selectedMonth = this.months.indexOf(centeredText)
+          } else if (type === 'year' && centeredText) {
+            this.selectedYear = parseInt(centeredText, 10)
+          }
+        }
+      }
+
+      centerItem(dayContainer, 'day')
+      centerItem(monthContainer, 'month')
+      centerItem(yearContainer, 'year')
     }
   }
 }
 </script>
-
 
 <style lang="scss" scoped>
 .ui-slider-date-picker-c {
