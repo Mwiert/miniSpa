@@ -149,6 +149,7 @@
           :baseInitialDates="sendInitialDates"
           :isDatePickerEnable="isMultiDatePickerEnable"
           :spaceBetweenDays="spaceBetweenDays"
+          :maxSelectibleDay="maxSelectibleDay"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
@@ -190,8 +191,9 @@ export default {
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
-    spaceBetweenDays: { type: Number, default: 2 }
-  },
+    spaceBetweenDays: { type: Number, default: 2 },
+    maxSelectibleDay: { type: Number, default: 0 }
+    },
   data() {
     return {
       userSelectedDates: {

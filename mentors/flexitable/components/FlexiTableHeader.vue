@@ -1,23 +1,12 @@
 <template>
-  <div
-    class="flexi-table-header-c"
-    :class="StickyHeaderClass"
-    :style="[gridTemplateColumns, ColumnGap]"
-    ref="print2">
+  <div class="flexi-table-header-c" :class="StickyHeaderClass" :style="[gridTemplateColumns, ColumnGap]" ref="print2">
     <template v-for="column in flexi.columns" :key="column.name">
       <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
-        <div
-          class="flexi-table-header-col"
-          :class="column.class"
-          @click="handlerSortingColumn(column)">
+        <div class="flexi-table-header-col" :class="column.class" @click="handlerSortingColumn(column)">
           <span class="flexi-table-header-col-value"> {{ column.name }} </span>
 
-          <input
-            v-if="column.label === 'id'"
-            type="checkbox"
-            v-model="masterCheckbox"
-            @change="handleMasterCheckboxChange"
-            @click.stop="innerClick" />
+          <input v-if="column.label === 'id'" type="checkbox" v-model="masterCheckbox"
+            @change="handleMasterCheckboxChange" @click.stop="innerClick" />
 
           <template v-if="flexi.options.sortableColumns.includes(column.label)">
             <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
@@ -95,29 +84,39 @@ export default {
 
 <style lang="scss" scoped>
 .flexi-table-header-c {
+  border-radius: 12px;
+
   &.sticky-header {
-    background-color: #fff;
+    background-color: #FAF4D9;
     position: sticky;
     top: 0;
+    height: 40px;
+  }
+
+  .flexi-table-header-col-wrapper {
+    // width: fit-content;
+    cursor: pointer;
+    font-weight: 500;
+    height: 40px;
+    border-right: 1px solid rgba(112, 112, 112, 0.14);
+
+    // border: 1px solid #eee;
+
+    // &:hover {
+    //   background-color: #f4f4f4;
+    //   border-radius: 1rem;
+    // }
+
+    .flexi-table-header-col {
+      display: flex;
+      align-items: center;
+      height: 40px;
+    }
   }
 }
-.flexi-table-header-col-wrapper {
-  // width: fit-content;
-  cursor: pointer;
-  font-weight: 500;
 
-  // border: 1px solid #eee;
 
-  &:hover {
-    background-color: #f4f4f4;
-    border-radius: 1rem;
-  }
 
-  .flexi-table-header-col {
-    display: flex;
-    align-items: center;
-  }
-}
 .txt-right {
   justify-content: flex-end;
 }

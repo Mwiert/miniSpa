@@ -87,8 +87,8 @@ export default {
 .flexi-table-body-c {
   .flexi-table-body-row-wrapper {
     border: 1.5px solid #e0e0e0;
-    margin: 0.45rem 0rem;
-    border-radius: 24rem;
+    margin-bottom: 4px;
+    border-radius: 28px;
 
     // transition: border-radius 0.25s ease-in-out;
     &.remove-radius {
@@ -124,6 +124,8 @@ export default {
       .flexi-table-body-col {
         display: flex;
         align-items: center;
+        height: 56px;
+        border-right: 1px dashed rgba(41, 45, 50, 0.14);
 
         // justify-content: center;
         img {

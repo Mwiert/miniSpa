@@ -142,15 +142,19 @@ export default {
       display: grid;
 
       // border: 1px solid #ccc;
-      padding: 0.5rem;
+
     }
 
-    .flexi-table-header-col-wrapper,
-    .flexi-table-body-col {
-      // border: 1px solid #ccc;
-      // border-right: 1px solid #eeeeee;
-      // border-radius: 0 !important;
+    .flexi-table-header-c {
+      margin-bottom: 8px;
     }
+
+    // .flexi-table-header-col-wrapper,
+    // .flexi-table-body-col {
+    //   // border: 1px solid #ccc;
+    //   // border-right: 1px solid #eeeeee;
+    //   // border-radius: 0 !important;
+    // }
 
     .flexi-table-header-col-value,
     .flexi-table-body-col-value {
