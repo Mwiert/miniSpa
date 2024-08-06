@@ -64,9 +64,13 @@ export default {
     generateDays() {
       const days: number[] = []
       const daysInMonth = dayjs().year(this.selectedYear).month(this.selectedMonth).daysInMonth()
+
+      days.push(null, null, null)
       for (let i = 1; i <= daysInMonth; i++) {
         days.push(i)
       }
+      days.push(null, null, null)
+      
       this.days = days
 
       if (this.selectedDay > daysInMonth) {
@@ -74,18 +78,26 @@ export default {
       }
     },
     generateMonths() {
-      const months: string[] = []
+      const months: string[] = [] 
+      
+      months.push(null, null, null)
       for (let i = 0; i < 12; i++) {
         months.push(dayjs().month(i).format('MMMM'))
       }
+      months.push(null, null, null)
+      
       this.months = months
     },
     generateYears() {
       const years: number[] = []
       const currentYear = dayjs().year()
+      
+      years.push(null, null, null)
       for (let i = currentYear - 50; i <= currentYear + 50; i++) {
         years.push(i)
       }
+      years.push(null, null, null)
+
       this.years = years
     },
     selectDay(day: number) {
@@ -156,6 +168,8 @@ export default {
     scroll-snap-align: center;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0.5;
+    min-height: 1.5rem;
+    line-height: 1.5rem;
   }
 
   .day span.selected,
