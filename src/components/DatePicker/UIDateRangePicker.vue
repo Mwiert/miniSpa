@@ -91,7 +91,7 @@
     <div
       class="date-picker"
       ref="datePicker"
-      :class="{ 'date-picker-with-label': label, 'date-picker-without-label': !label }">
+      :class="{ 'date-picker-with-label': label, 'date-picker-without-label': !label , 'isMulti': isMulti}">
       <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
       <div v-if="isSingle">
         <UIDatePicker
@@ -108,7 +108,8 @@
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
           @dateSelected="handleFirstDateSelected"
-          @click="sendDateToParent" />
+          @click="sendDateToParent"
+          :positionToLeftSingle="positionToLeftSingle" />
       </div>
       <div v-if="isMulti">
         <UIMultiDatePicker
@@ -128,7 +129,9 @@
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
-          @click="sendDateToParent" />
+          @click="sendDateToParent"
+          :positionToRight="positionToRight"
+          :positionToLeft="positionToLeft" />
       </div>
     </div>
   </div>
@@ -175,7 +178,10 @@ export default {
       sendInitialDates: {
         firstInitialDate: '',
         secondInitialDate: ''
-      }
+      },
+      positionToRight: false,
+      positionToLeft: false,
+      positionToLeftSingle: false
     }
   },
   mounted() {
@@ -245,7 +251,6 @@ export default {
       this.secondSelectedDate = secondDate
     },
     toggleDatePicker() {
-      this.test1 = !this.test1
       //If the single date picker is enabled on TimeBenders, we are toggling the single date picker
       if (this.isSingle === true) {
         //We can implement it by this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable; but it will create problem in muldi date picker implementation
@@ -265,6 +270,38 @@ export default {
           this.isMultiDatePickerEnable = false
         }
       }
+
+      this.$nextTick(() => {
+        const datePicker = this.$el.querySelector('.date-picker')
+        const datePickerRect = datePicker.getBoundingClientRect()
+        const windowWidth = window.innerWidth
+        if (this.isMultiDatePickerEnable) {
+          if (datePickerRect.left < 0) {
+            datePicker.classList.add('positionToRight')
+            this.positionToRight = true
+          }
+          if (windowWidth - datePickerRect.right < 0) {
+            datePicker.classList.add('positionToLeft')
+            this.positionToLeft = true
+          }
+        } else {
+          datePicker.classList.remove('positionToRight')
+          this.positionToRight = false
+          datePicker.classList.remove('positionToLeft')
+          this.positionToLeft = false
+        }
+        
+        if(this.isSingleDatePickerEnable) {
+          if (windowWidth - datePickerRect.right < 0) {
+            datePicker.classList.add('positionToLeftSingle')
+            this.positionToLeftSingle = true
+          }
+        }
+        else {
+          datePicker.classList.remove('positionToLeftSingle')
+          this.positionToLeftSingle = false
+        }
+      })
     },
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
@@ -380,19 +417,26 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/variables.scss';
 @import '../../assets/css/_fonts.scss';
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'small' {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+}
 
 //This is main container
 .ui-date-range-picker-c {
   user-select: none;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   justify-content: space-around;
   align-self: center;
   text-align: center;
   padding: 1rem;
   gap: 0.5rem;
+  width: auto;
   position: relative;
-  width: 175px;
   .label {
     font-size: 0.85rem;
     display: flex;
@@ -402,12 +446,29 @@ export default {
   .date-picker-without-label {
     position: absolute;
     top: 50px;
-    left: 10px;
+    left: 10%;
   }
   .date-picker-with-label {
     position: absolute;
     top: 75px;
-    left: 15px;
+    left: 10%;
+  }
+  .isMulti {
+    left: -89%;
+    transition: all 0.3s;
+
+    @include respond-to(small) {
+      left: -26%;
+    }
+  }
+  .positionToRight {
+    left: 6%;
+  }
+  .positionToLeft {
+    left: -175%;
+  }
+  .positionToLeftSingle{
+    left: -85%;
   }
 
   //This is our button container
@@ -460,10 +521,14 @@ export default {
           height: 24px;
 
           .day {
+            width: 25px;
+            margin-right: 5px;
+            border: none;
+            border-color: transparent;
+            outline: none;
             font-size: 20px;
             font-weight: bold;
             color: #2b2b2b;
-            padding: 0 5px;
           }
 
           //Month and Year Box To Design
@@ -472,12 +537,25 @@ export default {
             flex-direction: column;
             justify-content: center;
             align-items: start;
+            background: transparent;
+
             font-size: 10px;
+
             .month {
               color: #2e2e2e;
+              width: 30px !important;
+              border: none;
+              border-color: transparent;
+              outline: none;
+              background: transparent;
             }
             .year {
               color: #7f7f7f;
+              width: 30px !important;
+              border: none;
+              border-color: transparent;
+              outline: none;
+              background: transparent;
             }
           }
 

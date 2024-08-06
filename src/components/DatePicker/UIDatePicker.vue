@@ -4,7 +4,7 @@
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
 
-    <div class="ui-date-picker-wrapper">
+    <div class="ui-date-picker-wrapper"  :class="{'positionToLeftSingle': positionToLeftSingle}">
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
@@ -81,7 +81,9 @@ export default {
     forwardDayRange: { type: Number, default: 99 },
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
-    isDatePickerEnable: { type: Boolean }
+    isDatePickerEnable: { type: Boolean },
+    positionToLeftSingle: { type: Boolean, default: false }
+    
   },
   methods: {
     checkRange() {
@@ -426,7 +428,7 @@ export default {
     opacity: 1;
     width: 270px;
     height: 240px;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
     position: relative;
@@ -443,6 +445,9 @@ export default {
       border-left: 10px solid transparent; //This is the left border of the triangle invisible
       border-right: 10px solid transparent; //This is the right border of the triangle invisible
       border-bottom: 10px solid #ffffff; //This is the bottom border of the triangle white which is visible
+    }
+    &.positionToLeftSingle::before{
+      left: 80%;
     }
     //This is the main calendar content
     .calendar {

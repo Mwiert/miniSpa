@@ -2,7 +2,7 @@
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
-    <div class="ui-date-picker-wrapper">
+    <div class="ui-date-picker-wrapper"  :class="{ 'positionToRight': positionToRight, 'positionToLeft': positionToLeft }">
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
@@ -126,7 +126,9 @@ export default {
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
-    isDatePickerEnable: { type: Boolean }
+    isDatePickerEnable: { type: Boolean },
+    positionToRight: { type: Boolean, default: false },
+    positionToLeft: { type: Boolean, default: false },
   },
   methods: {
     checkRange() {
@@ -775,15 +777,22 @@ export default {
 }
 </script>
 
+
+
 <style lang="scss" scoped>
 @import '../../assets/css/variables.scss';
 @import '../../assets/css/_fonts.scss';
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'small' {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+}
 
-// This is the main container
 .ui-date-picker-c {
   align-self: center;
 
-  // This is the main calendar wrapper
   .ui-date-picker-wrapper {
     background: white;
     box-shadow: 2px 2px 6px #5c75991a;
@@ -804,19 +813,31 @@ export default {
       width: 600px;
       height: 250px;
       flex-direction: row;
+      transition: all 0.3s;
+      @include respond-to('small') {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+      }
     }
     &::before {
       content: '';
-      position: absolute; //Position relative to parent
-      top: -10px; //10px above the calendar
-      left: 15px; //15px from the left of the calendar
+      position: absolute;
+      top: -10px;
+      left: 50%;
       width: 0;
       height: 0;
-      border-left: 10px solid transparent; //This is the left border of the triangle invisible
-      border-right: 10px solid transparent; //This is the right border of the triangle invisible
-      border-bottom: 10px solid #ffffff; //This is the bottom border of the triangle white which is visible
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid #ffffff;
     }
-    //This is the main calendar content
+    &.positionToRight::before {
+      left: 15%;
+    }
+    &.positionToLeft::before {
+      left: 82%;
+    }
+
     .calendar {
       padding-top: 1.2rem;
       width: 300px;
@@ -825,7 +846,6 @@ export default {
       margin: 0 10px;
       border-radius: 30px;
 
-      // This is the header section
       .header {
         position: relative;
         display: flex;
@@ -833,7 +853,6 @@ export default {
         align-items: center;
         width: 100%;
 
-        // This is the arrow icons for the calendar
         .nav-button {
           background-color: transparent;
           border: none;
@@ -845,14 +864,12 @@ export default {
           justify-content: center;
           align-items: center;
 
-          // This is the arrow icon
           img {
             width: 15px;
             height: 15px;
           }
         }
 
-        // This is the left arrow icon
         .nav-button:first-child {
           position: absolute;
           left: 10px;
@@ -860,7 +877,6 @@ export default {
           transform: translateY(-50%);
         }
 
-        // This is the right arrow icon
         .nav-button:last-child {
           position: absolute;
           right: 10px;
@@ -868,7 +884,6 @@ export default {
           transform: translateY(-50%);
         }
 
-        // This is the current date
         .current-date {
           flex-grow: 1;
           text-align: center;
@@ -878,7 +893,6 @@ export default {
       }
     }
 
-    // Styling of weekdays and days generally
     .weekdays,
     .days {
       list-style: none;
@@ -900,7 +914,6 @@ export default {
 
     .days {
       padding-top: 6px;
-      // Styling depending on if it is today (coloring gray)
       .isToday {
         background: #e7e7e7;
         border-radius: 16px;
@@ -913,12 +926,12 @@ export default {
       }
     }
 
-    // Styling of days generally
     .days li {
       padding: 10px 10px;
       font-weight: 500;
       line-height: 7px;
       cursor: pointer;
+      transition: all 0.3s;
     }
     .days li.textDecoration {
       color: grey;
@@ -926,13 +939,11 @@ export default {
       pointer-events: none;
       cursor: not-allowed;
     }
-    // If the dates that are selected are inactive, they are invisible
     .days li.inactive {
       visibility: hidden;
       pointer-events: none;
       cursor: not-allowed;
     }
-    // If the specific date is selected, it is colored with accent-primary-color which is light-blue
     .days li.selected {
       background-color: $accent-primary-color;
       border-radius: 4px;
