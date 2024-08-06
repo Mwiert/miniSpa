@@ -93,6 +93,10 @@
       <br />
       second
       {{ secondSelectedDate }}
+      <br />
+      <br />
+      base
+      {{ baseInitialDates }}
     </div>
   </div>
 </template>
@@ -519,6 +523,23 @@ export default {
       })
       this.$emit('resetBaseInitialDates')
     },
+    resetInitialDates() {
+      this.baseInitialDates.firstInitialDate = ''
+      this.baseInitialDates.secondInitialDate = ''
+      this.daysInMonth.forEach((day) => {
+        if (day.firstInitialDate || day.secondInitialDate) {
+          day.firstInitialDate = false
+          day.secondInitialDate = false
+        }
+      })
+
+      this.nextMonthDays.forEach((day) => {
+        if (day.firstInitialDate || day.secondInitialDate) {
+          day.firstInitialDate = false
+          day.secondInitialDate = false
+        }
+      })
+    },
     emitResetSecondDates() {
       this.daysInMonth.forEach((day) => {
         if (day.secondInitialDate) {
@@ -771,6 +792,12 @@ export default {
           '-' +
           newVal.secondSelectedDate.number
 
+        // if (this.saveFirstDateHistory < this.minDate) {
+        //   this.saveFirstDateHistory = this.minDate
+        // }
+        // if (this.saveSecondDateHistory > this.maxDate) {
+        //   this.saveSecondDateHistory = this.maxDate
+        // }
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
@@ -796,6 +823,9 @@ export default {
       }
     },
     saveFirstDateHistory(newVal) {
+      //console.log(newVal)
+
+      this.saveFirstDateHistory = newVal
       if (!newVal) {
         // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin
         this.daysInMonth.forEach((day) => {
@@ -829,6 +859,7 @@ export default {
     this.checkDateHistory()
     this.linedThroughDate()
     this.checkSkippability()
+    this.resetInitialDates()
   }
 }
 </script>

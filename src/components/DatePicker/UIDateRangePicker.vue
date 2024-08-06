@@ -14,7 +14,14 @@
             <span class="day">
               
               <!-- This is where we are getting the day -->
-              <input class="day" v-model="firstSelectedDate.number">
+              <input class="day" v-model="firstSelectedDate.number"
+              @keyup ="handleResetInitialDates"
+              :max="maxValue"
+              :min="0"
+              @input="validateInput"
+              @blur="formatInput"
+
+              >
               </input>
             </span>
 
@@ -22,13 +29,15 @@
               <span class="month">
                 <!-- This is where we are getting the month -->
 
-                <input class="month" v-model="firstSelectedDate.month">
+                <input class="month" v-model="firstSelectedDate.month"
+                @keyup ="handleResetInitialDates">
                 </input>
               </span>
               <span class="year">
                 <!-- This is where we are getting the year -->
 
-                <input class="year" v-model="firstSelectedDate.year">
+                <input class="year" v-model="firstSelectedDate.year"
+                @keyup ="handleResetInitialDates">
                 </input>
               </span>
             </div>
@@ -37,20 +46,23 @@
             <span class="day">
               <!-- This is where we are getting the day -->
 
-              <input class="day" v-model="secondSelectedDate.number">
+              <input class="day" v-model="secondSelectedDate.number"
+              @keyup ="handleResetInitialDates">
               </input>
             </span>
 
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                <input class="month" v-model="secondSelectedDate.month">
+                <input class="month" v-model="secondSelectedDate.month"
+                @keyup ="handleResetInitialDates">
                 </input>
               </span>
 
               <span class="year">
                 <!-- This is where we are getting the year -->
-                <input class="year" v-model="secondSelectedDate.year">
+                <input class="year" v-model="secondSelectedDate.year"
+                @keyup ="handleResetInitialDates">
 
                 </input>
               </span>
@@ -294,6 +306,7 @@ export default {
     fillInitialDate() {
       if (this.isMulti) {
         if (this.initialDate) {
+
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs(this.initialDate).format('DD'),
@@ -328,6 +341,7 @@ export default {
             }
           }
         } else {
+         
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs().format('DD'),
@@ -383,8 +397,12 @@ export default {
     handleResetInitialDates() {
       this.sendInitialDates.firstInitialDate = ''
       this.sendInitialDates.secondInitialDate = ''
-    },
-    checkMultiOrSingleCalendar() {}
+      this.firstSelectedDate.number=String(this.firstSelectedDate.number).length==1? '0'+this.firstSelectedDate.number:this.firstSelectedDate.number
+      this.firstSelectedDate.number=String(this.firstSelectedDate.number).length==3? this.firstSelectedDate.number.slice(-2):this.firstSelectedDate.number
+
+      this.secondSelectedDate.number=String(this.secondSelectedDate.number).length==1? '0'+this.secondSelectedDate.number:this.secondSelectedDate.number
+      this.secondSelectedDate.number=String(this.secondSelectedDate.number).length==3? this.secondSelectedDate.number.slice(-2):this.secondSelectedDate.number
+    }
   },
 
   watch: {
@@ -403,12 +421,13 @@ export default {
       },
       deep:true
     },
-  },
+},
   created() {        
     this.firstSelectedDate = this.sendInitialDates.firstInitialDate
     this.secondSelectedDate = this.sendInitialDates.secondInitialDate
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
+    
     this.sendDateToParent()
   }
 }
