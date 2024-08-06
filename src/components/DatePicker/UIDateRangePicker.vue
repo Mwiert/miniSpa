@@ -153,7 +153,9 @@
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
           @click="sendDateToParent"
-          :userSelectedDates="userSelectedDates" />
+          :userSelectedDates="userSelectedDates"
+          :positionToRight="positionToRight"
+          :positionToLeft="positionToLeft" />
       </div>
     </div>
   </div>
@@ -225,7 +227,9 @@ export default {
           year: '',
           date: ''
         }
-      }
+      },
+      positionToRight: false,
+      positionToLeft: false
     }
   },
   mounted() {
@@ -299,7 +303,6 @@ export default {
       this.secondSelectedDate = secondDate
     },
     toggleDatePicker() {
-      this.test1 = !this.test1
       //If the single date picker is enabled on TimeBenders, we are toggling the single date picker
       if (this.isSingle === true) {
         //We can implement it by this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable; but it will create problem in muldi date picker implementation
@@ -319,6 +322,30 @@ export default {
           this.isMultiDatePickerEnable = false
         }
       }
+
+      this.$nextTick(() => {
+        const datePicker = this.$el.querySelector('.date-picker')
+        const datePickerRect = datePicker.getBoundingClientRect()
+        const windowWidth = window.innerWidth
+        console.log(datePickerRect.right - windowWidth, datePickerRect)
+
+        if (this.isMultiDatePickerEnable) {
+          if (datePickerRect.left < 0) {
+            datePicker.classList.add('positionToRight')
+            this.positionToRight = true
+          }
+
+          if (windowWidth - datePickerRect.right < 0) {
+            datePicker.classList.add('positionToLeft')
+            this.positionToLeft = true
+          }
+        } else {
+          datePicker.classList.remove('positionToRight')
+          this.positionToRight = false
+          datePicker.classList.remove('positionToLeft')
+          this.positionToLeft = false
+        }
+      })
     },
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
@@ -488,13 +515,11 @@ export default {
     position: absolute;
     top: 50px;
     left: 10%;
-
   }
   .date-picker-with-label {
     position: absolute;
     top: 75px;
     left: 10%;
-
   }
   .isMulti {
     left: -89%;
@@ -503,6 +528,12 @@ export default {
     @include respond-to(small) {
       left: -26%;
     }
+  }
+  .positionToRight {
+    left: 6%;
+  }
+  .positionToLeft {
+    left: -175%;
   }
 
   //This is our button container
