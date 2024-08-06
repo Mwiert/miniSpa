@@ -469,6 +469,7 @@ export default {
 
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
+            this.saveSecondDateHistory = this.secondSelectedDate.date
           }
         } else if (selectedDay.date == this.firstSelectedDate.date) {
           if (this.isPastValidation) {
@@ -499,6 +500,7 @@ export default {
             this.rearrangeController()
 
             this.secondSelectedDate.selected = true
+            this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
           }
         }
