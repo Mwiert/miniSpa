@@ -1,6 +1,6 @@
 <template>
   <div class="ui-slider-date-picker-c">
-    <div class="day" @mousedown="startDrag($event, 'y')">
+    <div class="day" @mousedown="startDrag($event, 'y')" ref="dayContainer">
       <span
         v-for="day in days"
         :key="day"
@@ -9,7 +9,7 @@
         {{ day }}
       </span>
     </div>
-    <div class="month" @mousedown="startDrag($event, 'y')">
+    <div class="month" @mousedown="startDrag($event, 'y')" ref="monthContainer">
       <span
         v-for="(month, index) in months"
         :key="month"
@@ -18,7 +18,7 @@
         {{ month }}
       </span>
     </div>
-    <div class="year" @mousedown="startDrag($event, 'y')">
+    <div class="year" @mousedown="startDrag($event, 'y')" ref="yearContainer">
       <span
         v-for="year in years"
         :key="year"
@@ -29,7 +29,6 @@
     </div>
   </div>
 </template>
-
 
 
 <script lang="ts">
@@ -51,13 +50,19 @@ export default {
     this.generateMonths()
     this.generateYears()
     this.updateDays()
+    this.centerSelectedItem()
   },
   watch: {
+    selectedDay() {
+      this.centerSelectedItem()
+    },
     selectedMonth() {
       this.updateDays()
+      this.centerSelectedItem()
     },
     selectedYear() {
       this.updateDays()
+      this.centerSelectedItem()
     }
   },
   methods: {
@@ -111,6 +116,26 @@ export default {
     },
     updateDays() {
       this.generateDays()
+    },
+    centerSelectedItem() {
+      this.$nextTick(() => {
+        const dayContainer = this.$refs.dayContainer as HTMLElement
+        const monthContainer = this.$refs.monthContainer as HTMLElement
+        const yearContainer = this.$refs.yearContainer as HTMLElement
+
+        const scrollIntoView = (container: HTMLElement, selectedItem: number | string) => {
+          const items = Array.from(container.children) as HTMLElement[]
+          const selectedElement = items.find(item => item.textContent?.trim() === selectedItem.toString())
+          
+          if (selectedElement) {
+            container.scrollTop = selectedElement.offsetTop - container.clientHeight / 2 + selectedElement.clientHeight / 2
+          }
+        }
+
+        scrollIntoView(dayContainer, this.selectedDay)
+        scrollIntoView(monthContainer, this.months[this.selectedMonth])
+        scrollIntoView(yearContainer, this.selectedYear)
+      })
     },
     startDrag(event: MouseEvent, axis: 'y' | 'x') {
       event.preventDefault()
