@@ -404,20 +404,32 @@ export default {
       this.linedThroughDate()
       this.checkSkippability()
     },
-    rearrangeSelects(reDate: string) {
+    rearrangeSelects(reDate: string , condition: boolean) {
       
       this.daysInMonth.forEach((day) => {
         if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
-          this.firstSelectedDate = day
-          return
+          if( condition ) {
+            this.firstSelectedDate = day
+            return
+          }
+          else  {
+            this.secondSelectedDate = day
+            return
+          }
         }
       })
       this.nextMonthDays.forEach((day) => {
         if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
-          this.firstSelectedDate = day
-          return
+          if( condition ) {
+            this.firstSelectedDate = day
+            return
+          }
+          else  {
+            this.secondSelectedDate = day
+            return
+          }
         }
       })
     },
@@ -432,14 +444,15 @@ export default {
         this.firstSelectedDate.selected = true
         this.saveFirstDateHistory = this.firstSelectedDate.date
       } else {
-        
+        const temp = selectedDay.date < this.firstSelectedDate.date
         if (selectedDay.date < this.firstSelectedDate.date) {
           // Seçilen gün first'ten küçükse gir
           if (!this.secondSelectedDate.date) {
             // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
+            console.log(selectedDay.date)
             this.secondSelectedDate = this.firstSelectedDate
             this.firstSelectedDate = selectedDay
-            this.rearrangeController()
+            this.rearrangeController(temp)
             this.firstSelectedDate.selected = true
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
@@ -450,7 +463,7 @@ export default {
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = selectedDay
 
-            this.rearrangeController()
+            this.rearrangeController(temp)
 
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
@@ -493,23 +506,23 @@ export default {
       this.deactivateAllBetween()
       this.updateBetweenDates()
     },
-    rearrangeController() {  
+    rearrangeController(condition: boolean) {  
       const firstDate = dayjs(this.firstSelectedDate.date)
       const secondDate = dayjs(this.secondSelectedDate.date)
       const ifValidate = secondDate.diff(firstDate,'day')
       
-      
-      if(ifValidate > this.maxSelectibleDay) {
-      const newDate = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
-      this.rearrangeSelects(newDate)
-
+      if(condition) {
+        if(ifValidate > this.maxSelectibleDay) {
+          const newDate = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
+          this.rearrangeSelects(newDate , condition)
+        }
       }
-      // else if (selectedDay.date > this.firstSelectedDate.date) {
-      //   if(ifValidate > this.maxSelectibleDay) {
-      //   const newDate = secondDate.subtract(this.maxSelectibleDay, 'day')
-      //   this.rearrangeSelects(newDate)
-      //   }
-      // }
+      else  {
+        if(ifValidate > this.maxSelectibleDay) {
+          const newDate2 = dayjs(this.secondSelectedDate.date).subtract(ifValidate - this.maxSelectibleDay, 'day')
+          this.rearrangeSelects(newDate2 , condition)
+        }
+      }
     },
     emitDate(event, date) {
       this.$emit(event, date)
