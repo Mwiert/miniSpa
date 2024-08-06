@@ -426,7 +426,7 @@ export default {
     opacity: 1;
     width: 270px;
     height: 240px;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
     position: relative;

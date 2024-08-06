@@ -86,15 +86,14 @@ export default {
     },
     
     paginationText() {
-      const itemsPerPage = this.flexi.options.itemsPerPage
-      const currentPage = this.flexi.options.currentPage
-      const totalItems = this.SearchKey.length
-
-      const start = (currentPage - 1) * itemsPerPage + 1
-      const end = Math.min(currentPage * itemsPerPage, totalItems)
-
-      return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${totalItems}</strong>`
+      const start = (this.flexi.options.currentPage - 1) * this.flexi.options.selected.id + 1
+      const end = Math.min(
+        this.flexi.options.currentPage * this.flexi.options.selected.id,
+        this.flexi.options.totalPages
+      )
+      return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${this.flexi.options.totalPages}</strong>`
     },
+
 
     paginationTrigger() {
       return {
