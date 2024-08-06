@@ -29,7 +29,5 @@
     "fontSize": 12,
     "showAll": true
   },
-  "hasDetails": false,
-  "newPage": null,
-  "showPage": false
+  "hasDetails": false
 }

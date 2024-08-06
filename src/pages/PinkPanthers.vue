@@ -45,6 +45,7 @@ export default {
           //itemsPerPage: 5,
           stickyHeader: true,
           // disableSorting: true,
+          // hideSearch: true,
           show: false
         },
         columns: [
