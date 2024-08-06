@@ -1,15 +1,15 @@
 <template>
   <div class="flexi-table-footer-c">
-    <SmartTablePagination />
+    <FlexiTablePagination />
   </div>
 </template>
 <script lang="ts">
-import SmartTablePagination from '../../../src/components/SmartTable/SmartTablePagination.vue'
+import FlexiTablePagination from './FlexiTablePagination.vue'
 export default {
   name: 'FlexiTableFooter',
   inject: ['flexi'],
   components: {
-    SmartTablePagination
+    FlexiTablePagination
   }
 }
 </script>
