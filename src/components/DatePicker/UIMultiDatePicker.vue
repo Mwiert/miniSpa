@@ -1,6 +1,8 @@
 <template>
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
+    {{ saveFirstDateHistory }}
+    {{ saveSecondDateHistory }}
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
       <div>
@@ -126,7 +128,9 @@ export default {
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
-    isDatePickerEnable: { type: Boolean }
+    isDatePickerEnable: { type: Boolean },
+    maxSelectibleDay: { type: Number, default: 0 },
+    userSelectedDates: { type: Object, default: null }
   },
   methods: {
     checkRange() {
@@ -403,6 +407,35 @@ export default {
       this.linedThroughDate()
       this.checkSkippability()
     },
+    rearrangeSelects(reDate: string , condition: boolean) {
+      
+      this.daysInMonth.forEach((day) => {
+        if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
+          day.selected = true
+          if( condition ) {
+            this.firstSelectedDate = day
+            return
+          }
+          else  {
+            this.secondSelectedDate = day
+            return
+          }
+        }
+      })
+      this.nextMonthDays.forEach((day) => {
+        if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
+          day.selected = true
+          if( condition ) {
+            this.firstSelectedDate = day
+            return
+          }
+          else  {
+            this.secondSelectedDate = day
+            return
+          }
+        }
+      })
+    },
     selectDate(selectedDay: date) {
       if (this.baseInitialDates.firstInitialDate) {
         this.emitResetInitialDates() // turuncu baslangic degerlerini ilk tiklamada emit edip false olmasini saglar
@@ -414,20 +447,27 @@ export default {
         this.firstSelectedDate.selected = true
         this.saveFirstDateHistory = this.firstSelectedDate.date
       } else {
+        const temp = selectedDay.date < this.firstSelectedDate.date
         if (selectedDay.date < this.firstSelectedDate.date) {
           // Seçilen gün first'ten küçükse gir
           if (!this.secondSelectedDate.date) {
             // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
+            console.log(selectedDay.date)
             this.secondSelectedDate = this.firstSelectedDate
             this.firstSelectedDate = selectedDay
+            this.rearrangeController(temp)
             this.firstSelectedDate.selected = true
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
+           
           } else {
             // First ve second varsa gir (tarihi sola doğru genişletir)
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = selectedDay
+
+            this.rearrangeController(temp)
+
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
           }
@@ -456,6 +496,9 @@ export default {
             // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
             this.secondSelectedDate.selected = false
             this.secondSelectedDate = selectedDay
+
+            this.rearrangeController()
+
             this.secondSelectedDate.selected = true
             this.saveSecondDateHistory = this.secondSelectedDate.date
           }
@@ -465,6 +508,24 @@ export default {
       this.emitDate('dateSecondSelected', this.secondSelectedDate)
       this.deactivateAllBetween()
       this.updateBetweenDates()
+    },
+    rearrangeController(condition: boolean) {  
+      const firstDate = dayjs(this.firstSelectedDate.date)
+      const secondDate = dayjs(this.secondSelectedDate.date)
+      const ifValidate = secondDate.diff(firstDate,'day')
+      
+      if(condition) {
+        if(ifValidate > this.maxSelectibleDay) {
+          const newDate = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
+          this.rearrangeSelects(newDate , condition)
+        }
+      }
+      else  {
+        if(ifValidate > this.maxSelectibleDay) {
+          const newDate2 = dayjs(this.secondSelectedDate.date).subtract(ifValidate - this.maxSelectibleDay, 'day')
+          this.rearrangeSelects(newDate2 , condition)
+        }
+      }
     },
     emitDate(event, date) {
       this.$emit(event, date)
@@ -721,6 +782,15 @@ export default {
     }
   },
   watch: {
+    userSelectedDates: {
+      handler(newValue) {
+        if (this.userSelectedDates.isUserSelect) {
+          this.saveFirstDateHistory = newValue.firstInitialDate.date
+          this.saveSecondDateHistory = newValue.secondInitialDate.date
+        }
+      },
+      deep: true
+    },
     isDatePickerEnable(newVal) {
       if (newVal) {
         if (!this.saveFirstDateHistory) {
@@ -733,7 +803,7 @@ export default {
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
-        this.linedThroughDate() // Her iki takvim için geçerli
+        this.linedThroughDate()
         this.checkSkippability()
       }
     },
@@ -778,12 +848,17 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/variables.scss';
 @import '../../assets/css/_fonts.scss';
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'small' {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+}
 
-// This is the main container
 .ui-date-picker-c {
   align-self: center;
 
-  // This is the main calendar wrapper
   .ui-date-picker-wrapper {
     background: white;
     box-shadow: 2px 2px 6px #5c75991a;
@@ -804,19 +879,25 @@ export default {
       width: 600px;
       height: 250px;
       flex-direction: row;
+      transition: all 0.3s;
+      @include respond-to('small') {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+      }
     }
     &::before {
       content: '';
-      position: absolute; //Position relative to parent
-      top: -10px; //10px above the calendar
-      left: 15px; //15px from the left of the calendar
+      position: absolute;
+      top: -10px;
+      left: 50%;
       width: 0;
       height: 0;
-      border-left: 10px solid transparent; //This is the left border of the triangle invisible
-      border-right: 10px solid transparent; //This is the right border of the triangle invisible
-      border-bottom: 10px solid #ffffff; //This is the bottom border of the triangle white which is visible
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid #ffffff;
     }
-    //This is the main calendar content
+
     .calendar {
       padding-top: 1.2rem;
       width: 300px;
@@ -824,8 +905,8 @@ export default {
       background: #ffffff;
       margin: 0 10px;
       border-radius: 30px;
-
-      // This is the header section
+   
+      
       .header {
         position: relative;
         display: flex;
@@ -833,7 +914,6 @@ export default {
         align-items: center;
         width: 100%;
 
-        // This is the arrow icons for the calendar
         .nav-button {
           background-color: transparent;
           border: none;
@@ -845,14 +925,12 @@ export default {
           justify-content: center;
           align-items: center;
 
-          // This is the arrow icon
           img {
             width: 15px;
             height: 15px;
           }
         }
 
-        // This is the left arrow icon
         .nav-button:first-child {
           position: absolute;
           left: 10px;
@@ -860,7 +938,6 @@ export default {
           transform: translateY(-50%);
         }
 
-        // This is the right arrow icon
         .nav-button:last-child {
           position: absolute;
           right: 10px;
@@ -868,7 +945,6 @@ export default {
           transform: translateY(-50%);
         }
 
-        // This is the current date
         .current-date {
           flex-grow: 1;
           text-align: center;
@@ -878,7 +954,6 @@ export default {
       }
     }
 
-    // Styling of weekdays and days generally
     .weekdays,
     .days {
       list-style: none;
@@ -900,7 +975,6 @@ export default {
 
     .days {
       padding-top: 6px;
-      // Styling depending on if it is today (coloring gray)
       .isToday {
         background: #e7e7e7;
         border-radius: 16px;
@@ -913,12 +987,12 @@ export default {
       }
     }
 
-    // Styling of days generally
     .days li {
       padding: 10px 10px;
       font-weight: 500;
       line-height: 7px;
       cursor: pointer;
+      transition: all 0.3s;
     }
     .days li.textDecoration {
       color: grey;
@@ -926,13 +1000,11 @@ export default {
       pointer-events: none;
       cursor: not-allowed;
     }
-    // If the dates that are selected are inactive, they are invisible
     .days li.inactive {
       visibility: hidden;
       pointer-events: none;
       cursor: not-allowed;
     }
-    // If the specific date is selected, it is colored with accent-primary-color which is light-blue
     .days li.selected {
       background-color: $accent-primary-color;
       border-radius: 4px;

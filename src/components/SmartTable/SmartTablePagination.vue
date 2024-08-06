@@ -59,27 +59,24 @@ export default {
         return pages
       }
       pages.push(1)
+
       for (let index = 2; index <= Math.min(4, totalPages); index++) {
         pages.push(index)
       }
 
-      // Show ellipsis and middle pages if necessary
       if (totalPages > 5) {
         if (currentPage > 4) {
           pages.push('...')
         }
 
-        // Show current page in the middle if it's not one of the first two or last two pages
         if (currentPage > 4 && currentPage < totalPages) {
           pages.push(currentPage)
         }
 
-        // Show ellipsis if necessary before the last two pages
         if (currentPage < totalPages - 1) {
           pages.push('...')
         }
 
-        // Always show the last two pages
         pages.push(totalPages)
       } else if (totalPages === 5) {
         pages.push(totalPages)
@@ -89,14 +86,12 @@ export default {
     },
 
     paginationText() {
-      const itemsPerPage = this.flexi.options.itemsPerPage
-      const currentPage = this.flexi.options.currentPage
-      const totalItems = this.SearchKey.length
-
-      const start = (currentPage - 1) * itemsPerPage + 1
-      const end = Math.min(currentPage * itemsPerPage, totalItems)
-
-      return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${totalItems}</strong>`
+      const start = (this.flexi.options.currentPage - 1) * this.flexi.options.selected.id + 1
+      const end = Math.min(
+        this.flexi.options.currentPage * this.flexi.options.selected.id,
+        this.flexi.options.totalPages
+      )
+      return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${this.flexi.options.totalPages}</strong>`
     },
 
     paginationTrigger() {

@@ -5,7 +5,6 @@
 </template>
 <script lang="ts">
 import SmartTablePagination from '../../../src/components/SmartTable/SmartTablePagination.vue'
-import flexitableMixin from '../flexitableMixin.js'
 export default {
   name: 'FlexiTableFooter',
   inject: ['flexi'],
