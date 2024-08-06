@@ -1,6 +1,5 @@
 <template>
   <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
-
     <FlexiTableControls />
     <FlexiTableHeader ref="flexiheader" />
     <FlexiTableBody ref="flexibody" />
@@ -70,23 +69,13 @@ export default {
       }
       //sortable Control
       if (!this.flexiTableOptions.options.disableSorting) {
-        const sortableParamsExist = this.flexiTableOptions.columns.some(
-          (column) => column.sortable == true
-        )
-        if (sortableParamsExist) {
-          this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns
-            .filter((column) => column.sortable)
-            .map((column) => {
-              return column.sortable ? column.label : ''
-            })
-        } else {
-          this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns.map(
-            (column) => {
-              return column.label
-            }
-          )
-        }
+        this.flexiTableOptions.options.sortableColumns = this.flexiTableOptions.columns
+          .filter((column) => column.sortable !== false)
+          .map((column) => {
+            return column.sortable !== false ? column.label : ''
+          })
       }
+
       //Dropdown
       this.flexiTableOptions.columns = this.flexiTableOptions.columns.map((col, index) => {
         return {
