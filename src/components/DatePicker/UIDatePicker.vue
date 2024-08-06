@@ -4,7 +4,7 @@
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
 
-    <div class="ui-date-picker-wrapper" :class="{'positionToLeftSingle': positionToLeftSingle}">
+    <div class="ui-date-picker-wrapper" :class="{ positionToLeftSingle: positionToLeftSingle }">
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
@@ -445,7 +445,7 @@ export default {
       border-right: 10px solid transparent; //This is the right border of the triangle invisible
       border-bottom: 10px solid #ffffff; //This is the bottom border of the triangle white which is visible
     }
-    &.positionToLeftSingle::before{
+    &.positionToLeftSingle::before {
       left: 80%;
     }
     //This is the main calendar content
