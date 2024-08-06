@@ -154,13 +154,16 @@ export default {
     padding: 4px;
     cursor: pointer;
     scroll-snap-align: center;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.5;
   }
 
   .day span.selected,
   .month span.selected,
   .year span.selected {
     font-weight: bold;
-    color: red;
+    transform: scale(1.2);
+    opacity: 1;
   }
 
   .day {
