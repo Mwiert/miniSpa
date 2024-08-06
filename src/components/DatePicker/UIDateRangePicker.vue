@@ -132,7 +132,8 @@
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
           @dateSelected="handleFirstDateSelected"
-          @click="sendDateToParent" />
+          @click="sendDateToParent"
+          :positionToLeftSingle="positionToLeftSingle" />
       </div>
       <div v-if="isMulti">
         <UIMultiDatePicker
@@ -231,7 +232,8 @@ export default {
         }
       },
       positionToRight: false,
-      positionToLeft: false
+      positionToLeft: false,
+      positionToLeftSingle: false
     }
   },
   mounted() {
@@ -329,7 +331,6 @@ export default {
         const datePicker = this.$el.querySelector('.date-picker')
         const datePickerRect = datePicker.getBoundingClientRect()
         const windowWidth = window.innerWidth
-        console.log(datePickerRect.right - windowWidth, datePickerRect)
 
         if (this.isMultiDatePickerEnable) {
           if (datePickerRect.left < 0) {
@@ -346,6 +347,19 @@ export default {
           this.positionToRight = false
           datePicker.classList.remove('positionToLeft')
           this.positionToLeft = false
+        }
+        
+
+        if(this.isSingleDatePickerEnable) {
+          if (windowWidth - datePickerRect.right < 0) {
+            console.log(windowWidth - datePickerRect.right)
+            datePicker.classList.add('positionToLeftSingle')
+            this.positionToLeftSingle = true
+          }
+        }
+        else {
+          datePicker.classList.remove('positionToLeftSingle')
+          this.positionToLeftSingle = false
         }
       })
     },
@@ -536,6 +550,9 @@ export default {
   }
   .positionToLeft {
     left: -175%;
+  }
+  .positionToLeftSingle{
+    left: -85%;
   }
 
   //This is our button container
