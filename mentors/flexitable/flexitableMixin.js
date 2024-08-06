@@ -1,20 +1,21 @@
 export default {
   computed: {
     SearchKey() {
-      if (this.flexi.options.hideSearch) {
+      if (this.flexi.options.hideSearch || this.flexi.options.searchKeyWord.length < 3) {
+        this.flexi.options.totalPages = this.flexi.rows.length
         return this.flexi.rows
       }
+      const startTime = performance.now()
       const searchResults = this.flexi.rows.filter((item) => {
-        const rowValues = Object.values(item.row)
-        return rowValues.some((val) => {
-          return (
-            (typeof val.value === 'string' || typeof val.value === 'number') &&
-            JSON.stringify(val.value)
-              .toLowerCase()
-              .includes(this.flexi.options.searchKeyWord.toLowerCase())
-          )
-        })
+        const rowValuesString = Object.entries(item.row)
+          .filter(([key]) => !this.flexi.options.hiddenColumns.includes(key))
+          .map(([, val]) => JSON.stringify(val.value))
+          .join(', ')
+          .toLowerCase()
+        return rowValuesString.includes(this.flexi.options.searchKeyWord.toLowerCase())
       })
+      const endTime = performance.now()
+      console.log(`${(endTime - startTime).toFixed(2)} ms`)
       this.flexi.options.totalPages = searchResults.length
       return searchResults
     },

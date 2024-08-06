@@ -63,12 +63,19 @@
     <!-- Search Table -->
     <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
       <SvgIcon :name="'search'" size="s" class="search" />
-      <input type="text" v-model="flexi.options.searchKeyWord" />
+      <input
+        type="text"
+        v-model="flexi.options.searchWord"
+        @input="
+          debounce(() => {
+            state.filterText = flexi.options.searchWord
+          })
+        " />
       <button
         type="button"
         class="clear-button"
         @click="clearSearch"
-        v-if="flexi.options.searchKeyWord">
+        v-if="flexi.options.searchWord">
         <SvgIcon :name="'x'" size="s" class="clear" />
       </button>
     </div>
@@ -83,6 +90,8 @@ import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
 import html2pdf from 'html2pdf.js'
 import dayjs from 'dayjs'
+import { reactive } from 'vue'
+
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
@@ -97,7 +106,29 @@ export default {
       dayjs: dayjs()
     }
   },
+  setup() {
+    const state = reactive({
+      filterText: ''
+    })
+
+    return {
+      state
+    }
+  },
+  created() {
+    this.debounce = this.createDebounce()
+  },
   methods: {
+    createDebounce() {
+      let timeout = null
+      return (fnc, delayMs) => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+          fnc()
+          this.flexi.options.searchKeyWord = this.flexi.options.searchWord
+        }, delayMs || 500)
+      }
+    },
     async downloadPdf() {
       this.showSpinner = true
       try {
@@ -333,6 +364,8 @@ export default {
     },
     clearSearch() {
       this.flexi.options.searchKeyWord = ''
+      this.flexi.options.searchWord = ''
+      this.state.filterText = ''
     }
   },
   watch: {
@@ -526,6 +559,7 @@ export default {
                 background-color: #ecfcca;
               }
             }
+
             .option-text {
               &.selected {
                 text-align: left;

@@ -123,7 +123,7 @@ export default {
   },
   created() {
     // row mapper for FlexiTable
-    ;(this.flexiTableOptions.rows = response.map((item) => {
+    ; (this.flexiTableOptions.rows = response.map((item) => {
       return {
         row: {
           id: {
