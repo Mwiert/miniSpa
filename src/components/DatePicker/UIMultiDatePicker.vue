@@ -1,8 +1,6 @@
 <template>
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
-    {{ saveFirstDateHistory }}
-    {{ saveSecondDateHistory }}
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
       <div>
@@ -88,6 +86,7 @@
         </div>
       </div>
     </div>
+    {{ baseInitialDates.firstInitialDate.number }}
   </div>
 </template>
 
@@ -726,10 +725,55 @@ export default {
   watch: {
     userSelectedDates: {
       handler(newValue) {
+        //console.log(this.userSelectedDates.isUserSelect)
         if (this.userSelectedDates.isUserSelect) {
+          // this.baseInitialDates.firstInitialDate = newValue.firstInitialDate
+          // this.baseInitialDates.secondInitialDate =newValue.secondInitialDate
+
           this.saveFirstDateHistory = newValue.firstInitialDate.date
           this.saveSecondDateHistory = newValue.secondInitialDate.date
+          const daysInWholeMonth = {
+            date: newValue.firstInitialDate.date,
+            inactive: false,
+            selected: true,
+            textDecoration: false,
+            isToday: false,
+            number: newValue.firstInitialDate.number,
+            month: newValue.firstInitialDate.month,
+            year: newValue.firstInitialDate.year,
+            firstInitialDate: false,
+            secondInitialDate: false
+          }
+          const daysInWholeNext = {
+            date: newValue.secondInitialDate.date,
+            inactive: false,
+            selected: true,
+            textDecoration: false,
+            isToday: false,
+            number: newValue.secondInitialDate.number,
+            month: newValue.secondInitialDate.month,
+            year: newValue.secondInitialDate.year,
+            firstInitialDate: false,
+            secondInitialDate: false
+          }
+
+          this.firstSelectedDate.selected = false
+          this.firstSelectedDate = daysInWholeMonth
+
+          this.secondSelectedDate.selected = false
+          this.secondSelectedDate = daysInWholeNext
+
+          //console.log(daysInWholeNext)
+          // console.log(daysInWholeMonth)
+          //this.selectDate(daysInWholeMonth)
+          //this.selectDate(daysInWholeNext)
         }
+        this.checkDateHistory()
+        this.populdateMonthDays()
+
+        this.updateBetweenDates()
+        this.linedThroughDate()
+        this.checkSkippability()
       },
       deep: true
     },
@@ -771,8 +815,76 @@ export default {
             day.secondInitialDate = true
           }
         })
+      } else {
+        this.daysInMonth.forEach((day) => {
+          // soldaki takvim için initial'ları ara
+          if (day.date == this.baseInitialDates.firstInitialDate.date) {
+            day.firstInitialDate = false
+          }
+          if (day.date == this.baseInitialDates.secondInitialDate.date) {
+            day.secondInitialDate = false
+          }
+        })
+
+        this.nextMonthDays.forEach((day) => {
+          // sağdaki takvim için initial'ları ara
+          if (day.date == this.baseInitialDates.firstInitialDate.date) {
+            day.firstInitialDate = false
+          }
+          if (day.date == this.baseInitialDates.secondInitialDate.date) {
+            day.secondInitialDate = false
+          }
+        })
       }
+    },
+    saveSecondDateHistory(newVal) {
+      this.daysInMonth.forEach((day) => {
+        // soldaki takvim için initial'ları ara
+        if (day.date == this.baseInitialDates.firstInitialDate.date) {
+          day.firstInitialDate = false
+        }
+        if (day.date == this.baseInitialDates.secondInitialDate.date) {
+          day.secondInitialDate = false
+        }
+      })
+
+      this.nextMonthDays.forEach((day) => {
+        // sağdaki takvim için initial'ları ara
+        if (day.date == this.baseInitialDates.firstInitialDate.date) {
+          day.firstInitialDate = false
+        }
+        if (day.date == this.baseInitialDates.secondInitialDate.date) {
+          day.secondInitialDate = false
+        }
+      })
     }
+    // baseInitialDates: {
+    //   handler(newValue) {
+    //     console.log(newValue)
+    //     this.firstSelectedDate.number = newValue.firstInitialDate.number
+    //     this.firstSelectedDate.month = newValue.firstInitialDate.month
+    //     this.firstSelectedDate.year = newValue.firstInitialDate.year
+    //     this.firstSelectedDate.date =
+    //       newValue.firstInitialDate.year +
+    //       '-' +
+    //       newValue.firstInitialDate.month +
+    //       '-' +
+    //       newValue.firstInitialDate.number
+
+    //     this.secondSelectedDate.number = newValue.secondInitialDate.number
+    //     this.secondSelectedDate.month = newValue.secondInitialDate.month
+    //     this.secondSelectedDate.year = newValue.secondInitialDate.year
+    //     this.secondSelectedDate.date =
+    //       newValue.secondInitialDate.year +
+    //       '-' +
+    //       newValue.secondInitialDate.month +
+    //       '-' +
+    //       newValue.secondInitialDate.number
+    //     console.log(this.firstSelectedDate)
+    //     console.log(this.secondSelectedDate)
+    //   },
+    //   deep: true
+    // }
   },
 
   created() {

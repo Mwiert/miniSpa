@@ -80,14 +80,14 @@
 //import { jsPDF } from 'jspdf';
 //import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
-import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
-import html2pdf from 'html2pdf.js'
+//import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
+//import html2pdf from 'html2pdf.js'
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
   mixins: [flexiTableMixin],
   components: {
-    UIEnumDropdown
+    // UIEnumDropdown
   },
   data() {
     return {

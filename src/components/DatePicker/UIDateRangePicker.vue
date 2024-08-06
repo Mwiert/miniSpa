@@ -22,11 +22,12 @@
                 class="day"
                 v-model="firstSelectedDate.number"
                 v-else
-                @keypress="logKeypress()" />
+                @keypress="logKeypress()"
+                disabled />
             </span>
 
             <div class="month-year">
-              <span class="month">
+              <span class="month" v-if="isClickable">
                 <!-- This is where we are getting the month -->
                 <input
                   class="month"
@@ -39,7 +40,17 @@
                   v-else
                   @keypress="logKeypress()" />
               </span>
-              <span class="year">
+              <span class="month" v-else>
+                <!-- This is where we are getting the month -->
+
+                <span v-if="!firstSelectedDate.date">
+                  {{ formatMonth(sendInitialDates.firstInitialDate.month) }}
+                </span>
+                <span v-else>
+                  {{ formatMonth(firstSelectedDate.month) }}
+                </span>
+              </span>
+              <span class="year" v-if="isClickable">
                 <!-- This is where we are getting the year -->
                 <input
                   class="year"
@@ -51,6 +62,16 @@
                   v-model="firstSelectedDate.year"
                   v-else
                   @keypress="logKeypress()" />
+              </span>
+              <span class="year" v-else>
+                <!-- This is where we are getting the year -->
+
+                <span v-if="!firstSelectedDate.date">
+                  {{ sendInitialDates.firstInitialDate.year }}
+                </span>
+                <span v-else>
+                  {{ firstSelectedDate.year }}
+                </span>
               </span>
             </div>
           </div>
@@ -160,6 +181,7 @@ import date from '../../interface/IUIDatePicker'
 import dayjs from 'dayjs'
 import UIDatePicker from './UIDatePicker.vue'
 import UIMultiDatePicker from './UIMultiDatePicker.vue'
+import { readonly } from 'vue'
 
 export default {
   name: 'UIDateRangePicker',
@@ -415,6 +437,56 @@ export default {
   watch: {
     sendInitialDates: {
       handler(newValue) {
+        // console.log(newValue)
+
+        // if (newValue.firstInitialDate.date == '') {
+        //   // console.log(this.userSelectedDates.isUserSelect)
+
+        //   this.userSelectedDates.firstInitialDate.number = this.firstSelectedDate.number
+        //   this.userSelectedDates.firstInitialDate.month = this.firstSelectedDate.month
+        //   this.userSelectedDates.firstInitialDate.year = this.firstSelectedDate.year
+        //   this.userSelectedDates.firstInitialDate.date =
+        //     this.firstSelectedDate.year +
+        //     '-' +
+        //     this.firstSelectedDate.month +
+        //     '-' +
+        //     this.firstSelectedDate.number
+
+        //   this.userSelectedDates.secondInitialDate.number = this.secondSelectedDate.number
+        //   this.userSelectedDates.secondInitialDate.month = this.secondSelectedDate.month
+        //   this.userSelectedDates.secondInitialDate.year = this.secondSelectedDate.year
+        //   this.userSelectedDates.secondInitialDate.date =
+        //     this.secondSelectedDate.year +
+        //     '-' +
+        //     this.secondSelectedDate.month +
+        //     '-' +
+        //     this.secondSelectedDate.number
+
+        //   return
+        // }
+        if (this.userSelectedDates.isUserSelect) {
+          this.firstSelectedDate.number = newValue.firstInitialDate.number
+          this.firstSelectedDate.month = newValue.firstInitialDate.month
+          this.firstSelectedDate.year = newValue.firstInitialDate.year
+          this.firstSelectedDate.date =
+            newValue.firstInitialDate.year +
+            '-' +
+            newValue.firstInitialDate.month +
+            '-' +
+            newValue.firstInitialDate.number
+
+          this.secondSelectedDate.number = newValue.secondInitialDate.number
+          this.secondSelectedDate.month = newValue.secondInitialDate.month
+          this.secondSelectedDate.year = newValue.secondInitialDate.year
+          this.secondSelectedDate.date =
+            newValue.secondInitialDate.year +
+            '-' +
+            newValue.secondInitialDate.month +
+            '-' +
+            newValue.secondInitialDate.number
+          // this.sendInitialDates.firstInitialDate.firstInitialDate = false
+          //this.sendInitialDates.secondInitialDate.secondInitialDate = false
+        }
         this.userSelectedDates.firstInitialDate.number = newValue.firstInitialDate.number
         this.userSelectedDates.firstInitialDate.month = newValue.firstInitialDate.month
         this.userSelectedDates.firstInitialDate.year = newValue.firstInitialDate.year
@@ -435,12 +507,51 @@ export default {
           '-' +
           newValue.secondInitialDate.number
       },
+
       deep: true
     },
-    firstSelectedDate(newVal) {
-      if (!newVal.date) {
-        this.fillInitialDate()
-      }
+    firstSelectedDate: {
+      handler(newVal) {
+        if (!newVal.date) {
+          this.fillInitialDate()
+        } else {
+          // this.firstSelectedDate.selected = false
+          //this.sendInitialDates.firstInitialDate = newVal
+          //this.firstSelectedDate.selected = true
+          this.userSelectedDates.firstInitialDate.number = this.firstSelectedDate.number
+          this.userSelectedDates.firstInitialDate.month = this.firstSelectedDate.month
+          this.userSelectedDates.firstInitialDate.year = this.firstSelectedDate.year
+          this.userSelectedDates.firstInitialDate.date =
+            this.firstSelectedDate.year +
+            '-' +
+            this.firstSelectedDate.month +
+            '-' +
+            this.firstSelectedDate.number
+        }
+
+        //console.log('a', this.firstSelectedDate)
+      },
+
+      deep: true
+    },
+    secondSelectedDate: {
+      handler(newVal) {
+        // this.firstSelectedDate.selected = false
+        //this.sendInitialDates.firstInitialDate = newVal
+        //this.firstSelectedDate.selected = true
+
+        this.userSelectedDates.secondInitialDate.number = this.secondSelectedDate.number
+        this.userSelectedDates.secondInitialDate.month = this.secondSelectedDate.month
+        this.userSelectedDates.secondInitialDate.year = this.secondSelectedDate.year
+        this.userSelectedDates.secondInitialDate.date =
+          this.secondSelectedDate.year +
+          '-' +
+          this.secondSelectedDate.month +
+          '-' +
+          this.secondSelectedDate.number
+      },
+
+      deep: true
     }
   },
   created() {
