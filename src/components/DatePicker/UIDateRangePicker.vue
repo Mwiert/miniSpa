@@ -150,7 +150,6 @@
           :maxSelectibleDay="maxSelectibleDay"
           :isDatePickerEnable="isMultiDatePickerEnable"
           :spaceBetweenDays="spaceBetweenDays"
-          :maxSelectibleDay="maxSelectibleDay"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
