@@ -1,10 +1,8 @@
 <template>
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
-    {{ saveFirstDateHistory }}
-    {{ saveSecondDateHistory }}
     <!-- This is where we work with our calendar -->
-    <div class="ui-date-picker-wrapper">
+    <div class="ui-date-picker-wrapper" :class="{ 'positionToRight': positionToRight, 'positionToLeft': positionToLeft }">
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
@@ -130,7 +128,8 @@ export default {
     baseInitialDates: { type: Object },
     isDatePickerEnable: { type: Boolean },
     maxSelectibleDay: { type: Number, default: 0 },
-    userSelectedDates: { type: Object, default: null }
+    positionToRight: { type: Boolean, default: false },
+    positionToLeft: { type: Boolean, default: false },
   },
   methods: {
     checkRange() {
@@ -782,15 +781,6 @@ export default {
     }
   },
   watch: {
-    userSelectedDates: {
-      handler(newValue) {
-        if (this.userSelectedDates.isUserSelect) {
-          this.saveFirstDateHistory = newValue.firstInitialDate.date
-          this.saveSecondDateHistory = newValue.secondInitialDate.date
-        }
-      },
-      deep: true
-    },
     isDatePickerEnable(newVal) {
       if (newVal) {
         if (!this.saveFirstDateHistory) {
@@ -803,7 +793,7 @@ export default {
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
-        this.linedThroughDate()
+        this.linedThroughDate() // Her iki takvim için geçerli
         this.checkSkippability()
       }
     },
@@ -897,6 +887,12 @@ export default {
       border-right: 10px solid transparent;
       border-bottom: 10px solid #ffffff;
     }
+    &.positionToRight::before {
+      left: 15%;
+    }
+    &.positionToLeft::before {
+      left: 82%;
+    }
 
     .calendar {
       padding-top: 1.2rem;
@@ -905,8 +901,7 @@ export default {
       background: #ffffff;
       margin: 0 10px;
       border-radius: 30px;
-   
-      
+
       .header {
         position: relative;
         display: flex;
