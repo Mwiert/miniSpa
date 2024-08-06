@@ -7,6 +7,7 @@
       :isMulti="true"
       isFuture
       :maxSelectibleDay="10"
+      :validateForwardDay="20"
       label="Date Picker" />
   </div>
 </template>
