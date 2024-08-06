@@ -5,20 +5,13 @@
       <div class="spinner"></div>
     </div>
     <div class="ftc-select-wrapper">
-      <UIEnumDropdown
-        v-model="flexi.options.selected"
-        :enumObj="flexi.options.pageOrder"
-        :label="flexi.options.UIDropdownOrderProp.label"
-        :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
-        :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
-        :showAll="flexi.options.UIDropdownOrderProp.showAll" />
+      <UIEnumDropdown v-model="flexi.options.selected" :enumObj="flexi.options.pageOrder"
+        :label="flexi.options.UIDropdownOrderProp.label" :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
+        :fontSize="flexi.options.UIDropdownOrderProp.fontSize" :showAll="flexi.options.UIDropdownOrderProp.showAll" />
       <!--Custom Dropdown-->
 
       <div class="export-buttons">
-        <div
-          class="excel-selector"
-          @mouseover="openComponent = true"
-          @mouseleave="openComponent = false">
+        <div class="excel-selector" @mouseover="openComponent = true" @mouseleave="openComponent = false">
           <SvgIcon name="excel" size="xs" class="excel-button" />
           <div class="excel-wrapper" v-if="openComponent">
             <div class="excel-text" @click="downloadExcel()">Download Excel</div>
@@ -26,23 +19,15 @@
           </div>
         </div>
         <SvgIcon name="pdf" size="xs" class="pdf-button" @click="downloadPdf()"></SvgIcon>
-        <SvgIcon
-          name="print"
-          size="xs"
-          class="print-button"
-          @click="triggerExportPrint()"></SvgIcon>
+        <SvgIcon name="print" size="xs" class="print-button" @click="triggerExportPrint()"></SvgIcon>
         <div class="dropdown">
           <div class="dropdown-icon" @click="Toggle">
             <SvgIcon name="columns" size="xs" />
           </div>
 
           <div class="multi" v-if="flexi.options.show">
-            <div
-              class="option"
-              :class="col.status === false ? 'notselected' : 'selected'"
-              v-for="(col, index) in flexi.columns"
-              :key="index"
-              @click="selectHidden(index)">
+            <div class="option" :class="col.status === false ? 'notselected' : 'selected'"
+              v-for="(col, index) in flexi.columns" :key="index" @click="selectHidden(index)">
               <div class="option-text" :class="col.status === false ? 'notselected' : 'selected'">
                 {{ col.name }}
               </div>
@@ -63,12 +48,9 @@
     <!-- Search Table -->
     <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
       <SvgIcon :name="'search'" size="s" class="search" />
-      <input type="text" v-model="flexi.options.searchKeyWord" />
-      <button
-        type="button"
-        class="clear-button"
-        @click="clearSearch"
-        v-if="flexi.options.searchKeyWord">
+      <input type="text" v-model="flexi.options.searchWord"
+        @input="debounce(() => { state.filterText = flexi.options.searchWord })" />
+      <button type="button" class="clear-button" @click="clearSearch" v-if="flexi.options.searchWord">
         <SvgIcon :name="'x'" size="s" class="clear" />
       </button>
     </div>
@@ -82,6 +64,7 @@
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
 import html2pdf from 'html2pdf.js'
+import { reactive } from 'vue';
 export default {
   name: 'FlexiTableControls',
   inject: ['flexi'],
@@ -92,10 +75,32 @@ export default {
   data() {
     return {
       openComponent: false,
-      showSpinner: false
+      showSpinner: false,
     }
   },
+  setup() {
+    const state = reactive({
+      filterText: '',
+    });
+
+    return {
+      state,
+    };
+  },
+  created() {
+    this.debounce = this.createDebounce();
+  },
   methods: {
+    createDebounce() {
+      let timeout = null;
+      return (fnc, delayMs) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          fnc();
+          this.flexi.options.searchKeyWord = this.flexi.options.searchWord;
+        }, delayMs || 500);
+      };
+    },
     async downloadPdf() {
       this.showSpinner = true
       try {
@@ -103,9 +108,9 @@ export default {
         const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
 
         const connectedElement = document.createElement('div')
-        ;[headerElement, bodyElement].forEach((element) => {
-          connectedElement.appendChild(element.cloneNode(true))
-        })
+          ;[headerElement, bodyElement].forEach((element) => {
+            connectedElement.appendChild(element.cloneNode(true))
+          })
 
         const options = {
           margin: [10, 10, 10, 10], // location
@@ -279,6 +284,8 @@ export default {
 
     clearSearch() {
       this.flexi.options.searchKeyWord = ''
+      this.flexi.options.searchWord = ''
+      this.state.filterText = ''
     }
   },
   watch: {
@@ -297,14 +304,17 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   @keyframes spin {
     0% {
       transform: rotate(0deg);
     }
+
     100% {
       transform: rotate(360deg);
     }
   }
+
   .loading-overlay {
     position: fixed;
     top: 0;
@@ -316,6 +326,7 @@ export default {
     justify-content: center;
     align-items: center;
     z-index: 9999;
+
     .spinner {
       border: 16px solid #f3f3f3;
       border-top: 16px solid #2feb9c;
@@ -401,15 +412,18 @@ export default {
           align-items: center;
           padding: 10px;
           z-index: 999;
+
           .excel-text {
             width: 100%;
             cursor: pointer;
+
             &:hover {
               color: #2feb9c;
             }
           }
         }
       }
+
       .dropdown {
         display: flex;
         flex-direction: column;
@@ -417,6 +431,7 @@ export default {
         .dropdown-icon {
           cursor: pointer;
         }
+
         .multi {
           position: absolute;
           top: 10%;
@@ -437,6 +452,7 @@ export default {
             grid-column: 4;
             padding: 10px;
             border: none;
+
             &:hover {
               background-color: #ecfcca;
             }
@@ -454,6 +470,7 @@ export default {
             padding: 5px;
 
             cursor: pointer;
+
             .tick-wrapper {
               display: flex;
               justify-content: center;
@@ -463,6 +480,7 @@ export default {
                 background-color: #ecfcca;
               }
             }
+
             .option-text {
               &.selected {
                 text-align: left;
