@@ -1,7 +1,6 @@
 <template>
   <div class="ui-date-range-picker-c">
     <label class="label" v-if="label">{{ label }}</label>
-
     <!-- This is for opening and closing the calendar -->
     <div
       class="button"
@@ -14,34 +13,22 @@
           <div class="single-date-box">
             <span class="day">
               <!-- This is where we are getting the day -->
-              <span v-if="!firstSelectedDate.date">
-                {{ sendInitialDates.firstInitialDate.number }}
-              </span>
-              <span v-else>
-                {{ firstSelectedDate.number }}
-              </span>
+              <input class="day" v-model="firstSelectedDate.number">
+              </input>
             </span>
 
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
 
-                <span v-if="!firstSelectedDate.date">
-                  {{ formatMonth(sendInitialDates.firstInitialDate.month) }}
-                </span>
-                <span v-else>
-                  {{ formatMonth(firstSelectedDate.month) }}
-                </span>
+                <input class="month" v-model="firstSelectedDate.month">
+                </input>
               </span>
               <span class="year">
                 <!-- This is where we are getting the year -->
 
-                <span v-if="!firstSelectedDate.date">
-                  {{ sendInitialDates.firstInitialDate.year }}
-                </span>
-                <span v-else>
-                  {{ firstSelectedDate.year }}
-                </span>
+                <input class="year" v-model="firstSelectedDate.year">
+                </input>
               </span>
             </div>
           </div>
@@ -49,33 +36,22 @@
             <span class="day">
               <!-- This is where we are getting the day -->
 
-              <span v-if="!secondSelectedDate.date">
-                {{ sendInitialDates.secondInitialDate.number }}
-              </span>
-              <span v-else>
-                {{ secondSelectedDate.number }}
-              </span>
+              <input class="day" v-model="secondSelectedDate.number">
+              </input>
             </span>
 
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                <span v-if="!secondSelectedDate.date">
-                  {{ formatMonth(sendInitialDates.secondInitialDate.month) }}
-                </span>
-                <span v-else>
-                  {{ formatMonth(secondSelectedDate.month) }}
-                </span>
+                <input class="month" v-model="secondSelectedDate.month">
+                </input>
               </span>
 
               <span class="year">
                 <!-- This is where we are getting the year -->
-                <span v-if="!secondSelectedDate.date">
-                  {{ sendInitialDates.secondInitialDate.year }}
-                </span>
-                <span v-else>
-                  {{ secondSelectedDate.year }}
-                </span>
+                <input class="year" v-model="secondSelectedDate.year">
+
+                </input>
               </span>
             </div>
 
@@ -135,7 +111,8 @@
           @resetBaseInitialDates="handleResetInitialDates"
           @click="sendDateToParent"
           :positionToRight="positionToRight"
-          :positionToLeft="positionToLeft" />
+          :positionToLeft="positionToLeft"
+          :newSelectedDays="newSelectedDays" />
       </div>
     </div>
   </div>
@@ -185,11 +162,17 @@ export default {
       },
       positionToRight: false,
       positionToLeft: false,
-      positionToLeftSingle: false
+      positionToLeftSingle: false,
+      newSelectedDays: {
+        firstSelectedDate: {},
+        secondSelectedDate: {}
+      }
     }
   },
   mounted() {
     document.addEventListener('click', this.handleClickOutside)
+    this.firstSelectedDate = this.sendInitialDates.firstInitialDate
+    this.secondSelectedDate = this.sendInitialDates.secondInitialDate
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside)
@@ -261,7 +244,7 @@ export default {
         if (this.isSingleDatePickerEnable === false) {
           this.isSingleDatePickerEnable = true
         } else {
-          this.isSingleDatePickerEnable = false
+          // this.isSingleDatePickerEnable = false
         }
       }
 
@@ -271,7 +254,7 @@ export default {
         if (this.isMultiDatePickerEnable === false) {
           this.isMultiDatePickerEnable = true
         } else {
-          this.isMultiDatePickerEnable = false
+          // this.isMultiDatePickerEnable = false
         }
       }
 
@@ -397,19 +380,32 @@ export default {
       }
     },
     handleResetInitialDates() {
-      this.sendInitialDates.firstInitialDate = { date: '' }
-      this.sendInitialDates.secondInitialDate = { date: '' }
+      this.sendInitialDates.firstInitialDate = ''
+      this.sendInitialDates.secondInitialDate = ''
     },
     checkMultiOrSingleCalendar() {}
   },
+
   watch: {
-    firstSelectedDate(newVal) {
-      if (!newVal.date) {
-        this.fillInitialDate()
-      }
-    }
+    firstSelectedDate:{
+      handler(newVal){
+        if (!newVal.date) {
+          this.firstSelectedDate = this.sendInitialDates.firstInitialDate
+          this.secondSelectedDate = this.sendInitialDates.secondInitialDate
+          this.fillInitialDate()
+        }
+        else{
+          this.newSelectedDays.firstSelectedDate = newVal
+          this.newSelectedDays.secondSelectedDate = this.secondSelectedDate
+        }
+        
+      },
+      deep:true
+    },
   },
-  created() {
+  created() {        
+    this.firstSelectedDate = this.sendInitialDates.firstInitialDate
+    this.secondSelectedDate = this.sendInitialDates.secondInitialDate
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
     this.sendDateToParent()
