@@ -1,5 +1,6 @@
 <template>
   <div class="ui-slider-date-picker-c">
+    <div class="center-overlay"></div>
     <div class="day" @mousedown="startDrag($event)" ref="dayContainer">
       <span v-for="day in days" :key="day" :class="{ selected: day === selectedDay }">
         {{ day }}
@@ -98,7 +99,8 @@ export default {
     },
     updateDays() {
       this.generateDays()
-    },    startDrag(event: MouseEvent) {
+    },
+    startDrag(event: MouseEvent) {
       event.preventDefault()
       const target = event.currentTarget as HTMLElement
       const sensitivity = 0.4
@@ -196,6 +198,18 @@ export default {
   padding: 16px;
   box-sizing: border-box;
   gap: 16px;
+  position: relative;
+
+  .center-overlay {
+    position: absolute;
+    top: 43%;
+    left: 5%;
+    width: 90%;
+    height: 2rem;
+    border-radius: 10px;
+    background: #f4f4f4;
+    pointer-events: none;
+  }
 
   .day,
   .month,
