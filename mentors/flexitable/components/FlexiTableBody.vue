@@ -1,46 +1,110 @@
 <template>
-  <div ref="tableContainer" class="flexi-table-body-c">
-    <!-- <button @click="pushtheArray" style="margin-right: 200px">
-      {{ pushelements ? 'Kaan False' : 'Kaan True' }}
-    </button> -->
-    <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
-      <div ref="tableContent" class="flexi-table-body-row-wrapper" :class="{ 'remove-radius': rowObj.details?.status }">
-        <div class="flexi-table-body-row" :style="[gridTemplateColumns, ColumnGap]"
-          @click="handlerToggleDetails(rowObj)">
-          <!-- Columns -->
-          <template v-for="(col, key) in rowObj.row" :key="key">
-            <div class="flexi-table-body-col" :class="{ 'jc-center': col.checkbox }" v-if="HideColumn(key)">
-              <!-- CHECKBOX Render -->
-              <template v-if="col.checkbox">
-                <input type="checkbox" name="" id="" v-model="col.value" />
-              </template>
-
-              <template v-else>
-                <!-- IMG Render -->
-                <template v-if="col?.img">
-                  <img :src="col.img" :class="col.imgClass" />
+  <div ref="tableContainer" class="flexi-table-body-c" @scroll.passive="handleScroll">
+    <div v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
+      <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
+        <div
+          ref="tableContent"
+          class="flexi-table-body-row-wrapper"
+          :class="{ 'remove-radius': rowObj.details?.status }">
+          <div
+            class="flexi-table-body-row"
+            :style="[gridTemplateColumns, ColumnGap]"
+            @click="handlerToggleDetails(rowObj)">
+            <!-- Columns -->
+            <template v-for="(col, key) in rowObj.row" :key="key">
+              <div
+                class="flexi-table-body-col"
+                :class="{ 'jc-center': col.checkbox }"
+                v-if="HideColumn(key)">
+                <!-- CHECKBOX Render -->
+                <template v-if="col.checkbox">
+                  <input type="checkbox" name="" id="" v-model="col.value" />
                 </template>
 
-                <!-- TEXT Render -->
-                <span class="flexi-table-body-col-value" :class="[col.class, { pointer: col.url }]"
-                  @click="handlerGoToUrl(col.url)">
-                  {{ col.value ?? col }}
-                </span>
-              </template>
+                <template v-else>
+                  <!-- IMG Render -->
+                  <template v-if="col?.img">
+                    <img :src="col.img" :class="col.imgClass" />
+                  </template>
+
+                  <!-- TEXT Render -->
+                  <span
+                    class="flexi-table-body-col-value"
+                    :class="[col.class, { pointer: col.url }]"
+                    @click="handlerGoToUrl(col.url)">
+                    {{ col.value ?? col }}
+                  </span>
+                </template>
+              </div>
+            </template>
+          </div>
+
+          <!-- Details -->
+
+          <template v-if="rowObj.details?.status">
+            <div class="flexi-table-body-detail-wrapper">
+              <component
+                :is="getAsyncComponent(rowObj.details.componentPath)"
+                v-bind="rowObj.details.props">
+              </component>
             </div>
           </template>
         </div>
+      </template>
+    </div>
+    <div v-else>
+      <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPageLimited" :key="rowobjKey">
+        <div
+          ref="tableContent"
+          class="flexi-table-body-row-wrapper"
+          :class="{ 'remove-radius': rowObj.details?.status }">
+          <div
+            class="flexi-table-body-row"
+            :style="[gridTemplateColumns, ColumnGap]"
+            @click="handlerToggleDetails(rowObj)">
+            <!-- Columns -->
+            <template v-for="(col, key) in rowObj.row" :key="key">
+              <div
+                class="flexi-table-body-col"
+                :class="{ 'jc-center': col.checkbox }"
+                v-if="HideColumn(key)">
+                <!-- CHECKBOX Render -->
+                <template v-if="col.checkbox">
+                  <input type="checkbox" name="" id="" v-model="col.value" />
+                </template>
 
-        <!-- Details -->
+                <template v-else>
+                  <!-- IMG Render -->
+                  <template v-if="col?.img">
+                    <img :src="col.img" :class="col.imgClass" />
+                  </template>
 
-        <template v-if="rowObj.details?.status">
-          <div class="flexi-table-body-detail-wrapper">
-            <component :is="getAsyncComponent(rowObj.details.componentPath)" v-bind="rowObj.details.props">
-            </component>
+                  <!-- TEXT Render -->
+                  <span
+                    class="flexi-table-body-col-value"
+                    :class="[col.class, { pointer: col.url }]"
+                    @click="handlerGoToUrl(col.url)">
+                    {{ col.value ?? col }}
+                  </span>
+                </template>
+              </div>
+            </template>
           </div>
-        </template>
-      </div>
-    </template>
+
+          <!-- Details -->
+
+          <template v-if="rowObj.details?.status">
+            <div class="flexi-table-body-detail-wrapper">
+              <component
+                :is="getAsyncComponent(rowObj.details.componentPath)"
+                v-bind="rowObj.details.props">
+              </component>
+            </div>
+          </template>
+        </div>
+      </template>
+      <div v-if="loading">Loading Data...</div>
+    </div>
   </div>
 </template>
 
@@ -54,10 +118,24 @@ export default {
   mixins: [flexiTableMixin],
   data() {
     return {
-      pushelements: false
+      pushelements: false,
+      FlexiBodyItemsPerPageLimited: [],
+      page: 1,
+      maxItem: 90,
+      loading: false
     }
   },
   methods: {
+    addItemsPerPage() {
+      this.page++
+      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.page * this.maxItem)
+    },
+    handleScroll(event) {
+      const { scrollTop, clientHeight, scrollHeight } = event.target
+      if (scrollTop + clientHeight >= scrollHeight) {
+        this.addItemsPerPage()
+      }
+    },
     handlerGoToUrl(url) {
       if (url) {
         window.open(url, '_blank')
@@ -79,14 +157,22 @@ export default {
       this.flexi.selectedRows.length = 0
       this.flexi.selectedRows.push(...selected)
     }
+  },
+  created() {
+    this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
+    window.addEventListener('scroll', () => {
+      console.log('scrolling')
+    })
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .flexi-table-body-c {
+  max-height: 500px;
+  overflow-y: auto;
   .flexi-table-body-row-wrapper {
-    border: 1.5px solid #e0e0e0;
+    border: 2px solid #E8ECF4;
     margin-bottom: 4px;
     border-radius: 28px;
 
@@ -124,8 +210,12 @@ export default {
       .flexi-table-body-col {
         display: flex;
         align-items: center;
-        height: 56px;
+        min-height: 56px;
         border-right: 1px dashed rgba(41, 45, 50, 0.14);
+
+        &:last-child {
+          border-right: none;
+        }
 
         // justify-content: center;
         img {
@@ -176,21 +266,11 @@ export default {
   }
 }
 
-.txt-right {
-  text-align: right;
-  width: 100%;
-  display: block;
-}
-
-.txt-bold {
-  font-weight: 600;
-}
-
-.email {
-  font-size: 0.95rem;
-  color: #5c4958;
-  font-weight: 500;
-}
+// .email {
+//   font-size: 0.95rem;
+//   color: #5c4958;
+//   font-weight: 500;
+// }
 
 .jc-center {
   justify-content: center;

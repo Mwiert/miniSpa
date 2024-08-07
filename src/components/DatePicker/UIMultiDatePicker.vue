@@ -1,10 +1,10 @@
 <template>
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
-    {{ saveFirstDateHistory }}
-    {{ saveSecondDateHistory }}
     <!-- This is where we work with our calendar -->
-    <div class="ui-date-picker-wrapper">
+    <div
+      class="ui-date-picker-wrapper"
+      :class="{ positionToRight: positionToRight, positionToLeft: positionToLeft }">
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
@@ -448,26 +448,20 @@ export default {
         this.firstSelectedDate.selected = true
         this.saveFirstDateHistory = this.firstSelectedDate.date
       } else {
-        const temp = selectedDay.date < this.firstSelectedDate.date
         if (selectedDay.date < this.firstSelectedDate.date) {
           // Seçilen gün first'ten küçükse gir
           if (!this.secondSelectedDate.date) {
             // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
             this.secondSelectedDate = this.firstSelectedDate
             this.firstSelectedDate = selectedDay
-            this.rearrangeController(temp)
             this.firstSelectedDate.selected = true
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
-           
           } else {
             // First ve second varsa gir (tarihi sola doğru genişletir)
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = selectedDay
-
-            this.rearrangeController(temp)
-
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
@@ -497,9 +491,6 @@ export default {
             // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
             this.secondSelectedDate.selected = false
             this.secondSelectedDate = selectedDay
-
-            this.rearrangeController()
-
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
@@ -786,15 +777,6 @@ export default {
     }
   },
   watch: {
-    userSelectedDates: {
-      handler(newValue) {
-        if (this.userSelectedDates.isUserSelect) {
-          this.saveFirstDateHistory = newValue.firstInitialDate.date
-          this.saveSecondDateHistory = newValue.secondInitialDate.date
-        }
-      },
-      deep: true
-    },
     isDatePickerEnable(newVal) {
       if (newVal) {
         if (!this.saveFirstDateHistory) {
@@ -807,7 +789,7 @@ export default {
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
-        this.linedThroughDate()
+        this.linedThroughDate() // Her iki takvim için geçerli
         this.checkSkippability()
       }
     },
@@ -901,6 +883,12 @@ export default {
       border-right: 10px solid transparent;
       border-bottom: 10px solid #ffffff;
     }
+    &.positionToRight::before {
+      left: 15%;
+    }
+    &.positionToLeft::before {
+      left: 82%;
+    }
 
     .calendar {
       padding-top: 1.2rem;
@@ -909,8 +897,7 @@ export default {
       background: #ffffff;
       margin: 0 10px;
       border-radius: 30px;
-   
-      
+
       .header {
         position: relative;
         display: flex;

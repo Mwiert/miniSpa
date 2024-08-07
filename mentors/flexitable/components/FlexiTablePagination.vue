@@ -1,38 +1,23 @@
 <template>
   <div class="smart-table-pagination-c" v-if="flexi.options.pagination">
     <p class="show" v-html="paginationText"></p>
-    <div>
+    <div class="go-to-container">
       <label for="gotoLabel" class="gotoLabel">Go to </label>
-      <input
-        class="smart-table-pagination-goto"
-        type="number"
-        min="1"
-        :max="this.flexi.options.pages.length"
+      <input class="smart-table-pagination-goto" type="number" min="1" :max="this.flexi.options.pages.length"
         v-model="flexi.options.currentPage" />
     </div>
-    <div class="search-page" v-if="this.flexi.options.showPage">
-      <input type="text" v-model="flexi.options.newPage" />
-      <button type="button" @click="goPage()" v-if="isValidPage(flexi.options.newPage)">Go</button>
-    </div>
     <div class="buttons">
-      <button
-        @click="setPage(flexi.options.currentPage - 1)"
-        class="prev-page-btn"
+      <button @click="setPage(flexi.options.currentPage - 1)" class="prev-page-btn"
         :class="{ visibility: flexi.options.currentPage == 1 }">
         <SvgIcon :name="'arrow-left'" size="s" />
       </button>
 
-      <button
-        v-for="page in pagesToShow"
-        :key="page"
-        @click="setPage(page)"
+      <button v-for="page in pagesToShow" :key="page" @click="setPage(page)"
         :class="['page-btn', { active: page == flexi.options.currentPage }]">
         {{ page }}
       </button>
 
-      <button
-        @click="setPage(flexi.options.currentPage + 1)"
-        class="next-page-btn"
+      <button @click="setPage(flexi.options.currentPage + 1)" class="next-page-btn"
         :class="{ visibility: flexi.options.currentPage == flexi.options.pages.length }">
         <SvgIcon :name="'arrow-right'" size="s" />
       </button>
@@ -41,10 +26,10 @@
 </template>
 
 <script>
-import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin'
+import flexiTableMixin from '../flexitableMixin'
 
 export default {
-  name: 'SmartTablePagination',
+  name: 'FlexiTablePagination',
   inject: ['flexi'],
   mixins: [flexiTableMixin],
 
@@ -59,7 +44,7 @@ export default {
         return pages
       }
       pages.push(1)
-      
+
       for (let index = 2; index <= Math.min(4, totalPages); index++) {
         pages.push(index)
       }
@@ -84,7 +69,7 @@ export default {
 
       return pages
     },
-    
+
     paginationText() {
       const start = (this.flexi.options.currentPage - 1) * this.flexi.options.selected.id + 1
       const end = Math.min(
@@ -93,7 +78,6 @@ export default {
       )
       return `Showing <strong>${start}</strong> - <strong>${end}</strong> of <strong>${this.flexi.options.totalPages}</strong>`
     },
-
 
     paginationTrigger() {
       return {
@@ -104,23 +88,15 @@ export default {
   },
 
   methods: {
-  setPage(page) {
-    if (page <= 0 || page > this.flexi.options.pages.length) return
-    if (page === '...') {
-      this.flexi.options.showPage = true
-      return
+    setPage(page) {
+      if (page <= 0 || page > this.flexi.options.pages.length || page === '...') return
+
+      this.flexi.options.currentPage = page
+    },
+    isValidPage(page) {
+      return page > 0 && page <= this.flexi.options.pages.length
     }
-    this.flexi.options.currentPage = page
   },
-  goPage() {
-    this.flexi.options.currentPage = this.flexi.options.currentPage = parseInt(this.flexi.options.newPage, 10)
-    this.flexi.options.showPage = false
-    this.flexi.options.newPage = null
-  },
-  isValidPage(page) {
-    return page > 0 && page <= this.flexi.options.pages.length
-  }
-},
 
   watch: {
     paginationTrigger: {
@@ -141,37 +117,45 @@ export default {
   padding: 1rem;
   display: flex;
   flex-direction: row;
-  .show{
+
+  .show {
     margin-right: auto;
   }
-  
-  .smart-table-pagination-goto {
-    background:#F7F8FA 0% 0% no-repeat padding-box;
-    border: 1px solid #DFE0E6;
-    border-radius: 8px;
 
-    width: 48px;
-    height: 32px;
-    opacity: 1;
-    text-align: left;
-    font: normal normal normal 14px/17px Inter;
-    letter-spacing: 0px;
-    color: #1F2126;
-    opacity: 1;
-    gap: 100px;
-    .gotoLabel {
-      text-align: left;
-      font: normal normal medium 13px/16px Inter;
-      letter-spacing: 0.52px;
-      color: #292D32;
+  .go-to-container {
+    position: absolute;
+    margin-right: 25%;
+
+    .smart-table-pagination-goto {
+      background: #f7f8fa 0% 0% no-repeat padding-box;
+      border: 1px solid #dfe0e6;
+      border-radius: 8px;
+
+      width: 48px;
+      height: 32px;
       opacity: 1;
+      text-align: left;
+      font: normal normal normal 14px/17px Inter;
+      letter-spacing: 0px;
+      color: #1f2126;
+      opacity: 1;
+      gap: 100px;
+
+      .gotoLabel {
+        text-align: left;
+        font: normal normal medium 13px/16px Inter;
+        letter-spacing: 0.52px;
+        color: #292d32;
+        opacity: 1;
+      }
     }
-    
   }
+
   .buttons {
     display: flex;
     flex-direction: row;
     align-items: center;
+
     .prev-page-btn,
     .next-page-btn {
       height: 32px;
