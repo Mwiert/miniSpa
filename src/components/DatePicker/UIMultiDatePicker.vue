@@ -91,8 +91,8 @@
       {{ firstSelectedDate }}
       <br />
       <br />
-      second
-      {{ secondSelectedDate }}
+      saveFirst
+      {{ saveFirstDateHistory }}
       <br />
       <br />
       base
@@ -878,7 +878,8 @@ export default {
     },
     saveFirstDateHistory(newVal) {
       //console.log(newVal)
-
+      // this.saveFirstDateHistory = dayjs(newVal).format('YYYY-MM-DD')
+      //console.log(this.saveFirstDateHistory)
       this.saveFirstDateHistory = newVal
       if (!newVal) {
         // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin

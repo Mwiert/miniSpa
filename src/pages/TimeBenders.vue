@@ -5,7 +5,7 @@
     <UIDateRangePicker
       v-model="selectDate"
       :isMulti="true"
-      :maxSelectibleDay="5"
+      :maxSelectibleDay="65"
       label="Date Picker" />
   </div>
 </template>
