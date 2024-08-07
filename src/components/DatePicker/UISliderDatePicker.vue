@@ -22,6 +22,7 @@
   </div>
 </template>
 
+
 <script lang="ts">
 import dayjs from 'dayjs'
 
@@ -35,7 +36,8 @@ export default {
       selectedDay: dayjs().date(),
       selectedMonth: dayjs().month(),
       selectedYear: dayjs().year(),
-      scrolling: false
+      scrolling: false,
+      scrollTimeout: null as number | null
     }
   },
   created() {
@@ -105,31 +107,15 @@ export default {
       const target = event.currentTarget as HTMLElement
       const sensitivity = 0.3
 
-      let animationFrameId: number | null = null
-
       const onDrag = (e: MouseEvent) => {
         const move = (event.clientY - e.clientY) * sensitivity
         target.scrollTop += move
-
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId)
-        }
-
-        const updateSelection = () => {
-          this.selectCenteredItem()
-          animationFrameId = requestAnimationFrame(updateSelection)
-        }
-
-        updateSelection()
       }
 
       const onEndDrag = () => {
         document.removeEventListener('mousemove', onDrag)
         document.removeEventListener('mouseup', onEndDrag)
         this.scrolling = false
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId)
-        }
         this.$nextTick(() => {
           this.selectCenteredItem()
         })
@@ -146,6 +132,7 @@ export default {
           this.$refs.monthContainer,
           this.$refs.yearContainer
         ]
+
         containers.forEach((container) => {
           const selectedElement = container.querySelector('.selected')
           if (selectedElement) {
@@ -200,7 +187,26 @@ export default {
       centerItem(dayContainer, 'day')
       centerItem(monthContainer, 'month')
       centerItem(yearContainer, 'year')
+    },
+    onScroll(event: Event) {
+      if (this.scrollTimeout) {
+        clearTimeout(this.scrollTimeout)
+      }
+
+      this.scrollTimeout = setTimeout(() => {
+        this.selectCenteredItem()
+      }, 100)
     }
+  },
+  mounted() {
+    this.$refs.dayContainer.addEventListener('scroll', this.onScroll)
+    this.$refs.monthContainer.addEventListener('scroll', this.onScroll)
+    this.$refs.yearContainer.addEventListener('scroll', this.onScroll)
+  },
+  beforeUnmount() {
+    this.$refs.dayContainer.removeEventListener('scroll', this.onScroll)
+    this.$refs.monthContainer.removeEventListener('scroll', this.onScroll)
+    this.$refs.yearContainer.removeEventListener('scroll', this.onScroll)
   }
 }
 </script>
