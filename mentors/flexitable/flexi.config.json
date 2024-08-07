@@ -22,6 +22,8 @@
     "30": "THIRTY",
     "-1": "ALL"
   },
+  "selectedStatus": { "id": 3, "name": "Controlled" },
+
   "UIDropdownOrderProp": {
     "label": "Select an Item",
     "dataSize": 5,

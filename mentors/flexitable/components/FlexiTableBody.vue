@@ -178,7 +178,7 @@ export default {
 <style lang="scss" scoped>
 .flexi-table-body-c {
   .flexi-table-body-row-wrapper {
-    border: 2px solid #E8ECF4;
+    border: 2px solid #e8ecf4;
     margin-bottom: 4px;
     border-radius: 28px;
 
