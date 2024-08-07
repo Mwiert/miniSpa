@@ -22,6 +22,8 @@
     "30": "THIRTY",
     "-1": "ALL"
   },
+  "selectedStatus": { "id": 3, "name": "Controlled" },
+
   "UIDropdownOrderProp": {
     "label": "Select an Item",
     "dataSize": 5,
@@ -29,7 +31,5 @@
     "fontSize": 12,
     "showAll": true
   },
-  "hasDetails": false,
-  "newPage": null,
-  "showPage": false
+  "hasDetails": false
 }
