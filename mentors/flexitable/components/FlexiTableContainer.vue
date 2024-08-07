@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <table>
+  <div class="table-container">
+    <table class="custom-table">
       <FlexiTableHeader1 />
       <FlexiTableBody1 />
     </table>
@@ -21,3 +21,23 @@ export default {
   }
 }
 </script>
+<style scoped>
+.table-container {
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.custom-table th {
+  background-color: #f4f4f4;
+}
+</style>
