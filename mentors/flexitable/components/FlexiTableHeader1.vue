@@ -95,13 +95,6 @@ export default {
 
 <style lang="scss" scoped>
 .flexi-table-header-c {
-  width: 100%;
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-
-  border-radius: 12px;
-
   &.sticky-header {
     background-color: #faf4d9;
     position: sticky;
@@ -139,6 +132,10 @@ export default {
       align-items: center;
       height: 40px;
       justify-content: space-between;
+      width: 100%;
+      &-value {
+        margin-left: 8px;
+      }
 
       .icon-c {
         background-color: rgba(36, 55, 89, 0.06);
@@ -146,7 +143,7 @@ export default {
         height: 24px;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: end;
         margin-right: 8px;
 
         .svg-icon-c {
