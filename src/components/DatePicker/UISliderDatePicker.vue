@@ -89,7 +89,7 @@ export default {
       const currentYear = dayjs().year()
 
       years.push(null, null, null)
-      for (let i = currentYear - 50; i <= currentYear + 50; i++) {
+      for (let i = currentYear - 10; i <= currentYear + 10; i++) {
         years.push(i)
       }
       years.push(null, null, null)
@@ -98,26 +98,7 @@ export default {
     },
     updateDays() {
       this.generateDays()
-    },
-    centerSelectedItem() {
-      this.$nextTick(() => {
-        const containers = [
-          this.$refs.dayContainer,
-          this.$refs.monthContainer,
-          this.$refs.yearContainer
-        ]
-        containers.forEach((container) => {
-          const selectedElement = container.querySelector('.selected')
-          if (selectedElement) {
-            container.scrollTop =
-              selectedElement.offsetTop -
-              container.clientHeight / 2 +
-              selectedElement.clientHeight / 2
-          }
-        })
-      })
-    },
-    startDrag(event: MouseEvent) {
+    },    startDrag(event: MouseEvent) {
       event.preventDefault()
       const target = event.currentTarget as HTMLElement
       const sensitivity = 0.4
@@ -139,6 +120,24 @@ export default {
 
       document.addEventListener('mousemove', onDrag)
       document.addEventListener('mouseup', onEndDrag)
+    },
+    centerSelectedItem() {
+      this.$nextTick(() => {
+        const containers = [
+          this.$refs.dayContainer,
+          this.$refs.monthContainer,
+          this.$refs.yearContainer
+        ]
+        containers.forEach((container) => {
+          const selectedElement = container.querySelector('.selected')
+          if (selectedElement) {
+            container.scrollTop =
+              selectedElement.offsetTop -
+              container.clientHeight / 2 +
+              selectedElement.clientHeight / 2
+          }
+        })
+      })
     },
     selectCenteredItem() {
       if (this.scrolling) return
