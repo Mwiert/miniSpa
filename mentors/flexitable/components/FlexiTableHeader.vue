@@ -90,6 +90,12 @@ export default {
       this.flexi.rows.forEach((row) => {
         row.row.id.value = this.masterCheckbox
       })
+      const selected = this.flexi.rows.filter((row) => {
+        return Object.values(row.row).some((col) => col.checkbox && col.value)
+      })
+      this.pushelements = !this.pushelements
+      this.flexi.selectedRows.length = 0
+      this.flexi.selectedRows.push(...selected)
     }
   }
 }
