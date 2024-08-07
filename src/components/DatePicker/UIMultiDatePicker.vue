@@ -87,16 +87,6 @@
           </ul>
         </div>
       </div>
-      First
-      {{ firstSelectedDate }}
-      <br />
-      <br />
-      second
-      {{ secondSelectedDate }}
-      <br />
-      <br />
-      base
-      {{ baseInitialDates }}
     </div>
   </div>
 </template>
