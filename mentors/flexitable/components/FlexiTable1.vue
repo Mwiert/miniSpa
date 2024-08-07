@@ -137,8 +137,6 @@ export default {
 
     .flexi-table-header-c,
     .flexi-table-body-row {
-      display: grid;
-
       // border: 1px solid #ccc;
     }
 
@@ -155,7 +153,6 @@ export default {
 
     .flexi-table-header-col-value,
     .flexi-table-body-col-value {
-      padding: 0.25rem 1rem;
       // // border: 1px solid #eee;
       // background-color: #ccc;
     }
