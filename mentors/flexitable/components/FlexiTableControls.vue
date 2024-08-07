@@ -55,6 +55,9 @@
         </div>
         <SvgIcon name="freeze" size="xs" class="freeze-button"></SvgIcon>
         <SvgIcon name="refresh" size="xs" class="refresh-button"></SvgIcon>
+        <div v-if="flexi.options.selected.id === -1" class="show">
+          <p class="show" v-html="paginationText()"></p>
+        </div>
       </div>
     </div>
 
@@ -66,14 +69,10 @@
         <div class="sign-status-container">
           <UIDropdown
             v-model="this.flexi.options.selectedStatus"
-            :label="'Set Sign Status To'"
-            :items="[
-              { id: 1, name: 'Mark' },
-              { id: 2, name: 'Unmark' },
-              { id: 3, name: 'Controlled' }
-            ]" />
+            :label="flexi.options.UIDropdownStatusProp.label"
+            :items="flexi.options.status" />
         </div>
-        <div class="mark-container">
+        <div class="mark-container" @click="changeStatus()">
           <div class="mark-container-text">Mark</div>
         </div>
       </div>
@@ -139,6 +138,15 @@ export default {
     this.debounce = this.createDebounce()
   },
   methods: {
+    changeStatus() {
+      this.flexi.selectedRows.forEach((element) => {
+        element.row.status.value = this.flexi.options.selectedStatus.name.toLowerCase()
+        element.row.status.class = 'item-' + this.flexi.options.selectedStatus.name.toLowerCase()
+      })
+    },
+    paginationText() {
+      return `Showing <strong> ${this.flexi.options.totalPages} </strong> of <strong> ${this.flexi.options.totalPages} </strong> data`
+    },
     createDebounce() {
       let timeout = null
       return (fnc, delayMs) => {
@@ -448,6 +456,7 @@ export default {
       }
 
       .mark-container {
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -521,7 +530,10 @@ export default {
       display: flex;
       align-items: center;
       gap: 10px;
-
+      .show {
+        margin-right: auto;
+        min-width: fit-content;
+      }
       .excel-selector {
         display: flex;
         flex-direction: column;
