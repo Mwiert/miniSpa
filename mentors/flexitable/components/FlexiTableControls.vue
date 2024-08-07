@@ -61,23 +61,41 @@
     <!-- <button @click="toggleSelectAll">All</button> -->
 
     <!-- Search Table -->
-    <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
-      <SvgIcon :name="'search'" size="s" class="search" />
-      <input
-        type="text"
-        v-model="flexi.options.searchWord"
-        @input="
-          debounce(() => {
-            state.filterText = flexi.options.searchWord
-          })
-        " />
-      <button
-        type="button"
-        class="clear-button"
-        @click="clearSearch"
-        v-if="flexi.options.searchWord">
-        <SvgIcon :name="'x'" size="s" class="clear" />
-      </button>
+    <div class="ftc-right-side-wrapper">
+      <div class="mark-sign-wrapper">
+        <div class="sign-status-container">
+          <UIDropdown
+            v-model="this.flexi.options.selectedStatus"
+            :label="'Set Sign Status To'"
+            :items="[
+              { id: 1, name: 'Mark' },
+              { id: 2, name: 'Unmark' },
+              { id: 3, name: 'Controlled' }
+            ]" />
+        </div>
+        <div class="mark-container">
+          <div class="mark-container-text">Mark</div>
+        </div>
+      </div>
+
+      <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
+        <SvgIcon :name="'search'" size="s" class="search" />
+        <input
+          type="text"
+          v-model="flexi.options.searchWord"
+          @input="
+            debounce(() => {
+              state.filterText = flexi.options.searchWord
+            })
+          " />
+        <button
+          type="button"
+          class="clear-button"
+          @click="clearSearch"
+          v-if="flexi.options.searchWord">
+          <SvgIcon :name="'x'" size="s" class="clear" />
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -88,7 +106,8 @@
 //import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
-//import html2pdf from 'html2pdf.js'
+import UIDropdown from '../../../src/components/Dropdown/UIDropdown.vue'
+import html2pdf from 'html2pdf.js'
 import dayjs from 'dayjs'
 import { reactive } from 'vue'
 
@@ -97,7 +116,8 @@ export default {
   inject: ['flexi'],
   mixins: [flexiTableMixin],
   components: {
-    UIEnumDropdown
+    UIEnumDropdown,
+    UIDropdown
   },
   data() {
     return {
@@ -412,53 +432,87 @@ export default {
       animation: spin 2s linear infinite;
     }
   }
-
-  .ftc-search-wrapper {
-    height: 40px;
-    width: 280px;
-    position: relative;
+  .ftc-right-side-wrapper {
     display: flex;
     align-items: center;
-    background-color: #f7f8fa;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
-    input[type='text'] {
-      padding: 10px 15px 10px 40px;
-      margin-right: 20px;
-      font-size: 14px;
-      border: none;
-      border-radius: 5px;
-      flex: 1;
-      background-color: #f7f8fa;
-
-      &:focus {
-        outline: none;
-      }
-    }
-
-    .clear-button {
-      position: absolute;
-      right: 0px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      font-size: 15px;
-      cursor: pointer;
-      color: #007bff;
-      border: none;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 40px;
+    .mark-sign-wrapper {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
+      gap: 10px;
+      .sign-status-container {
+        display: flex;
+        align-items: center;
+      }
 
-    .search {
-      position: absolute;
-      left: 0px;
+      .mark-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        width: 88px;
+        background-color: #4da6ff;
+        border-radius: 8px;
+        .mark-container-text {
+          font-size: 14px;
+          font-weight: 500;
+          color: white;
+          font: normal normal medium 16px/20px Inter;
+          letter-spacing: 0px;
+          color: #ffffff;
+          text-transform: capitalize;
+          opacity: 1;
+        }
+      }
+    }
+    .ftc-search-wrapper {
+      height: 40px;
+      width: 280px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      background-color: #f7f8fa;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+      input[type='text'] {
+        padding: 10px 15px 10px 40px;
+        margin-right: 20px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        flex: 1;
+        background-color: #f7f8fa;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .clear-button {
+        position: absolute;
+        right: 0px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        font-size: 15px;
+        cursor: pointer;
+        color: #007bff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .search {
+        position: absolute;
+        left: 0px;
+      }
     }
   }
-
   .ftc-select-wrapper {
     display: inline-flex;
     align-items: center;
