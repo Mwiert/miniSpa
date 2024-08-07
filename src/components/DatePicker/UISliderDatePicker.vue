@@ -103,18 +103,33 @@ export default {
     startDrag(event: MouseEvent) {
       event.preventDefault()
       const target = event.currentTarget as HTMLElement
-      const sensitivity = 0.4
+      const sensitivity = 0.3
+
+      let animationFrameId: number | null = null
 
       const onDrag = (e: MouseEvent) => {
         const move = (event.clientY - e.clientY) * sensitivity
         target.scrollTop += move
-        this.scrolling = true
+
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId)
+        }
+
+        const updateSelection = () => {
+          this.selectCenteredItem()
+          animationFrameId = requestAnimationFrame(updateSelection)
+        }
+
+        updateSelection()
       }
 
       const onEndDrag = () => {
         document.removeEventListener('mousemove', onDrag)
         document.removeEventListener('mouseup', onEndDrag)
         this.scrolling = false
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId)
+        }
         this.$nextTick(() => {
           this.selectCenteredItem()
         })
@@ -122,6 +137,7 @@ export default {
 
       document.addEventListener('mousemove', onDrag)
       document.addEventListener('mouseup', onEndDrag)
+      this.scrolling = true
     },
     centerSelectedItem() {
       this.$nextTick(() => {
