@@ -37,7 +37,9 @@ export default {
       selectedMonth: dayjs().month(),
       selectedYear: dayjs().year(),
       scrolling: false,
-      scrollTimeout: null as number | null
+      scrollTimeout: null as number | null,
+      lastScrollTop: 0,
+      isDragging: false
     }
   },
   created() {
@@ -92,7 +94,7 @@ export default {
       const currentYear = dayjs().year()
 
       years.push(null, null, null)
-      for (let i = currentYear - 10; i <= currentYear + 10; i++) {
+      for (let i = currentYear - 50; i <= currentYear + 50; i++) {
         years.push(i)
       }
       years.push(null, null, null)
@@ -105,14 +107,18 @@ export default {
     startDrag(event: MouseEvent) {
       event.preventDefault()
       const target = event.currentTarget as HTMLElement
-      const sensitivity = 0.3
+      this.isDragging = true
+
+      const startY = event.clientY
+      const initialScrollTop = target.scrollTop
 
       const onDrag = (e: MouseEvent) => {
-        const move = (event.clientY - e.clientY) * sensitivity
-        target.scrollTop += move
+        const moveY = e.clientY - startY
+        target.scrollTop = initialScrollTop - moveY
       }
 
       const onEndDrag = () => {
+        this.isDragging = false
         document.removeEventListener('mousemove', onDrag)
         document.removeEventListener('mouseup', onEndDrag)
         this.scrolling = false
@@ -188,7 +194,30 @@ export default {
       centerItem(monthContainer, 'month')
       centerItem(yearContainer, 'year')
     },
+    highlightCenteredItem(container: HTMLElement) {
+      const items = Array.from(container.children) as HTMLElement[]
+      const containerHeight = container.clientHeight
+      const containerTop = container.scrollTop
+      const centerPosition = containerHeight / 2 + containerTop
+
+      items.forEach((item) => {
+        const itemTop = item.offsetTop
+        const itemBottom = itemTop + item.clientHeight
+        const itemCenter = (itemTop + itemBottom) / 2
+        const distance = Math.abs(itemCenter - centerPosition)
+
+        if (distance < item.clientHeight / 2) {
+          item.classList.add('highlighted')
+        } else {
+          item.classList.remove('highlighted')
+        }
+      })
+    },
     onScroll(event: Event) {
+      if (this.isDragging) return
+      const target = event.currentTarget as HTMLElement
+      this.highlightCenteredItem(target)
+
       if (this.scrollTimeout) {
         clearTimeout(this.scrollTimeout)
       }
@@ -267,6 +296,14 @@ export default {
   .day span.selected,
   .month span.selected,
   .year span.selected {
+    font-weight: 500;
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  .day span.highlighted,
+  .month span.highlighted,
+  .year span.highlighted {
     font-weight: 500;
     transform: scale(1.2);
     opacity: 1;
