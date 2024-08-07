@@ -87,16 +87,7 @@
           </ul>
         </div>
       </div>
-      First
-      {{ firstSelectedDate }}
-      <br />
-      <br />
-      second
-      {{ secondSelectedDate }}
-      <br />
-      <br />
-      base
-      {{ baseInitialDates }}
+      
     </div>
   </div>
 </template>
@@ -969,12 +960,18 @@ export default {
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
       border-bottom: 10px solid #ffffff;
+      @include respond-to('small') {
+        left: 40%;
+      }
     }
     &.positionToRight::before {
       left: 15%;
+      @include respond-to('small') {
+        left: 28%;
+      }
     }
     &.positionToLeft::before {
-      left: 82%;
+      left: 75%;
     }
 
     .calendar {

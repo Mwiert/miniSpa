@@ -21,8 +21,8 @@
               @input="validateInput"
               @blur="formatInput"
 
-              >
-              </input>
+              />
+              
             </span>
 
            
@@ -32,8 +32,9 @@
               <!-- This is where we are getting the day -->
 
               <input class="date" v-model="secondSelectedDate.date"
-              @keyup ="handleResetInitialDates">
-              </input>
+              @keyup ="handleResetInitialDates"
+              />
+              
             </span>
 
            
@@ -44,6 +45,9 @@
               <span>Select</span>
             </div>
           </div>
+        </div>
+        <div class="date-box-icon">
+            <SvgIcon name="dp" size="s" class="date-icon"/>
         </div>
       </div>
     </div>
@@ -231,7 +235,7 @@ export default {
         if (this.isSingleDatePickerEnable === false) {
           this.isSingleDatePickerEnable = true
         } else {
-          // this.isSingleDatePickerEnable = false
+          this.isSingleDatePickerEnable = false
         }
       }
 
@@ -241,7 +245,7 @@ export default {
         if (this.isMultiDatePickerEnable === false) {
           this.isMultiDatePickerEnable = true
         } else {
-          // this.isMultiDatePickerEnable = false
+          this.isMultiDatePickerEnable = false
         }
       }
 
@@ -447,18 +451,18 @@ export default {
     left: 10%;
   }
   .isMulti {
-    left: -89%;
+    left: -75%;
     transition: all 0.3s;
 
     @include respond-to(small) {
-      left: -26%;
+      left: -10%;
     }
   }
   .positionToRight {
-    left: 6%;
+    left: 5%;
   }
   .positionToLeft {
-    left: -175%;
+    left: -130%;
   }
   .positionToLeftSingle {
     left: -85%;
@@ -481,12 +485,12 @@ export default {
     cursor: pointer;
     border-radius: 12px;
     &.multi {
-      width: 170px;
+      width: auto;
       align-items: center;
       justify-content: center;
     }
     &.single {
-      width: 100px;
+      width: auto;
     }
 
     //This is content inside of button
@@ -500,10 +504,21 @@ export default {
       font-size: 12px;
       color: #2b2b2b;
       opacity: 0.9;
+      .date-box-icon {
+          background-color: #f8f8f8;
+          .date-icon  {
+            padding: 0;
+            &:hover {
+              background: #f8f8f8;
+            }
+          }
+          
+        }
       //The output for single date picker if it is single
       .is-single-date {
         width: 100%;
         display: flex;
+
         //Date format box
         .single-date-box {
           display: flex;
@@ -522,6 +537,7 @@ export default {
             font-size: 14px;
             font-weight: 400;
             color: #2b2b2b;
+            background-color: #f8f8f8;
           }
 
           //Month and Year Box To Design
@@ -540,7 +556,7 @@ export default {
           //Divider for multi date picker
           &.divider {
             border-left: 1px solid #b6b6b6;
-            margin: 0 10px;
+            padding: 0 10px;
           }
         }
       }
