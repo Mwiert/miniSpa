@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="flexi-table-header-c"
-    :class="StickyHeaderClass"
-    :style="[gridTemplateColumns, ColumnGap]"
-    ref="print2">
-    <template v-for="column in flexi.columns" :key="column.name">
+  <div class="a" :class="StickyHeaderClass">
+    <th class="table-head-c" v-for="column in flexi.columns" :key="column.name">
       <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
         <div
           class="flexi-table-header-col"
@@ -28,7 +24,7 @@
           </template>
         </div>
       </div>
-    </template>
+    </th>
   </div>
 </template>
 
@@ -98,6 +94,7 @@ export default {
 <style lang="scss" scoped>
 .flexi-table-header-c {
   border-radius: 12px;
+  display: flex;
 
   &.sticky-header {
     background-color: #faf4d9;
@@ -105,49 +102,8 @@ export default {
     top: 0;
     height: 40px;
   }
-
-  .flexi-table-header-col-wrapper {
-    // width: fit-content;
-    cursor: pointer;
-    font-weight: 500;
-    height: 40px;
-    border-right: 1px solid rgba(112, 112, 112, 0.14);
-
-    // &:last-child {
-    //   border-right: none;
-    // }
-
-    // border: 1px solid #eee;
-
-    // &:hover {
-    //   background-color: #f4f4f4;
-    //   border-radius: 1rem;
-    // }
-
-    .flexi-table-header-col {
-      display: flex;
-      align-items: center;
-      height: 40px;
-      justify-content: space-between;
-
-      .icon-c {
-        background-color: rgba(36, 55, 89, 0.06);
-        width: 16px;
-        height: 24px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-right: 8px;
-
-        .svg-icon-c {
-          padding: 0;
-
-          &:hover {
-            background: rgba(36, 55, 89, 0.06);
-          }
-        }
-      }
-    }
+  .table-head-c {
+    display: flex;
   }
 }
 </style>

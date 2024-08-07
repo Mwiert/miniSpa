@@ -1,8 +1,7 @@
 <template>
   <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
     <FlexiTableControls />
-    <FlexiTableHeader ref="flexiheader" />
-    <FlexiTableBody ref="flexibody" />
+    <FlexiTableContainer />
     <FlexiTableFooter />
   </div>
   <div v-else>
@@ -12,13 +11,14 @@
 
 <script lang="ts">
 import FlexiTableControls from './FlexiTableControls.vue'
-import FlexiTableHeader from './FlexiTableHeader.vue'
-import FlexiTableBody from './FlexiTableBody.vue'
+
 import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
 import FlexiTableInfo from './FlexiTableInfo.vue'
+import FlexiTableContainer from './FlexiTableContainer.vue'
 import { computed } from 'vue'
 import flexitableExceptionHandler from '../flexitableExceptionHandler'
+
 export default {
   name: 'FlexiTable',
   provide() {
@@ -97,10 +97,9 @@ export default {
   },
   components: {
     FlexiTableControls,
-    FlexiTableHeader,
-    FlexiTableBody,
     FlexiTableFooter,
-    FlexiTableInfo
+    FlexiTableInfo,
+    FlexiTableContainer
   },
 
   watch: {
