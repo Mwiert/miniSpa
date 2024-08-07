@@ -236,7 +236,7 @@ export default {
   .day span.selected,
   .month span.selected,
   .year span.selected {
-    font-weight: bold;
+    font-weight: 500;
     transform: scale(1.2);
     opacity: 1;
   }
