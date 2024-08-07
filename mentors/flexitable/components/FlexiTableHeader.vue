@@ -87,7 +87,7 @@ export default {
       })
     },
     handleMasterCheckboxChange() {
-      this.flexi.rows.forEach((row) => {
+      this.FlexiBodyItemsPerPage.forEach((row) => {
         row.row.id.value = this.masterCheckbox
       })
       const selected = this.flexi.rows.filter((row) => {
