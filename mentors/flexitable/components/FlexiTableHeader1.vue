@@ -1,35 +1,33 @@
 <template>
-  <div
-    class="flexi-table-header-c"
-    :class="StickyHeaderClass"
-    :style="[gridTemplateColumns, ColumnGap]"
-    ref="print2">
-    <template v-for="column in flexi.columns" :key="column.name">
-      <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
-        <div
-          class="flexi-table-header-col"
-          :class="column.class"
-          @click="handlerSortingColumn(column)">
-          <span class="flexi-table-header-col-value"> {{ column.name }} </span>
+  <thead class="flexi-table-header-c" :class="StickyHeaderClass">
+    <tr>
+      <th class="table-head-c" v-for="column in flexi.columns" :key="column.name">
+        <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
+          <div
+            class="flexi-table-header-col"
+            :class="column.class"
+            @click="handlerSortingColumn(column)">
+            <span class="flexi-table-header-col-value"> {{ column.name }} </span>
 
-          <input
-            v-if="column.label === 'id'"
-            type="checkbox"
-            v-model="masterCheckbox"
-            @change="handleMasterCheckboxChange"
-            @click.stop="innerClick" />
+            <input
+              v-if="column.label === 'id'"
+              type="checkbox"
+              v-model="masterCheckbox"
+              @change="handleMasterCheckboxChange"
+              @click.stop="innerClick" />
 
-          <template v-if="flexi.options.sortableColumns.includes(column.label)">
-            <div class="icon-c">
-              <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
-              <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
-              <SvgIcon name="filter-desc" size="xs" v-else />
-            </div>
-          </template>
+            <template v-if="flexi.options.sortableColumns.includes(column.label)">
+              <div class="icon-c">
+                <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
+                <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
+                <SvgIcon name="filter-desc" size="xs" v-else />
+              </div>
+            </template>
+          </div>
         </div>
-      </div>
-    </template>
-  </div>
+      </th>
+    </tr>
+  </thead>
 </template>
 
 <script lang="ts">
@@ -97,6 +95,11 @@ export default {
 
 <style lang="scss" scoped>
 .flexi-table-header-c {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+
   border-radius: 12px;
 
   &.sticky-header {
@@ -105,8 +108,15 @@ export default {
     top: 0;
     height: 40px;
   }
+  .table-head-c {
+    padding: 0;
+    height: 40px;
+  }
 
   .flexi-table-header-col-wrapper {
+    display: flex;
+    align-items: center;
+
     // width: fit-content;
     cursor: pointer;
     font-weight: 500;
