@@ -1,6 +1,7 @@
 <template>
   <div class="ui-date-range-picker-c">
     <label class="label" v-if="label">{{ label }}</label>
+
     <!-- This is for opening and closing the calendar -->
     <div
       class="button"
@@ -13,89 +14,68 @@
           <div class="single-date-box">
             <span class="day">
               <!-- This is where we are getting the day -->
-              <input
-                class="day"
-                v-model="sendInitialDates.firstInitialDate.number"
-                v-if="!firstSelectedDate.date"
-                @keypress="logKeypress()" />
-              <input
-                class="day"
-                v-model="firstSelectedDate.number"
-                v-else
-                @keypress="logKeypress()" />
+              <span v-if="!firstSelectedDate.date">
+                {{ sendInitialDates.firstInitialDate.number }}
+              </span>
+              <span v-else>
+                {{ firstSelectedDate.number }}
+              </span>
             </span>
 
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                <input
-                  class="month"
-                  v-model="sendInitialDates.firstInitialDate.month"
-                  v-if="!firstSelectedDate.date"
-                  @keypress="logKeypress()" />
-                <input
-                  class="month"
-                  v-model="firstSelectedDate.month"
-                  v-else
-                  @keypress="logKeypress()" />
+
+                <span v-if="!firstSelectedDate.date">
+                  {{ formatMonth(sendInitialDates.firstInitialDate.month) }}
+                </span>
+                <span v-else>
+                  {{ formatMonth(firstSelectedDate.month) }}
+                </span>
               </span>
               <span class="year">
                 <!-- This is where we are getting the year -->
-                <input
-                  class="year"
-                  v-model="sendInitialDates.firstInitialDate.year"
-                  v-if="!firstSelectedDate.date"
-                  @keypress="logKeypress()" />
-                <input
-                  class="year"
-                  v-model="firstSelectedDate.year"
-                  v-else
-                  @keypress="logKeypress()" />
+
+                <span v-if="!firstSelectedDate.date">
+                  {{ sendInitialDates.firstInitialDate.year }}
+                </span>
+                <span v-else>
+                  {{ firstSelectedDate.year }}
+                </span>
               </span>
             </div>
           </div>
           <div class="single-date-box divider" v-if="isMulti">
             <span class="day">
               <!-- This is where we are getting the day -->
-              <input
-                class="day"
-                v-model="sendInitialDates.secondInitialDate.number"
-                v-if="!secondSelectedDate.date"
-                @keypress="logKeypress()" />
-              <input
-                class="day"
-                v-model="secondSelectedDate.number"
-                v-else
-                @keypress="logKeypress()" />
+
+              <span v-if="!secondSelectedDate.date">
+                {{ sendInitialDates.secondInitialDate.number }}
+              </span>
+              <span v-else>
+                {{ secondSelectedDate.number }}
+              </span>
             </span>
 
             <div class="month-year">
               <span class="month">
                 <!-- This is where we are getting the month -->
-                <input
-                  class="month"
-                  v-model="sendInitialDates.secondInitialDate.month"
-                  v-if="!secondSelectedDate.date"
-                  @keypress="logKeypress()" />
-                <input
-                  class="month"
-                  v-model="secondSelectedDate.month"
-                  v-else
-                  @keypress="logKeypress()" />
+                <span v-if="!secondSelectedDate.date">
+                  {{ formatMonth(sendInitialDates.secondInitialDate.month) }}
+                </span>
+                <span v-else>
+                  {{ formatMonth(secondSelectedDate.month) }}
+                </span>
               </span>
 
               <span class="year">
                 <!-- This is where we are getting the year -->
-                <input
-                  class="year"
-                  v-model="sendInitialDates.secondInitialDate.year"
-                  v-if="!secondSelectedDate.date"
-                  @keypress="logKeypress()" />
-                <input
-                  class="year"
-                  v-model="secondSelectedDate.year"
-                  v-else
-                  @keypress="logKeypress()" />
+                <span v-if="!secondSelectedDate.date">
+                  {{ sendInitialDates.secondInitialDate.year }}
+                </span>
+                <span v-else>
+                  {{ secondSelectedDate.year }}
+                </span>
               </span>
             </div>
 
@@ -132,7 +112,8 @@
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
           @dateSelected="handleFirstDateSelected"
-          @click="sendDateToParent" />
+          @click="sendDateToParent"
+          :positionToLeftSingle="positionToLeftSingle" />
       </div>
       <div v-if="isMulti">
         <UIMultiDatePicker
@@ -147,14 +128,15 @@
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :baseInitialDates="sendInitialDates"
+          :maxSelectibleDay="maxSelectibleDay"
           :isDatePickerEnable="isMultiDatePickerEnable"
           :spaceBetweenDays="spaceBetweenDays"
-          :maxSelectibleDay="maxSelectibleDay"
           @dateFirstSelected="handleFirstDateSelected"
           @dateSecondSelected="handleSecondDateSelected"
           @resetBaseInitialDates="handleResetInitialDates"
           @click="sendDateToParent"
-          :userSelectedDates="userSelectedDates" />
+          :positionToRight="positionToRight"
+          :positionToLeft="positionToLeft" />
       </div>
     </div>
   </div>
@@ -191,43 +173,21 @@ export default {
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     spaceBetweenDays: { type: Number, default: 2 },
     maxSelectibleDay: { type: Number, default: 0 }
-    },
+  },
   data() {
     return {
-      userSelectedDates: {
-        firstInitialDate: {
-          number: '',
-          month: '',
-          year: '',
-          date: ''
-        },
-        secondInitialDate: {
-          number: '',
-          month: '',
-          year: '',
-          date: ''
-        },
-        isUserSelect: false
-      },
       firstSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
       secondSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
       isSingleDatePickerEnable: false, //This is for enabling the single date picker as default false
       isMultiDatePickerEnable: false, //This is for enabling the multi date picker as default false
       presentDate: {} as date,
       sendInitialDates: {
-        firstInitialDate: {
-          number: '',
-          month: '',
-          year: '',
-          date: ''
-        },
-        secondInitialDate: {
-          number: '',
-          month: '',
-          year: '',
-          date: ''
-        }
-      }
+        firstInitialDate: '',
+        secondInitialDate: ''
+      },
+      positionToRight: false,
+      positionToLeft: false,
+      positionToLeftSingle: false
     }
   },
   mounted() {
@@ -237,9 +197,6 @@ export default {
     document.removeEventListener('click', this.handleClickOutside)
   },
   methods: {
-    logKeypress() {
-      this.userSelectedDates.isUserSelect = true
-    },
     handleClickOutside(event) {
       if (!this.$el.contains(event.target)) {
         setTimeout(() => {
@@ -271,7 +228,6 @@ export default {
         //We are sending the selected date to the parent component with v-model implementation.
         this.$emit('update:modelValue', dates)
       }
-      this.userSelectedDates.isUserSelect = false
     },
     formatMonth(month) {
       //We are converting the month number to month name
@@ -301,7 +257,6 @@ export default {
       this.secondSelectedDate = secondDate
     },
     toggleDatePicker() {
-      this.test1 = !this.test1
       //If the single date picker is enabled on TimeBenders, we are toggling the single date picker
       if (this.isSingle === true) {
         //We can implement it by this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable; but it will create problem in muldi date picker implementation
@@ -321,6 +276,37 @@ export default {
           this.isMultiDatePickerEnable = false
         }
       }
+
+      this.$nextTick(() => {
+        const datePicker = this.$el.querySelector('.date-picker')
+        const datePickerRect = datePicker.getBoundingClientRect()
+        const windowWidth = window.innerWidth
+        if (this.isMultiDatePickerEnable) {
+          if (datePickerRect.left < 0) {
+            datePicker.classList.add('positionToRight')
+            this.positionToRight = true
+          }
+          if (windowWidth - datePickerRect.right < 0) {
+            datePicker.classList.add('positionToLeft')
+            this.positionToLeft = true
+          }
+        } else {
+          datePicker.classList.remove('positionToRight')
+          this.positionToRight = false
+          datePicker.classList.remove('positionToLeft')
+          this.positionToLeft = false
+        }
+
+        if (this.isSingleDatePickerEnable) {
+          if (windowWidth - datePickerRect.right < 0) {
+            datePicker.classList.add('positionToLeftSingle')
+            this.positionToLeftSingle = true
+          }
+        } else {
+          datePicker.classList.remove('positionToLeftSingle')
+          this.positionToLeftSingle = false
+        }
+      })
     },
     //This is for filling the initial date to the singleSelectedDate since it comes empty as default so we need to use our TypeScript interface to fill it.
     fillInitialDate() {
@@ -419,30 +405,6 @@ export default {
     checkMultiOrSingleCalendar() {}
   },
   watch: {
-    sendInitialDates: {
-      handler(newValue) {
-        this.userSelectedDates.firstInitialDate.number = newValue.firstInitialDate.number
-        this.userSelectedDates.firstInitialDate.month = newValue.firstInitialDate.month
-        this.userSelectedDates.firstInitialDate.year = newValue.firstInitialDate.year
-        this.userSelectedDates.firstInitialDate.date =
-          newValue.firstInitialDate.year +
-          '-' +
-          newValue.firstInitialDate.month +
-          '-' +
-          newValue.firstInitialDate.number
-
-        this.userSelectedDates.secondInitialDate.number = newValue.secondInitialDate.number
-        this.userSelectedDates.secondInitialDate.month = newValue.secondInitialDate.month
-        this.userSelectedDates.secondInitialDate.year = newValue.secondInitialDate.year
-        this.userSelectedDates.secondInitialDate.date =
-          newValue.secondInitialDate.year +
-          '-' +
-          newValue.secondInitialDate.month +
-          '-' +
-          newValue.secondInitialDate.number
-      },
-      deep: true
-    },
     firstSelectedDate(newVal) {
       if (!newVal.date) {
         this.fillInitialDate()
@@ -490,13 +452,11 @@ export default {
     position: absolute;
     top: 50px;
     left: 10%;
-
   }
   .date-picker-with-label {
     position: absolute;
     top: 75px;
     left: 10%;
-
   }
   .isMulti {
     left: -89%;
@@ -505,6 +465,15 @@ export default {
     @include respond-to(small) {
       left: -26%;
     }
+  }
+  .positionToRight {
+    left: 6%;
+  }
+  .positionToLeft {
+    left: -175%;
+  }
+  .positionToLeftSingle {
+    left: -85%;
   }
 
   //This is our button container

@@ -1,10 +1,10 @@
 <template>
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
-    {{ saveFirstDateHistory }}
-    {{ saveSecondDateHistory }}
     <!-- This is where we work with our calendar -->
-    <div class="ui-date-picker-wrapper">
+    <div
+      class="ui-date-picker-wrapper"
+      :class="{ positionToRight: positionToRight, positionToLeft: positionToLeft }">
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
@@ -130,7 +130,8 @@ export default {
     baseInitialDates: { type: Object },
     isDatePickerEnable: { type: Boolean },
     maxSelectibleDay: { type: Number, default: 0 },
-    userSelectedDates: { type: Object, default: null }
+    positionToRight: { type: Boolean, default: false },
+    positionToLeft: { type: Boolean, default: false },
   },
   methods: {
     checkRange() {
@@ -413,12 +414,12 @@ export default {
         if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
           if( condition ) {
-            this.firstSelectedDate = day
+            this.secondSelectedDate = day
             return
           }
           else  {
-            this.secondSelectedDate = day
-            return
+            this.firstSelectedDate = day
+            return 
           }
         }
       })
@@ -426,11 +427,11 @@ export default {
         if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
           if( condition ) {
-            this.firstSelectedDate = day
+            this.secondSelectedDate = day
             return
           }
           else  {
-            this.secondSelectedDate = day
+            this.firstSelectedDate = day
             return
           }
         }
@@ -452,10 +453,11 @@ export default {
           // Seçilen gün first'ten küçükse gir
           if (!this.secondSelectedDate.date) {
             // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
-            console.log(selectedDay.date)
             this.secondSelectedDate = this.firstSelectedDate
             this.firstSelectedDate = selectedDay
-            this.rearrangeController(temp)
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController(temp)
+            }
             this.firstSelectedDate.selected = true
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
@@ -465,11 +467,13 @@ export default {
             // First ve second varsa gir (tarihi sola doğru genişletir)
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = selectedDay
-
-            this.rearrangeController(temp)
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController(temp)
+            }
 
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
+            this.saveSecondDateHistory = this.secondSelectedDate.date
           }
         } else if (selectedDay.date == this.firstSelectedDate.date) {
           if (this.isPastValidation) {
@@ -496,10 +500,12 @@ export default {
             // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
             this.secondSelectedDate.selected = false
             this.secondSelectedDate = selectedDay
-
-            this.rearrangeController()
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController()
+            }
 
             this.secondSelectedDate.selected = true
+            this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
           }
         }
@@ -516,14 +522,16 @@ export default {
       
       if(condition) {
         if(ifValidate > this.maxSelectibleDay) {
-          const newDate = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
+          this.secondSelectedDate.selected = false
+          const newDate = dayjs(this.secondSelectedDate.date).subtract(ifValidate - this.maxSelectibleDay, 'day')
           this.rearrangeSelects(newDate , condition)
         }
       }
       else  {
         if(ifValidate > this.maxSelectibleDay) {
-          const newDate2 = dayjs(this.secondSelectedDate.date).subtract(ifValidate - this.maxSelectibleDay, 'day')
-          this.rearrangeSelects(newDate2 , condition)
+          this.firstSelectedDate.selected = false
+          const newDate2 = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
+          this.rearrangeSelects(newDate2)
         }
       }
     },
@@ -782,15 +790,6 @@ export default {
     }
   },
   watch: {
-    userSelectedDates: {
-      handler(newValue) {
-        if (this.userSelectedDates.isUserSelect) {
-          this.saveFirstDateHistory = newValue.firstInitialDate.date
-          this.saveSecondDateHistory = newValue.secondInitialDate.date
-        }
-      },
-      deep: true
-    },
     isDatePickerEnable(newVal) {
       if (newVal) {
         if (!this.saveFirstDateHistory) {
@@ -803,7 +802,7 @@ export default {
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
-        this.linedThroughDate()
+        this.linedThroughDate() // Her iki takvim için geçerli
         this.checkSkippability()
       }
     },
@@ -897,6 +896,12 @@ export default {
       border-right: 10px solid transparent;
       border-bottom: 10px solid #ffffff;
     }
+    &.positionToRight::before {
+      left: 15%;
+    }
+    &.positionToLeft::before {
+      left: 82%;
+    }
 
     .calendar {
       padding-top: 1.2rem;
@@ -905,8 +910,7 @@ export default {
       background: #ffffff;
       margin: 0 10px;
       border-radius: 30px;
-   
-      
+
       .header {
         position: relative;
         display: flex;

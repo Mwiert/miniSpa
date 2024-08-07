@@ -178,7 +178,7 @@ export default {
 <style lang="scss" scoped>
 .flexi-table-body-c {
   .flexi-table-body-row-wrapper {
-    border: 1.5px solid #e0e0e0;
+    border: 2px solid #E8ECF4;
     margin-bottom: 4px;
     border-radius: 28px;
 
@@ -216,8 +216,12 @@ export default {
       .flexi-table-body-col {
         display: flex;
         align-items: center;
-        height: 56px;
+        min-height: 56px;
         border-right: 1px dashed rgba(41, 45, 50, 0.14);
+
+        &:last-child {
+          border-right: none;
+        }
 
         // justify-content: center;
         img {
@@ -268,21 +272,11 @@ export default {
   }
 }
 
-.txt-right {
-  text-align: right;
-  width: 100%;
-  display: block;
-}
-
-.txt-bold {
-  font-weight: 600;
-}
-
-.email {
-  font-size: 0.95rem;
-  color: #5c4958;
-  font-weight: 500;
-}
+// .email {
+//   font-size: 0.95rem;
+//   color: #5c4958;
+//   font-weight: 500;
+// }
 
 .jc-center {
   justify-content: center;
