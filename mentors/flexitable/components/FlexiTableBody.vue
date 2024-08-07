@@ -18,7 +18,7 @@
                 v-if="HideColumn(key)">
                 <!-- CHECKBOX Render -->
                 <template v-if="col.checkbox">
-                  <input type="checkbox" name="" id="" v-model="col.value" />
+                  <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
                 </template>
 
                 <template v-else>

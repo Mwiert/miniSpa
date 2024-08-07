@@ -1,12 +1,23 @@
 <template>
-  <div class="flexi-table-header-c" :class="StickyHeaderClass" :style="[gridTemplateColumns, ColumnGap]" ref="print2">
+  <div
+    class="flexi-table-header-c"
+    :class="StickyHeaderClass"
+    :style="[gridTemplateColumns, ColumnGap]"
+    ref="print2">
     <template v-for="column in flexi.columns" :key="column.name">
       <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
-        <div class="flexi-table-header-col" :class="column.class" @click="handlerSortingColumn(column)">
+        <div
+          class="flexi-table-header-col"
+          :class="column.class"
+          @click="handlerSortingColumn(column)">
           <span class="flexi-table-header-col-value"> {{ column.name }} </span>
 
-          <input v-if="column.label === 'id'" type="checkbox" v-model="masterCheckbox"
-            @change="handleMasterCheckboxChange" @click.stop="innerClick" />
+          <input
+            v-if="column.label === 'id'"
+            type="checkbox"
+            v-model="masterCheckbox"
+            @change="handleMasterCheckboxChange"
+            @click.stop="innerClick" />
 
           <template v-if="flexi.options.sortableColumns.includes(column.label)">
             <div class="icon-c">
@@ -79,6 +90,12 @@ export default {
       this.flexi.rows.forEach((row) => {
         row.row.id.value = this.masterCheckbox
       })
+      const selected = this.flexi.rows.filter((row) => {
+        return Object.values(row.row).some((col) => col.checkbox && col.value)
+      })
+      this.pushelements = !this.pushelements
+      this.flexi.selectedRows.length = 0
+      this.flexi.selectedRows.push(...selected)
     }
   }
 }
@@ -89,7 +106,7 @@ export default {
   border-radius: 12px;
 
   &.sticky-header {
-    background-color: #FAF4D9;
+    background-color: #faf4d9;
     position: sticky;
     top: 0;
     height: 40px;
@@ -101,7 +118,6 @@ export default {
     font-weight: 500;
     height: 40px;
     border-right: 1px solid rgba(112, 112, 112, 0.14);
-
 
     // &:last-child {
     //   border-right: none;
@@ -134,10 +150,8 @@ export default {
 
           &:hover {
             background: rgba(36, 55, 89, 0.06);
-
           }
         }
-
       }
     }
   }
