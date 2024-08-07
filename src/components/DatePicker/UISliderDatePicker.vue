@@ -140,13 +140,26 @@ export default {
         ]
 
         containers.forEach((container) => {
-          const selectedElement = container.querySelector('.selected')
-          if (selectedElement) {
-            container.scrollTop =
-              selectedElement.offsetTop -
-              container.clientHeight / 2 +
-              selectedElement.clientHeight / 2
-          }
+          const items = Array.from(container.children) as HTMLElement[]
+          const containerHeight = container.clientHeight
+          const containerTop = container.scrollTop
+          const centerPosition = containerHeight / 2 + containerTop
+
+          items.forEach((item) => {
+            const itemTop = item.offsetTop
+            const itemBottom = itemTop + item.clientHeight
+            const itemCenter = (itemTop + itemBottom) / 2
+            const distance = Math.abs(itemCenter - centerPosition)
+
+            const normalizedDistance = Math.min(distance / (containerHeight / 2), 1)
+
+            const rotationAngle = 60 * normalizedDistance
+            item.style.transform = `rotateX(${rotationAngle}deg)`
+
+            if (itemCenter === centerPosition) {
+              item.style.transform = `rotateX(0deg)`
+            }
+          })
         })
       })
     },
@@ -229,6 +242,7 @@ export default {
   box-sizing: border-box;
   gap: 16px;
   position: relative;
+  perspective: 1000px;
 
   .center-overlay {
     position: absolute;
@@ -253,6 +267,8 @@ export default {
     position: relative;
     scroll-behavior: smooth;
     user-select: none;
+    transform-style: preserve-3d;
+    perspective: inherit;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -270,13 +286,15 @@ export default {
     opacity: 0.5;
     min-height: 1.5rem;
     line-height: 1.5rem;
+    transform: rotateX(0deg);
+    transform-origin: center;
   }
 
   .day span.selected,
   .month span.selected,
   .year span.selected {
     font-weight: 500;
-    transform: scale(1.2);
+    transform: scale(1.2) rotateX(0deg);
     opacity: 1;
   }
 }
