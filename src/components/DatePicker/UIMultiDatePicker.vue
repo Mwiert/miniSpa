@@ -455,7 +455,9 @@ export default {
             // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
             this.secondSelectedDate = this.firstSelectedDate
             this.firstSelectedDate = selectedDay
-            this.rearrangeController(temp)
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController(temp)
+            }
             this.firstSelectedDate.selected = true
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
@@ -465,8 +467,9 @@ export default {
             // First ve second varsa gir (tarihi sola doğru genişletir)
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = selectedDay
-
-            this.rearrangeController(temp)
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController(temp)
+            }
 
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
@@ -497,8 +500,9 @@ export default {
             // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
             this.secondSelectedDate.selected = false
             this.secondSelectedDate = selectedDay
-
-            this.rearrangeController()
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController()
+            }
 
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
