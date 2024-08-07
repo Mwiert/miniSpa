@@ -131,8 +131,8 @@ export default {
       this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.page * this.maxItem)
     },
     handleScroll(event) {
-      const { scrollTop, clientHeight, scrollHeight } = event.target
-      if (scrollTop + clientHeight >= scrollHeight) {
+      console.log(event)
+      if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
         this.addItemsPerPage()
       }
     },
@@ -156,23 +156,29 @@ export default {
       this.pushelements = !this.pushelements
       this.flexi.selectedRows.length = 0
       this.flexi.selectedRows.push(...selected)
+    },
+    createEventListener() {
+      window.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop
+        const clientHeight = document.documentElement.clientHeight
+        const scrollHeight = document.documentElement.scrollHeight
+        this.handleScroll({ scrollTop, clientHeight, scrollHeight })
+
+        console.log('Current scroll position:', scrollTop)
+      })
     }
   },
   created() {
     this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
-    window.addEventListener('scroll', () => {
-      console.log('scrolling')
-    })
+    this.createEventListener()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .flexi-table-body-c {
-  max-height: 500px;
-  overflow-y: auto;
   .flexi-table-body-row-wrapper {
-    border: 2px solid #E8ECF4;
+    border: 2px solid #e8ecf4;
     margin-bottom: 4px;
     border-radius: 28px;
 
