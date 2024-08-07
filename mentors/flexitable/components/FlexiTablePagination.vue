@@ -1,18 +1,15 @@
 <template>
   <div class="smart-table-pagination-c" v-if="flexi.options.pagination">
     <p class="show" v-html="paginationText"></p>
-    <div>
+    <div class="go-to-container">
       <label for="gotoLabel" class="gotoLabel">Go to </label>
       <input
         class="smart-table-pagination-goto"
         type="number"
         min="1"
         :max="this.flexi.options.pages.length"
-        v-model="flexi.options.currentPage" />
-    </div>
-    <div class="search-page" v-if="this.flexi.options.showPage">
-      <input type="text" v-model="flexi.options.newPage" />
-      <button type="button" @click="goPage()" v-if="isValidPage(flexi.options.newPage)">Go</button>
+        :value="flexi.options.currentPage"
+        @input="handleInputChange" />
     </div>
     <div class="buttons">
       <button
@@ -41,10 +38,10 @@
 </template>
 
 <script>
-import flexiTableMixin from '../../../mentors/flexitable/flexitableMixin'
+import flexiTableMixin from '../flexitableMixin'
 
 export default {
-  name: 'SmartTablePagination',
+  name: 'FlexiTablePagination',
   inject: ['flexi'],
   mixins: [flexiTableMixin],
 
@@ -104,23 +101,22 @@ export default {
 
   methods: {
     setPage(page) {
-      if (page <= 0 || page > this.flexi.options.pages.length) return
-      if (page === '...') {
-        this.flexi.options.showPage = true
-        return
-      }
+      if (page <= 0 || page > this.flexi.options.pages.length || page === '...') return
+
       this.flexi.options.currentPage = page
-    },
-    goPage() {
-      this.flexi.options.currentPage = this.flexi.options.currentPage = parseInt(
-        this.flexi.options.newPage,
-        10
-      )
-      this.flexi.options.showPage = false
-      this.flexi.options.newPage = null
     },
     isValidPage(page) {
       return page > 0 && page <= this.flexi.options.pages.length
+    },
+    handleInputChange(event) {
+      const value = Number(event.target.value)
+      if (value < 1) {
+        this.flexi.options.currentPage = 1
+      } else if (value > this.flexi.options.pages.length) {
+        this.flexi.options.currentPage = this.flexi.options.pages.length
+      } else {
+        this.flexi.options.currentPage = value
+      }
     }
   },
 
@@ -138,41 +134,52 @@ export default {
 <style lang="scss">
 .smart-table-pagination-c {
   display: flex;
-  align-items: center;
-  justify-content: right;
-  padding: 1rem;
-  display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  flex-wrap: wrap;
+
   .show {
-    margin-right: auto;
+    flex: 1;
+    margin-right: 1rem;
   }
 
-  .smart-table-pagination-goto {
-    background: #f7f8fa 0% 0% no-repeat padding-box;
-    border: 1px solid #dfe0e6;
-    border-radius: 8px;
+  .go-to-container {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
 
-    width: 48px;
-    height: 32px;
-    opacity: 1;
-    text-align: left;
-    font: normal normal normal 14px/17px Inter;
-    letter-spacing: 0px;
-    color: #1f2126;
-    opacity: 1;
-    gap: 100px;
-    .gotoLabel {
-      text-align: left;
-      font: normal normal medium 13px/16px Inter;
-      letter-spacing: 0.52px;
-      color: #292d32;
+    .smart-table-pagination-goto {
+      background: #f7f8fa 0% 0% no-repeat padding-box;
+      border: 1px solid #dfe0e6;
+      border-radius: 8px;
+      width: 48px;
+      height: 32px;
       opacity: 1;
+      text-align: left;
+      font: normal normal normal 14px/17px Inter;
+      letter-spacing: 0px;
+      color: #1f2126;
+      opacity: 1;
+      gap: 100px;
+
+      .gotoLabel {
+        text-align: left;
+        font: normal normal medium 13px/16px Inter;
+        letter-spacing: 0.52px;
+        color: #292d32;
+        opacity: 1;
+      }
     }
   }
+
   .buttons {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    margin-left: auto;
+
     .prev-page-btn,
     .next-page-btn {
       height: 32px;
@@ -215,6 +222,39 @@ export default {
       &.disabled {
         cursor: not-allowed;
         opacity: 0.5;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .smart-table-pagination-c {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .show {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .go-to-container {
+      margin-bottom: 1rem;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .buttons {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+
+      .prev-page-btn,
+      .next-page-btn {
+        margin: 5px 0;
+      }
+
+      .page-btn {
+        margin: 5px 0;
       }
     }
   }
