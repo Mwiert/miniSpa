@@ -95,7 +95,9 @@
           @click="sendDateToParent"
           :positionToRight="positionToRight"
           :positionToLeft="positionToLeft"
-          :newSelectedDays="newSelectedDays" />
+          :newSelectedDays="newSelectedDays"
+          :maxSelectibleDay="maxSelectibleDay"
+          />
       </div>
     </div>
   </div>
@@ -130,7 +132,9 @@ export default {
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
-    spaceBetweenDays: { type: Number, default: 2 }
+    spaceBetweenDays: { type: Number, default: 2 },
+    maxSelectibleDay: { type: Number, default: 0 }
+
   },
   data() {
     return {
