@@ -199,13 +199,13 @@ export default {
 
 <style lang="scss" scoped>
 .ui-slider-date-picker-c {
-  position: relative;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1.5fr;
   height: 100%;
   width: 100%;
   padding: 16px;
   box-sizing: border-box;
+  gap: 16px;
 
   .day,
   .month,
@@ -239,16 +239,6 @@ export default {
     font-weight: 500;
     transform: scale(1.2);
     opacity: 1;
-  }
-
-  .day {
-    flex: 2;
-  }
-  .month {
-    flex: 6;
-  }
-  .year {
-    flex: 3;
   }
 }
 </style>
