@@ -1,10 +1,10 @@
 <template>
-  <div class="smart-table-pagination-c" v-if="flexi.options.pagination">
+  <div class="flexi-table-pagination-c" v-if="flexi.options.pagination">
     <p class="show" v-html="paginationText"></p>
     <div class="go-to-container">
       <label for="gotoLabel" class="gotoLabel">Go to </label>
       <input
-        class="smart-table-pagination-goto"
+        class="flexi-table-pagination-goto"
         type="number"
         min="1"
         :max="this.flexi.options.pages.length"
@@ -132,7 +132,7 @@ export default {
 </script>
 
 <style lang="scss">
-.smart-table-pagination-c {
+.flexi-table-pagination-c {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -150,7 +150,7 @@ export default {
     align-items: center;
     margin-right: 1rem;
 
-    .smart-table-pagination-goto {
+    .flexi-table-pagination-goto {
       background: #f7f8fa 0% 0% no-repeat padding-box;
       border: 1px solid #dfe0e6;
       border-radius: 8px;
@@ -227,7 +227,7 @@ export default {
   }
 
   @media (max-width: 768px) {
-    .smart-table-pagination-c {
+    .flexi-table-pagination-c {
       flex-direction: column;
       align-items: flex-start;
     }
