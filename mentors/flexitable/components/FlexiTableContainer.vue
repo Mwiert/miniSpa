@@ -26,6 +26,7 @@ export default {
 }
 
 .custom-table {
+  overflow: auto;
   width: 100%;
   border-collapse: collapse;
 }
