@@ -1,5 +1,5 @@
 <template>
-  <tbody class="flexi-table-body-c">
+  <tbody class="flexi-table-body-c" ref="print1">
     <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
       <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
         <td class="flexi-table-body-row" v-for="(col, key) in rowObj.row" :key="key">
@@ -9,7 +9,7 @@
             v-if="HideColumn(key)">
             <!-- CHECKBOX Render -->
             <template v-if="col.checkbox">
-              <input type="checkbox" name="" id="" v-model="col.value" />
+              <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
             </template>
 
             <template v-else>
@@ -140,17 +140,16 @@ export default {
     }
 
     .flexi-table-body-row {
-      border-right: 1px solid rgba(41, 45, 50, 0.14);
       .flexi-table-body-col {
-        &-value {
-          margin: 0px 8px 0px 8px;
-        }
+        width: 100%;
+        border-right: 1px solid rgba(41, 45, 50, 0.14);
         display: flex;
         align-items: center;
-        min-height: 56px;
+        justify-content: center;
 
-        &:last-child {
-          border-right: none;
+        min-height: 56px;
+        &-value {
+          margin: 0px 8px 0px 8px;
         }
 
         // justify-content: center;
