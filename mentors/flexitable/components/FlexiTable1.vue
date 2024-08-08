@@ -46,13 +46,13 @@ export default {
 
       const sizes = options.columnSizes
         ? [
-            ...options.columnSizes,
-            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
-          ]
+          ...options.columnSizes,
+          ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
+        ]
         : [
-            ...flexiConfig.columnSizes,
-            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
-          ]
+          ...flexiConfig.columnSizes,
+          ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
+        ]
       this.flexiTableOptions = {
         columns,
         selectedRows,
@@ -109,11 +109,10 @@ export default {
         this.flexiTableOptions.options.columnSizes = []
         // The hiddenColumns and columnSizes arrays change according to the changes in the flex.columns array.
         Object.keys(this.flexiTableOptions.columns).forEach((column) => {
-          if (this.flexiTableOptions.columns[column].status === true) {
-            this.flexiTableOptions.options.columnSizes.push(
-              this.flexiTableOptions.columns[column].colSizes
-            )
-          } else {
+          this.flexiTableOptions.options.columnSizes.push(
+            this.flexiTableOptions.columns[column].colSizes
+          )
+          if (!this.flexiTableOptions.columns[column].status) {
             hidden.push(this.flexiTableOptions.columns[column].label)
           }
         })
@@ -132,8 +131,7 @@ export default {
   color: #363636;
 
   ::v-deep {
-    div {
-    }
+    div {}
 
     .flexi-table-header-c,
     .flexi-table-body-row {

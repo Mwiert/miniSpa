@@ -29,7 +29,6 @@ export default {
       const endIndex = startIndex + itemsPerPage
       return this.SearchKey.slice(startIndex, endIndex)
     },
-
     gridTemplateColumns() {
       if (this.flexi.options.columnSizes) {
         const templateColumns = this.flexi.options.columnSizes.map((size) => `${size}fr`).join(' ')
@@ -38,6 +37,13 @@ export default {
         const hiddenColumns = this.flexi.options.hiddenColumns?.length || 0
         return `grid-template-columns:repeat(${this.flexi.columns.length - hiddenColumns}, 1fr)`
       }
+    },
+    gridTemplateColumns1() {
+      const visibleColumnSizes = this.flexi.columns.map((column, index) =>
+        this.HideColumn(column.label) ? this.flexi.options.columnSizes[index] : 0
+      )
+      const totalWeight = visibleColumnSizes.reduce((sum, size) => sum + size, 0)
+      return visibleColumnSizes.map((size) => `${(size / totalWeight) * 100}%`)
     },
     ColumnGap() {
       return `column-gap:${this.flexi.options.columnGap}`

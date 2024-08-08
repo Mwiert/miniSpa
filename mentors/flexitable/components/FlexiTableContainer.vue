@@ -23,21 +23,21 @@ export default {
 </script>
 <style scoped>
 .table-container {
-}
 
-.custom-table {
-  overflow: auto;
-  width: 100%;
-  border-collapse: collapse;
-}
+  .custom-table {
+    overflow: auto;
+    width: 100%;
+    border-collapse: collapse;
+  }
 
-.custom-table th,
-.custom-table td {
-  padding: 8px;
-  text-align: center;
-}
+  .custom-table th,
+  .custom-table td {
+    padding: 8px;
+    text-align: center;
+  }
 
-.custom-table th {
-  background-color: #f4f4f4;
+  .custom-table th {
+    background-color: #f4f4f4;
+  }
 }
 </style>
