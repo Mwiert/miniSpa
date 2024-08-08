@@ -22,7 +22,6 @@
   </div>
 </template>
 
-
 <script lang="ts">
 import dayjs from 'dayjs'
 
@@ -51,14 +50,17 @@ export default {
   watch: {
     selectedDay() {
       this.centerSelectedItem()
+      this.emitSelectedDate()
     },
     selectedMonth() {
       this.updateDays()
       this.centerSelectedItem()
+      this.emitSelectedDate()
     },
     selectedYear() {
       this.updateDays()
       this.centerSelectedItem()
+      this.emitSelectedDate()
     }
   },
   methods: {
@@ -206,6 +208,14 @@ export default {
       centerItem(dayContainer, 'day')
       centerItem(monthContainer, 'month')
       centerItem(yearContainer, 'year')
+    },
+    emitSelectedDate() {
+      const formattedDate = dayjs()
+        .year(this.selectedYear)
+        .month(this.selectedMonth)
+        .date(this.selectedDay)
+        .format('DD-MM-YYYY')
+      this.$emit('selected-date', formattedDate)
     },
     onScroll() {
       if (this.isDragging) return
