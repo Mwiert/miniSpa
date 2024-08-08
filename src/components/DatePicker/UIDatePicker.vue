@@ -1,6 +1,5 @@
 <template>
   <!-- This is the main container to create the calendar -->
-
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
