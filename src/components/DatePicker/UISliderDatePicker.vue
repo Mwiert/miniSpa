@@ -20,6 +20,7 @@
       </span>
     </div>
   </div>
+  {{ firstSelected.date }}
 </template>
 
 <script lang="ts">
@@ -294,7 +295,9 @@ export default {
     padding: 4px;
     cursor: pointer;
     scroll-snap-align: center;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
     opacity: 0.5;
     min-height: 1.5rem;
     line-height: 1.5rem;

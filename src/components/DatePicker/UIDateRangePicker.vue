@@ -220,7 +220,7 @@ export default {
       this.handleResetInitialDates()
       // const isValidFormat = value.isValidDateFormat()
 
-      if (value.isValidFormat) {
+      if (value.isValidDateFormat()) {
         const parsedDate = this.parseDate(value)
         this.firstSelectedDate.date = parsedDate
         this.$emit('update:firstSelectedDate', parsedDate)
@@ -317,7 +317,7 @@ export default {
         if (this.isSingleDatePickerEnable === false) {
           this.isSingleDatePickerEnable = true
         } else {
-          this.isSingleDatePickerEnable = false
+          // this.isSingleDatePickerEnable = false
         }
       }
 
@@ -327,7 +327,7 @@ export default {
         if (this.isMultiDatePickerEnable === false) {
           this.isMultiDatePickerEnable = true
         } else {
-          this.isMultiDatePickerEnable = false
+          // this.isMultiDatePickerEnable = false
         }
       }
 
@@ -540,15 +540,6 @@ export default {
                   .format('YYYY-MM-DD')
               }
             }
-              // Eğer newDate ile firstDate arasındaki fark maxSelectibleDays'ten fazlaysa
-              const dayDifference = newDate.diff(firstDate, 'day')
-              if (dayDifference > this.maxSelectibleDay) {
-                this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')
-                this.firstSelectedDate.date = newDate
-                  .subtract(this.maxSelectibleDay, 'day')
-                  .format('YYYY-MM-DD')
-              }
-            }
           }
         }
       }
@@ -705,7 +696,6 @@ export default {
       .is-single-date {
         width: 100%;
         display: flex;
-
         //Date format box
         .single-date-box {
           display: flex;
