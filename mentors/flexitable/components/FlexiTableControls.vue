@@ -5,19 +5,13 @@
       <div class="spinner"></div>
     </div>
     <div class="ftc-select-wrapper">
-      <UIEnumDropdown
-        v-model="flexi.options.selected"
-        :enumObj="updatedPageOrder"
-        :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
-        :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
+      <UIEnumDropdown v-model="flexi.options.selected" :enumObj="updatedPageOrder"
+        :dataSize="flexi.options.UIDropdownOrderProp.dataSize" :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
         :showAll="flexi.options.UIDropdownOrderProp.showAll" />
       <!--Custom Dropdown-->
 
       <div class="export-buttons">
-        <div
-          class="excel-selector"
-          @mouseover="openComponent = true"
-          @mouseleave="openComponent = false">
+        <div class="excel-selector" @mouseover="openComponent = true" @mouseleave="openComponent = false">
           <SvgIcon name="excel" size="xs" class="excel-button" />
           <div class="excel-wrapper" v-if="openComponent">
             <div class="excel-text" @click="downloadExcel()">Download Excel</div>
@@ -25,23 +19,15 @@
           </div>
         </div>
         <SvgIcon name="pdf" size="xs" class="pdf-button" @click="downloadPdf()"></SvgIcon>
-        <SvgIcon
-          name="print"
-          size="xs"
-          class="print-button"
-          @click="triggerExportPrint()"></SvgIcon>
+        <SvgIcon name="print" size="xs" class="print-button" @click="triggerExportPrint()"></SvgIcon>
         <div class="dropdown">
           <div class="dropdown-icon" @click="Toggle()">
             <SvgIcon class="dropdown-icon" name="columns" size="xs" />
           </div>
 
           <div class="multi" v-if="flexi.options.show">
-            <div
-              class="option"
-              :class="col.status === false ? 'notselected' : 'selected'"
-              v-for="(col, index) in flexi.columns"
-              :key="index"
-              @click="selectHidden(index)">
+            <div class="option" :class="col.status === false ? 'notselected' : 'selected'"
+              v-for="(col, index) in flexi.columns" :key="index" @click="selectHidden(index)">
               <div class="option-text" :class="col.status === false ? 'notselected' : 'selected'">
                 {{ col.name }}
               </div>
@@ -65,28 +51,17 @@
     <!-- Search Table -->
     <div class="ftc-right-side-wrapper">
       <div class="mark-sign-wrapper">
-        <FlexiTableActionArea
-          :buttonNumber="1"
-          :dropdownNumber="1"
-          :propFunction="changeStatus"
-          :label="'Mark'" />
+        <FlexiTableActionArea :buttonNumber="1" :dropdownNumber="1" :propFunction="changeStatus" :label="'Mark'" />
       </div>
 
       <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
         <SvgIcon :name="'search'" size="s" class="search" />
-        <input
-          type="text"
-          v-model="flexi.options.searchWord"
-          @input="
-            debounce(() => {
-              state.filterText = flexi.options.searchWord
-            })
+        <input type="text" v-model="flexi.options.searchWord" @input="
+          debounce(() => {
+            state.filterText = flexi.options.searchWord
+          })
           " />
-        <button
-          type="button"
-          class="clear-button"
-          @click="clearSearch"
-          v-if="flexi.options.searchWord">
+        <button type="button" class="clear-button" @click="clearSearch" v-if="flexi.options.searchWord">
           <SvgIcon :name="'x'" size="s" class="clear" />
         </button>
       </div>
@@ -367,19 +342,17 @@ export default {
     },
     // status true for every column
     selectClear() {
-      if (this.flexi.options.hiddenColumns.length != 0) {
-        for (let i = 0; i < this.flexi.columns.length; i++) {
-          this.flexi.columns[i].status = true
-        }
-      } else {
-        for (let i = 0; i < this.flexi.columns.length; i++) {
-          this.flexi.columns[i].status = false
-        }
-      }
+      this.flexi.columns.forEach((column, index) => {
+        column.status = index < this.flexi.options.minVisibleColumns
+          ? true
+          : this.flexi.options.hiddenColumns.length != 0;
+      });
+
     },
     // hide selected column
     selectHidden(index) {
-      this.flexi.columns[index].status = !this.flexi.columns[index].status
+      this.flexi.columns.length - this.flexi.options.hiddenColumns.length > this.flexi.options.minVisibleColumns ?
+        this.flexi.columns[index].status = !this.flexi.columns[index].status : this.flexi.columns[index].status = true
     },
     Toggle() {
       this.flexi.options.show = !this.flexi.options.show
@@ -408,7 +381,6 @@ export default {
   watch: {
     'flexi.options.selected': {
       handler: function (val) {
-        this.flexi.options.pages = []
         this.flexi.options.itemsPerPage = val.id
       }
     }
@@ -421,14 +393,17 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   @keyframes spin {
     0% {
       transform: rotate(0deg);
     }
+
     100% {
       transform: rotate(360deg);
     }
   }
+
   .loading-overlay {
     position: fixed;
     top: 0;
@@ -440,6 +415,7 @@ export default {
     justify-content: center;
     align-items: center;
     z-index: 9999;
+
     .spinner {
       border: 16px solid #f3f3f3;
       border-top: 16px solid #2feb9c;
@@ -449,15 +425,18 @@ export default {
       animation: spin 2s linear infinite;
     }
   }
+
   .ftc-right-side-wrapper {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 40px;
+
     .mark-sign-wrapper {
       display: flex;
       align-items: center;
       gap: 10px;
+
       .sign-status-container {
         display: flex;
         align-items: center;
@@ -472,6 +451,7 @@ export default {
         width: 88px;
         background-color: #4da6ff;
         border-radius: 8px;
+
         .mark-container-text {
           font-size: 14px;
           font-weight: 500;
@@ -484,6 +464,7 @@ export default {
         }
       }
     }
+
     .ftc-search-wrapper {
       height: 40px;
       width: 280px;
@@ -530,6 +511,7 @@ export default {
       }
     }
   }
+
   .ftc-select-wrapper {
     display: inline-flex;
     align-items: center;
@@ -538,10 +520,12 @@ export default {
       display: flex;
       align-items: center;
       gap: 10px;
+
       .show {
         margin-right: auto;
         min-width: fit-content;
       }
+
       .excel-selector {
         display: flex;
         flex-direction: column;
@@ -562,15 +546,18 @@ export default {
           align-items: center;
           padding: 10px;
           z-index: 999;
+
           .excel-text {
             width: 100%;
             cursor: pointer;
+
             &:hover {
               color: #2feb9c;
             }
           }
         }
       }
+
       .dropdown {
         display: flex;
         flex-direction: column;
@@ -578,6 +565,7 @@ export default {
         .dropdown-icon {
           cursor: pointer;
         }
+
         .multi {
           position: absolute;
           background-color: white;
@@ -598,6 +586,7 @@ export default {
             grid-column: 4;
             padding: 10px;
             border: none;
+
             &:hover {
               background-color: #ecfcca;
             }
@@ -615,6 +604,7 @@ export default {
             padding: 5px;
 
             cursor: pointer;
+
             .tick-wrapper {
               display: flex;
               justify-content: center;
@@ -625,6 +615,7 @@ export default {
                 justify-content: center;
                 align-items: center;
               }
+
               &.notselected {
                 display: none;
               }

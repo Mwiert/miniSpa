@@ -1,31 +1,28 @@
 <template>
   <thead class="flexi-table-header-c" :class="StickyHeaderClass" ref="print3">
     <tr>
-      <th class="table-head-c" v-for="column in flexi.columns" :key="column.name">
-        <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
-          <div
-            class="flexi-table-header-col"
-            :class="[column.class, { 'flexi-table-header-col-id': column.label === 'id' }]"
-            @click="handlerSortingColumn(column)">
-            <span class="flexi-table-header-col-value"> {{ column.name }} </span>
+      <template v-for="(column, index) in flexi.columns" :key="column.name">
+        <th class="table-head-c" :style="{ width: gridTemplateColumns1[index] }" v-if="HideColumn(column.label)">
+          <div class="flexi-table-header-col-wrapper">
+            <div class="flexi-table-header-col"
+              :class="[column.class, { 'flexi-table-header-col-id': column.label === 'id' }]"
+              @click="handlerSortingColumn(column)">
+              <span class="flexi-table-header-col-value"> {{ column.name }} </span>
 
-            <input
-              v-if="column.label === 'id'"
-              type="checkbox"
-              v-model="masterCheckbox"
-              @change="handleMasterCheckboxChange"
-              @click.stop="innerClick" />
+              <input v-if="column.label === 'id'" type="checkbox" v-model="masterCheckbox"
+                @change="handleMasterCheckboxChange" @click.stop="innerClick" />
 
-            <template v-if="flexi.options.sortableColumns.includes(column.label)">
-              <div class="icon-c">
-                <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
-                <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
-                <SvgIcon name="filter-desc" size="xs" v-else />
-              </div>
-            </template>
+              <template v-if="flexi.options.sortableColumns.includes(column.label)">
+                <div class="icon-c">
+                  <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
+                  <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
+                  <SvgIcon name="filter-desc" size="xs" v-else />
+                </div>
+              </template>
+            </div>
           </div>
-        </div>
-      </th>
+        </th>
+      </template>
     </tr>
   </thead>
 </template>
@@ -107,6 +104,7 @@ export default {
     top: 0;
     height: 40px;
   }
+
   .table-head-c {
     padding: 0;
     height: 40px;
@@ -139,9 +137,11 @@ export default {
       height: 40px;
       justify-content: space-between;
       width: 100%;
+
       &-value {
         margin-left: 8px;
       }
+
       &-id {
         justify-content: center;
       }
@@ -152,7 +152,7 @@ export default {
         height: 24px;
         display: flex;
         justify-content: center;
-        align-items: end;
+        align-items: center;
         margin-right: 8px;
 
         .svg-icon-c {
