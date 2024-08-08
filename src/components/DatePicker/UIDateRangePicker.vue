@@ -223,13 +223,11 @@ export default {
       if (!date) return ''
       const separators = /[-/.]/;
       let [day, month, year] = date.split(separators)
-      day = day.padStart(2, '0')
-      month = month.padStart(2, '0')
       return `${year}-${month}-${day}`
     },
     onFirstDateInput(value) {
       this.handleResetInitialDates()
-      const isValidFormat = newValue.isValidDateFormat()
+      const isValidFormat = value.isValidDateFormat()
 
 
       if (isValidFormat) {
@@ -241,7 +239,7 @@ export default {
     },
     onSecondDateInput(value) {
       this.handleResetInitialDates()
-      const isValidFormat = newValue.isValidDateFormat()
+      const isValidFormat = value.isValidDateFormat()
 
       if (isValidFormat) {
         const parsedDate = this.parseDate(value)
