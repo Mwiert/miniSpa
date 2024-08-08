@@ -7,7 +7,7 @@
     <div class="ftc-select-wrapper">
       <UIEnumDropdown
         v-model="flexi.options.selected"
-        :enumObj="flexi.options.pageOrder"
+        :enumObj="updatedPageOrder"
         :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
@@ -122,7 +122,8 @@ export default {
     return {
       openComponent: false,
       showSpinner: false,
-      dayjs: dayjs()
+      dayjs: dayjs(),
+      updatedPageOrder: []
     }
   },
   setup() {
@@ -136,6 +137,7 @@ export default {
   },
   created() {
     this.debounce = this.createDebounce()
+    this.updatedPageOrder = this.updatePageOrder()
   },
   methods: {
     changeStatus() {
@@ -143,6 +145,13 @@ export default {
         element.row.status.value = this.flexi.options.selectedStatus.name.toLowerCase()
         element.row.status.class = 'item-' + this.flexi.options.selectedStatus.name.toLowerCase()
       })
+    },
+    updatePageOrder() {
+      let updatedPageOrder = this.flexi.options.pageOrder
+      let name = this.flexi.options.pageOrder['-1']
+      updatedPageOrder['-1'] = name + ` (${this.flexi.rows.length} Data)`
+
+      return updatedPageOrder
     },
     paginationText() {
       return `Showing <strong> ${this.flexi.options.totalPages} </strong> of <strong> ${this.flexi.options.totalPages} </strong> data`
