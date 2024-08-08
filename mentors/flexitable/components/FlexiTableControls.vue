@@ -101,7 +101,7 @@
 import flexiTableMixin from '../flexitableMixin'
 import FlexiTableActionArea from './FlexiTableActionArea.vue'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
-//import html2pdf from 'html2pdf.js'
+import html2pdf from 'html2pdf.js'
 import dayjs from 'dayjs'
 import { reactive } from 'vue'
 
