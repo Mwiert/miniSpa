@@ -55,6 +55,9 @@
         </div>
         <SvgIcon name="freeze" size="xs" class="freeze-button"></SvgIcon>
         <SvgIcon name="refresh" size="xs" class="refresh-button"></SvgIcon>
+        <div v-if="flexi.options.selected.id === -1" class="show">
+          <p class="show" v-html="paginationText()"></p>
+        </div>
       </div>
     </div>
 
@@ -140,6 +143,9 @@ export default {
         element.row.status.value = this.flexi.options.selectedStatus.name.toLowerCase()
         element.row.status.class = 'item-' + this.flexi.options.selectedStatus.name.toLowerCase()
       })
+    },
+    paginationText() {
+      return `Showing <strong> ${this.flexi.options.totalPages} </strong> of <strong> ${this.flexi.options.totalPages} </strong> data`
     },
     createDebounce() {
       let timeout = null
@@ -450,6 +456,7 @@ export default {
       }
 
       .mark-container {
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -523,7 +530,10 @@ export default {
       display: flex;
       align-items: center;
       gap: 10px;
-
+      .show {
+        margin-right: auto;
+        min-width: fit-content;
+      }
       .excel-selector {
         display: flex;
         flex-direction: column;
