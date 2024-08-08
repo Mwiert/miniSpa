@@ -522,7 +522,7 @@ export default {
             this.secondSelectedDate.date = ''
             //this.secondSelectedDate.selected = false
           } else if (newDate.isBefore(minDate)) {
-            this.firstSelectedDate = this.minDate
+            this.firstSelectedDate.date = this.minDate
             if (this.maxSelectibleDay != 0) {
               //Eğer secondDate minDate + maxSelectibleDay'den sonraysa
 
