@@ -1,8 +1,8 @@
 <template>
   <div class="table-container">
     <table class="custom-table">
-      <FlexiTableHeader1 />
-      <FlexiTableBody1 />
+      <FlexiTableHeader1 ref="head" />
+      <FlexiTableBody1 ref="body" />
     </table>
   </div>
 </template>
@@ -23,7 +23,6 @@ export default {
 </script>
 <style scoped>
 .table-container {
-  overflow: auto;
 }
 
 .custom-table {
@@ -33,7 +32,6 @@ export default {
 
 .custom-table th,
 .custom-table td {
-  border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
