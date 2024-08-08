@@ -32,21 +32,22 @@ export default {
       days: [] as number[],
       months: [] as string[],
       years: [] as number[],
-      selectedDay: dayjs().date(),
-      selectedMonth: dayjs().month(),
-      selectedYear: dayjs().year(),
-      
+      selectedDay: dayjs(this.firstSelected.date).date(),
+      selectedMonth: dayjs(this.firstSelected.date).month(),
+      selectedYear: dayjs(this.firstSelected.date).year(),
       scrolling: false,
       scrollTimeout: null as number | null,
       lastScrollTop: 0,
       isDragging: false
     }
   },
+  props: {
+    firstSelected: { type: Object, default: null }
+  },
   created() {
     this.generateMonths()
     this.generateYears()
     this.updateDays()
-    this.centerSelectedItem()
   },
   watch: {
     selectedDay() {
@@ -193,7 +194,6 @@ export default {
             closestElement = item
           }
         }
-
         if (closestElement) {
           const centeredText = closestElement.textContent?.trim()
           if (type === 'day' && centeredText) {
@@ -234,6 +234,7 @@ export default {
     this.$refs.dayContainer.addEventListener('scroll', this.onScroll)
     this.$refs.monthContainer.addEventListener('scroll', this.onScroll)
     this.$refs.yearContainer.addEventListener('scroll', this.onScroll)
+    this.centerSelectedItem()
   },
   beforeUnmount() {
     this.$refs.dayContainer.removeEventListener('scroll', this.onScroll)

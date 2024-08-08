@@ -19,7 +19,10 @@
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
-          <UISliderDatePicker v-show="isSlider" @emitSelectedDate="handleSelectedDate" />
+          <UISliderDatePicker
+            v-show="isSlider"
+            @emitSelectedDate="handleSelectedDate"
+            :firstSelected="firstSelectedDate" />
           <div v-show="!isSlider">
             <!-- This is the weekdays section -->
             <ul class="weekdays">
@@ -487,12 +490,14 @@ export default {
       .header {
         position: relative;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
         width: 100%;
 
         //This is the arrow icons for the calendar
         .nav-button {
+          position: absolute;
+          transform: translateY(-45%);
           top: 50%;
           background-color: transparent;
           border: none;
