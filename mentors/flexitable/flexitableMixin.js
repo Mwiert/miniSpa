@@ -12,7 +12,27 @@ export default {
           .map(([, val]) => JSON.stringify(val.value))
           .join(', ')
           .toLowerCase()
-        return rowValuesString.includes(this.flexi.options.searchKeyWord.toLowerCase())
+        const searchKeyword = this.flexi.options.searchKeyWord.toLowerCase()
+        if (rowValuesString.includes(searchKeyword)) {
+          item.highlighted = {}
+          Object.entries(item.row).forEach(([key, val]) => {
+            const valueString = val.value.toString()
+            const regex = new RegExp(searchKeyword, 'gi')
+            const match = valueString.match(regex)
+            if (match) {
+              const highlightedText = match[0]
+              const originalText = val.value
+              const highlightedValue = originalText.replace(
+                regex,
+                `<span class="highlight">${highlightedText}</span>`
+              )
+              item.highlighted[key] = highlightedValue
+            } else {
+              item.highlighted[key] = val.value
+            }
+          })
+        }
+        return rowValuesString.includes(searchKeyword)
       })
       const endTime = performance.now()
       console.log(`${(endTime - startTime).toFixed(2)} ms`)

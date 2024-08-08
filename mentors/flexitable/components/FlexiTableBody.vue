@@ -33,9 +33,13 @@
                   <!-- TEXT Render -->
                   <span
                     class="flexi-table-body-col-value"
-                    :class="[col.class, { pointer: col.url }]"
-                    @click="handlerGoToUrl(col.url)">
-                    {{ col.value ?? col }}
+                    :class="[col.class, { pointer: col.url }]">
+                    <template v-if="rowObj.highlighted && rowObj.highlighted[key]">
+                      <span v-html="rowObj.highlighted[key]"></span>
+                    </template>
+                    <template v-else>
+                      {{ col.value }}
+                    </template>
                   </span>
                 </template>
               </div>
@@ -137,21 +141,14 @@ export default {
       )
     },
     checkFilter(value, key) {
-      if (this.SearchKey.length !== this.flexi.rows.length) {
-        if (typeof value === 'string' || typeof value === 'number') {
-          if (typeof value === 'number') {
-            value = String(value)
-          }
-          for (let i = 0; i < this.SearchKey.length; i++) {
-            let searchValue = this.SearchKey[i].row[key].value
-
-            if (searchValue.toLowerCase().includes(value.toLowerCase())) {
-              console.log('searchValue', searchValue)
-              return true
-            }
-          }
+      if (this.flexi.options.searchKeyWord.length > 2) {
+        const searchKeyword = this.flexi.options.searchKeyWord.toLowerCase()
+        const valueString = value.toString().toLowerCase()
+        if (valueString.includes(searchKeyword)) {
+          return true
         }
       }
+      return false
     },
 
     handleScroll(event) {
@@ -253,6 +250,10 @@ export default {
 
     .flexi-table-body-row {
       .flexi-table-body-col {
+        .highlight {
+          background-color: yellow;
+          font-weight: bold;
+        }
         display: flex;
         align-items: center;
         min-height: 56px;
