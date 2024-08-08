@@ -2,7 +2,6 @@
   <div class="ui-date-range-picker-c">
     <label class="label" v-if="label">{{ label }}</label>
     <!-- This is for opening and closing the calendar -->
-     {{ firstSelectedDate.date }}
     <div
       class="button"
       @click="toggleDatePicker()"

@@ -37,7 +37,6 @@ export default {
       selectedYear: dayjs(this.firstSelected.date).year(),
       scrolling: false,
       scrollTimeout: null as number | null,
-      lastScrollTop: 0,
       isDragging: false
     }
   },
@@ -98,7 +97,7 @@ export default {
       const currentYear = dayjs().year()
 
       years.push(null, null, null)
-      for (let i = currentYear - 50; i <= currentYear + 50; i++) {
+      for (let i = currentYear - 20; i <= currentYear + 20; i++) {
         years.push(i)
       }
       years.push(null, null, null)
@@ -228,18 +227,48 @@ export default {
       this.scrollTimeout = setTimeout(() => {
         this.selectCenteredItem()
       }, 100)
+    },
+    scrollToSelected() {
+  const dayContainer = this.$refs.dayContainer as HTMLElement;
+  const monthContainer = this.$refs.monthContainer as HTMLElement;
+  const yearContainer = this.$refs.yearContainer as HTMLElement;
+
+  this.$nextTick(() => {
+    const dayElement = dayContainer.children[this.selectedDay + 2] as HTMLElement;
+    const monthElement = monthContainer.children[this.selectedMonth + 3] as HTMLElement;
+    const yearIndex = this.years.indexOf(this.selectedYear) + 3;
+
+    // Ensure the index is within bounds
+    if (yearIndex >= 0 && yearIndex < yearContainer.children.length) {
+      const yearElement = yearContainer.children[yearIndex] as HTMLElement;
+
+      dayContainer.scrollTop = dayElement.offsetTop - dayContainer.clientHeight / 2 + dayElement.clientHeight / 2;
+      monthContainer.scrollTop = monthElement.offsetTop - monthContainer.clientHeight / 2 + monthElement.clientHeight / 2;
+      yearContainer.scrollTop = yearElement.offsetTop - yearContainer.clientHeight / 2 + yearElement.clientHeight / 2;
+    } else {
+      console.warn('Year index out of bounds:', yearIndex);
     }
+  });
+},
   },
   mounted() {
     this.$refs.dayContainer.addEventListener('scroll', this.onScroll)
     this.$refs.monthContainer.addEventListener('scroll', this.onScroll)
     this.$refs.yearContainer.addEventListener('scroll', this.onScroll)
-    this.centerSelectedItem()
+    this.$nextTick(() => {
+        this.scrollToSelected()  // Scroll to the selected item
+        this.centerSelectedItem()
+    })
   },
   beforeUnmount() {
     this.$refs.dayContainer.removeEventListener('scroll', this.onScroll)
     this.$refs.monthContainer.removeEventListener('scroll', this.onScroll)
     this.$refs.yearContainer.removeEventListener('scroll', this.onScroll)
+  },
+  updated() {
+    this.$nextTick(() => {
+        this.scrollToSelected()  // Ensure scroll position after updates
+    })
   }
 }
 </script>
