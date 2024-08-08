@@ -452,7 +452,6 @@ export default {
   .ftc-right-side-wrapper {
     display: flex;
     align-items: center;
-    width: 100%;
     justify-content: flex-end;
     gap: 40px;
     .mark-sign-wrapper {
