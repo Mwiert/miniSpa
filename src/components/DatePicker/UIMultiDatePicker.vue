@@ -837,6 +837,8 @@ export default {
         this.saveFirstDateHistory = newVal.firstSelectedDate.date
 
         this.saveSecondDateHistory = newVal.secondSelectedDate.date
+        this.calendarDate = dayjs(this.saveFirstDateHistory)
+        this.currentDate = this.calendarDate.format('YYYY-MM-DD')
 
         this.populdateMonthDays()
         this.checkDateHistory()
