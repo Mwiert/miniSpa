@@ -1,6 +1,6 @@
 <template>
   <div ref="tableContainer" class="flexi-table-body-c" @scroll.passive="handleScroll">
-    <div v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
+    <div v-if="FlexiBodyItemsPerPage.length < maxItem" class="ben oc">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <div
           ref="tableContent"
@@ -135,7 +135,7 @@ export default {
     },
 
     handleScroll(event) {
-      if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
+      if (event?.scrollTop + event?.clientHeight >= event?.scrollHeight) {
         this.addItemsPerPage()
       }
       this.$nextTick(() => {
@@ -182,7 +182,10 @@ export default {
           break
         }
       }
-      this.checkHighlight()
+      this.$nextTick(() => {
+        this.checkHighlight()
+        this.handleScroll()
+      })
     },
     checkHighlight() {
       this.$nextTick(() => {
@@ -217,7 +220,7 @@ export default {
       this.checkUpdate()
     },
     SearchKey() {
-      this.checkUpdate()
+      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
     }
   }
 }
