@@ -14,7 +14,10 @@
             <template v-for="(col, key) in rowObj.row" :key="key">
               <div
                 class="flexi-table-body-col"
-                :class="{ 'jc-center': col.checkbox }"
+                :class="[
+                  { 'jc-center': col.checkbox },
+                  { 'item-filter': checkFilter(col.value, key) }
+                ]"
                 v-if="HideColumn(key)">
                 <!-- CHECKBOX Render -->
                 <template v-if="col.checkbox">
@@ -128,10 +131,30 @@ export default {
   methods: {
     addItemsPerPage() {
       this.page++
-      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.page * this.maxItem)
+      this.FlexiBodyItemsPerPageLimited = this.FlexiBodyItemsPerPage.slice(
+        0,
+        this.page * this.maxItem
+      )
     },
+    checkFilter(value, key) {
+      if (this.SearchKey.length !== this.flexi.rows.length) {
+        if (typeof value === 'string' || typeof value === 'number') {
+          if (typeof value === 'number') {
+            value = String(value)
+          }
+          for (let i = 0; i < this.SearchKey.length; i++) {
+            let searchValue = this.SearchKey[i].row[key].value
+
+            if (searchValue.toLowerCase().includes(value.toLowerCase())) {
+              console.log('searchValue', searchValue)
+              return true
+            }
+          }
+        }
+      }
+    },
+
     handleScroll(event) {
-      console.log(event)
       if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
         this.addItemsPerPage()
       }
@@ -163,14 +186,30 @@ export default {
         const clientHeight = document.documentElement.clientHeight
         const scrollHeight = document.documentElement.scrollHeight
         this.handleScroll({ scrollTop, clientHeight, scrollHeight })
-
-        console.log('Current scroll position:', scrollTop)
       })
+    },
+    checkUpdate() {
+      const limitedItems = this.FlexiBodyItemsPerPage.slice(
+        0,
+        this.FlexiBodyItemsPerPageLimited.length
+      )
+      for (let i = 0; i < limitedItems.length; i++) {
+        if (limitedItems[i]?.row?.id !== this.FlexiBodyItemsPerPageLimited[i]?.row?.id) {
+          this.FlexiBodyItemsPerPageLimited = limitedItems
+          break
+        }
+      }
     }
   },
+
   created() {
     this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
     this.createEventListener()
+  },
+  watch: {
+    FlexiBodyItemsPerPage() {
+      this.checkUpdate()
+    }
   }
 }
 </script>
