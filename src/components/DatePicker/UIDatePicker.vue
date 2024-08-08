@@ -12,17 +12,14 @@
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
 
-            <span class="current-date" @click="isSliderOpen">{{ dateHolder }} </span>
+            <span class="current-date">{{ dateHolder }} </span>
 
             <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
-          <UISliderDatePicker
-            v-show="isSlider"
-            @emitSelectedDate="handleSelectedDate"
-            :firstSelected="firstSelectedDate" />
-          <div v-show="!isSlider">
+
+          <div>
             <!-- This is the weekdays section -->
             <ul class="weekdays">
               <template v-for="(weekday, index) in weekdays" :key="index">
@@ -58,12 +55,9 @@
 //Imports the needed components and interfaces
 import dayjs from 'dayjs'
 import date from '../../interface/IUIDatePicker'
-import UISliderDatePicker from '../DatePicker/UISliderDatePicker.vue'
 export default {
   name: 'UIDatePicker',
-  components: {
-    UISliderDatePicker
-  },
+
   data() {
     return {
       weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], //Static weekdays
@@ -76,9 +70,7 @@ export default {
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
       saveDateHistory: this.saveDate.date, //Saving the date history so we can see when we close calendar
       prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
-      nextDate: dayjs().endOf('month').format('YYYY-MM-DD'),
-      isSlider: false,
-      formattedDate: ''
+      nextDate: dayjs().endOf('month').format('YYYY-MM-DD')
     }
   },
   props: {
@@ -95,15 +87,6 @@ export default {
     newSelectedDays: { type: Object, default: null }
   },
   methods: {
-    handleSelectedDate(formattedDate: string) {
-      this.formattedDate = formattedDate
-      this.firstSelectedDate.date = formattedDate
-      this.saveDateHistory = this.firstSelectedDate.date
-      this.$emit('sliderSelected', formattedDate)
-    },
-    isSliderOpen() {
-      this.isSlider = !this.isSlider
-    },
     checkRange() {
       if (this.isPastValidation) {
         if (this.backMonthRange !== 99) {
