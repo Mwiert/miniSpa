@@ -1,5 +1,6 @@
 <template>
   <div ref="tableContainer" class="flexi-table-body-c" @scroll.passive="handleScroll">
+    {{ loading }}
     <div v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <div
@@ -128,8 +129,12 @@ export default {
   methods: {
     addItemsPerPage() {
       this.page++
-      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.page * this.maxItem)
+      this.FlexiBodyItemsPerPageLimited = this.FlexiBodyItemsPerPage.slice(
+        0,
+        this.page * this.maxItem
+      )
     },
+
     handleScroll(event) {
       console.log(event)
       if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
@@ -166,11 +171,29 @@ export default {
 
         console.log('Current scroll position:', scrollTop)
       })
+    },
+    checkUpdate() {
+      const limitedItems = this.FlexiBodyItemsPerPage.slice(
+        0,
+        this.FlexiBodyItemsPerPageLimited.length
+      )
+      for (let i = 0; i < limitedItems.length; i++) {
+        if (limitedItems[i]?.row?.id !== this.FlexiBodyItemsPerPageLimited[i]?.row?.id) {
+          this.FlexiBodyItemsPerPageLimited = limitedItems
+          break
+        }
+      }
     }
   },
+
   created() {
     this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
     this.createEventListener()
+  },
+  watch: {
+    FlexiBodyItemsPerPage() {
+      this.checkUpdate()
+    }
   }
 }
 </script>
