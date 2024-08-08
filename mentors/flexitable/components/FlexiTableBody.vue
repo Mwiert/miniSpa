@@ -1,7 +1,5 @@
 <template>
   <div ref="tableContainer" class="flexi-table-body-c" @scroll.passive="handleScroll">
-    {{ FlexiBodyItemsPerPage.length }}
-    {{ FlexiBodyItemsPerPageLimited.length }}
     <div v-if="FlexiBodyItemsPerPage.length < maxItem">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <div
