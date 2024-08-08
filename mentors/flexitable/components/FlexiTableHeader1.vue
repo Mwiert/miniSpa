@@ -5,7 +5,7 @@
         <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
           <div
             class="flexi-table-header-col"
-            :class="column.class"
+            :class="[column.class, { 'flexi-table-header-col-id': column.label === 'id' }]"
             @click="handlerSortingColumn(column)">
             <span class="flexi-table-header-col-value"> {{ column.name }} </span>
 
@@ -135,6 +135,9 @@ export default {
       width: 100%;
       &-value {
         margin-left: 8px;
+      }
+      &-id {
+        justify-content: center;
       }
 
       .icon-c {
