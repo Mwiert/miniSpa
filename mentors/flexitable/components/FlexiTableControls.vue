@@ -164,17 +164,17 @@ export default {
         //const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
         const bodyElement = this.$parent.$refs.container.$refs.body.$refs.print1
         const headerElement = this.$parent.$refs.container.$refs.head.$refs.print3
-        const connectedElement = document.createElement('div')
-        ;[headerElement, bodyElement].forEach((element) => {
-          connectedElement.appendChild(element.cloneNode(true))
-        })
-
+        const connectedElement = document.createElement('div');
+    connectedElement.appendChild(headerElement.cloneNode(true));
+    connectedElement.appendChild(bodyElement.cloneNode(true));
+  
         const options = {
           margin: [10, 10, 10, 10], // location
           filename: this.flexi.options.tableTitle + '.pdf',
           image: { type: 'jpeg', quality: 1 },
           html2canvas: { scale: 2 },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          jsPDF: { unit: 'mm', format: 'a2', orientation: 'portrait' }
+       
         }
 
         // use html2pdf.js to convert the combinedDiv to pdf
