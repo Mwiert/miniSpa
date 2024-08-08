@@ -381,7 +381,6 @@ export default {
   watch: {
     'flexi.options.selected': {
       handler: function (val) {
-        this.flexi.options.pages = []
         this.flexi.options.itemsPerPage = val.id
       }
     }

@@ -5,7 +5,6 @@ export default {
         this.flexi.options.totalPages = this.flexi.rows.length
         return this.flexi.rows
       }
-      const startTime = performance.now()
       const searchResults = this.flexi.rows.filter((item) => {
         const rowValuesString = Object.entries(item.row)
           .filter(([key]) => !this.flexi.options.hiddenColumns.includes(key))
@@ -14,8 +13,6 @@ export default {
           .toLowerCase()
         return rowValuesString.includes(this.flexi.options.searchKeyWord.toLowerCase())
       })
-      const endTime = performance.now()
-      console.log(`${(endTime - startTime).toFixed(2)} ms`)
       this.flexi.options.totalPages = searchResults.length
       return searchResults
     },
