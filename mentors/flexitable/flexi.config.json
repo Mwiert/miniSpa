@@ -1,6 +1,6 @@
 {
   "searchWord": "",
-  "hideColumnLimit": 1,
+  "minVisibleColumns": 1,
   "itemsPerPage": 5,
   "columnSizes": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   "currentPage": 1,

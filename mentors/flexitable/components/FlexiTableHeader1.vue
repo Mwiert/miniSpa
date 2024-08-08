@@ -152,7 +152,7 @@ export default {
         height: 24px;
         display: flex;
         justify-content: center;
-        align-items: end;
+        align-items: center;
         margin-right: 8px;
 
         .svg-icon-c {
