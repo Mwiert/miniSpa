@@ -137,21 +137,7 @@ export default {
       )
     },
     checkFilter(value, key) {
-      if (this.SearchKey.length !== this.flexi.rows.length) {
-        if (typeof value === 'string' || typeof value === 'number') {
-          if (typeof value === 'number') {
-            value = String(value)
-          }
-          for (let i = 0; i < this.SearchKey.length; i++) {
-            let searchValue = this.SearchKey[i].row[key].value
-
-            if (searchValue.toLowerCase().includes(value.toLowerCase())) {
-              console.log('searchValue', searchValue)
-              return true
-            }
-          }
-        }
-      }
+      console.log(value)
     },
 
     handleScroll(event) {
