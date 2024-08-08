@@ -8,7 +8,6 @@
       <UIEnumDropdown
         v-model="flexi.options.selected"
         :enumObj="updatedPageOrder"
-        :label="flexi.options.UIDropdownOrderProp.label"
         :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
         :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
         :showAll="flexi.options.UIDropdownOrderProp.showAll" />
@@ -66,15 +65,11 @@
     <!-- Search Table -->
     <div class="ftc-right-side-wrapper">
       <div class="mark-sign-wrapper">
-        <div class="sign-status-container">
-          <UIDropdown
-            v-model="this.flexi.options.selectedStatus"
-            :label="flexi.options.UIDropdownStatusProp.label"
-            :items="flexi.options.status" />
-        </div>
-        <div class="mark-container" @click="changeStatus()">
-          <div class="mark-container-text">Mark</div>
-        </div>
+        <FlexiTableActionArea
+          :buttonNumber="1"
+          :dropdownNumber="1"
+          :propFunction="changeStatus"
+          :label="'Mark'" />
       </div>
 
       <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
@@ -104,8 +99,8 @@
 //import { jsPDF } from 'jspdf';
 //import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
+import FlexiTableActionArea from './FlexiTableActionArea.vue'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
-import UIDropdown from '../../../src/components/Dropdown/UIDropdown.vue'
 import html2pdf from 'html2pdf.js'
 import dayjs from 'dayjs'
 import { reactive } from 'vue'
@@ -116,7 +111,7 @@ export default {
   mixins: [flexiTableMixin],
   components: {
     UIEnumDropdown,
-    UIDropdown
+    FlexiTableActionArea
   },
   data() {
     return {

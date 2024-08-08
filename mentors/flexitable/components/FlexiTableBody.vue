@@ -1,6 +1,5 @@
 <template>
   <div ref="tableContainer" class="flexi-table-body-c" @scroll.passive="handleScroll">
-    {{ loading }}
     <div v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <div
