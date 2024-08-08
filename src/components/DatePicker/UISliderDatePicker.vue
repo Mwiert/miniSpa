@@ -10,7 +10,7 @@
       <span
         v-for="(month, index) in months"
         :key="month"
-        :class="{ selected: index === selectedMonth }">
+        :class="{ selected: index === selectedMonth + 3 }">
         {{ month }}
       </span>
     </div>
@@ -198,7 +198,7 @@ export default {
           if (type === 'day' && centeredText) {
             this.selectedDay = parseInt(centeredText, 10)
           } else if (type === 'month' && centeredText) {
-            this.selectedMonth = this.months.indexOf(centeredText)
+            this.selectedMonth = this.months.indexOf(centeredText) - 3
           } else if (type === 'year' && centeredText) {
             this.selectedYear = parseInt(centeredText, 10)
           }
@@ -216,6 +216,7 @@ export default {
         .date(this.selectedDay)
         .format('DD-MM-YYYY')
       this.$emit('selected-date', formattedDate)
+      console.log(formattedDate)
     },
     onScroll() {
       if (this.isDragging) return
