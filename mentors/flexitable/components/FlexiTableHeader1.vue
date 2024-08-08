@@ -1,35 +1,33 @@
 <template>
-  <div
-    class="flexi-table-header-c"
-    :class="StickyHeaderClass"
-    :style="[gridTemplateColumns, ColumnGap]"
-    ref="print2">
-    <template v-for="column in flexi.columns" :key="column.name">
-      <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
-        <div
-          class="flexi-table-header-col"
-          :class="column.class"
-          @click="handlerSortingColumn(column)">
-          <span class="flexi-table-header-col-value"> {{ column.name }} </span>
+  <thead class="flexi-table-header-c" :class="StickyHeaderClass">
+    <tr>
+      <th class="table-head-c" v-for="column in flexi.columns" :key="column.name">
+        <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
+          <div
+            class="flexi-table-header-col"
+            :class="column.class"
+            @click="handlerSortingColumn(column)">
+            <span class="flexi-table-header-col-value"> {{ column.name }} </span>
 
-          <input
-            v-if="column.label === 'id'"
-            type="checkbox"
-            v-model="masterCheckbox"
-            @change="handleMasterCheckboxChange"
-            @click.stop="innerClick" />
+            <input
+              v-if="column.label === 'id'"
+              type="checkbox"
+              v-model="masterCheckbox"
+              @change="handleMasterCheckboxChange"
+              @click.stop="innerClick" />
 
-          <template v-if="flexi.options.sortableColumns.includes(column.label)">
-            <div class="icon-c">
-              <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
-              <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
-              <SvgIcon name="filter-desc" size="xs" v-else />
-            </div>
-          </template>
+            <template v-if="flexi.options.sortableColumns.includes(column.label)">
+              <div class="icon-c">
+                <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
+                <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
+                <SvgIcon name="filter-desc" size="xs" v-else />
+              </div>
+            </template>
+          </div>
         </div>
-      </div>
-    </template>
-  </div>
+      </th>
+    </tr>
+  </thead>
 </template>
 
 <script lang="ts">
@@ -87,15 +85,9 @@ export default {
       })
     },
     handleMasterCheckboxChange() {
-      this.FlexiBodyItemsPerPage.forEach((row) => {
+      this.flexi.rows.forEach((row) => {
         row.row.id.value = this.masterCheckbox
       })
-      const selected = this.flexi.rows.filter((row) => {
-        return Object.values(row.row).some((col) => col.checkbox && col.value)
-      })
-      this.pushelements = !this.pushelements
-      this.flexi.selectedRows.length = 0
-      this.flexi.selectedRows.push(...selected)
     }
   }
 }
@@ -103,16 +95,21 @@ export default {
 
 <style lang="scss" scoped>
 .flexi-table-header-c {
-  border-radius: 12px;
-
   &.sticky-header {
     background-color: #faf4d9;
     position: sticky;
     top: 0;
     height: 40px;
   }
+  .table-head-c {
+    padding: 0;
+    height: 40px;
+  }
 
   .flexi-table-header-col-wrapper {
+    display: flex;
+    align-items: center;
+
     // width: fit-content;
     cursor: pointer;
     font-weight: 500;
@@ -135,6 +132,10 @@ export default {
       align-items: center;
       height: 40px;
       justify-content: space-between;
+      width: 100%;
+      &-value {
+        margin-left: 8px;
+      }
 
       .icon-c {
         background-color: rgba(36, 55, 89, 0.06);
@@ -142,7 +143,7 @@ export default {
         height: 24px;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: end;
         margin-right: 8px;
 
         .svg-icon-c {

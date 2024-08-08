@@ -36,18 +36,20 @@ export default {
       },
       flexiTableOptions: {
         options: {
+          tableTitle: 'Hakan Calhanoglu burda on numara her yerde eller havada',
           columnGap: '.5rem',
-          selected: { id: 5, name: "FIVE" },
-          //columnSizes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-          hiddenColumns: ['annualFee', 'city'],
+          selected: { id: 5, name: 'FIVE' },
+          // columnSizes: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+          // hiddenColumns: ['annualFee', 'city'],
 
           //itemsPerPage: 5,
           stickyHeader: true,
-          // disableSorting: true
+          // disableSorting: true,
+          // hideSearch: true,
           show: false
         },
         columns: [
-          { id: 1, name: '#', label: 'id' },
+          { id: 1, name: '#', label: 'id', sortable: false },
           { id: 2, name: 'Status', label: 'status' },
           { id: 3, name: 'Name ', label: 'nameSurname' },
           { id: 4, name: 'Student ID', label: 'studentNumber' },
@@ -71,9 +73,7 @@ export default {
 
           hiddenColumns: ['annualFee', 'city'],
 
-          //itemsPerPage: 5,
           stickyHeader: true,
-          // disableSorting: true
           show: false
         },
         columns: [
@@ -100,10 +100,7 @@ export default {
           columnGap: '.5rem',
 
           hiddenColumns: ['annualFee', 'city'],
-
-          //itemsPerPage: 5,
           stickyHeader: true,
-          // disableSorting: true
           show: false
         },
         columns: [
@@ -127,7 +124,7 @@ export default {
   },
   created() {
     // row mapper for FlexiTable
-    ; (this.flexiTableOptions.rows = response.map((item) => {
+    ;(this.flexiTableOptions.rows = response.map((item) => {
       return {
         row: {
           id: {

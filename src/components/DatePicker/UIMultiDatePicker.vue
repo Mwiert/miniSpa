@@ -2,7 +2,9 @@
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
-    <div class="ui-date-picker-wrapper">
+    <div
+      class="ui-date-picker-wrapper"
+      :class="{ positionToRight: positionToRight, positionToLeft: positionToLeft }">
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
@@ -126,7 +128,11 @@ export default {
     isFutureValidation: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
-    isDatePickerEnable: { type: Boolean }
+    isDatePickerEnable: { type: Boolean },
+    positionToRight: { type: Boolean, default: false },
+    positionToLeft: { type: Boolean, default: false },
+    newSelectedDays: { type: Object, default: null },
+    maxSelectibleDay: { type: Number, default: 0 }
   },
   methods: {
     checkRange() {
@@ -278,6 +284,8 @@ export default {
           this.maxDate = dayjs(this.initialDate).add(day, 'day').format('YYYY-MM-DD')
         }
       }
+      this.$emit('minDate', this.minDate)
+      this.$emit('maxDate', this.maxDate)
     },
     populdateMonthDays() {
       if (this.isPastValidation) {
@@ -346,7 +354,7 @@ export default {
       for (let i = 0; i < endOfMonth.date(); i++) {
         const dateSender = date.startOf('month').add(i, 'day')
         const getDate = dayjs(dateSender).format('YYYY-MM-DD')
-        const test = dayjs(dateSender).format('YYYY-MMMM-DD')
+        const formattedDate = dayjs(dateSender).format('YYYY-MMMM-DD')
 
         daysInWholeMonth.push({
           date: getDate,
@@ -359,7 +367,7 @@ export default {
           year: dayjs(dateSender).format('YYYY'),
           firstInitialDate: getDate == this.baseInitialDates.firstInitialDate.date ? true : false,
           secondInitialDate: getDate == this.baseInitialDates.secondInitialDate.date ? true : false,
-          fullDateFormatted: test
+          fullDateFormatted: formattedDate
         })
       }
 
@@ -403,7 +411,38 @@ export default {
       this.linedThroughDate()
       this.checkSkippability()
     },
+    rearrangeSelects(reDate: string, condition: boolean) {
+      this.daysInMonth.forEach((day) => {
+        if (dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
+          day.selected = true
+          if (condition) {
+            this.secondSelectedDate = day
+            return
+          } else {
+            this.firstSelectedDate = day
+            return
+          }
+        }
+      })
+      this.nextMonthDays.forEach((day) => {
+        if (dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
+          day.selected = true
+          if (condition) {
+            this.secondSelectedDate = day
+            return
+          } else {
+            this.firstSelectedDate = day
+            return
+          }
+        }
+      })
+    },
     selectDate(selectedDay: date) {
+      if (this.baseInitialDates.firstInitialDate.date == this.firstSelectedDate.date) {
+        this.firstSelectedDate = {}
+        this.secondSelectedDate = {}
+      }
+
       if (this.baseInitialDates.firstInitialDate) {
         this.emitResetInitialDates() // turuncu baslangic degerlerini ilk tiklamada emit edip false olmasini saglar
       }
@@ -414,12 +453,16 @@ export default {
         this.firstSelectedDate.selected = true
         this.saveFirstDateHistory = this.firstSelectedDate.date
       } else {
+        const temp = selectedDay.date < this.firstSelectedDate.date
         if (selectedDay.date < this.firstSelectedDate.date) {
           // Seçilen gün first'ten küçükse gir
           if (!this.secondSelectedDate.date) {
             // First varsa, second yoksa gir (seçileni first, önceki first'ü second yapar)
             this.secondSelectedDate = this.firstSelectedDate
             this.firstSelectedDate = selectedDay
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController(temp)
+            }
             this.firstSelectedDate.selected = true
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
@@ -428,6 +471,10 @@ export default {
             // First ve second varsa gir (tarihi sola doğru genişletir)
             this.firstSelectedDate.selected = false
             this.firstSelectedDate = selectedDay
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController(temp)
+            }
+
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
           }
@@ -456,15 +503,62 @@ export default {
             // seçilen gün first'ten büyükse gir (tarihi sağa doğru daraltır veya genişletir)
             this.secondSelectedDate.selected = false
             this.secondSelectedDate = selectedDay
+            if (this.maxSelectibleDay != 0) {
+              this.rearrangeController()
+            }
+
             this.secondSelectedDate.selected = true
             this.saveSecondDateHistory = this.secondSelectedDate.date
           }
         }
       }
-      this.emitDate('dateFirstSelected', this.firstSelectedDate)
-      this.emitDate('dateSecondSelected', this.secondSelectedDate)
+      const FDate = {
+        number:
+          this.firstSelectedDate.number < 10
+            ? '0' + this.firstSelectedDate.number
+            : this.firstSelectedDate.number,
+        month: this.firstSelectedDate.month,
+        year: this.firstSelectedDate.year,
+        date: this.firstSelectedDate.date
+      }
+      const SDate = {
+        number:
+          this.secondSelectedDate.number < 10
+            ? '0' + this.secondSelectedDate.number
+            : this.secondSelectedDate.number,
+        month: this.secondSelectedDate.month,
+        year: this.secondSelectedDate.year,
+        date: this.secondSelectedDate.date
+      }
+      this.emitDate('dateFirstSelected', FDate)
+      this.emitDate('dateSecondSelected', SDate)
       this.deactivateAllBetween()
       this.updateBetweenDates()
+    },
+    rearrangeController(condition: boolean) {
+      const firstDate = dayjs(this.firstSelectedDate.date)
+      const secondDate = dayjs(this.secondSelectedDate.date)
+      const ifValidate = secondDate.diff(firstDate, 'day')
+
+      if (condition) {
+        if (ifValidate > this.maxSelectibleDay) {
+          this.secondSelectedDate.selected = false
+          const newDate = dayjs(this.secondSelectedDate.date).subtract(
+            ifValidate - this.maxSelectibleDay,
+            'day'
+          )
+          this.rearrangeSelects(newDate, condition)
+        }
+      } else {
+        if (ifValidate > this.maxSelectibleDay) {
+          this.firstSelectedDate.selected = false
+          const newDate2 = dayjs(this.firstSelectedDate.date).add(
+            ifValidate - this.maxSelectibleDay,
+            'day'
+          )
+          this.rearrangeSelects(newDate2)
+        }
+      }
     },
     emitDate(event, date) {
       this.$emit(event, date)
@@ -484,6 +578,23 @@ export default {
         }
       })
       this.$emit('resetBaseInitialDates')
+    },
+    resetInitialDates() {
+      this.baseInitialDates.firstInitialDate = ''
+      this.baseInitialDates.secondInitialDate = ''
+      this.daysInMonth.forEach((day) => {
+        if (day.firstInitialDate || day.secondInitialDate) {
+          day.firstInitialDate = false
+          day.secondInitialDate = false
+        }
+      })
+
+      this.nextMonthDays.forEach((day) => {
+        if (day.firstInitialDate || day.secondInitialDate) {
+          day.firstInitialDate = false
+          day.secondInitialDate = false
+        }
+      })
     },
     emitResetSecondDates() {
       this.daysInMonth.forEach((day) => {
@@ -721,6 +832,20 @@ export default {
     }
   },
   watch: {
+    newSelectedDays: {
+      handler(newVal) {
+        this.saveFirstDateHistory = newVal.firstSelectedDate.date
+
+        this.saveSecondDateHistory = newVal.secondSelectedDate.date
+
+        this.populdateMonthDays()
+        this.checkDateHistory()
+        this.updateBetweenDates()
+        this.linedThroughDate() // Her iki takvim için geçerli
+        this.checkSkippability()
+      },
+      deep: true
+    },
     isDatePickerEnable(newVal) {
       if (newVal) {
         if (!this.saveFirstDateHistory) {
@@ -738,6 +863,9 @@ export default {
       }
     },
     saveFirstDateHistory(newVal) {
+      this.saveFirstDateHistory = newVal
+
+      this.saveFirstDateHistory = newVal
       if (!newVal) {
         // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin
         this.daysInMonth.forEach((day) => {
@@ -767,10 +895,10 @@ export default {
     //When the component is created, we are checking the range, creating the days in month and checking the date history
     this.checkRange()
     this.populdateMonthDays()
-
     this.checkDateHistory()
     this.linedThroughDate()
     this.checkSkippability()
+    this.resetInitialDates()
   }
 }
 </script>
@@ -778,12 +906,17 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/variables.scss';
 @import '../../assets/css/_fonts.scss';
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'small' {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+}
 
-// This is the main container
 .ui-date-picker-c {
   align-self: center;
 
-  // This is the main calendar wrapper
   .ui-date-picker-wrapper {
     background: white;
     box-shadow: 2px 2px 6px #5c75991a;
@@ -804,19 +937,37 @@ export default {
       width: 600px;
       height: 250px;
       flex-direction: row;
+      transition: all 0.3s;
+      @include respond-to('small') {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+      }
     }
     &::before {
       content: '';
-      position: absolute; //Position relative to parent
-      top: -10px; //10px above the calendar
-      left: 15px; //15px from the left of the calendar
+      position: absolute;
+      top: -10px;
+      left: 50%;
       width: 0;
       height: 0;
-      border-left: 10px solid transparent; //This is the left border of the triangle invisible
-      border-right: 10px solid transparent; //This is the right border of the triangle invisible
-      border-bottom: 10px solid #ffffff; //This is the bottom border of the triangle white which is visible
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid #ffffff;
+      @include respond-to('small') {
+        left: 40%;
+      }
     }
-    //This is the main calendar content
+    &.positionToRight::before {
+      left: 15%;
+      @include respond-to('small') {
+        left: 28%;
+      }
+    }
+    &.positionToLeft::before {
+      left: 75%;
+    }
+
     .calendar {
       padding-top: 1.2rem;
       width: 300px;
@@ -825,7 +976,6 @@ export default {
       margin: 0 10px;
       border-radius: 30px;
 
-      // This is the header section
       .header {
         position: relative;
         display: flex;
@@ -833,7 +983,6 @@ export default {
         align-items: center;
         width: 100%;
 
-        // This is the arrow icons for the calendar
         .nav-button {
           background-color: transparent;
           border: none;
@@ -845,14 +994,12 @@ export default {
           justify-content: center;
           align-items: center;
 
-          // This is the arrow icon
           img {
             width: 15px;
             height: 15px;
           }
         }
 
-        // This is the left arrow icon
         .nav-button:first-child {
           position: absolute;
           left: 10px;
@@ -860,7 +1007,6 @@ export default {
           transform: translateY(-50%);
         }
 
-        // This is the right arrow icon
         .nav-button:last-child {
           position: absolute;
           right: 10px;
@@ -868,7 +1014,6 @@ export default {
           transform: translateY(-50%);
         }
 
-        // This is the current date
         .current-date {
           flex-grow: 1;
           text-align: center;
@@ -878,7 +1023,6 @@ export default {
       }
     }
 
-    // Styling of weekdays and days generally
     .weekdays,
     .days {
       list-style: none;
@@ -888,7 +1032,7 @@ export default {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
-      font-size: 14px;
+      font-size: 11px;
     }
 
     .weekdays {
@@ -900,7 +1044,6 @@ export default {
 
     .days {
       padding-top: 6px;
-      // Styling depending on if it is today (coloring gray)
       .isToday {
         background: #e7e7e7;
         border-radius: 16px;
@@ -913,12 +1056,12 @@ export default {
       }
     }
 
-    // Styling of days generally
     .days li {
       padding: 10px 10px;
       font-weight: 500;
-      line-height: 7px;
+      line-height: 6px;
       cursor: pointer;
+      transition: all 0.3s;
     }
     .days li.textDecoration {
       color: grey;
@@ -926,13 +1069,11 @@ export default {
       pointer-events: none;
       cursor: not-allowed;
     }
-    // If the dates that are selected are inactive, they are invisible
     .days li.inactive {
       visibility: hidden;
       pointer-events: none;
       cursor: not-allowed;
     }
-    // If the specific date is selected, it is colored with accent-primary-color which is light-blue
     .days li.selected {
       background-color: $accent-primary-color;
       border-radius: 4px;

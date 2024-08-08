@@ -1,32 +1,23 @@
 export default {
   computed: {
     SearchKey() {
-      if (this.flexi.options.hideSearch) {
+      if (this.flexi.options.hideSearch || this.flexi.options.searchKeyWord.length < 3) {
+        this.flexi.options.totalPages = this.flexi.rows.length
         return this.flexi.rows
       }
-      // console.log(this.flexi.rows)
+      const startTime = performance.now()
       const searchResults = this.flexi.rows.filter((item) => {
-        const rowValues = Object.values(item.row)
-        return rowValues.some((val) => {
-          const value = val.value ? val.value : val
-          return (
-            (typeof value === 'string' || typeof value === 'number') &&
-            JSON.stringify(value)
-              .toLowerCase()
-              .includes(this.flexi.options.searchKeyWord.toLowerCase())
-          )
-        })
+        const rowValuesString = Object.entries(item.row)
+          .filter(([key]) => !this.flexi.options.hiddenColumns.includes(key))
+          .map(([, val]) => JSON.stringify(val.value))
+          .join(', ')
+          .toLowerCase()
+        return rowValuesString.includes(this.flexi.options.searchKeyWord.toLowerCase())
       })
-      // console.log(searchResults)
-      const search = searchResults.map((result) => ({
-        row: result.row,
-        details: result.details,
-        check: result.check
-      }))
-
-      this.flexi.options.totalPages = search.length
-      console.log(search)
-      return search
+      const endTime = performance.now()
+      console.log(`${(endTime - startTime).toFixed(2)} ms`)
+      this.flexi.options.totalPages = searchResults.length
+      return searchResults
     },
     FlexiBodyItemsPerPage() {
       let itemsPerPage = parseInt(this.flexi.options.itemsPerPage)
@@ -36,7 +27,6 @@ export default {
       const currentPage = parseInt(this.flexi.options.currentPage)
       const startIndex = (currentPage - 1) * itemsPerPage
       const endIndex = startIndex + itemsPerPage
-      this.flexi.options.showCount = this.SearchKey.slice(startIndex, endIndex).length
       return this.SearchKey.slice(startIndex, endIndex)
     },
 

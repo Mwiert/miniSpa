@@ -1,25 +1,20 @@
 <template>
   <div class="flexi-table-footer-c">
-    {{ 'Showing ' + this.flexi.options.showCount +
-      ' out of ' + this.flexi.options.totalPages +
-      ' reservations' }}
-
-    <SmartTablePagination />
+    <FlexiTablePagination />
   </div>
 </template>
 <script lang="ts">
-import SmartTablePagination from '../../../src/components/SmartTable/SmartTablePagination.vue'
-import flexitableMixin from '../flexitableMixin.js'
+import FlexiTablePagination from './FlexiTablePagination.vue'
 export default {
   name: 'FlexiTableFooter',
   inject: ['flexi'],
-  mixins: [flexitableMixin],
   components: {
-    SmartTablePagination
+    FlexiTablePagination
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.flexi-table-footer-c {}
+.flexi-table-footer-c {
+}
 </style>
