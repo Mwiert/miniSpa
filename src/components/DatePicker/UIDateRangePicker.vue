@@ -31,14 +31,13 @@
                 type="text"
                 v-model="secondSelectedDateDisplay"
                 @input="onSecondDateInput($event.target.value)"
-                @keyup="handleResetInitialDates" />
+                @keyup="handleResetInitialDates"
+                placeholder="Select" />
             </span>
 
             <div
               class="placeholder-select"
-              v-if="!secondSelectedDate.date && !sendInitialDates.secondInitialDate.date">
-              <span>Select</span>
-            </div>
+              v-if="!secondSelectedDate.date && !sendInitialDates.secondInitialDate.date"></div>
           </div>
         </div>
         <div class="date-box-icon">
@@ -113,7 +112,7 @@ import date from '../../interface/IUIDatePicker'
 import dayjs from 'dayjs'
 import UIDatePicker from './UIDatePicker.vue'
 import UIMultiDatePicker from './UIMultiDatePicker.vue'
-
+import './dateInputHelper'
 export default {
   name: 'UIDateRangePicker',
   components: {
@@ -168,7 +167,7 @@ export default {
         return this.formatDateDisplay(this.firstSelectedDate.date)
       },
       set(newValue) {
-        const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(newValue)
+        const isValidFormat = newValue.isValidDateFormat()
 
         if (isValidFormat) {
           const parsedDate = this.parseDate(newValue)
@@ -181,7 +180,7 @@ export default {
         return this.formatDateDisplay(this.secondSelectedDate.date)
       },
       set(newValue) {
-        const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(newValue)
+        const isValidFormat = newValue.isValidDateFormat()
 
         if (isValidFormat) {
           const parsedDate = this.parseDate(newValue)
@@ -208,36 +207,39 @@ export default {
     formatDateDisplay(date) {
       if (!date) return ''
       const [year, month, day] = date.split('-')
-      return `${day}/${month}/${year}`
+      return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`
     },
     parseDate(date) {
       if (!date) return ''
-      let [day, month, year] = date.split('/')
-      //day = day.padStart(2, '0')
-      //month = month.padStart(2, '0')
+      const separators = /[-/.]/
+      let [day, month, year] = date.split(separators)
       return `${year}-${month}-${day}`
     },
     onFirstDateInput(value) {
       //this.secondSelectedDate.date = ''
       this.handleResetInitialDates()
-      const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value)
+      // const isValidFormat = value.isValidDateFormat()
 
-      if (isValidFormat) {
+      if (value.isValidFormat) {
         const parsedDate = this.parseDate(value)
         this.firstSelectedDate.date = parsedDate
         this.$emit('update:firstSelectedDate', parsedDate)
         this.validateDates(parsedDate)
+      } else {
+        console.error('Invalid date format')
       }
     },
     onSecondDateInput(value) {
       this.handleResetInitialDates()
-      const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value)
+      // const isValidFormat = value.isValidDateFormat()
 
-      if (isValidFormat) {
+      if (value.isValidDateFormat()) {
         const parsedDate = this.parseDate(value)
         this.secondSelectedDate.date = parsedDate
         this.$emit('update:secondSelectedDate', parsedDate)
         this.validateDates(parsedDate)
+      } else {
+        console.error('Invalid date format')
       }
     },
     formatDate(dateString) {
@@ -315,7 +317,7 @@ export default {
         if (this.isSingleDatePickerEnable === false) {
           this.isSingleDatePickerEnable = true
         } else {
-          // this.isSingleDatePickerEnable = false
+          this.isSingleDatePickerEnable = false
         }
       }
 
@@ -325,7 +327,7 @@ export default {
         if (this.isMultiDatePickerEnable === false) {
           this.isMultiDatePickerEnable = true
         } else {
-          // this.isMultiDatePickerEnable = false
+          this.isMultiDatePickerEnable = false
         }
       }
 
@@ -538,6 +540,15 @@ export default {
                   .format('YYYY-MM-DD')
               }
             }
+              // Eğer newDate ile firstDate arasındaki fark maxSelectibleDays'ten fazlaysa
+              const dayDifference = newDate.diff(firstDate, 'day')
+              if (dayDifference > this.maxSelectibleDay) {
+                this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')
+                this.firstSelectedDate.date = newDate
+                  .subtract(this.maxSelectibleDay, 'day')
+                  .format('YYYY-MM-DD')
+              }
+            }
           }
         }
       }
@@ -694,6 +705,7 @@ export default {
       .is-single-date {
         width: 100%;
         display: flex;
+
         //Date format box
         .single-date-box {
           display: flex;
