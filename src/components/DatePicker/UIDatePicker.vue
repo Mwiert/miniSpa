@@ -3,8 +3,7 @@
 
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
-
-    <div class="ui-date-picker-wrapper" :class="{ positionToLeftSingle: positionToLeftSingle }">
+    <div class="ui-date-picker-wrapper">
       <div>
         <!-- This is the main calendar -->
         <div class="calendar">
@@ -59,14 +58,14 @@ export default {
   data() {
     return {
       weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], //Static weekdays
-      calendarDate: dayjs(this.saveDate), //Creating the calendar date
+      calendarDate: dayjs(this.saveDate.date), //Creating the calendar date
       daysInMonth: [] as date[], //Creating the days in month as date interface object
       firstSelectedDate: {}, //Getting first selected date as type of date interface object
-      currentDate: dayjs(this.saveDate).format('YYYY-MM-DD'), //Manipulated date
+      currentDate: dayjs(this.saveDate.date).format('YYYY-MM-DD'), //Manipulated date
       presentDate: dayjs().format('YYYY-MM-DD'), //Present date that won't change
       minDate: dayjs(), //Minimum date range we select (Will manipulated later in code)
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
-      saveDateHistory: this.saveDate, //Saving the date history so we can see when we close calendar
+      saveDateHistory: this.saveDate.date, //Saving the date history so we can see when we close calendar
       prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
       nextDate: dayjs().endOf('month').format('YYYY-MM-DD')
     }
@@ -74,7 +73,7 @@ export default {
   props: {
     backYearRange: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
     forwardYearRange: { type: Number, default: 99 },
-    saveDate: { type: String, default: '' }, //This is for saving the date history
+    saveDate: { type: Object, default: null }, //This is for saving the date history
     backMonthRange: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     forwardMonthRange: { type: Number, default: 99 },
     backDayRange: { type: Number, default: 99 }, //This is for validating the Day range by giving it 9999 as default value since this is one of the maximum value
@@ -82,7 +81,7 @@ export default {
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
     isDatePickerEnable: { type: Boolean },
-    positionToLeftSingle: { type: Boolean, default: false }
+    newSelectedDays: { type: Object, default: null }
   },
   methods: {
     checkRange() {
@@ -108,114 +107,118 @@ export default {
         }
       } else {
         if (this.backMonthRange !== 99) {
-          this.minDate = dayjs(this.saveDate)
+          this.minDate = dayjs(this.saveDate.date)
             .subtract(this.backMonthRange, 'month')
             .format('YYYY-MM-DD')
           if (this.forwardMonthRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardMonthRange, 'month')
               .format('YYYY-MM-DD')
           } else if (this.forwardDayRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardYearRange, 'year')
               .format('YYYY-MM-DD')
           }
         } else if (this.backYearRange !== 99) {
-          this.minDate = dayjs(this.saveDate)
+          this.minDate = dayjs(this.saveDate.date)
             .subtract(this.backYearRange, 'month')
             .format('YYYY-MM-DD')
           if (this.forwardMonthRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardMonthRange, 'month')
               .format('YYYY-MM-DD')
           } else if (this.forwardDayRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardYearRange, 'year')
               .format('YYYY-MM-DD')
           }
         } else if (this.forwardMonthRange !== 99) {
-          this.maxDate = dayjs(this.saveDate)
+          this.maxDate = dayjs(this.saveDate.date)
             .add(this.forwardMonthRange, 'month')
             .format('YYYY-MM-DD')
           if (this.backMonthRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backMonthRange, 'month')
               .format('YYYY-MM-DD')
           } else if (this.backDayRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backYearRange, 'year')
               .format('YYYY-MM-DD')
           }
         } else if (this.forwardYearRange !== 99) {
-          this.maxDate = dayjs(this.saveDate)
+          this.maxDate = dayjs(this.saveDate.date)
             .add(this.forwardYearRange, 'year')
             .format('YYYY-MM-DD')
           if (this.backMonthRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backMonthRange, 'month')
               .format('YYYY-MM-DD')
           } else if (this.backDayRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backYearRange, 'year')
               .format('YYYY-MM-DD')
           }
         } else if (this.backDayRange !== 99) {
-          this.minDate = dayjs(this.saveDate)
+          this.minDate = dayjs(this.saveDate.date)
             .subtract(this.backDayRange, 'day')
             .format('YYYY-MM-DD')
           if (this.forwardMonthRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardMonthRange, 'month')
               .format('YYYY-MM-DD')
           } else if (this.forwardDayRange !== 99) {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
-            this.maxDate = dayjs(this.saveDate)
+            this.maxDate = dayjs(this.saveDate.date)
               .add(this.forwardYearRange, 'year')
               .format('YYYY-MM-DD')
           }
         } else if (this.forwardDayRange !== 99) {
-          this.maxDate = dayjs(this.saveDate).add(this.forwardDayRange, 'day').format('YYYY-MM-DD')
+          this.maxDate = dayjs(this.saveDate.date)
+            .add(this.forwardDayRange, 'day')
+            .format('YYYY-MM-DD')
           if (this.backMonthRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backMonthRange, 'month')
               .format('YYYY-MM-DD')
           } else if (this.backDayRange !== 99) {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backDayRange, 'day')
               .format('YYYY-MM-DD')
           } else {
-            this.minDate = dayjs(this.saveDate)
+            this.minDate = dayjs(this.saveDate.date)
               .subtract(this.backYearRange, 'year')
               .format('YYYY-MM-DD')
           }
         } else {
-          this.minDate = dayjs(this.saveDate)
+          this.minDate = dayjs(this.saveDate.date)
             .subtract(this.forwardYearRange, 'year')
             .format('YYYY-MM-DD')
-          this.maxDate = dayjs(this.saveDate)
+          this.maxDate = dayjs(this.saveDate.date)
             .add(this.forwardYearRange, 'year')
             .format('YYYY-MM-DD')
         }
       }
+      this.$emit('minDate', this.minDate)
+      this.$emit('maxDate', this.maxDate)
     },
     //This is where we create the calendar for a month
     totalDaysInMonth() {
@@ -305,6 +308,7 @@ export default {
       this.firstSelectedDate = date //First selected date is the date we clicked
       this.firstSelectedDate.selected = true //First selected date is true after we clicked
       this.saveDateHistory = this.firstSelectedDate.date //Saving the date history
+      console.log(this.saveDateHistory)
       this.linedThroughDate() //Lining through the date
       this.checkDateHistory() //Checking the date history
       this.$emit('dateSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
@@ -397,6 +401,15 @@ export default {
         this.totalDaysInMonth()
         this.checkSkippability()
       }
+    },
+    newSelectedDays: {
+      handler(newValue) {
+        this.saveDateHistory = newValue.firstSelectedDate.date
+
+        this.totalDaysInMonth()
+        this.checkSkippability()
+      },
+      deep: true
     }
   },
   created() {
@@ -427,7 +440,7 @@ export default {
     opacity: 1;
     width: 270px;
     height: 240px;
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
@@ -444,9 +457,6 @@ export default {
       border-left: 10px solid transparent; //This is the left border of the triangle invisible
       border-right: 10px solid transparent; //This is the right border of the triangle invisible
       border-bottom: 10px solid #ffffff; //This is the bottom border of the triangle white which is visible
-    }
-    &.positionToLeftSingle::before {
-      left: 80%;
     }
     //This is the main calendar content
     .calendar {
@@ -508,7 +518,7 @@ export default {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
-      font-size: 10px;
+      font-size: 11px;
     }
 
     .weekdays {
@@ -530,7 +540,7 @@ export default {
     .days li {
       padding: 10px 8px;
       font-weight: 500;
-      line-height: 5px;
+      line-height: 6px;
       cursor: pointer;
     }
     .days li.textDecoration {
