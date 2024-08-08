@@ -22,7 +22,7 @@ export default {
     FlexiBodyItemsPerPage() {
       let itemsPerPage = parseInt(this.flexi.options.itemsPerPage)
       if (itemsPerPage == -1) {
-        itemsPerPage = this.FlexiBodyItemsPerPageLimited.length
+        itemsPerPage = this.flexi.rows.length
       }
       const currentPage = parseInt(this.flexi.options.currentPage)
       const startIndex = (currentPage - 1) * itemsPerPage

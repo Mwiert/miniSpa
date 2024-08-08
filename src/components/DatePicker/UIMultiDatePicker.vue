@@ -87,16 +87,6 @@
           </ul>
         </div>
       </div>
-      First
-      {{ firstSelectedDate }}
-      <br />
-      <br />
-      second
-      {{ secondSelectedDate }}
-      <br />
-      <br />
-      base
-      {{ baseInitialDates }}
     </div>
   </div>
 </template>
@@ -143,7 +133,6 @@ export default {
     positionToLeft: { type: Boolean, default: false },
     newSelectedDays: { type: Object, default: null },
     maxSelectibleDay: { type: Number, default: 0 }
-
   },
   methods: {
     checkRange() {
@@ -420,29 +409,26 @@ export default {
       this.linedThroughDate()
       this.checkSkippability()
     },
-    rearrangeSelects(reDate: string , condition: boolean) {
-      
+    rearrangeSelects(reDate: string, condition: boolean) {
       this.daysInMonth.forEach((day) => {
-        if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
+        if (dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
-          if( condition ) {
+          if (condition) {
             this.secondSelectedDate = day
             return
-          }
-          else  {
+          } else {
             this.firstSelectedDate = day
-            return 
+            return
           }
         }
       })
       this.nextMonthDays.forEach((day) => {
-        if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
+        if (dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
-          if( condition ) {
+          if (condition) {
             this.secondSelectedDate = day
             return
-          }
-          else  {
+          } else {
             this.firstSelectedDate = day
             return
           }
@@ -547,22 +533,27 @@ export default {
       this.deactivateAllBetween()
       this.updateBetweenDates()
     },
-    rearrangeController(condition: boolean) {  
+    rearrangeController(condition: boolean) {
       const firstDate = dayjs(this.firstSelectedDate.date)
       const secondDate = dayjs(this.secondSelectedDate.date)
-      const ifValidate = secondDate.diff(firstDate,'day')
-      
-      if(condition) {
-        if(ifValidate > this.maxSelectibleDay) {
+      const ifValidate = secondDate.diff(firstDate, 'day')
+
+      if (condition) {
+        if (ifValidate > this.maxSelectibleDay) {
           this.secondSelectedDate.selected = false
-          const newDate = dayjs(this.secondSelectedDate.date).subtract(ifValidate - this.maxSelectibleDay, 'day')
-          this.rearrangeSelects(newDate , condition)
+          const newDate = dayjs(this.secondSelectedDate.date).subtract(
+            ifValidate - this.maxSelectibleDay,
+            'day'
+          )
+          this.rearrangeSelects(newDate, condition)
         }
-      }
-      else  {
-        if(ifValidate > this.maxSelectibleDay) {
+      } else {
+        if (ifValidate > this.maxSelectibleDay) {
           this.firstSelectedDate.selected = false
-          const newDate2 = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
+          const newDate2 = dayjs(this.firstSelectedDate.date).add(
+            ifValidate - this.maxSelectibleDay,
+            'day'
+          )
           this.rearrangeSelects(newDate2)
         }
       }
@@ -968,12 +959,18 @@ export default {
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
       border-bottom: 10px solid #ffffff;
+      @include respond-to('small') {
+        left: 40%;
+      }
     }
     &.positionToRight::before {
       left: 15%;
+      @include respond-to('small') {
+        left: 28%;
+      }
     }
     &.positionToLeft::before {
-      left: 82%;
+      left: 75%;
     }
 
     .calendar {

@@ -12,31 +12,27 @@
         <div class="is-single-date">
           <div class="single-date-box">
             <span class="date">
-              
               <!-- This is where we are getting the day -->
-              <input class="date" v-model="firstSelectedDate.date"
-              @keyup ="handleResetInitialDates"
-              :max="maxValue"
-              :min="0"
-              @input="validateInput"
-              @blur="formatInput"
-
-              >
-              </input>
+              <input
+                class="date"
+                type="text"
+                v-model="firstSelectedDateDisplay"
+                @input="onFirstDateInput($event.target.value)"
+                @keyup="handleResetInitialDates"
+                @blur="formatInput" />
             </span>
-
-           
           </div>
           <div class="single-date-box divider" v-if="isMulti">
             <span class="date">
               <!-- This is where we are getting the day -->
 
-              <input class="date" v-model="secondSelectedDate.date"
-              @keyup ="handleResetInitialDates">
-              </input>
+              <input
+                class="date"
+                type="text"
+                v-model="secondSelectedDateDisplay"
+                @input="onSecondDateInput($event.target.value)"
+                @keyup="handleResetInitialDates" />
             </span>
-
-           
 
             <div
               class="placeholder-select"
@@ -44,6 +40,9 @@
               <span>Select</span>
             </div>
           </div>
+        </div>
+        <div class="date-box-icon">
+            <SvgIcon name="dp" size="s" class="date-icon"/>
         </div>
       </div>
     </div>
@@ -96,8 +95,7 @@
           :positionToRight="positionToRight"
           :positionToLeft="positionToLeft"
           :newSelectedDays="newSelectedDays"
-          :maxSelectibleDay="maxSelectibleDay"
-          />
+          :maxSelectibleDay="maxSelectibleDay" />
       </div>
     </div>
   </div>
@@ -134,7 +132,6 @@ export default {
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     spaceBetweenDays: { type: Number, default: 2 },
     maxSelectibleDay: { type: Number, default: 0 }
-
   },
   data() {
     return {
@@ -156,6 +153,14 @@ export default {
       }
     }
   },
+  computed: {
+    firstSelectedDateDisplay() {
+      return this.formatDateDisplay(this.firstSelectedDate.date)
+    },
+    secondSelectedDateDisplay() {
+      return this.formatDateDisplay(this.secondSelectedDate.date)
+    }
+  },
   mounted() {
     document.addEventListener('click', this.handleClickOutside)
     this.firstSelectedDate = this.sendInitialDates.firstInitialDate
@@ -165,6 +170,34 @@ export default {
     document.removeEventListener('click', this.handleClickOutside)
   },
   methods: {
+    formatDateDisplay(date) {
+      if (!date) return ''
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+    parseDate(date) {
+      if (!date) return ''
+      const [day, month, year] = date.split('/')
+      return `${year}-${month}-${day}`
+    },
+    onFirstDateInput(value) {
+      const back = this.parseDate(value)
+      this.$emit('update:firstSelectedDate', back)
+
+      this.firstSelectedDate.date = back
+    },
+    onSecondDateInput(value) {
+      const back = this.parseDate(value)
+      this.$emit('update:secondSelectedDate', back)
+      this.secondSelectedDate.date = back
+    },
+
+    formatDate(dateString) {
+      return dayjs(dateString).format('DD/MM/YYYY')
+    },
+    emitFormattedDate() {
+      this.$emit('update:modelValue', this.formatDate(this.firstSelectedDate.date))
+    },
     handleClickOutside(event) {
       if (!this.$el.contains(event.target)) {
         setTimeout(() => {
@@ -231,7 +264,7 @@ export default {
         if (this.isSingleDatePickerEnable === false) {
           this.isSingleDatePickerEnable = true
         } else {
-          // this.isSingleDatePickerEnable = false
+          this.isSingleDatePickerEnable = false
         }
       }
 
@@ -241,7 +274,7 @@ export default {
         if (this.isMultiDatePickerEnable === false) {
           this.isMultiDatePickerEnable = true
         } else {
-          // this.isMultiDatePickerEnable = false
+          this.isMultiDatePickerEnable = false
         }
       }
 
@@ -280,7 +313,6 @@ export default {
     fillInitialDate() {
       if (this.isMulti) {
         if (this.initialDate) {
-
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs(this.initialDate).format('DD'),
@@ -315,7 +347,6 @@ export default {
             }
           }
         } else {
-         
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs().format('DD'),
@@ -371,37 +402,53 @@ export default {
     handleResetInitialDates() {
       this.sendInitialDates.firstInitialDate = ''
       this.sendInitialDates.secondInitialDate = ''
-      this.firstSelectedDate.number=String(this.firstSelectedDate.number).length==1? '0'+this.firstSelectedDate.number:this.firstSelectedDate.number
-      this.firstSelectedDate.number=String(this.firstSelectedDate.number).length==3? this.firstSelectedDate.number.slice(-2):this.firstSelectedDate.number
+      this.firstSelectedDate.number =
+        String(this.firstSelectedDate.number).length == 1
+          ? '0' + this.firstSelectedDate.number
+          : this.firstSelectedDate.number
+      this.firstSelectedDate.number =
+        String(this.firstSelectedDate.number).length == 3
+          ? this.firstSelectedDate.number.slice(-2)
+          : this.firstSelectedDate.number
 
-      this.secondSelectedDate.number=String(this.secondSelectedDate.number).length==1? '0'+this.secondSelectedDate.number:this.secondSelectedDate.number
-      this.secondSelectedDate.number=String(this.secondSelectedDate.number).length==3? this.secondSelectedDate.number.slice(-2):this.secondSelectedDate.number
+      this.secondSelectedDate.number =
+        String(this.secondSelectedDate.number).length == 1
+          ? '0' + this.secondSelectedDate.number
+          : this.secondSelectedDate.number
+      this.secondSelectedDate.number =
+        String(this.secondSelectedDate.number).length == 3
+          ? this.secondSelectedDate.number.slice(-2)
+          : this.secondSelectedDate.number
     }
   },
 
   watch: {
-    firstSelectedDate:{
-      handler(newVal){
+    firstSelectedDate: {
+      handler(newVal) {
         if (!newVal.date) {
           this.firstSelectedDate = this.sendInitialDates.firstInitialDate
           this.secondSelectedDate = this.sendInitialDates.secondInitialDate
           this.fillInitialDate()
-        }
-        else{
+        } else {
           this.newSelectedDays.firstSelectedDate = newVal
           this.newSelectedDays.secondSelectedDate = this.secondSelectedDate
         }
-        
       },
-      deep:true
+      deep: true
     },
-},
-  created() {        
+    secondSelectedDate: {
+      handler(newVal) {
+        this.newSelectedDays.secondSelectedDate = newVal
+      },
+      deep: true
+    }
+  },
+  created() {
     this.firstSelectedDate = this.sendInitialDates.firstInitialDate
     this.secondSelectedDate = this.sendInitialDates.secondInitialDate
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
-    
+
     this.sendDateToParent()
   }
 }
@@ -447,18 +494,18 @@ export default {
     left: 10%;
   }
   .isMulti {
-    left: -89%;
+    left: -75%;
     transition: all 0.3s;
 
     @include respond-to(small) {
-      left: -26%;
+      left: -10%;
     }
   }
   .positionToRight {
-    left: 6%;
+    left: 5%;
   }
   .positionToLeft {
-    left: -175%;
+    left: -130%;
   }
   .positionToLeftSingle {
     left: -85%;
@@ -481,12 +528,12 @@ export default {
     cursor: pointer;
     border-radius: 12px;
     &.multi {
-      width: 170px;
+      width: auto;
       align-items: center;
       justify-content: center;
     }
     &.single {
-      width: 100px;
+      width: auto;
     }
 
     //This is content inside of button
@@ -500,6 +547,15 @@ export default {
       font-size: 12px;
       color: #2b2b2b;
       opacity: 0.9;
+      .date-box-icon {
+        background-color: #f8f8f8;
+        .date-icon {
+          padding: 0;
+          &:hover {
+            background: #f8f8f8;
+          }
+        }
+      }
       //The output for single date picker if it is single
       .is-single-date {
         width: 100%;
@@ -512,6 +568,7 @@ export default {
           flex-direction: row;
           width: 100%;
           height: 24px;
+          background-color: #f8f8f8;
 
           .date {
             width: 80px;
@@ -522,10 +579,10 @@ export default {
             font-size: 14px;
             font-weight: 400;
             color: #2b2b2b;
+            background-color: #f8f8f8;
           }
 
           //Month and Year Box To Design
-          
 
           .placeholder-select {
             font-size: 14px;
@@ -540,7 +597,7 @@ export default {
           //Divider for multi date picker
           &.divider {
             border-left: 1px solid #b6b6b6;
-            margin: 0 10px;
+            padding: 0 10px;
           }
         }
       }

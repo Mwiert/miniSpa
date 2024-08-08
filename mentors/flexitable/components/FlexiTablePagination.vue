@@ -1,23 +1,35 @@
 <template>
-  <div class="smart-table-pagination-c" v-if="flexi.options.pagination">
+  <div class="flexi-table-pagination-c" v-if="flexi.options.pagination">
     <p class="show" v-html="paginationText"></p>
     <div class="go-to-container">
       <label for="gotoLabel" class="gotoLabel">Go to </label>
-      <input class="smart-table-pagination-goto" type="number" min="1" :max="this.flexi.options.pages.length"
-        v-model="flexi.options.currentPage" />
+      <input
+        class="flexi-table-pagination-goto"
+        type="number"
+        min="1"
+        :max="this.flexi.options.pages.length"
+        :value="flexi.options.currentPage"
+        @input="handleInputChange" />
     </div>
     <div class="buttons">
-      <button @click="setPage(flexi.options.currentPage - 1)" class="prev-page-btn"
+      <button
+        @click="setPage(flexi.options.currentPage - 1)"
+        class="prev-page-btn"
         :class="{ visibility: flexi.options.currentPage == 1 }">
         <SvgIcon :name="'arrow-left'" size="s" />
       </button>
 
-      <button v-for="page in pagesToShow" :key="page" @click="setPage(page)"
+      <button
+        v-for="page in pagesToShow"
+        :key="page"
+        @click="setPage(page)"
         :class="['page-btn', { active: page == flexi.options.currentPage }]">
         {{ page }}
       </button>
 
-      <button @click="setPage(flexi.options.currentPage + 1)" class="next-page-btn"
+      <button
+        @click="setPage(flexi.options.currentPage + 1)"
+        class="next-page-btn"
         :class="{ visibility: flexi.options.currentPage == flexi.options.pages.length }">
         <SvgIcon :name="'arrow-right'" size="s" />
       </button>
@@ -95,6 +107,16 @@ export default {
     },
     isValidPage(page) {
       return page > 0 && page <= this.flexi.options.pages.length
+    },
+    handleInputChange(event) {
+      const value = Number(event.target.value)
+      if (value < 1) {
+        this.flexi.options.currentPage = 1
+      } else if (value > this.flexi.options.pages.length) {
+        this.flexi.options.currentPage = this.flexi.options.pages.length
+      } else {
+        this.flexi.options.currentPage = value
+      }
     }
   },
 
@@ -110,27 +132,28 @@ export default {
 </script>
 
 <style lang="scss">
-.smart-table-pagination-c {
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  padding: 1rem;
+.flexi-table-pagination-c {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  flex-wrap: wrap;
 
   .show {
-    margin-right: auto;
+    flex: 1;
+    margin-right: 1rem;
   }
 
   .go-to-container {
-    position: absolute;
-    margin-right: 25%;
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
 
-    .smart-table-pagination-goto {
+    .flexi-table-pagination-goto {
       background: #f7f8fa 0% 0% no-repeat padding-box;
       border: 1px solid #dfe0e6;
       border-radius: 8px;
-
       width: 48px;
       height: 32px;
       opacity: 1;
@@ -153,8 +176,9 @@ export default {
 
   .buttons {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    margin-left: auto;
 
     .prev-page-btn,
     .next-page-btn {
@@ -198,6 +222,39 @@ export default {
       &.disabled {
         cursor: not-allowed;
         opacity: 0.5;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .flexi-table-pagination-c {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .show {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .go-to-container {
+      margin-bottom: 1rem;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .buttons {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+
+      .prev-page-btn,
+      .next-page-btn {
+        margin: 5px 0;
+      }
+
+      .page-btn {
+        margin: 5px 0;
       }
     }
   }
