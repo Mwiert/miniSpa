@@ -12,32 +12,27 @@
         <div class="is-single-date">
           <div class="single-date-box">
             <span class="date">
-              
               <!-- This is where we are getting the day -->
-              <input class="date" v-model="firstSelectedDate.date"
-              @keyup ="handleResetInitialDates"
-              :max="maxValue"
-              :min="0"
-              @input="validateInput"
-              @blur="formatInput"
-
-              />
-              
+              <input
+                class="date"
+                type="text"
+                v-model="firstSelectedDateDisplay"
+                @input="onFirstDateInput($event.target.value)"
+                @keyup="handleResetInitialDates"
+                @blur="formatInput" />
             </span>
-
-           
           </div>
           <div class="single-date-box divider" v-if="isMulti">
             <span class="date">
               <!-- This is where we are getting the day -->
 
-              <input class="date" v-model="secondSelectedDate.date"
-              @keyup ="handleResetInitialDates"
-              />
-              
+              <input
+                class="date"
+                type="text"
+                v-model="secondSelectedDateDisplay"
+                @input="onSecondDateInput($event.target.value)"
+                @keyup="handleResetInitialDates" />
             </span>
-
-           
 
             <div
               class="placeholder-select"
@@ -47,7 +42,7 @@
           </div>
         </div>
         <div class="date-box-icon">
-            <SvgIcon name="dp" size="s" class="date-icon"/>
+          <SvgIcon name="dp" size="s" class="date-icon" />
         </div>
       </div>
     </div>
@@ -69,14 +64,17 @@
           :backMonthRange="validateBackMonth"
           :forwardDayRange="validateForwardDay"
           :backDayRange="validateBackDay"
-          :saveDate="sendInitialDates.firstInitialDate.date"
+          :saveDate="firstSelectedDate"
           :isFutureValidation="isFuture"
           :isPastValidation="isPast"
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
           @dateSelected="handleFirstDateSelected"
           @click="sendDateToParent"
-          :positionToLeftSingle="positionToLeftSingle" />
+          :positionToLeftSingle="positionToLeftSingle"
+          @minDate="updateMinDate"
+          @maxDate="updateMaxDate"
+          :newSelectedDays="newSelectedDays" />
       </div>
       <div v-if="isMulti">
         <UIMultiDatePicker
@@ -101,11 +99,13 @@
           :positionToLeft="positionToLeft"
           :newSelectedDays="newSelectedDays"
           :maxSelectibleDay="maxSelectibleDay"
-          />
+          @minDate="updateMinDate"
+          @maxDate="updateMaxDate" />
       </div>
     </div>
   </div>
 </template>
+
 <script lang="ts">
 //Imports the need../../interface/IUIDatePickeres
 import date from '../../interface/IUIDatePicker'
@@ -125,7 +125,7 @@ export default {
       default: ''
     },
     isMulti: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
-    isSingle: { type: Boolean, default: false }, //This is for asking to parent whether should the single date picker available in this implementation
+    isSingle: { type: Boolean, default: true }, //This is for asking to parent whether should the single date picker available in this implementation
     validateForwardMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateForwardYear: { type: Number, default: 99 },
@@ -138,7 +138,6 @@ export default {
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     spaceBetweenDays: { type: Number, default: 2 },
     maxSelectibleDay: { type: Number, default: 0 }
-
   },
   data() {
     return {
@@ -147,6 +146,8 @@ export default {
       isSingleDatePickerEnable: false, //This is for enabling the single date picker as default false
       isMultiDatePickerEnable: false, //This is for enabling the multi date picker as default false
       presentDate: {} as date,
+      minDate: '',
+      maxDate: '',
       sendInitialDates: {
         firstInitialDate: '',
         secondInitialDate: ''
@@ -160,6 +161,42 @@ export default {
       }
     }
   },
+  // computed: {
+  //   firstSelectedDateDisplay() {
+  //     return this.formatDateDisplay(this.firstSelectedDate.date)
+  //   },
+  //   secondSelectedDateDisplay() {
+  //     return this.formatDateDisplay(this.secondSelectedDate.date)
+  //   }
+  // },
+  computed: {
+    firstSelectedDateDisplay: {
+      get() {
+        return this.formatDateDisplay(this.firstSelectedDate.date)
+      },
+      set(newValue) {
+        const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(newValue)
+
+        if (isValidFormat) {
+          const parsedDate = this.parseDate(newValue)
+          this.firstSelectedDate.date = parsedDate
+        }
+      }
+    },
+    secondSelectedDateDisplay: {
+      get() {
+        return this.formatDateDisplay(this.secondSelectedDate.date)
+      },
+      set(newValue) {
+        const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(newValue)
+
+        if (isValidFormat) {
+          const parsedDate = this.parseDate(newValue)
+          this.secondSelectedDate.date = parsedDate
+        }
+      }
+    }
+  },
   mounted() {
     document.addEventListener('click', this.handleClickOutside)
     this.firstSelectedDate = this.sendInitialDates.firstInitialDate
@@ -169,6 +206,50 @@ export default {
     document.removeEventListener('click', this.handleClickOutside)
   },
   methods: {
+    updateMinDate(minDate) {
+      this.minDate = minDate
+    },
+    updateMaxDate(maxDate) {
+      this.maxDate = maxDate
+    },
+    formatDateDisplay(date) {
+      if (!date) return ''
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+    parseDate(date) {
+      if (!date) return ''
+      let [day, month, year] = date.split('/')
+      //day = day.padStart(2, '0')
+      //month = month.padStart(2, '0')
+      return `${year}-${month}-${day}`
+    },
+    onFirstDateInput(value) {
+      this.handleResetInitialDates()
+      const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value)
+
+      if (isValidFormat) {
+        const parsedDate = this.parseDate(value)
+        this.firstSelectedDate.date = parsedDate
+        this.$emit('update:firstSelectedDate', parsedDate)
+        this.validateDates(parsedDate)
+      }
+    },
+    onSecondDateInput(value) {
+      this.handleResetInitialDates()
+      const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value)
+
+      if (isValidFormat) {
+        const parsedDate = this.parseDate(value)
+        this.secondSelectedDate.date = parsedDate
+        this.$emit('update:secondSelectedDate', parsedDate)
+        this.validateDates(parsedDate)
+      }
+    },
+    formatDate(dateString) {
+      return dayjs(dateString).format('DD/MM/YYYY')
+    },
+
     handleClickOutside(event) {
       if (!this.$el.contains(event.target)) {
         setTimeout(() => {
@@ -284,7 +365,6 @@ export default {
     fillInitialDate() {
       if (this.isMulti) {
         if (this.initialDate) {
-
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs(this.initialDate).format('DD'),
@@ -319,7 +399,6 @@ export default {
             }
           }
         } else {
-         
           if (!this.isPast) {
             this.sendInitialDates.firstInitialDate = {
               number: dayjs().format('DD'),
@@ -374,38 +453,113 @@ export default {
     },
     handleResetInitialDates() {
       this.sendInitialDates.firstInitialDate = ''
-      this.sendInitialDates.secondInitialDate = ''
-      this.firstSelectedDate.number=String(this.firstSelectedDate.number).length==1? '0'+this.firstSelectedDate.number:this.firstSelectedDate.number
-      this.firstSelectedDate.number=String(this.firstSelectedDate.number).length==3? this.firstSelectedDate.number.slice(-2):this.firstSelectedDate.number
+      if (this.isMulti) {
+        this.sendInitialDates.secondInitialDate = ''
+      }
+    },
+    validateDates(value) {
+      let firstDate = dayjs(this.firstSelectedDate.date)
+      let secondDate = dayjs(this.secondSelectedDate.date)
+      let newDate = dayjs(value)
+      const minDate = dayjs(this.minDate)
+      const maxDate = dayjs(this.maxDate)
 
-      this.secondSelectedDate.number=String(this.secondSelectedDate.number).length==1? '0'+this.secondSelectedDate.number:this.secondSelectedDate.number
-      this.secondSelectedDate.number=String(this.secondSelectedDate.number).length==3? this.secondSelectedDate.number.slice(-2):this.secondSelectedDate.number
+      if (this.isMulti) {
+        if (this.firstSelectedDate.date === value) {
+          // newDate minDate'ten önceyse
+          if (newDate.isBefore(minDate)) {
+            this.firstSelectedDate.date = minDate.format('YYYY-MM-DD')
+            //Eğer secondDate minDate + maxSelectibleDay'den sonraysa
+            if (secondDate.isAfter(minDate.add(this.maxSelectibleDay, 'day'))) {
+              this.secondSelectedDate.date = minDate
+                .add(this.maxSelectibleDay, 'day')
+                .format('YYYY-MM-DD')
+            }
+          } else {
+            // Eğer newDate, secondDate'ten sonraysa
+            if (newDate.isAfter(secondDate)) {
+              this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
+              this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')
+            }
+
+            // Eğer secondDate ve newDate arasındaki fark maxSelectibleDays'ten fazlaysa
+            const dayDifference = secondDate.diff(newDate, 'day')
+            if (dayDifference > this.maxSelectibleDay) {
+              this.firstSelectedDate.date = newDate.format('YYYY-MM-DD')
+              this.secondSelectedDate.date = newDate
+                .add(this.maxSelectibleDay, 'day')
+                .format('YYYY-MM-DD')
+            }
+          }
+        }
+        if (this.secondSelectedDate.date === value) {
+          // newDate maxDate'ten sonraysa
+          if (newDate.isAfter(maxDate)) {
+            this.secondSelectedDate.date = maxDate.format('YYYY-MM-DD')
+            // Eğer firstDate maxDate - maxSelectibleDays'ten sonraysa
+            if (firstDate.isBefore(maxDate.subtract(this.maxSelectibleDay, 'day'))) {
+              this.firstSelectedDate.date = maxDate
+                .subtract(this.maxSelectibleDay, 'day')
+                .format('YYYY-MM-DD')
+            }
+          } else {
+            // Eğer newDate, firstDate'ten sonraysa
+            if (newDate.isBefore(firstDate)) {
+              this.secondSelectedDate.date = firstDate.format('YYYY-MM-DD')
+              this.firstSelectedDate.date = newDate.format('YYYY-MM-DD')
+            }
+
+            // Eğer newDate ile firstDate arasındaki fark maxSelectibleDays'ten fazlaysa
+            const dayDifference = newDate.diff(firstDate, 'day')
+            if (dayDifference > this.maxSelectibleDay) {
+              this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')
+              this.firstSelectedDate.date = newDate
+                .subtract(this.maxSelectibleDay, 'day')
+                .format('YYYY-MM-DD')
+            }
+          }
+        }
+      } else {
+        if (newDate.isBefore(this.minDate)) {
+          this.firstSelectedDate.date = this.minDate
+        }
+        if (newDate.isAfter(this.maxDate)) {
+          this.firstSelectedDate.date = this.maxDate
+          console.log(this.firstSelectedDate.date)
+        }
+      }
+
+      this.sendDateToParent()
     }
   },
 
   watch: {
-    firstSelectedDate:{
-      handler(newVal){
+    firstSelectedDate: {
+      handler(newVal) {
         if (!newVal.date) {
           this.firstSelectedDate = this.sendInitialDates.firstInitialDate
           this.secondSelectedDate = this.sendInitialDates.secondInitialDate
           this.fillInitialDate()
-        }
-        else{
+        } else {
           this.newSelectedDays.firstSelectedDate = newVal
           this.newSelectedDays.secondSelectedDate = this.secondSelectedDate
         }
-        
       },
-      deep:true
+      deep: true
     },
-},
-  created() {        
+    secondSelectedDate: {
+      handler(newVal) {
+        this.newSelectedDays.secondSelectedDate = newVal
+      },
+      deep: true
+    }
+  },
+  created() {
     this.firstSelectedDate = this.sendInitialDates.firstInitialDate
     this.secondSelectedDate = this.sendInitialDates.secondInitialDate
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
-    
+
     this.sendDateToParent()
   }
 }
@@ -505,15 +659,14 @@ export default {
       color: #2b2b2b;
       opacity: 0.9;
       .date-box-icon {
-          background-color: #f8f8f8;
-          .date-icon  {
-            padding: 0;
-            &:hover {
-              background: #f8f8f8;
-            }
+        background-color: #f8f8f8;
+        .date-icon {
+          padding: 0;
+          &:hover {
+            background: #f8f8f8;
           }
-          
         }
+      }
       //The output for single date picker if it is single
       .is-single-date {
         width: 100%;
@@ -527,6 +680,7 @@ export default {
           flex-direction: row;
           width: 100%;
           height: 24px;
+          background-color: #f8f8f8;
 
           .date {
             width: 80px;
@@ -541,7 +695,6 @@ export default {
           }
 
           //Month and Year Box To Design
-          
 
           .placeholder-select {
             font-size: 14px;

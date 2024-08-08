@@ -22,12 +22,22 @@
     "30": "THIRTY",
     "-1": "ALL"
   },
+  "selectedStatus": { "id": 3, "name": "Pending" },
+  "status": [
+    { "id": 1, "name": "Active" },
+    { "id": 2, "name": "Graduate" },
+    { "id": 3, "name": "Pending" }
+  ],
+
   "UIDropdownOrderProp": {
     "label": "Select an Item",
     "dataSize": 5,
     "placeHolder": "hellooo",
     "fontSize": 12,
     "showAll": true
+  },
+  "UIDropdownStatusProp": {
+    "label": "Set Sign Status To"
   },
   "hasDetails": false
 }

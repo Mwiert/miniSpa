@@ -1,8 +1,7 @@
 <template>
   <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
     <FlexiTableControls />
-    <FlexiTableHeader ref="flexiheader" />
-    <FlexiTableBody ref="flexibody" />
+    <FlexiTableContainer />
     <FlexiTableFooter />
   </div>
   <div v-else>
@@ -12,13 +11,14 @@
 
 <script lang="ts">
 import FlexiTableControls from './FlexiTableControls.vue'
-import FlexiTableHeader from './FlexiTableHeader.vue'
-import FlexiTableBody from './FlexiTableBody.vue'
+
 import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
 import FlexiTableInfo from './FlexiTableInfo.vue'
+import FlexiTableContainer from './FlexiTableContainer.vue'
 import { computed } from 'vue'
 import flexitableExceptionHandler from '../flexitableExceptionHandler'
+
 export default {
   name: 'FlexiTable',
   provide() {
@@ -97,10 +97,9 @@ export default {
   },
   components: {
     FlexiTableControls,
-    FlexiTableHeader,
-    FlexiTableBody,
     FlexiTableFooter,
-    FlexiTableInfo
+    FlexiTableInfo,
+    FlexiTableContainer
   },
 
   watch: {
@@ -138,8 +137,6 @@ export default {
 
     .flexi-table-header-c,
     .flexi-table-body-row {
-      display: grid;
-
       // border: 1px solid #ccc;
     }
 
@@ -156,7 +153,6 @@ export default {
 
     .flexi-table-header-col-value,
     .flexi-table-body-col-value {
-      padding: 0.25rem 1rem;
       // // border: 1px solid #eee;
       // background-color: #ccc;
     }
