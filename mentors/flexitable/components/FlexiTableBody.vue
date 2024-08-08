@@ -14,10 +14,7 @@
             <template v-for="(col, key) in rowObj.row" :key="key">
               <div
                 class="flexi-table-body-col"
-                :class="[
-                  { 'jc-center': col.checkbox },
-                  { 'item-filter': checkFilter(col.value, key) }
-                ]"
+                :class="[{ 'jc-center': col.checkbox }]"
                 v-if="HideColumn(key)">
                 <!-- CHECKBOX Render -->
                 <template v-if="col.checkbox">
@@ -136,14 +133,14 @@ export default {
         this.page * this.maxItem
       )
     },
-    checkFilter(value, key) {
-      console.log(value)
-    },
 
     handleScroll(event) {
       if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
         this.addItemsPerPage()
       }
+      this.$nextTick(() => {
+        this.checkHighlight()
+      })
     },
     handlerGoToUrl(url) {
       if (url) {
@@ -185,6 +182,28 @@ export default {
           break
         }
       }
+      this.checkHighlight()
+    },
+    checkHighlight() {
+      this.$nextTick(() => {
+        let input = this.flexi.options.searchKeyWord
+        document.body.querySelectorAll('.flexi-table-body-col-value').forEach((el) => {
+          if (el.textContent.toLowerCase().includes(input.toLowerCase())) {
+            const regex = new RegExp(`(${input})`, 'gi')
+            el.innerHTML = el.textContent.replace(
+              regex,
+              '<span class="highlight" style="background:yellow">$1</span>'
+            )
+          }
+        })
+      })
+    },
+    fillFlexiBodyItems() {
+      if (this.FlexiBodyItemsPerPage.length !== this.flexi.rows.length) {
+        return this.FlexiBodyItemsPerPage.slice(0, this.maxItem)
+      } else {
+        return this.FlexiBodyItemsPerPage
+      }
     }
   },
 
@@ -192,8 +211,12 @@ export default {
     this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
     this.createEventListener()
   },
+
   watch: {
     FlexiBodyItemsPerPage() {
+      this.checkUpdate()
+    },
+    SearchKey() {
       this.checkUpdate()
     }
   }
