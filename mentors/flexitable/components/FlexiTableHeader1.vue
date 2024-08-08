@@ -1,5 +1,5 @@
 <template>
-  <thead class="flexi-table-header-c" :class="StickyHeaderClass">
+  <thead class="flexi-table-header-c" :class="StickyHeaderClass" ref="print3">
     <tr>
       <th class="table-head-c" v-for="column in flexi.columns" :key="column.name">
         <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
@@ -85,9 +85,15 @@ export default {
       })
     },
     handleMasterCheckboxChange() {
-      this.flexi.rows.forEach((row) => {
+      this.FlexiBodyItemsPerPage.forEach((row) => {
         row.row.id.value = this.masterCheckbox
       })
+      const selected = this.flexi.rows.filter((row) => {
+        return Object.values(row.row).some((col) => col.checkbox && col.value)
+      })
+      this.pushelements = !this.pushelements
+      this.flexi.selectedRows.length = 0
+      this.flexi.selectedRows.push(...selected)
     }
   }
 }
@@ -114,7 +120,6 @@ export default {
     cursor: pointer;
     font-weight: 500;
     height: 40px;
-    border-right: 1px solid rgba(112, 112, 112, 0.14);
 
     // &:last-child {
     //   border-right: none;
@@ -128,6 +133,7 @@ export default {
     // }
 
     .flexi-table-header-col {
+      border-right: 1px solid rgba(112, 112, 112, 0.14);
       display: flex;
       align-items: center;
       height: 40px;

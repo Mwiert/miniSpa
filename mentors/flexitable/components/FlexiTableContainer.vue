@@ -1,8 +1,8 @@
 <template>
   <div class="table-container">
     <table class="custom-table">
-      <FlexiTableHeader1 />
-      <FlexiTableBody1 />
+      <FlexiTableHeader1 ref="head" />
+      <FlexiTableBody1 ref="body" />
     </table>
   </div>
 </template>
@@ -26,13 +26,13 @@ export default {
 }
 
 .custom-table {
+  overflow: auto;
   width: 100%;
   border-collapse: collapse;
 }
 
 .custom-table th,
 .custom-table td {
-  border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
     <FlexiTableControls />
-    <FlexiTableContainer />
+    <FlexiTableContainer ref="container" />
     <FlexiTableFooter />
   </div>
   <div v-else>
