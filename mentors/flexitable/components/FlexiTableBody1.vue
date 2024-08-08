@@ -140,17 +140,15 @@ export default {
     }
 
     .flexi-table-body-row {
-      border-right: 1px solid rgba(41, 45, 50, 0.14);
       .flexi-table-body-col {
-        &-value {
-          margin: 0px 8px 0px 8px;
-        }
+        border-right: 1px solid rgba(41, 45, 50, 0.14);
+
         display: flex;
         align-items: center;
-        min-height: 56px;
 
-        &:last-child {
-          border-right: none;
+        min-height: 56px;
+        &-value {
+          margin: 0px 8px 0px 8px;
         }
 
         // justify-content: center;
