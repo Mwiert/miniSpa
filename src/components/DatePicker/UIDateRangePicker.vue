@@ -480,18 +480,16 @@ export default {
             }
           }
           //firstSelected max'tan büyükse
-          // else if (newDate.isAfter(maxDate)) {
-          //   this.secondSelectedDate.date = maxDate.format('YYYY-MM-DD')
-          //   if (this.maxSelectibleDay != 0) {
-          //     // Eğer firstDate maxDate - maxSelectibleDays'ten sonraysa
-          //     if (firstDate.isBefore(maxDate.subtract(this.maxSelectibleDay, 'day'))) {
-          //       this.firstSelectedDate.date = maxDate
-          //         .subtract(this.maxSelectibleDay, 'day')
-          //         .format('YYYY-MM-DD')
-          //     }
-          //   }
-          // }
-          else if (firstDate.isAfter(secondDate)) {
+          else if (newDate.isAfter(maxDate)) {
+            this.secondSelectedDate.date = this.maxDate
+            if (this.maxSelectibleDay != 0) {
+              // Eğer firstDate maxDate - maxSelectibleDays'ten sonraysa
+
+              this.firstSelectedDate.date = maxDate
+                .subtract(this.maxSelectibleDay, 'day')
+                .format('YYYY-MM-DD')
+            }
+          } else if (firstDate.isAfter(secondDate)) {
             this.secondSelectedDate.date = ''
             //this.secondSelectedDate.selected = false
           } else {
@@ -523,6 +521,15 @@ export default {
             this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
             this.secondSelectedDate.date = ''
             //this.secondSelectedDate.selected = false
+          } else if (newDate.isBefore(minDate)) {
+            this.firstSelectedDate = this.minDate
+            if (this.maxSelectibleDay != 0) {
+              //Eğer secondDate minDate + maxSelectibleDay'den sonraysa
+
+              this.secondSelectedDate.date = minDate
+                .add(this.maxSelectibleDay, 'day')
+                .format('YYYY-MM-DD')
+            }
           } else {
             // Eğer newDate, firstDate'ten önceyse
             // if (newDate.isBefore(firstDate)) {
