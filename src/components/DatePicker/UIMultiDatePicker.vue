@@ -284,6 +284,8 @@ export default {
           this.maxDate = dayjs(this.initialDate).add(day, 'day').format('YYYY-MM-DD')
         }
       }
+      this.$emit('minDate', this.minDate)
+      this.$emit('maxDate', this.maxDate)
     },
     populdateMonthDays() {
       if (this.isPastValidation) {
@@ -836,12 +838,6 @@ export default {
 
         this.saveSecondDateHistory = newVal.secondSelectedDate.date
 
-        // if (this.saveFirstDateHistory < this.minDate) {
-        //   this.saveFirstDateHistory = this.minDate
-        // }
-        // if (this.saveSecondDateHistory > this.maxDate) {
-        //   this.saveSecondDateHistory = this.maxDate
-        // }
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
@@ -867,7 +863,7 @@ export default {
       }
     },
     saveFirstDateHistory(newVal) {
-      //console.log(newVal)
+      this.saveFirstDateHistory = newVal
 
       this.saveFirstDateHistory = newVal
       if (!newVal) {
@@ -899,7 +895,6 @@ export default {
     //When the component is created, we are checking the range, creating the days in month and checking the date history
     this.checkRange()
     this.populdateMonthDays()
-
     this.checkDateHistory()
     this.linedThroughDate()
     this.checkSkippability()
@@ -1037,7 +1032,7 @@ export default {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
-      font-size: 14px;
+      font-size: 11px;
     }
 
     .weekdays {
@@ -1064,7 +1059,7 @@ export default {
     .days li {
       padding: 10px 10px;
       font-weight: 500;
-      line-height: 7px;
+      line-height: 6px;
       cursor: pointer;
       transition: all 0.3s;
     }

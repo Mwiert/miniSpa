@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import response from '../../mentors/flexitable/flexitableData'
-import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
+import FlexiTable from '../../mentors/flexitable/components/FlexiTable1.vue'
 
 export default {
   name: 'FlexiTablePage',
