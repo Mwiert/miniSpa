@@ -2,11 +2,11 @@
   <!-- This is the main container to create the calendar -->
 
   <div class="ui-date-picker-c">
+      {{ formattedDate }}
+      {{ firstSelectedDate.date }}
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
-      <UISliderDatePicker v-if="true" />
-
-      <div v-else>
+      <div>
         <!-- This is the main calendar -->
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
@@ -14,13 +14,18 @@
             <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
-            <span class="current-date">{{ dateHolder }} </span>
+            
+            <span class="current-date" @click="isSliderOpen">{{ dateHolder }} </span>
 
             <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
-          <!-- This is the weekdays section -->
+          <UISliderDatePicker 
+            v-show="isSlider" 
+            @emitSelectedDate="handleSelectedDate"/>
+          <div v-show="!isSlider" >
+            <!-- This is the weekdays section -->
           <ul class="weekdays">
             <template v-for="(weekday, index) in weekdays" :key="index">
               <li>{{ weekday }}</li>
@@ -44,7 +49,10 @@
               {{ day.number }}
             </li>
           </ul>
+          </div>
+          
         </div>
+        
       </div>
     </div>
   </div>
@@ -72,7 +80,9 @@ export default {
       maxDate: dayjs(), // Maximum date range we select (Will manipulated later in code)
       saveDateHistory: this.saveDate.date, //Saving the date history so we can see when we close calendar
       prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
-      nextDate: dayjs().endOf('month').format('YYYY-MM-DD')
+      nextDate: dayjs().endOf('month').format('YYYY-MM-DD'),
+      isSlider: false,
+      formattedDate: ""
     }
   },
   props: {
@@ -89,6 +99,15 @@ export default {
     newSelectedDays: { type: Object, default: null }
   },
   methods: {
+    handleSelectedDate(formattedDate: string){
+      this.formattedDate = formattedDate
+      this.firstSelectedDate.date = formattedDate
+      this.saveDateHistory = this.firstSelectedDate.date
+      this.$emit('sliderSelected', formattedDate)
+    },
+    isSliderOpen(){
+      this.isSlider = !this.isSlider
+    },
     checkRange() {
       if (this.isPastValidation) {
         if (this.backMonthRange !== 99) {
@@ -313,13 +332,13 @@ export default {
       this.firstSelectedDate = date //First selected date is the date we clicked
       this.firstSelectedDate.selected = true //First selected date is true after we clicked
       this.saveDateHistory = this.firstSelectedDate.date //Saving the date history
-      console.log(this.saveDateHistory)
       this.linedThroughDate() //Lining through the date
       this.checkDateHistory() //Checking the date history
       this.$emit('dateSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
     },
 
     checkDateHistory() {
+      if (this.isSlider) return
       //Checking the date history and setting the selected date
       for (let i = 0; i < this.daysInMonth.length; i++) {
         //If the date history is equal to the date in the month, set the selected date to true
@@ -478,9 +497,7 @@ export default {
 
         //This is the arrow icons for the calendar
         .nav-button {
-          position: absolute;
           top: 50%;
-          transform: translateY(-45%);
           background-color: transparent;
           border: none;
           font-size: 1rem;
@@ -505,8 +522,10 @@ export default {
 
         //This is the current date
         .current-date {
-          flex-grow: 1;
           text-align: center;
+          border: 1px solid #848484;
+          border-radius: $border-radius-medium;
+          padding: 4px 12px;
           font-size: 0.9rem;
           font-weight: 500;
           cursor: pointer;

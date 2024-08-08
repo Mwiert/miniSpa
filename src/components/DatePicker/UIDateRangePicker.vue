@@ -2,6 +2,7 @@
   <div class="ui-date-range-picker-c">
     <label class="label" v-if="label">{{ label }}</label>
     <!-- This is for opening and closing the calendar -->
+     {{ firstSelectedDate.date }}
     <div
       class="button"
       @click="toggleDatePicker()"
@@ -70,6 +71,7 @@
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
           @dateSelected="handleFirstDateSelected"
+          @sliderSelected="handleFirstSliderDate"
           @click="sendDateToParent"
           :positionToLeftSingle="positionToLeftSingle"
           @minDate="updateMinDate"
@@ -300,6 +302,11 @@ export default {
       }
       //We are returning the month name if not available just return the month's number like on top.
       return months[month] || month
+    },
+    handleFirstSliderDate(sliderDate: string) {
+      // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
+      this.firstSelectedDate.date = sliderDate
+      this.validateDates()
     },
     handleFirstDateSelected(firstDate: date) {
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)

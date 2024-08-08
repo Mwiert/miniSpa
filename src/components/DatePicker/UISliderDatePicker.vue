@@ -35,6 +35,7 @@ export default {
       selectedDay: dayjs().date(),
       selectedMonth: dayjs().month(),
       selectedYear: dayjs().year(),
+      
       scrolling: false,
       scrollTimeout: null as number | null,
       lastScrollTop: 0,
@@ -214,9 +215,8 @@ export default {
         .year(this.selectedYear)
         .month(this.selectedMonth)
         .date(this.selectedDay)
-        .format('DD-MM-YYYY')
-      this.$emit('selected-date', formattedDate)
-      console.log(formattedDate)
+        .format('YYYY-MM-DD')
+      this.$emit('emitSelectedDate', formattedDate)
     },
     onScroll() {
       if (this.isDragging) return
