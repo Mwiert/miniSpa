@@ -1,6 +1,5 @@
 <template>
   <!-- This is the main container to create the calendar -->
-
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
@@ -12,36 +11,40 @@
             <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
+
             <span class="current-date">{{ dateHolder }} </span>
 
             <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
-          <!-- This is the weekdays section -->
-          <ul class="weekdays">
-            <template v-for="(weekday, index) in weekdays" :key="index">
-              <li>{{ weekday }}</li>
-            </template>
-          </ul>
-          <!-- This is the days section -->
-          <ul class="days">
-            <li
-              v-for="(day, index) in daysInMonth"
-              :key="index"
-              :class="{
-                inactive: day.inactive,
-                active: day.active,
-                selected: day.selected,
-                textDecoration: day.textDecoration,
-                blink: day.blink,
-                between: day.between,
-                isToday: day.isToday
-              }"
-              @click="selectDate(day)">
-              {{ day.number }}
-            </li>
-          </ul>
+
+          <div>
+            <!-- This is the weekdays section -->
+            <ul class="weekdays">
+              <template v-for="(weekday, index) in weekdays" :key="index">
+                <li>{{ weekday }}</li>
+              </template>
+            </ul>
+            <!-- This is the days section -->
+            <ul class="days">
+              <li
+                v-for="(day, index) in daysInMonth"
+                :key="index"
+                :class="{
+                  inactive: day.inactive,
+                  active: day.active,
+                  selected: day.selected,
+                  textDecoration: day.textDecoration,
+                  blink: day.blink,
+                  between: day.between,
+                  isToday: day.isToday
+                }"
+                @click="selectDate(day)">
+                {{ day.number }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -308,13 +311,13 @@ export default {
       this.firstSelectedDate = date //First selected date is the date we clicked
       this.firstSelectedDate.selected = true //First selected date is true after we clicked
       this.saveDateHistory = this.firstSelectedDate.date //Saving the date history
-      console.log(this.saveDateHistory)
       this.linedThroughDate() //Lining through the date
       this.checkDateHistory() //Checking the date history
       this.$emit('dateSelected', date) //Emitting the date selected to the parent component UIDateRangePicker
     },
 
     checkDateHistory() {
+      if (this.isSlider) return
       //Checking the date history and setting the selected date
       for (let i = 0; i < this.daysInMonth.length; i++) {
         //If the date history is equal to the date in the month, set the selected date to true
@@ -405,6 +408,8 @@ export default {
     newSelectedDays: {
       handler(newValue) {
         this.saveDateHistory = newValue.firstSelectedDate.date
+        this.calendarDate = dayjs(this.saveDateHistory)
+        this.currentDate = this.calendarDate.format('YYYY-MM-DD')
 
         this.totalDaysInMonth()
         this.checkSkippability()
@@ -467,15 +472,15 @@ export default {
       .header {
         position: relative;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
         width: 100%;
 
         //This is the arrow icons for the calendar
         .nav-button {
           position: absolute;
-          top: 50%;
           transform: translateY(-45%);
+          top: 50%;
           background-color: transparent;
           border: none;
           font-size: 1rem;
@@ -500,8 +505,10 @@ export default {
 
         //This is the current date
         .current-date {
-          flex-grow: 1;
           text-align: center;
+          border: 1px solid #848484;
+          border-radius: $border-radius-medium;
+          padding: 4px 12px;
           font-size: 0.9rem;
           font-weight: 500;
           cursor: pointer;

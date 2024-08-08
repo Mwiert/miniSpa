@@ -1,46 +1,92 @@
 <template>
-  <tbody class="flexi-table-body-c" ref="print1">
-    <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
-      <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
-        <td class="flexi-table-body-row" v-for="(col, key) in rowObj.row" :key="key">
-          <div
-            class="flexi-table-body-col"
-            :class="{ 'jc-center': col.checkbox }"
-            v-if="HideColumn(key)">
-            <!-- CHECKBOX Render -->
-            <template v-if="col.checkbox">
-              <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
-            </template>
-
-            <template v-else>
-              <!-- IMG Render -->
-              <template v-if="col?.img">
-                <img :src="col.img" :class="col.imgClass" />
+  <tbody class="flexi-table-body-c" ref="print1" @scroll.passive="handleScroll">
+    <template v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
+      <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
+        <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
+          <td class="flexi-table-body-row" v-for="(col, key) in rowObj.row" :key="key">
+            <div
+              class="flexi-table-body-col"
+              :class="{ 'jc-center': col.checkbox }"
+              v-if="HideColumn(key)">
+              <!-- CHECKBOX Render -->
+              <template v-if="col.checkbox">
+                <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
               </template>
 
-              <!-- TEXT Render -->
-              <span
-                class="flexi-table-body-col-value"
-                :class="[col.class, { pointer: col.url }]"
-                @click="handlerGoToUrl(col.url)">
-                {{ col.value ?? col }}
-              </span>
-            </template>
-          </div>
-        </td>
-      </tr>
-      <tr class="flexi-table-body-row-wrapper">
-        <td>
-          <template v-if="rowObj.details?.status">
-            <div class="flexi-table-body-detail-wrapper">
-              <component
-                :is="getAsyncComponent(rowObj.details.componentPath)"
-                v-bind="rowObj.details.props">
-              </component>
+              <template v-else>
+                <!-- IMG Render -->
+                <template v-if="col?.img">
+                  <img :src="col.img" :class="col.imgClass" />
+                </template>
+
+                <!-- TEXT Render -->
+                <span
+                  class="flexi-table-body-col-value"
+                  :class="[col.class, { pointer: col.url }]"
+                  @click="handlerGoToUrl(col.url)">
+                  {{ col.value ?? col }}
+                </span>
+              </template>
             </div>
-          </template>
-        </td>
-      </tr>
+          </td>
+        </tr>
+        <tr class="flexi-table-body-row-wrapper">
+          <td colspan="999">
+            <template v-if="rowObj.details?.status">
+              <div class="flexi-table-body-detail-wrapper">
+                <component
+                  :is="getAsyncComponent(rowObj.details.componentPath)"
+                  v-bind="rowObj.details.props">
+                </component>
+              </div>
+            </template>
+          </td>
+        </tr>
+      </template>
+    </template>
+    <template v-else>
+      <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPageLimited" :key="rowobjKey">
+        <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
+          <td class="flexi-table-body-row" v-for="(col, key) in rowObj.row" :key="key">
+            <div
+              class="flexi-table-body-col"
+              :class="{ 'jc-center': col.checkbox }"
+              v-if="HideColumn(key)">
+              <!-- CHECKBOX Render -->
+              <template v-if="col.checkbox">
+                <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
+              </template>
+
+              <template v-else>
+                <!-- IMG Render -->
+                <template v-if="col?.img">
+                  <img :src="col.img" :class="col.imgClass" />
+                </template>
+
+                <!-- TEXT Render -->
+                <span
+                  class="flexi-table-body-col-value"
+                  :class="[col.class, { pointer: col.url }]"
+                  @click="handlerGoToUrl(col.url)">
+                  {{ col.value ?? col }}
+                </span>
+              </template>
+            </div>
+          </td>
+        </tr>
+        <tr class="flexi-table-body-row-wrapper">
+          <td colspan="999">
+            <template v-if="rowObj.details?.status">
+              <div class="flexi-table-body-detail-wrapper">
+                <component
+                  :is="getAsyncComponent(rowObj.details.componentPath)"
+                  v-bind="rowObj.details.props">
+                </component>
+              </div>
+            </template>
+          </td>
+        </tr>
+      </template>
     </template>
   </tbody>
 </template>
@@ -68,8 +114,7 @@ export default {
       this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.page * this.maxItem)
     },
     handleScroll(event) {
-      const { scrollTop, clientHeight, scrollHeight } = event.target
-      if (scrollTop + clientHeight >= scrollHeight) {
+      if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
         this.addItemsPerPage()
       }
     },
@@ -93,13 +138,19 @@ export default {
       this.pushelements = !this.pushelements
       this.flexi.selectedRows.length = 0
       this.flexi.selectedRows.push(...selected)
+    },
+    createEventListener() {
+      window.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop
+        const clientHeight = document.documentElement.clientHeight
+        const scrollHeight = document.documentElement.scrollHeight
+        this.handleScroll({ scrollTop, clientHeight, scrollHeight })
+      })
     }
   },
   created() {
     this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
-    window.addEventListener('scroll', () => {
-      console.log('scrolling')
-    })
+    this.createEventListener()
   }
 }
 </script>

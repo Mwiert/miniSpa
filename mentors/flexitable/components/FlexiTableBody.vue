@@ -1,6 +1,6 @@
 <template>
   <div ref="tableContainer" class="flexi-table-body-c" @scroll.passive="handleScroll">
-    <div v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
+    <div v-if="FlexiBodyItemsPerPage.length < maxItem">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <div
           ref="tableContent"
@@ -14,7 +14,7 @@
             <template v-for="(col, key) in rowObj.row" :key="key">
               <div
                 class="flexi-table-body-col"
-                :class="{ 'jc-center': col.checkbox }"
+                :class="[{ 'jc-center': col.checkbox }]"
                 v-if="HideColumn(key)">
                 <!-- CHECKBOX Render -->
                 <template v-if="col.checkbox">
@@ -128,13 +128,19 @@ export default {
   methods: {
     addItemsPerPage() {
       this.page++
-      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.page * this.maxItem)
+      this.FlexiBodyItemsPerPageLimited = this.FlexiBodyItemsPerPage.slice(
+        0,
+        this.page * this.maxItem
+      )
     },
+
     handleScroll(event) {
-      console.log(event)
-      if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
+      if (event?.scrollTop + event?.clientHeight >= event?.scrollHeight) {
         this.addItemsPerPage()
       }
+      this.$nextTick(() => {
+        this.checkHighlight()
+      })
     },
     handlerGoToUrl(url) {
       if (url) {
@@ -163,14 +169,63 @@ export default {
         const clientHeight = document.documentElement.clientHeight
         const scrollHeight = document.documentElement.scrollHeight
         this.handleScroll({ scrollTop, clientHeight, scrollHeight })
-
-        console.log('Current scroll position:', scrollTop)
       })
+    },
+    checkUpdate() {
+      if (this.FlexiBodyItemsPerPage.length > this.maxItem) {
+        console.log('sa')
+        const limitedItems = this.FlexiBodyItemsPerPage.slice(
+          0,
+          this.FlexiBodyItemsPerPageLimited.length
+        )
+        console.log(limitedItems)
+        for (let i = 0; i < limitedItems.length; i++) {
+          if (limitedItems[i]?.row?.id !== this.FlexiBodyItemsPerPageLimited[i]?.row?.id) {
+            this.FlexiBodyItemsPerPageLimited = limitedItems
+            break
+          }
+        }
+      }
+      this.$nextTick(() => {
+        this.checkHighlight()
+        this.handleScroll()
+      })
+    },
+    checkHighlight() {
+      this.$nextTick(() => {
+        let input = this.flexi.options.searchKeyWord
+        document.body.querySelectorAll('.flexi-table-body-col-value').forEach((el) => {
+          if (el.textContent.toLowerCase().includes(input.toLowerCase())) {
+            const regex = new RegExp(`(${input})`, 'gi')
+            el.innerHTML = el.textContent.replace(
+              regex,
+              '<span class="highlight" style="background:yellow">$1</span>'
+            )
+          }
+        })
+      })
+    },
+    fillFlexiBodyItems() {
+      if (this.FlexiBodyItemsPerPage.length !== this.flexi.rows.length) {
+        return this.FlexiBodyItemsPerPage.slice(0, this.maxItem)
+      } else {
+        return this.FlexiBodyItemsPerPage
+      }
     }
   },
+
   created() {
     this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
     this.createEventListener()
+  },
+
+  watch: {
+    FlexiBodyItemsPerPage() {
+      this.checkUpdate()
+    },
+    SearchKey() {
+      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
+    }
   }
 }
 </script>
