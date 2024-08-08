@@ -5,6 +5,8 @@
     <UIDateRangePicker
       v-model="selectDate"
       isSingle
+      :validateBackDay="10"
+      
       label="Date Picker" />
   </div>
 </template>

@@ -2,8 +2,6 @@
   <!-- This is the main container to create the calendar -->
 
   <div class="ui-date-picker-c">
-      {{ formattedDate }}
-      {{ firstSelectedDate.date }}
     <!-- This is where we work with our calendar -->
     <div class="ui-date-picker-wrapper">
       <div>
@@ -14,7 +12,7 @@
             <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
-            
+
             <span class="current-date" @click="isSliderOpen">{{ dateHolder }} </span>
 
             <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
@@ -23,36 +21,35 @@
           </div>
           <UISliderDatePicker 
             v-show="isSlider" 
-            @emitSelectedDate="handleSelectedDate"/>
-          <div v-show="!isSlider" >
+            @emitSelectedDate="handleSelectedDate" 
+            :firstSelected="firstSelectedDate"/>
+          <div v-show="!isSlider">
             <!-- This is the weekdays section -->
-          <ul class="weekdays">
-            <template v-for="(weekday, index) in weekdays" :key="index">
-              <li>{{ weekday }}</li>
-            </template>
-          </ul>
-          <!-- This is the days section -->
-          <ul class="days">
-            <li
-              v-for="(day, index) in daysInMonth"
-              :key="index"
-              :class="{
-                inactive: day.inactive,
-                active: day.active,
-                selected: day.selected,
-                textDecoration: day.textDecoration,
-                blink: day.blink,
-                between: day.between,
-                isToday: day.isToday
-              }"
-              @click="selectDate(day)">
-              {{ day.number }}
-            </li>
-          </ul>
+            <ul class="weekdays">
+              <template v-for="(weekday, index) in weekdays" :key="index">
+                <li>{{ weekday }}</li>
+              </template>
+            </ul>
+            <!-- This is the days section -->
+            <ul class="days">
+              <li
+                v-for="(day, index) in daysInMonth"
+                :key="index"
+                :class="{
+                  inactive: day.inactive,
+                  active: day.active,
+                  selected: day.selected,
+                  textDecoration: day.textDecoration,
+                  blink: day.blink,
+                  between: day.between,
+                  isToday: day.isToday
+                }"
+                @click="selectDate(day)">
+                {{ day.number }}
+              </li>
+            </ul>
           </div>
-          
         </div>
-        
       </div>
     </div>
   </div>
@@ -82,7 +79,7 @@ export default {
       prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
       nextDate: dayjs().endOf('month').format('YYYY-MM-DD'),
       isSlider: false,
-      formattedDate: ""
+      formattedDate: ''
     }
   },
   props: {
@@ -99,13 +96,13 @@ export default {
     newSelectedDays: { type: Object, default: null }
   },
   methods: {
-    handleSelectedDate(formattedDate: string){
+    handleSelectedDate(formattedDate: string) {
       this.formattedDate = formattedDate
       this.firstSelectedDate.date = formattedDate
       this.saveDateHistory = this.firstSelectedDate.date
       this.$emit('sliderSelected', formattedDate)
     },
-    isSliderOpen(){
+    isSliderOpen() {
       this.isSlider = !this.isSlider
     },
     checkRange() {
@@ -491,12 +488,14 @@ export default {
       .header {
         position: relative;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
         width: 100%;
 
         //This is the arrow icons for the calendar
         .nav-button {
+          position: absolute;
+          transform: translateY(-45%);
           top: 50%;
           background-color: transparent;
           border: none;
