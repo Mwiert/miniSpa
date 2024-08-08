@@ -32,14 +32,12 @@
                 v-model="secondSelectedDateDisplay"
                 @input="onSecondDateInput($event.target.value)"
                 @keyup="handleResetInitialDates"
-                placeholder="Select"
-                />
+                placeholder="Select" />
             </span>
 
             <div
               class="placeholder-select"
-              v-if="!secondSelectedDate.date && !sendInitialDates.secondInitialDate.date">
-            </div>
+              v-if="!secondSelectedDate.date && !sendInitialDates.secondInitialDate.date"></div>
           </div>
         </div>
         <div class="date-box-icon">
@@ -178,7 +176,6 @@ export default {
       set(newValue) {
         const isValidFormat = newValue.isValidDateFormat()
 
-
         if (isValidFormat) {
           const parsedDate = this.parseDate(newValue)
           this.firstSelectedDate.date = parsedDate
@@ -217,35 +214,38 @@ export default {
     formatDateDisplay(date) {
       if (!date) return ''
       const [year, month, day] = date.split('-')
-      return `${day}/${month}/${year}`
+      return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`
     },
     parseDate(date) {
       if (!date) return ''
-      const separators = /[-/.]/;
+      const separators = /[-/.]/
       let [day, month, year] = date.split(separators)
       return `${year}-${month}-${day}`
     },
     onFirstDateInput(value) {
       this.handleResetInitialDates()
-      const isValidFormat = value.isValidDateFormat()
+      // const isValidFormat = value.isValidDateFormat()
 
-
-      if (isValidFormat) {
+      if (value.isValidFormat) {
         const parsedDate = this.parseDate(value)
         this.firstSelectedDate.date = parsedDate
         this.$emit('update:firstSelectedDate', parsedDate)
         this.validateDates(parsedDate)
+      } else {
+        console.error('Invalid date format')
       }
     },
     onSecondDateInput(value) {
       this.handleResetInitialDates()
-      const isValidFormat = value.isValidDateFormat()
+      // const isValidFormat = value.isValidDateFormat()
 
-      if (isValidFormat) {
+      if (value.isValidDateFormat()) {
         const parsedDate = this.parseDate(value)
         this.secondSelectedDate.date = parsedDate
         this.$emit('update:secondSelectedDate', parsedDate)
         this.validateDates(parsedDate)
+      } else {
+        console.error('Invalid date format')
       }
     },
     formatDate(dateString) {
@@ -466,31 +466,30 @@ export default {
       const minDate = dayjs(this.minDate)
       const maxDate = dayjs(this.maxDate)
 
-
       if (this.isMulti) {
         if (this.firstSelectedDate.date === value) {
           // newDate minDate'ten önceyse
           if (newDate.isBefore(minDate)) {
             this.firstSelectedDate.date = minDate.format('YYYY-MM-DD')
             if (this.maxSelectibleDay != 0) {
-            //Eğer secondDate minDate + maxSelectibleDay'den sonraysa
-            if (secondDate.isAfter(minDate.add(this.maxSelectibleDay, 'day'))) {
-              this.secondSelectedDate.date = minDate
-                .add(this.maxSelectibleDay, 'day')
-                .format('YYYY-MM-DD')
+              //Eğer secondDate minDate + maxSelectibleDay'den sonraysa
+              if (secondDate.isAfter(minDate.add(this.maxSelectibleDay, 'day'))) {
+                this.secondSelectedDate.date = minDate
+                  .add(this.maxSelectibleDay, 'day')
+                  .format('YYYY-MM-DD')
+              }
             }
-          }
           } else {
             if (this.maxSelectibleDay != 0) {
-            // Eğer secondDate ve newDate arasındaki fark maxSelectibleDays'ten fazlaysa
-            const dayDifference = secondDate.diff(newDate, 'day')
-            if (dayDifference > this.maxSelectibleDay) {
-              this.firstSelectedDate.date = newDate.format('YYYY-MM-DD')
-              this.secondSelectedDate.date = newDate
-                .add(this.maxSelectibleDay, 'day')
-                .format('YYYY-MM-DD')
+              // Eğer secondDate ve newDate arasındaki fark maxSelectibleDays'ten fazlaysa
+              const dayDifference = secondDate.diff(newDate, 'day')
+              if (dayDifference > this.maxSelectibleDay) {
+                this.firstSelectedDate.date = newDate.format('YYYY-MM-DD')
+                this.secondSelectedDate.date = newDate
+                  .add(this.maxSelectibleDay, 'day')
+                  .format('YYYY-MM-DD')
+              }
             }
-          }
           }
         }
         if (this.secondSelectedDate.date === value) {
@@ -498,13 +497,13 @@ export default {
           if (newDate.isAfter(maxDate)) {
             this.secondSelectedDate.date = maxDate.format('YYYY-MM-DD')
             if (this.maxSelectibleDay != 0) {
-            // Eğer firstDate maxDate - maxSelectibleDays'ten sonraysa
-            if (firstDate.isBefore(maxDate.subtract(this.maxSelectibleDay, 'day'))) {
-              this.firstSelectedDate.date = maxDate
-                .subtract(this.maxSelectibleDay, 'day')
-                .format('YYYY-MM-DD')
+              // Eğer firstDate maxDate - maxSelectibleDays'ten sonraysa
+              if (firstDate.isBefore(maxDate.subtract(this.maxSelectibleDay, 'day'))) {
+                this.firstSelectedDate.date = maxDate
+                  .subtract(this.maxSelectibleDay, 'day')
+                  .format('YYYY-MM-DD')
+              }
             }
-          }
           } else {
             // Eğer newDate, firstDate'ten sonraysa
             if (newDate.isBefore(firstDate)) {
@@ -513,15 +512,15 @@ export default {
             }
 
             if (this.maxSelectibleDay != 0) {
-            // Eğer newDate ile firstDate arasındaki fark maxSelectibleDays'ten fazlaysa
-            const dayDifference = newDate.diff(firstDate, 'day')
-            if (dayDifference > this.maxSelectibleDay) {
-              this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')
-              this.firstSelectedDate.date = newDate
-                .subtract(this.maxSelectibleDay, 'day')
-                .format('YYYY-MM-DD')
+              // Eğer newDate ile firstDate arasındaki fark maxSelectibleDays'ten fazlaysa
+              const dayDifference = newDate.diff(firstDate, 'day')
+              if (dayDifference > this.maxSelectibleDay) {
+                this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')
+                this.firstSelectedDate.date = newDate
+                  .subtract(this.maxSelectibleDay, 'day')
+                  .format('YYYY-MM-DD')
+              }
             }
-          }
           }
         }
       } else {
