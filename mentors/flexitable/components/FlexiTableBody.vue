@@ -1,6 +1,8 @@
 <template>
   <div ref="tableContainer" class="flexi-table-body-c" @scroll.passive="handleScroll">
-    <div v-if="FlexiBodyItemsPerPage.length < maxItem" class="ben oc">
+    {{ FlexiBodyItemsPerPage.length }}
+    {{ FlexiBodyItemsPerPageLimited.length }}
+    <div v-if="FlexiBodyItemsPerPage.length < maxItem">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <div
           ref="tableContent"
@@ -172,14 +174,18 @@ export default {
       })
     },
     checkUpdate() {
-      const limitedItems = this.FlexiBodyItemsPerPage.slice(
-        0,
-        this.FlexiBodyItemsPerPageLimited.length
-      )
-      for (let i = 0; i < limitedItems.length; i++) {
-        if (limitedItems[i]?.row?.id !== this.FlexiBodyItemsPerPageLimited[i]?.row?.id) {
-          this.FlexiBodyItemsPerPageLimited = limitedItems
-          break
+      if (this.FlexiBodyItemsPerPage.length > this.maxItem) {
+        console.log('sa')
+        const limitedItems = this.FlexiBodyItemsPerPage.slice(
+          0,
+          this.FlexiBodyItemsPerPageLimited.length
+        )
+        console.log(limitedItems)
+        for (let i = 0; i < limitedItems.length; i++) {
+          if (limitedItems[i]?.row?.id !== this.FlexiBodyItemsPerPageLimited[i]?.row?.id) {
+            this.FlexiBodyItemsPerPageLimited = limitedItems
+            break
+          }
         }
       }
       this.$nextTick(() => {
