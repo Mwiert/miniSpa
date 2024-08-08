@@ -31,13 +31,14 @@
                 type="text"
                 v-model="secondSelectedDateDisplay"
                 @input="onSecondDateInput($event.target.value)"
-                @keyup="handleResetInitialDates" />
+                @keyup="handleResetInitialDates"
+                placeholder="Select"
+                />
             </span>
 
             <div
               class="placeholder-select"
               v-if="!secondSelectedDate.date && !sendInitialDates.secondInitialDate.date">
-              <span>Select</span>
             </div>
           </div>
         </div>
@@ -112,7 +113,7 @@ import date from '../../interface/IUIDatePicker'
 import dayjs from 'dayjs'
 import UIDatePicker from './UIDatePicker.vue'
 import UIMultiDatePicker from './UIMultiDatePicker.vue'
-
+import './dateInputHelper'
 export default {
   name: 'UIDateRangePicker',
   components: {
@@ -175,7 +176,8 @@ export default {
         return this.formatDateDisplay(this.firstSelectedDate.date)
       },
       set(newValue) {
-        const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(newValue)
+        const isValidFormat = newValue.isValidDateFormat()
+
 
         if (isValidFormat) {
           const parsedDate = this.parseDate(newValue)
@@ -188,7 +190,7 @@ export default {
         return this.formatDateDisplay(this.secondSelectedDate.date)
       },
       set(newValue) {
-        const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(newValue)
+        const isValidFormat = newValue.isValidDateFormat()
 
         if (isValidFormat) {
           const parsedDate = this.parseDate(newValue)
@@ -219,14 +221,16 @@ export default {
     },
     parseDate(date) {
       if (!date) return ''
-      let [day, month, year] = date.split('/')
-      //day = day.padStart(2, '0')
-      //month = month.padStart(2, '0')
+      const separators = /[-/.]/;
+      let [day, month, year] = date.split(separators)
+      day = day.padStart(2, '0')
+      month = month.padStart(2, '0')
       return `${year}-${month}-${day}`
     },
     onFirstDateInput(value) {
       this.handleResetInitialDates()
-      const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value)
+      const isValidFormat = newValue.isValidDateFormat()
+
 
       if (isValidFormat) {
         const parsedDate = this.parseDate(value)
@@ -237,7 +241,7 @@ export default {
     },
     onSecondDateInput(value) {
       this.handleResetInitialDates()
-      const isValidFormat = /^(\d{2})\/(\d{2})\/(\d{4})$/.test(value)
+      const isValidFormat = newValue.isValidDateFormat()
 
       if (isValidFormat) {
         const parsedDate = this.parseDate(value)
