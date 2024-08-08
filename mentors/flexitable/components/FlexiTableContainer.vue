@@ -23,7 +23,6 @@ export default {
 </script>
 <style scoped>
 .table-container {
-  overflow: auto;
 }
 
 .custom-table {
