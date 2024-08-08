@@ -1,5 +1,5 @@
 <template>
-  <thead class="flexi-table-header-c" :class="StickyHeaderClass">
+  <thead class="flexi-table-header-c" :class="StickyHeaderClass" ref="print3">
     <tr>
       <th class="table-head-c" v-for="column in flexi.columns" :key="column.name">
         <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
@@ -114,7 +114,6 @@ export default {
     cursor: pointer;
     font-weight: 500;
     height: 40px;
-    border-right: 1px solid rgba(112, 112, 112, 0.14);
 
     // &:last-child {
     //   border-right: none;
@@ -128,6 +127,7 @@ export default {
     // }
 
     .flexi-table-header-col {
+      border-right: 1px solid rgba(112, 112, 112, 0.14);
       display: flex;
       align-items: center;
       height: 40px;

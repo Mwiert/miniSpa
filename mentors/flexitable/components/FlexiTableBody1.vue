@@ -1,5 +1,5 @@
 <template>
-  <tbody class="flexi-table-body-c">
+  <tbody class="flexi-table-body-c" ref="print1">
     <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
       <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
         <td class="flexi-table-body-row" v-for="(col, key) in rowObj.row" :key="key">
@@ -141,10 +141,11 @@ export default {
 
     .flexi-table-body-row {
       .flexi-table-body-col {
+        width: 100%;
         border-right: 1px solid rgba(41, 45, 50, 0.14);
-
         display: flex;
         align-items: center;
+        justify-content: center;
 
         min-height: 56px;
         &-value {
