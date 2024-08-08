@@ -6,8 +6,7 @@
         @click="toggleDropdown"
         class="ui-dropdown-button"
         :class="{ active: isOpen && !disabled, disabled: disabled }">
-        <span
-          class="placeholder-text">
+        <span class="placeholder-text">
           {{ isLongItem(selectedItem) || placeHolder }}
         </span>
         <SvgIcon
