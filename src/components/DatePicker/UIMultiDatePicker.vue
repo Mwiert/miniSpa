@@ -129,9 +129,10 @@ export default {
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     baseInitialDates: { type: Object },
     isDatePickerEnable: { type: Boolean },
-    maxSelectibleDay: { type: Number, default: 0 },
     positionToRight: { type: Boolean, default: false },
     positionToLeft: { type: Boolean, default: false },
+    newSelectedDays: { type: Object, default: null },
+    maxSelectibleDay: { type: Number, default: 0 }
   },
   methods: {
     checkRange() {
@@ -351,7 +352,7 @@ export default {
       for (let i = 0; i < endOfMonth.date(); i++) {
         const dateSender = date.startOf('month').add(i, 'day')
         const getDate = dayjs(dateSender).format('YYYY-MM-DD')
-        const test = dayjs(dateSender).format('YYYY-MMMM-DD')
+        const formattedDate = dayjs(dateSender).format('YYYY-MMMM-DD')
 
         daysInWholeMonth.push({
           date: getDate,
@@ -364,7 +365,7 @@ export default {
           year: dayjs(dateSender).format('YYYY'),
           firstInitialDate: getDate == this.baseInitialDates.firstInitialDate.date ? true : false,
           secondInitialDate: getDate == this.baseInitialDates.secondInitialDate.date ? true : false,
-          fullDateFormatted: test
+          fullDateFormatted: formattedDate
         })
       }
 
@@ -408,29 +409,26 @@ export default {
       this.linedThroughDate()
       this.checkSkippability()
     },
-    rearrangeSelects(reDate: string , condition: boolean) {
-      
+    rearrangeSelects(reDate: string, condition: boolean) {
       this.daysInMonth.forEach((day) => {
-        if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
+        if (dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
-          if( condition ) {
+          if (condition) {
             this.secondSelectedDate = day
             return
-          }
-          else  {
+          } else {
             this.firstSelectedDate = day
-            return 
+            return
           }
         }
       })
       this.nextMonthDays.forEach((day) => {
-        if(dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
+        if (dayjs(reDate).format('YYYY-MM-DD') == dayjs(day.date).format('YYYY-MM-DD')) {
           day.selected = true
-          if( condition ) {
+          if (condition) {
             this.secondSelectedDate = day
             return
-          }
-          else  {
+          } else {
             this.firstSelectedDate = day
             return
           }
@@ -438,6 +436,11 @@ export default {
       })
     },
     selectDate(selectedDay: date) {
+      if (this.baseInitialDates.firstInitialDate.date == this.firstSelectedDate.date) {
+        this.firstSelectedDate = {}
+        this.secondSelectedDate = {}
+      }
+
       if (this.baseInitialDates.firstInitialDate) {
         this.emitResetInitialDates() // turuncu baslangic degerlerini ilk tiklamada emit edip false olmasini saglar
       }
@@ -462,7 +465,6 @@ export default {
             this.secondSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
-           
           } else {
             // First ve second varsa gir (tarihi sola doğru genişletir)
             this.firstSelectedDate.selected = false
@@ -473,7 +475,6 @@ export default {
 
             this.firstSelectedDate.selected = true
             this.saveFirstDateHistory = this.firstSelectedDate.date
-            this.saveSecondDateHistory = this.secondSelectedDate.date
           }
         } else if (selectedDay.date == this.firstSelectedDate.date) {
           if (this.isPastValidation) {
@@ -505,32 +506,54 @@ export default {
             }
 
             this.secondSelectedDate.selected = true
-            this.saveFirstDateHistory = this.firstSelectedDate.date
             this.saveSecondDateHistory = this.secondSelectedDate.date
           }
         }
       }
-      this.emitDate('dateFirstSelected', this.firstSelectedDate)
-      this.emitDate('dateSecondSelected', this.secondSelectedDate)
+      const FDate = {
+        number:
+          this.firstSelectedDate.number < 10
+            ? '0' + this.firstSelectedDate.number
+            : this.firstSelectedDate.number,
+        month: this.firstSelectedDate.month,
+        year: this.firstSelectedDate.year,
+        date: this.firstSelectedDate.date
+      }
+      const SDate = {
+        number:
+          this.secondSelectedDate.number < 10
+            ? '0' + this.secondSelectedDate.number
+            : this.secondSelectedDate.number,
+        month: this.secondSelectedDate.month,
+        year: this.secondSelectedDate.year,
+        date: this.secondSelectedDate.date
+      }
+      this.emitDate('dateFirstSelected', FDate)
+      this.emitDate('dateSecondSelected', SDate)
       this.deactivateAllBetween()
       this.updateBetweenDates()
     },
-    rearrangeController(condition: boolean) {  
+    rearrangeController(condition: boolean) {
       const firstDate = dayjs(this.firstSelectedDate.date)
       const secondDate = dayjs(this.secondSelectedDate.date)
-      const ifValidate = secondDate.diff(firstDate,'day')
-      
-      if(condition) {
-        if(ifValidate > this.maxSelectibleDay) {
+      const ifValidate = secondDate.diff(firstDate, 'day')
+
+      if (condition) {
+        if (ifValidate > this.maxSelectibleDay) {
           this.secondSelectedDate.selected = false
-          const newDate = dayjs(this.secondSelectedDate.date).subtract(ifValidate - this.maxSelectibleDay, 'day')
-          this.rearrangeSelects(newDate , condition)
+          const newDate = dayjs(this.secondSelectedDate.date).subtract(
+            ifValidate - this.maxSelectibleDay,
+            'day'
+          )
+          this.rearrangeSelects(newDate, condition)
         }
-      }
-      else  {
-        if(ifValidate > this.maxSelectibleDay) {
+      } else {
+        if (ifValidate > this.maxSelectibleDay) {
           this.firstSelectedDate.selected = false
-          const newDate2 = dayjs(this.firstSelectedDate.date).add(ifValidate - this.maxSelectibleDay, 'day')
+          const newDate2 = dayjs(this.firstSelectedDate.date).add(
+            ifValidate - this.maxSelectibleDay,
+            'day'
+          )
           this.rearrangeSelects(newDate2)
         }
       }
@@ -553,6 +576,23 @@ export default {
         }
       })
       this.$emit('resetBaseInitialDates')
+    },
+    resetInitialDates() {
+      this.baseInitialDates.firstInitialDate = ''
+      this.baseInitialDates.secondInitialDate = ''
+      this.daysInMonth.forEach((day) => {
+        if (day.firstInitialDate || day.secondInitialDate) {
+          day.firstInitialDate = false
+          day.secondInitialDate = false
+        }
+      })
+
+      this.nextMonthDays.forEach((day) => {
+        if (day.firstInitialDate || day.secondInitialDate) {
+          day.firstInitialDate = false
+          day.secondInitialDate = false
+        }
+      })
     },
     emitResetSecondDates() {
       this.daysInMonth.forEach((day) => {
@@ -790,6 +830,26 @@ export default {
     }
   },
   watch: {
+    newSelectedDays: {
+      handler(newVal) {
+        this.saveFirstDateHistory = newVal.firstSelectedDate.date
+
+        this.saveSecondDateHistory = newVal.secondSelectedDate.date
+
+        // if (this.saveFirstDateHistory < this.minDate) {
+        //   this.saveFirstDateHistory = this.minDate
+        // }
+        // if (this.saveSecondDateHistory > this.maxDate) {
+        //   this.saveSecondDateHistory = this.maxDate
+        // }
+        this.populdateMonthDays()
+        this.checkDateHistory()
+        this.updateBetweenDates()
+        this.linedThroughDate() // Her iki takvim için geçerli
+        this.checkSkippability()
+      },
+      deep: true
+    },
     isDatePickerEnable(newVal) {
       if (newVal) {
         if (!this.saveFirstDateHistory) {
@@ -807,6 +867,9 @@ export default {
       }
     },
     saveFirstDateHistory(newVal) {
+      //console.log(newVal)
+
+      this.saveFirstDateHistory = newVal
       if (!newVal) {
         // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin
         this.daysInMonth.forEach((day) => {
@@ -840,6 +903,7 @@ export default {
     this.checkDateHistory()
     this.linedThroughDate()
     this.checkSkippability()
+    this.resetInitialDates()
   }
 }
 </script>
@@ -895,12 +959,18 @@ export default {
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
       border-bottom: 10px solid #ffffff;
+      @include respond-to('small') {
+        left: 40%;
+      }
     }
     &.positionToRight::before {
       left: 15%;
+      @include respond-to('small') {
+        left: 28%;
+      }
     }
     &.positionToLeft::before {
-      left: 82%;
+      left: 75%;
     }
 
     .calendar {
