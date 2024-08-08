@@ -468,24 +468,22 @@ export default {
       const minDate = dayjs(this.minDate)
       const maxDate = dayjs(this.maxDate)
 
+
       if (this.isMulti) {
         if (this.firstSelectedDate.date === value) {
           // newDate minDate'ten önceyse
           if (newDate.isBefore(minDate)) {
             this.firstSelectedDate.date = minDate.format('YYYY-MM-DD')
+            if (this.maxSelectibleDay != 0) {
             //Eğer secondDate minDate + maxSelectibleDay'den sonraysa
             if (secondDate.isAfter(minDate.add(this.maxSelectibleDay, 'day'))) {
               this.secondSelectedDate.date = minDate
                 .add(this.maxSelectibleDay, 'day')
                 .format('YYYY-MM-DD')
             }
+          }
           } else {
-            // Eğer newDate, secondDate'ten sonraysa
-            if (newDate.isAfter(secondDate)) {
-              this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
-              this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')
-            }
-
+            if (this.maxSelectibleDay != 0) {
             // Eğer secondDate ve newDate arasındaki fark maxSelectibleDays'ten fazlaysa
             const dayDifference = secondDate.diff(newDate, 'day')
             if (dayDifference > this.maxSelectibleDay) {
@@ -495,17 +493,20 @@ export default {
                 .format('YYYY-MM-DD')
             }
           }
+          }
         }
         if (this.secondSelectedDate.date === value) {
           // newDate maxDate'ten sonraysa
           if (newDate.isAfter(maxDate)) {
             this.secondSelectedDate.date = maxDate.format('YYYY-MM-DD')
+            if (this.maxSelectibleDay != 0) {
             // Eğer firstDate maxDate - maxSelectibleDays'ten sonraysa
             if (firstDate.isBefore(maxDate.subtract(this.maxSelectibleDay, 'day'))) {
               this.firstSelectedDate.date = maxDate
                 .subtract(this.maxSelectibleDay, 'day')
                 .format('YYYY-MM-DD')
             }
+          }
           } else {
             // Eğer newDate, firstDate'ten sonraysa
             if (newDate.isBefore(firstDate)) {
@@ -513,6 +514,7 @@ export default {
               this.firstSelectedDate.date = newDate.format('YYYY-MM-DD')
             }
 
+            if (this.maxSelectibleDay != 0) {
             // Eğer newDate ile firstDate arasındaki fark maxSelectibleDays'ten fazlaysa
             const dayDifference = newDate.diff(firstDate, 'day')
             if (dayDifference > this.maxSelectibleDay) {
@@ -521,6 +523,7 @@ export default {
                 .subtract(this.maxSelectibleDay, 'day')
                 .format('YYYY-MM-DD')
             }
+          }
           }
         }
       } else {

@@ -6,7 +6,8 @@
       v-model="selectDate"
       isMulti
       :validateBackMonth="2"
-      :validateForwardMonth="1"
+      :validateForwardMonth="2"
+      :maxSelectibleDay="5"
       label="Date Picker" />
   </div>
 </template>

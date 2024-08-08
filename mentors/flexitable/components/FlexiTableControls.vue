@@ -160,9 +160,10 @@ export default {
     async downloadPdf() {
       this.showSpinner = true
       try {
-        const headerElement = this.$parent.$refs.flexiheader.$refs.print2
-        const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
-
+        //const headerElement = this.$parent.$refs.flexiheader.$refs.print2
+        //const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
+        const bodyElement = this.$parent.$refs.container.$refs.body.$refs.print1
+        const headerElement = this.$parent.$refs.container.$refs.head.$refs.print3
         const connectedElement = document.createElement('div')
         ;[headerElement, bodyElement].forEach((element) => {
           connectedElement.appendChild(element.cloneNode(true))
@@ -238,8 +239,10 @@ export default {
       try {
         const self = this
         const tableTitle = this.flexi.options.tableTitle
-        const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
-        const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
+        const divToPrint = this.$parent.$refs.container.$refs.body.$refs.print1
+        const headersContainer = this.$parent.$refs.container.$refs.head.$refs.print3
+        //const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
+        //const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
 
         let excelContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">`
         excelContent += `<head>`
@@ -338,8 +341,11 @@ export default {
 
     // print method style not working
     triggerExportPrint() {
-      const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer //bodyi kapsıyor
-      const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2 ///columları
+      const divToPrint = this.$parent.$refs.container.$refs.body.$refs.print1
+      const divToPrint2 = this.$parent.$refs.container.$refs.head.$refs.print3
+
+      //const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer //bodyi kapsıyor
+      //const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2 ///columları
       const newPrintWindow = window.open('', 'Print')
       newPrintWindow.document.write(
         `<html>
