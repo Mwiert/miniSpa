@@ -40,7 +40,7 @@ export default {
           columnGap: '.5rem',
           selected: { id: 5, name: 'FIVE' },
           columnSizes: [10, 10, 10, 1, 1, 1, 1, 1, 1, 10, 1, 1],
-          // hiddenColumns: ['annualFee', 'city'],
+          hiddenColumns: ['annualFee', 'city', 'gpa'],
 
           //itemsPerPage: 5,
           stickyHeader: true,
@@ -157,7 +157,8 @@ export default {
           city: item.city,
           department: item.department,
           gpa: {
-            value: item.highSchoolGPA
+            value: item.highSchoolGPA,
+            class: 'txt-right'
           },
           annualFee: {
             value: item.annualFee,
