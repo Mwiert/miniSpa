@@ -49,6 +49,7 @@ export default {
           show: false,
           dropdowns: [
             {
+              id: 1,
               options: [
                 { id: 1, name: 'Active' },
                 { id: 2, name: 'Graduate' },
@@ -59,6 +60,7 @@ export default {
           ],
           buttons: [
             {
+              id: 1,
               label: 'Mark',
               function: this.changeStatus
             }
@@ -346,10 +348,16 @@ export default {
     },
     changeStatus() {
       this.flexiTableOptions.selectedRows.forEach((element) => {
-        element.row.status.value =
-          this.flexiTableOptions.options.dropdowns[0].selected.name.toLowerCase()
-        element.row.status.class =
-          'item-' + this.flexiTableOptions.options.dropdowns[0].selected.name.toLowerCase()
+        this.flexiTableOptions.options.dropdowns.forEach((dropdown) => {
+          this.flexiTableOptions.options.buttons.forEach((button) => {
+            if (dropdown.id === button.id) {
+              element.row.status.value =
+                this.flexiTableOptions.options.dropdowns[0].selected.name.toLowerCase()
+              element.row.status.class =
+                'item-' + this.flexiTableOptions.options.dropdowns[0].selected.name.toLowerCase()
+            }
+          })
+        })
       })
     }
   }
