@@ -2,6 +2,7 @@
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
+
     <div
       class="ui-date-picker-wrapper"
       :class="{ positionToRight: positionToRight, positionToLeft: positionToLeft }">
@@ -114,7 +115,11 @@ export default {
       saveFirstDateHistory: '', //Saving the date history so we can see when we close calendar
       saveSecondDateHistory: '', //Saving the date history so we can see when we close calendar
       prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
-      nextDate: dayjs().endOf('month').format('YYYY-MM-DD')
+      nextDate: dayjs().endOf('month').format('YYYY-MM-DD'),
+      changedDate: {
+        oldDate: null,
+        newDate: null
+      }
     }
   },
   props: {
@@ -548,6 +553,11 @@ export default {
             'day'
           )
           this.rearrangeSelects(newDate, condition)
+          this.changedDate = {
+            oldDate: secondDate.format('DD-MM-YYYY'),
+            newDate: newDate.format('DD-MM-YYYY')
+          }
+          this.$emit('changedDate', this.changedDate)
         }
       } else {
         if (ifValidate > this.maxSelectibleDay) {
@@ -557,9 +567,15 @@ export default {
             'day'
           )
           this.rearrangeSelects(newDate2)
+          this.changedDate = {
+            oldDate: firstDate.format('DD-MM-YYYY'),
+            newDate: newDate2.format('DD-MM-YYYY')
+          }
+          this.$emit('changedDate', this.changedDate)
         }
       }
     },
+
     emitDate(event, date) {
       this.$emit(event, date)
     },
@@ -981,7 +997,7 @@ export default {
       .header {
         position: relative;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-evenly;
         align-items: center;
         width: 100%;
 
@@ -1017,10 +1033,13 @@ export default {
         }
 
         .current-date {
-          flex-grow: 1;
           text-align: center;
+          border: 1px solid #848484;
+          border-radius: $border-radius-medium;
+          padding: 4px 12px;
           font-size: 0.9rem;
           font-weight: 500;
+          cursor: pointer;
         }
       }
     }

@@ -100,7 +100,8 @@
           :newSelectedDays="newSelectedDays"
           :maxSelectibleDay="maxSelectibleDay"
           @minDate="updateMinDate"
-          @maxDate="updateMaxDate" />
+          @maxDate="updateMaxDate"
+          @changedDate="changeDates" />
       </div>
     </div>
   </div>
@@ -148,6 +149,10 @@ export default {
       presentDate: {} as date,
       minDate: '',
       maxDate: '',
+      changedDate: {
+        oldDate: null,
+        newDate: null
+      },
       sendInitialDates: {
         firstInitialDate: '',
         secondInitialDate: ''
@@ -204,6 +209,13 @@ export default {
     updateMaxDate(maxDate) {
       this.maxDate = maxDate
     },
+    changeDates(changedDate) {
+      this.changeDate = {
+        oldDate: changedDate.oldDate,
+        newDate: changedDate.newDate
+      }
+    },
+
     formatDateDisplay(date) {
       if (!date) return ''
       const [year, month, day] = date.split('-')
@@ -225,8 +237,6 @@ export default {
         this.firstSelectedDate.date = parsedDate
         this.$emit('update:firstSelectedDate', parsedDate)
         this.validateDates(parsedDate)
-      } else {
-        console.error('Invalid date format')
       }
     },
     onSecondDateInput(value) {
@@ -238,8 +248,6 @@ export default {
         this.secondSelectedDate.date = parsedDate
         this.$emit('update:secondSelectedDate', parsedDate)
         this.validateDates(parsedDate)
-      } else {
-        console.error('Invalid date format')
       }
     },
     formatDate(dateString) {
@@ -478,6 +486,7 @@ export default {
                   .format('YYYY-MM-DD')
               }
             }
+            // this.notification(`First date adjusted to ${minDate.format('DD-MM-YYYY')}  `)
           }
           //firstSelected max'tan büyükse
           else if (newDate.isAfter(maxDate)) {
@@ -489,6 +498,8 @@ export default {
                 .subtract(this.maxSelectibleDay, 'day')
                 .format('YYYY-MM-DD')
             }
+
+            //this.notification(`Second date adjusted to ${maxDate.format('DD-MM-YYYY')}  `)
           } else if (firstDate.isAfter(secondDate)) {
             this.secondSelectedDate.date = ''
             //this.secondSelectedDate.selected = false
@@ -502,6 +513,9 @@ export default {
                   .add(this.maxSelectibleDay, 'day')
                   .format('YYYY-MM-DD')
               }
+              // this.notification(
+              //   `Second date adjusted to ${dayjs(this.secondSelectedDate.date).format('DD-MM-YYYY')}  `
+              // )
             }
           }
         }
@@ -517,10 +531,9 @@ export default {
                   .format('YYYY-MM-DD')
               }
             }
-          } else if (secondDate.isBefore(firstDate)) {
-            this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
-            this.secondSelectedDate.date = ''
-            //this.secondSelectedDate.selected = false
+            // this.notification(
+            //   `First date adjusted to ${dayjs(this.firstSelectedDate.date).format('DD-MM-YYYY')} and Second date adjusted to ${maxDate.format('DD-MM-YYYY')} `
+            // )
           } else if (newDate.isBefore(minDate)) {
             this.firstSelectedDate.date = this.minDate
             if (this.maxSelectibleDay != 0) {
@@ -529,14 +542,14 @@ export default {
               this.secondSelectedDate.date = minDate
                 .add(this.maxSelectibleDay, 'day')
                 .format('YYYY-MM-DD')
+            } else if (secondDate.isBefore(firstDate)) {
+              this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
+              this.secondSelectedDate.date = ''
             }
+            // this.notification(
+            //   `First date adjusted to ${dayjs(this.firstSelectedDate.date).format('DD-MM-YYYY')} and Second date adjusted to ${minDate.format('DD-MM-YYYY')} `
+            // )
           } else {
-            // Eğer newDate, firstDate'ten önceyse
-            // if (newDate.isBefore(firstDate)) {
-            //   this.secondSelectedDate.date = firstDate.format('YYYY-MM-DD')
-            //   this.firstSelectedDate.date = newDate.format('YYYY-MM-DD')
-            // }
-
             if (this.maxSelectibleDay != 0) {
               // Eğer newDate ile firstDate arasındaki fark maxSelectibleDays'ten fazlaysa
               const dayDifference = newDate.diff(firstDate, 'day')
@@ -546,6 +559,9 @@ export default {
                   .subtract(this.maxSelectibleDay, 'day')
                   .format('YYYY-MM-DD')
               }
+              // this.notification(
+              //   `First date adjusted to ${dayjs(this.firstSelectedDate.date).format('DD-MM-YYYY')}`
+              // )
             }
           }
         }
@@ -554,10 +570,11 @@ export default {
       else {
         if (newDate.isBefore(this.minDate)) {
           this.firstSelectedDate.date = this.minDate
+          //this.notification(`Selected date ${minDate.format('DD-MM-YYYY')}`)
         }
         if (newDate.isAfter(this.maxDate)) {
           this.firstSelectedDate.date = this.maxDate
-          console.log(this.firstSelectedDate.date)
+          //this.notification(`Selected date ${maxDate.format('DD-MM-YYYY')}`)
         }
       }
 
@@ -620,6 +637,7 @@ export default {
   gap: 0.5rem;
   width: auto;
   position: relative;
+
   .label {
     font-size: 0.85rem;
     display: flex;
