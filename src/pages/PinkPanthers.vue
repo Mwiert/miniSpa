@@ -39,14 +39,32 @@ export default {
           tableTitle: 'Hakan Calhanoglu burda on numara her yerde eller havada',
           columnGap: '.5rem',
           selected: { id: 5, name: 'FIVE' },
-          columnSizes: [10, 10, 10, 1, 1, 1, 1, 1, 1, 10, 1, 1],
+          columnSizes: [10, 10, 10, 1, 1, 1, 1, 1, 1, 10],
           // hiddenColumns: ['annualFee', 'city', 'gpa'],
           minVisibleColumns: 5,
           //itemsPerPage: 5,
           stickyHeader: true,
           // disableSorting: true,
           // hideSearch: true,
-          show: false
+          show: false,
+          dropdowns: [
+            {
+              id: 1,
+              options: [
+                { id: 1, name: 'Active' },
+                { id: 2, name: 'Graduate' },
+                { id: 3, name: 'Pending' }
+              ],
+              selected: { id: 3, name: 'Pending' }
+            }
+          ],
+          buttons: [
+            {
+              id: 1,
+              label: 'Mark',
+              function: this.changeStatus
+            }
+          ]
         },
         columns: [
           { id: 1, name: '#', label: 'id', sortable: false },
@@ -95,7 +113,7 @@ export default {
       },
       flexiTableOptionsWithoutDetails: {
         options: {
-          // columnSizes: [10, 10, 10, 1, 1, 1, 1, 1, 1, 10, 1, 1],
+          columnSizes: [10, 10, 10, 1, 1, 1, 1, 1, 1, 10, 1, 1],
 
           columnGap: '.5rem',
 
@@ -326,6 +344,20 @@ export default {
     printSelectedRows() {
       this.selectedRows.forEach((row, index) => {
         console.log(`Row ${index + 1}:`, row)
+      })
+    },
+    changeStatus() {
+      this.flexiTableOptions.selectedRows.forEach((element) => {
+        this.flexiTableOptions.options.dropdowns.forEach((dropdown) => {
+          this.flexiTableOptions.options.buttons.forEach((button) => {
+            if (dropdown.id === button.id) {
+              element.row.status.value =
+                this.flexiTableOptions.options.dropdowns[0].selected.name.toLowerCase()
+              element.row.status.class =
+                'item-' + this.flexiTableOptions.options.dropdowns[0].selected.name.toLowerCase()
+            }
+          })
+        })
       })
     }
   }

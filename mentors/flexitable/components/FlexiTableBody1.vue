@@ -1,6 +1,6 @@
 <template>
   <tbody class="flexi-table-body-c" ref="print1" @scroll.passive="handleScroll">
-    <template v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
+    <template v-if="FlexiBodyItemsPerPage.length < maxItem">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
           <template v-for="(col, key) in rowObj.row" :key="key">
@@ -27,16 +27,20 @@
             </td>
           </template>
         </tr>
-        <tr class="flexi-table-body-row-wrapper">
-          <td colspan="999">
-            <template v-if="rowObj.details?.status">
+        <template v-if="rowObj.details?.status">
+          <tr class="flexi-table-body-row-wrapper">
+
+            <td colspan="999">
+
               <div class="flexi-table-body-detail-wrapper">
                 <component :is="getAsyncComponent(rowObj.details.componentPath)" v-bind="rowObj.details.props">
                 </component>
               </div>
-            </template>
-          </td>
-        </tr>
+
+            </td>
+
+          </tr>
+        </template>
       </template>
     </template>
     <template v-else>
@@ -66,16 +70,20 @@
             </td>
           </template>
         </tr>
-        <tr class="flexi-table-body-row-wrapper">
-          <td colspan="999">
-            <template v-if="rowObj.details?.status">
+        <template v-if="rowObj.details?.status">
+          <tr class="flexi-table-body-row-wrapper">
+
+            <td colspan="999">
+
               <div class="flexi-table-body-detail-wrapper">
                 <component :is="getAsyncComponent(rowObj.details.componentPath)" v-bind="rowObj.details.props">
                 </component>
               </div>
-            </template>
-          </td>
-        </tr>
+
+            </td>
+
+          </tr>
+        </template>
       </template>
     </template>
   </tbody>
@@ -101,10 +109,13 @@ export default {
   methods: {
     addItemsPerPage() {
       this.page++
-      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.page * this.maxItem)
+      this.FlexiBodyItemsPerPageLimited = this.FlexiBodyItemsPerPage.slice(
+        0,
+        this.page * this.maxItem
+      )
     },
     handleScroll(event) {
-      if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
+      if (event?.scrollTop + event?.clientHeight >= event?.scrollHeight) {
         this.addItemsPerPage()
       }
     },
@@ -136,11 +147,62 @@ export default {
         const scrollHeight = document.documentElement.scrollHeight
         this.handleScroll({ scrollTop, clientHeight, scrollHeight })
       })
+    },
+    checkUpdate() {
+      if (this.FlexiBodyItemsPerPage.length > this.maxItem) {
+        const limitedItems = this.FlexiBodyItemsPerPage.slice(
+          0,
+          this.FlexiBodyItemsPerPageLimited.length
+        )
+
+        for (let i = 0; i < limitedItems.length; i++) {
+          if (limitedItems[i]?.row?.id !== this.FlexiBodyItemsPerPageLimited[i]?.row?.id) {
+            this.FlexiBodyItemsPerPageLimited = limitedItems
+            break
+          }
+        }
+      }
+      this.$nextTick(() => {
+        this.checkHighlight()
+        this.handleScroll()
+      })
+    },
+    checkHighlight() {
+      this.$nextTick(() => {
+        let input = this.flexi.options.searchKeyWord
+        document.body.querySelectorAll('.flexi-table-body-col-value').forEach((el) => {
+          if (el.textContent.toLowerCase().includes(input.toLowerCase())) {
+            const regex = new RegExp(`(${input})`, 'gi')
+            el.innerHTML = el.textContent.replace(
+              regex,
+              '<span class="highlight" style="background:yellow">$1</span>'
+            )
+          }
+        })
+      })
+    },
+    fillFlexiBodyItems() {
+      if (this.FlexiBodyItemsPerPage.length !== this.flexi.rows.length) {
+        return this.FlexiBodyItemsPerPage.slice(0, this.maxItem)
+      } else {
+        return this.FlexiBodyItemsPerPage
+      }
     }
   },
   created() {
     this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
     this.createEventListener()
+  },
+  watch: {
+    FlexiBodyItemsPerPage() {
+      this.checkUpdate()
+    },
+    SearchKey() {
+      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
+    },
+    FlexiBodyItemsPerPageLimited() {
+      this.checkUpdate()
+    }
   }
 }
 </script>
@@ -150,34 +212,20 @@ export default {
   .flexi-table-body-row-wrapper {
     margin-bottom: 4px;
 
-    // transition: border-radius 0.25s ease-in-out;
     &.remove-radius {
       border-radius: 1rem;
-      // background-color: azure !important;
     }
 
     &:hover {
-      // border-left: 1.5px solid #66fff7;
-      // transform: scale(1.01);
-      // background-color: #eee !important;
-      // background-color: #f6fefe !important;
       background-color: #f0f2f4 !important;
-      // border-color: #fff !important;
-      // outline: 3px solid #a5ddfd;
-      // box-shadow: 0 0 4px #33ddff;
     }
 
     &:nth-child(odd) {
       background: #f5f7fa;
     }
 
-    &:nth-child(odd):nth-child(4n + 1) {
+    &:nth-child(even) {
       background: #ffff;
-    }
-
-    .flexi-table-body-detail-wrapper {
-      // background: red;
-      // height: 100px;
     }
 
     .flexi-table-body-row {
@@ -186,7 +234,6 @@ export default {
         border-right: 1px solid rgba(41, 45, 50, 0.14);
         display: flex;
         align-items: center;
-        // justify-content: center; TASARIMDA SOLA YASLILAR - DEFNE
 
         min-height: 56px;
 
@@ -194,7 +241,6 @@ export default {
           margin: 0px 8px 0px 8px;
         }
 
-        // justify-content: center;
         img {
           margin-left: 8px;
           width: 42px;
@@ -243,12 +289,6 @@ export default {
     color: darken($bg-color, 30%);
   }
 }
-
-// .email {
-//   font-size: 0.95rem;
-//   color: #5c4958;
-//   font-weight: 500;
-// }
 
 .jc-center {
   justify-content: center;

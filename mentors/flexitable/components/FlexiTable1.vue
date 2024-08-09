@@ -43,16 +43,11 @@ export default {
       const tableOptions = Object.values(this.$attrs)[0]
       const { columns, selectedRows, rows, options } = tableOptions
       const hasDetails = rows[0]?.details ? true : false
-
-      const sizes = options.columnSizes
-        ? [
-          ...options.columnSizes,
-          ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
-        ]
-        : [
-          ...flexiConfig.columnSizes,
-          ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
-        ]
+      const columnSizes = options?.columnSizes || flexiConfig.columnSizes
+      const filledColumnSizes = [
+        ...columnSizes,
+        ...Array(Math.max(0, columns.length - columnSizes.length)).fill(1)
+      ]
       this.flexiTableOptions = {
         columns,
         selectedRows,
@@ -72,7 +67,7 @@ export default {
           ...flexiConfig,
           ...options,
           hasDetails,
-          columnSizes: sizes,
+          columnSizes: filledColumnSizes,
           itemsPerPage: options?.selected?.id ?? flexiConfig.selected.id
         }
       }
