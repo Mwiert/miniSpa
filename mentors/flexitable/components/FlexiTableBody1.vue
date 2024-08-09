@@ -1,6 +1,12 @@
 <template>
   <tbody class="flexi-table-body-c" ref="print1" @scroll.passive="handleScroll">
-    <template v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
+    {{
+      FlexiBodyItemsPerPage.length
+    }}
+    {{
+      FlexiBodyItemsPerPageLimited.length
+    }}
+    <template v-if="FlexiBodyItemsPerPage.length < maxItem">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
           <template v-for="(col, key) in rowObj.row" :key="key">
@@ -18,7 +24,9 @@
                   </template>
 
                   <!-- TEXT Render -->
-                  <span class="flexi-table-body-col-value" :class="[col.class, { pointer: col.url }]"
+                  <span
+                    class="flexi-table-body-col-value"
+                    :class="[col.class, { pointer: col.url }]"
                     @click="handlerGoToUrl(col.url)">
                     {{ col.value ?? col }}
                   </span>
@@ -31,7 +39,9 @@
           <td colspan="999">
             <template v-if="rowObj.details?.status">
               <div class="flexi-table-body-detail-wrapper">
-                <component :is="getAsyncComponent(rowObj.details.componentPath)" v-bind="rowObj.details.props">
+                <component
+                  :is="getAsyncComponent(rowObj.details.componentPath)"
+                  v-bind="rowObj.details.props">
                 </component>
               </div>
             </template>
@@ -57,7 +67,9 @@
                   </template>
 
                   <!-- TEXT Render -->
-                  <span class="flexi-table-body-col-value" :class="[col.class, { pointer: col.url }]"
+                  <span
+                    class="flexi-table-body-col-value"
+                    :class="[col.class, { pointer: col.url }]"
                     @click="handlerGoToUrl(col.url)">
                     {{ col.value ?? col }}
                   </span>
@@ -70,7 +82,9 @@
           <td colspan="999">
             <template v-if="rowObj.details?.status">
               <div class="flexi-table-body-detail-wrapper">
-                <component :is="getAsyncComponent(rowObj.details.componentPath)" v-bind="rowObj.details.props">
+                <component
+                  :is="getAsyncComponent(rowObj.details.componentPath)"
+                  v-bind="rowObj.details.props">
                 </component>
               </div>
             </template>
@@ -101,10 +115,13 @@ export default {
   methods: {
     addItemsPerPage() {
       this.page++
-      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.page * this.maxItem)
+      this.FlexiBodyItemsPerPageLimited = this.FlexiBodyItemsPerPage.slice(
+        0,
+        this.page * this.maxItem
+      )
     },
     handleScroll(event) {
-      if (event.scrollTop + event.clientHeight >= event.scrollHeight) {
+      if (event?.scrollTop + event?.clientHeight >= event?.scrollHeight) {
         this.addItemsPerPage()
       }
     },
@@ -136,11 +153,62 @@ export default {
         const scrollHeight = document.documentElement.scrollHeight
         this.handleScroll({ scrollTop, clientHeight, scrollHeight })
       })
+    },
+    checkUpdate() {
+      if (this.FlexiBodyItemsPerPage.length > this.maxItem) {
+        const limitedItems = this.FlexiBodyItemsPerPage.slice(
+          0,
+          this.FlexiBodyItemsPerPageLimited.length
+        )
+
+        for (let i = 0; i < limitedItems.length; i++) {
+          if (limitedItems[i]?.row?.id !== this.FlexiBodyItemsPerPageLimited[i]?.row?.id) {
+            this.FlexiBodyItemsPerPageLimited = limitedItems
+            break
+          }
+        }
+      }
+      this.$nextTick(() => {
+        this.checkHighlight()
+        this.handleScroll()
+      })
+    },
+    checkHighlight() {
+      this.$nextTick(() => {
+        let input = this.flexi.options.searchKeyWord
+        document.body.querySelectorAll('.flexi-table-body-col-value').forEach((el) => {
+          if (el.textContent.toLowerCase().includes(input.toLowerCase())) {
+            const regex = new RegExp(`(${input})`, 'gi')
+            el.innerHTML = el.textContent.replace(
+              regex,
+              '<span class="highlight" style="background:yellow">$1</span>'
+            )
+          }
+        })
+      })
+    },
+    fillFlexiBodyItems() {
+      if (this.FlexiBodyItemsPerPage.length !== this.flexi.rows.length) {
+        return this.FlexiBodyItemsPerPage.slice(0, this.maxItem)
+      } else {
+        return this.FlexiBodyItemsPerPage
+      }
     }
   },
   created() {
     this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
     this.createEventListener()
+  },
+  watch: {
+    FlexiBodyItemsPerPage() {
+      this.checkUpdate()
+    },
+    SearchKey() {
+      this.FlexiBodyItemsPerPageLimited = this.flexi.rows.slice(0, this.maxItem)
+    },
+    FlexiBodyItemsPerPageLimited() {
+      this.checkUpdate()
+    }
   }
 }
 </script>
