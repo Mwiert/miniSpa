@@ -114,8 +114,6 @@ export default {
   }
 
   .bolded {
-    // color: #366EF3;
-    // cursor: pointer;
     font-weight: bold;
 
   }
