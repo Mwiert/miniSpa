@@ -3,40 +3,35 @@
     <template v-if="FlexiBodyItemsPerPage.length !== flexi.rows.length">
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPage" :key="rowobjKey">
         <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
-          <td class="flexi-table-body-row" v-for="(col, key) in rowObj.row" :key="key">
-            <div
-              class="flexi-table-body-col"
-              :class="{ 'jc-center': col.checkbox }"
-              v-if="HideColumn(key)">
-              <!-- CHECKBOX Render -->
-              <template v-if="col.checkbox">
-                <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
-              </template>
-
-              <template v-else>
-                <!-- IMG Render -->
-                <template v-if="col?.img">
-                  <img :src="col.img" :class="col.imgClass" />
+          <template v-for="(col, key) in rowObj.row" :key="key">
+            <td class="flexi-table-body-row" v-if="HideColumn(key)">
+              <div class="flexi-table-body-col" :class="{ 'jc-center': col.checkbox }">
+                <!-- CHECKBOX Render -->
+                <template v-if="col.checkbox">
+                  <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
                 </template>
 
-                <!-- TEXT Render -->
-                <span
-                  class="flexi-table-body-col-value"
-                  :class="[col.class, { pointer: col.url }]"
-                  @click="handlerGoToUrl(col.url)">
-                  {{ col.value ?? col }}
-                </span>
-              </template>
-            </div>
-          </td>
+                <template v-else>
+                  <!-- IMG Render -->
+                  <template v-if="col?.img">
+                    <img :src="col.img" :class="col.imgClass" />
+                  </template>
+
+                  <!-- TEXT Render -->
+                  <span class="flexi-table-body-col-value" :class="[col.class, { pointer: col.url }]"
+                    @click="handlerGoToUrl(col.url)">
+                    {{ col.value ?? col }}
+                  </span>
+                </template>
+              </div>
+            </td>
+          </template>
         </tr>
         <tr class="flexi-table-body-row-wrapper">
           <td colspan="999">
             <template v-if="rowObj.details?.status">
               <div class="flexi-table-body-detail-wrapper">
-                <component
-                  :is="getAsyncComponent(rowObj.details.componentPath)"
-                  v-bind="rowObj.details.props">
+                <component :is="getAsyncComponent(rowObj.details.componentPath)" v-bind="rowObj.details.props">
                 </component>
               </div>
             </template>
@@ -47,40 +42,35 @@
     <template v-else>
       <template v-for="(rowObj, rowobjKey) in FlexiBodyItemsPerPageLimited" :key="rowobjKey">
         <tr class="flexi-table-body-row-wrapper" @click="handlerToggleDetails(rowObj)">
-          <td class="flexi-table-body-row" v-for="(col, key) in rowObj.row" :key="key">
-            <div
-              class="flexi-table-body-col"
-              :class="{ 'jc-center': col.checkbox }"
-              v-if="HideColumn(key)">
-              <!-- CHECKBOX Render -->
-              <template v-if="col.checkbox">
-                <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
-              </template>
-
-              <template v-else>
-                <!-- IMG Render -->
-                <template v-if="col?.img">
-                  <img :src="col.img" :class="col.imgClass" />
+          <template v-for="(col, key) in rowObj.row" :key="key">
+            <td class="flexi-table-body-row" v-if="HideColumn(key)">
+              <div class="flexi-table-body-col" :class="{ 'jc-center': col.checkbox }">
+                <!-- CHECKBOX Render -->
+                <template v-if="col.checkbox">
+                  <input type="checkbox" name="" id="" v-model="col.value" @change="pushtheArray" />
                 </template>
 
-                <!-- TEXT Render -->
-                <span
-                  class="flexi-table-body-col-value"
-                  :class="[col.class, { pointer: col.url }]"
-                  @click="handlerGoToUrl(col.url)">
-                  {{ col.value ?? col }}
-                </span>
-              </template>
-            </div>
-          </td>
+                <template v-else>
+                  <!-- IMG Render -->
+                  <template v-if="col?.img">
+                    <img :src="col.img" :class="col.imgClass" />
+                  </template>
+
+                  <!-- TEXT Render -->
+                  <span class="flexi-table-body-col-value" :class="[col.class, { pointer: col.url }]"
+                    @click="handlerGoToUrl(col.url)">
+                    {{ col.value ?? col }}
+                  </span>
+                </template>
+              </div>
+            </td>
+          </template>
         </tr>
         <tr class="flexi-table-body-row-wrapper">
           <td colspan="999">
             <template v-if="rowObj.details?.status">
               <div class="flexi-table-body-detail-wrapper">
-                <component
-                  :is="getAsyncComponent(rowObj.details.componentPath)"
-                  v-bind="rowObj.details.props">
+                <component :is="getAsyncComponent(rowObj.details.componentPath)" v-bind="rowObj.details.props">
                 </component>
               </div>
             </template>
@@ -196,9 +186,10 @@ export default {
         border-right: 1px solid rgba(41, 45, 50, 0.14);
         display: flex;
         align-items: center;
-        justify-content: center;
+        // justify-content: center; TASARIMDA SOLA YASLILAR - DEFNE
 
         min-height: 56px;
+
         &-value {
           margin: 0px 8px 0px 8px;
         }
