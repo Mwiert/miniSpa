@@ -23,12 +23,8 @@
     "30": "THIRTY",
     "-1": "ALL"
   },
-  "selectedStatus": { "id": 3, "name": "Pending" },
-  "status": [
-    { "id": 1, "name": "Active" },
-    { "id": 2, "name": "Graduate" },
-    { "id": 3, "name": "Pending" }
-  ],
+  "dropdowns": [],
+  "buttons": [],
 
   "UIDropdownOrderProp": {
     "label": "Select an Item",

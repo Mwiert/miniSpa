@@ -46,7 +46,23 @@ export default {
           stickyHeader: true,
           // disableSorting: true,
           // hideSearch: true,
-          show: false
+          show: false,
+          dropdowns: [
+            {
+              options: [
+                { id: 1, name: 'Active' },
+                { id: 2, name: 'Graduate' },
+                { id: 3, name: 'Pending' }
+              ],
+              selected: { id: 3, name: 'Pending' }
+            }
+          ],
+          buttons: [
+            {
+              label: 'Mark',
+              function: this.changeStatus
+            }
+          ]
         },
         columns: [
           { id: 1, name: '#', label: 'id', sortable: false },
@@ -326,6 +342,14 @@ export default {
     printSelectedRows() {
       this.selectedRows.forEach((row, index) => {
         console.log(`Row ${index + 1}:`, row)
+      })
+    },
+    changeStatus() {
+      this.flexiTableOptions.selectedRows.forEach((element) => {
+        element.row.status.value =
+          this.flexiTableOptions.options.dropdowns[0].selected.name.toLowerCase()
+        element.row.status.class =
+          'item-' + this.flexiTableOptions.options.dropdowns[0].selected.name.toLowerCase()
       })
     }
   }

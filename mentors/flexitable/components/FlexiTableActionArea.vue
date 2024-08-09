@@ -1,19 +1,18 @@
 <template>
   <div class="ui-action-c">
     <div class="ui-dropdown-wrapper">
-      <UIDropdown
-        v-for="n in Math.min(dropdownNumber, maxDropdownNumber)"
-        :key="n"
-        v-model="this.flexi.options.selectedStatus"
-        :items="flexi.options.status" />
+      <!-- Render dropdowns -->
+      <div v-for="(dropdown, index) in limitedDropdowns" :key="index">
+        <UIDropdown v-model="dropdown.selected" :items="dropdown.options" />
+      </div>
     </div>
     <div class="ui-button-wrapper">
+      <!-- Render buttons -->
       <UIButton
-        v-for="n in buttonNumber"
-        :key="n"
-        @click="propFunction()"
-        :text="label"
-        :size="'medium'" />
+        v-for="(button, index) in buttons"
+        :key="index"
+        :text="button.label"
+        @click="button.function" />
     </div>
   </div>
 </template>
@@ -22,6 +21,7 @@
 import UIDropdown from '../../../src/components/Dropdown/UIDropdown.vue'
 import UIButton from '../../../src/components/UIButton.vue'
 import flexiTableMixin from '../flexitableMixin'
+
 export default {
   name: 'FlexiTableActionArea',
   inject: ['flexi'],
@@ -30,27 +30,21 @@ export default {
     UIDropdown,
     UIButton
   },
-  data() {
-    return {
-      maxDropdownNumber: 2
-    }
-  },
   props: {
-    buttonNumber: {
-      type: Number
+    buttons: {
+      type: Array,
+      default: () => []
     },
-    dropdownNumber: {
-      type: Number
-    },
-    propFunction: {
-      type: Function,
-      required: true
-    },
-    label: {
-      type: String
+    dropdowns: {
+      type: Array,
+      default: () => []
     }
   },
-  methods: {}
+  computed: {
+    limitedDropdowns() {
+      return this.dropdowns.slice(0, Math.min(this.dropdowns.length, 2))
+    }
+  }
 }
 </script>
 
@@ -68,7 +62,6 @@ export default {
     display: flex;
     flex-direction: row;
     gap: 5px;
-
     width: 100%;
   }
   .ui-button-wrapper {
