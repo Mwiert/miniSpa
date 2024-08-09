@@ -8,11 +8,7 @@
     </div>
     <div class="ui-button-wrapper">
       <!-- Render buttons -->
-      <UIButton
-        v-for="(button, index) in buttons"
-        :key="index"
-        :text="button.label"
-        @click="button.function" />
+      <UIButton v-for="(button, index) in buttons" :key="index" :text="button.label" @click="button.function" />
     </div>
   </div>
 </template>
@@ -55,7 +51,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 0 3rem;
+  // padding: 0 3rem;
   gap: 10px;
 
   .ui-dropdown-wrapper {
@@ -64,6 +60,7 @@ export default {
     gap: 5px;
     width: 100%;
   }
+
   .ui-button-wrapper {
     display: flex;
     gap: 5px;
