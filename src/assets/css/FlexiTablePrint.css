@@ -1,88 +1,66 @@
-.flexi-table-header-c {
-  display: grid;
+.table-container {
+  overflow: auto;
 
-  .sticky-header {
-    background-color: #fff;
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  .custom-table {
+    overflow: auto;
+    width: 100%;
+    border-collapse: collapse;
   }
-}
 
-.flexi-table-header-col-value,
-.flexi-table-body-col-value {
-  padding: 0.25rem 1rem;
-  color: #363636;
-  font-family: 'Roboto', sans-serif;
-}
-
-.flexi-table-header-col-wrapper {
-  cursor: pointer;
-  font-weight: 500;
-  margin-right: 1rem;
-  width: fit-content;
-  display: flex;
-  align-items: center;
-
-  .flexi-table-header-col-wrapper:hover {
+  .custom-table th,
+  .custom-table td {
+    padding: 8px;
+    text-align: center;
+  }
+  .custom-table th {
     background-color: #f4f4f4;
-    border-radius: 1rem;
-  }
-
-  .flexi-table-header-col {
-    display: flex;
-    align-items: center;
   }
 }
+.flexi-table-body-c {
+  .flexi-table-body-row-wrapper {
+    margin-bottom: 4px;
 
-.flexi-table-body-row-wrapper {
-  border: 1.5px solid #e0e0e0;
-  margin: 0.45rem 0rem;
-  border-radius: 24rem;
-}
-.flexi-table-body-row {
-  display: grid;
-  flex-direction: row;
-  column-gap: 0.5rem;
-  padding: 0.5rem;
-}
-.flexi-table-body-c .flexi-table-body-row-wrapper.remove-radius {
-  border-radius: 1rem;
-}
+    &.remove-radius {
+      border-radius: 1rem;
+    }
 
-.flexi-table-body-c .flexi-table-body-row-wrapper:hover {
-  background-color: #f0f2f4 !important;
-}
+    &:hover {
+      background-color: #f0f2f4 !important;
+    }
 
-.flexi-table-body-c .flexi-table-body-row-wrapper:nth-child(even) {
-  background: #f5f7fa;
-}
+    &:nth-child(odd) {
+      background: #f5f7fa;
+    }
 
-.flexi-table-body-c .flexi-table-body-row-wrapper:nth-child(odd) {
-  background: #ffff;
-}
+    &:nth-child(even) {
+      background: #ffff;
+    }
 
-.flexi-table-body-c .flexi-table-body-row .flexi-table-body-col {
-  display: flex;
-  align-items: center;
-}
+    .flexi-table-body-row {
+      .flexi-table-body-col {
+        width: 100%;
+        border-right: 1px solid rgba(41, 45, 50, 0.14);
+        display: flex;
+        align-items: center;
 
-.flexi-table-body-c .flexi-table-body-row .flexi-table-body-col img {
-  width: 42px;
-  flex-shrink: 0;
-}
-.custom-details {
-  margin: 0 1rem;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background-color: #fff;
-  border: 2px dotted #ddd;
-  border-radius: 0.5rem;
-}
-.pointer {
-  cursor: pointer;
+        min-height: 56px;
+
+        &-value {
+          margin: 0px 8px 0px 8px;
+        }
+
+        img {
+          margin-left: 8px;
+          width: 42px;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
 }
 
 [class*='item-'] {
@@ -95,28 +73,6 @@
   min-width: 90px;
   font-weight: 500;
   height: fit-content;
-}
-
-.item-active {
-  background: #ccffdd;
-  outline: 3px solid rgba(204, 255, 221, 0.5);
-  color: #339933;
-}
-
-.item-pending {
-  background: #ffebcc;
-  outline: 3px solid rgba(255, 235, 204, 0.5);
-  color: #cc9933;
-}
-
-.item-graduate {
-  background: #e8ccff;
-  outline: 3px solid rgba(232, 204, 255, 0.5);
-  color: #9933cc;
-}
-
-.txt-bold {
-  font-weight: 600;
 }
 
 .jc-center {
@@ -136,4 +92,69 @@
 
 .student-photo-Female {
   outline: 3px solid #facfff70;
+}
+
+.flexi-table-header-c {
+  background-color: #faf4d9;
+  height: 40px;
+
+  &.sticky-header {
+    position: sticky;
+    top: 0;
+  }
+
+  .table-head-c {
+    padding: 0;
+    height: 40px;
+  }
+
+  .flexi-table-header-col-wrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    height: 40px;
+
+    .flexi-table-header-col {
+      border-right: 1px solid rgba(112, 112, 112, 0.14);
+      display: flex;
+      align-items: center;
+      height: 40px;
+      justify-content: space-between;
+      width: 100%;
+
+      &-value {
+        margin-left: 8px;
+      }
+
+      &-id {
+        justify-content: center;
+      }
+
+      .icon-c {
+        background-color: rgba(36, 55, 89, 0.06);
+        width: 16px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 8px;
+        
+        
+
+        .svg-icon-c {
+          padding: 0;
+          
+         
+
+          &:hover {
+            background: rgba(36, 55, 89, 0.06);
+          }
+        }
+      }
+    }
+  }
+}
+.icon-c { 
+  display: none;
 }
