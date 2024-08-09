@@ -14,12 +14,10 @@
   },
   "dependencies": {
     "dayjs": "^1.11.11",
-    
     "html2pdf.js": "^0.10.2",
-   
     "pinia": "^2.1.7",
     "vue": "^3.4.31",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.4.3"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
