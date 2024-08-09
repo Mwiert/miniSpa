@@ -1,5 +1,5 @@
 <template>
-  <div class="table-container">
+  <div class="table-container" ref="table">
     <table class="custom-table">
       <FlexiTableHeader1 ref="head" />
       <FlexiTableBody1 ref="body" />
