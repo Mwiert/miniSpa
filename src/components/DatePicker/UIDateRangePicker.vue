@@ -210,7 +210,7 @@ export default {
       this.maxDate = maxDate
     },
     changeDates(changedDate) {
-      this.changeDate = {
+      this.changedDate = {
         oldDate: changedDate.oldDate,
         newDate: changedDate.newDate
       }
