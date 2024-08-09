@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import response from '../../mentors/flexitable/flexitableData'
-import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
+import FlexiTable from '../../mentors/flexitable/components/FlexiTable1.vue'
 
 export default {
   name: 'FlexiTablePage',
@@ -39,9 +39,9 @@ export default {
           tableTitle: 'Hakan Calhanoglu burda on numara her yerde eller havada',
           columnGap: '.5rem',
           selected: { id: 5, name: 'FIVE' },
-          // columnSizes: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
-          // hiddenColumns: ['annualFee', 'city'],
-
+          columnSizes: [10, 10, 10, 1, 1, 1, 1, 1, 1, 10, 1, 1],
+          // hiddenColumns: ['annualFee', 'city', 'gpa'],
+          minVisibleColumns: 5,
           //itemsPerPage: 5,
           stickyHeader: true,
           // disableSorting: true,
@@ -67,7 +67,7 @@ export default {
       },
       flexiTableOptionsWithoutRowAndDetails: {
         options: {
-          columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
+          columnSizes: [10, 10, 10, 1, 1, 1, 1, 1, 1, 10, 1, 1],
 
           columnGap: '.5rem',
 
@@ -95,7 +95,7 @@ export default {
       },
       flexiTableOptionsWithoutDetails: {
         options: {
-          columnSizes: [0.5, 0.75, 1, 0.85, 0.75, 0.75, 0.65, 0.75, 1.3, 0.5, 1, 1.75],
+          // columnSizes: [10, 10, 10, 1, 1, 1, 1, 1, 1, 10, 1, 1],
 
           columnGap: '.5rem',
 
@@ -124,7 +124,7 @@ export default {
   },
   created() {
     // row mapper for FlexiTable
-    ;(this.flexiTableOptions.rows = response.map((item) => {
+    ; (this.flexiTableOptions.rows = response.map((item) => {
       return {
         row: {
           id: {
