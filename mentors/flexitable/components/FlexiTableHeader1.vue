@@ -98,11 +98,12 @@ export default {
 
 <style lang="scss" scoped>
 .flexi-table-header-c {
+  background-color: #faf4d9;
+  height: 40px;
+
   &.sticky-header {
-    background-color: #faf4d9;
     position: sticky;
     top: 0;
-    height: 40px;
   }
 
   .table-head-c {
@@ -113,22 +114,9 @@ export default {
   .flexi-table-header-col-wrapper {
     display: flex;
     align-items: center;
-
-    // width: fit-content;
     cursor: pointer;
     font-weight: 500;
     height: 40px;
-
-    // &:last-child {
-    //   border-right: none;
-    // }
-
-    // border: 1px solid #eee;
-
-    // &:hover {
-    //   background-color: #f4f4f4;
-    //   border-radius: 1rem;
-    // }
 
     .flexi-table-header-col {
       border-right: 1px solid rgba(112, 112, 112, 0.14);

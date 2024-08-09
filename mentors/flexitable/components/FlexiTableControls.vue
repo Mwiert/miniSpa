@@ -70,9 +70,6 @@
 </template>
 
 <script lang="ts">
-// import the necessary libraries
-//import { jsPDF } from 'jspdf';
-//import html2canvas from 'html2canvas';
 import flexiTableMixin from '../flexitableMixin'
 import FlexiTableActionArea from './FlexiTableActionArea.vue'
 import UIEnumDropdown from '../../../src/components/Dropdown/UIEnumDropdown.vue'
@@ -319,8 +316,7 @@ export default {
 
     // print method style not working
     triggerExportPrint() {
-      const divToPrint = this.$parent.$refs.container.$refs.body.$refs.print1
-      const divToPrint2 = this.$parent.$refs.container.$refs.head.$refs.print3
+      const divToPrint = this.$parent.$refs.container.$refs.table
 
       //const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer //bodyi kapsıyor
       //const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2 ///columları
@@ -331,7 +327,6 @@ export default {
         <link rel="stylesheet" type="text/css" href="../src/assets/css/FlexiTablePrint.css">
       </head>
       <body>
-        ${divToPrint2.outerHTML}
         ${divToPrint.outerHTML}
       </body>
     </html>`
