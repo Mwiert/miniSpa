@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import response from '../../mentors/flexitable/flexitableData'
-import FlexiTable from '../../mentors/flexitable/components/FlexiTable1.vue'
+import FlexiTable from '../../mentors/flexitable/components/FlexiTable.vue'
 
 export default {
   name: 'FlexiTablePage',
@@ -142,7 +142,7 @@ export default {
   },
   created() {
     // row mapper for FlexiTable
-    ; (this.flexiTableOptions.rows = response.map((item) => {
+    ;(this.flexiTableOptions.rows = response.map((item) => {
       return {
         row: {
           id: {

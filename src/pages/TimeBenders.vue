@@ -15,7 +15,7 @@
       <UIDateRangePicker
         v-model="selectDate"
         isMulti
-        :maxSelectibleDay="5"
+        :maxSelectableDays="5"
         :validateForwardDay="10"
         :validateBackDay="7"
         label="maxSelectable:5" />

@@ -1,8 +1,7 @@
 <template>
   <div class="flexi-table-c" v-if="isDataCorrect() === 'perfect'">
     <FlexiTableControls />
-    <FlexiTableHeader ref="flexiheader" />
-    <FlexiTableBody ref="flexibody" />
+    <FlexiTableContainer ref="container" />
     <FlexiTableFooter />
   </div>
   <div v-else>
@@ -12,13 +11,14 @@
 
 <script lang="ts">
 import FlexiTableControls from './FlexiTableControls.vue'
-import FlexiTableHeader from './FlexiTableHeader.vue'
-import FlexiTableBody from './FlexiTableBody.vue'
+
 import FlexiTableFooter from './FlexiTableFooter.vue'
 import flexiConfig from '../flexi.config.json'
 import FlexiTableInfo from './FlexiTableInfo.vue'
+import FlexiTableContainer from './FlexiTableContainer.vue'
 import { computed } from 'vue'
 import flexitableExceptionHandler from '../flexitableExceptionHandler'
+
 export default {
   name: 'FlexiTable',
   provide() {
@@ -43,16 +43,11 @@ export default {
       const tableOptions = Object.values(this.$attrs)[0]
       const { columns, selectedRows, rows, options } = tableOptions
       const hasDetails = rows[0]?.details ? true : false
-
-      const sizes = options.columnSizes
-        ? [
-            ...options.columnSizes,
-            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
-          ]
-        : [
-            ...flexiConfig.columnSizes,
-            ...Array(Math.max(0, columns.length - flexiConfig.columnSizes.length)).fill(1)
-          ]
+      const columnSizes = options?.columnSizes || flexiConfig.columnSizes
+      const filledColumnSizes = [
+        ...columnSizes,
+        ...Array(Math.max(0, columns.length - columnSizes.length)).fill(1)
+      ]
       this.flexiTableOptions = {
         columns,
         selectedRows,
@@ -72,7 +67,7 @@ export default {
           ...flexiConfig,
           ...options,
           hasDetails,
-          columnSizes: sizes,
+          columnSizes: filledColumnSizes,
           itemsPerPage: options?.selected?.id ?? flexiConfig.selected.id
         }
       }
@@ -97,10 +92,9 @@ export default {
   },
   components: {
     FlexiTableControls,
-    FlexiTableHeader,
-    FlexiTableBody,
     FlexiTableFooter,
-    FlexiTableInfo
+    FlexiTableInfo,
+    FlexiTableContainer
   },
 
   watch: {
@@ -110,11 +104,10 @@ export default {
         this.flexiTableOptions.options.columnSizes = []
         // The hiddenColumns and columnSizes arrays change according to the changes in the flex.columns array.
         Object.keys(this.flexiTableOptions.columns).forEach((column) => {
-          if (this.flexiTableOptions.columns[column].status === true) {
-            this.flexiTableOptions.options.columnSizes.push(
-              this.flexiTableOptions.columns[column].colSizes
-            )
-          } else {
+          this.flexiTableOptions.options.columnSizes.push(
+            this.flexiTableOptions.columns[column].colSizes
+          )
+          if (!this.flexiTableOptions.columns[column].status) {
             hidden.push(this.flexiTableOptions.columns[column].label)
           }
         })
@@ -131,35 +124,5 @@ export default {
 <style lang="scss" scoped>
 .flexi-table-c {
   color: #363636;
-
-  ::v-deep {
-    div {
-    }
-
-    .flexi-table-header-c,
-    .flexi-table-body-row {
-      display: grid;
-
-      // border: 1px solid #ccc;
-    }
-
-    .flexi-table-header-c {
-      margin-bottom: 8px;
-    }
-
-    // .flexi-table-header-col-wrapper,
-    // .flexi-table-body-col {
-    //   // border: 1px solid #ccc;
-    //   // border-right: 1px solid #eeeeee;
-    //   // border-radius: 0 !important;
-    // }
-
-    .flexi-table-header-col-value,
-    .flexi-table-body-col-value {
-      padding: 0.25rem 1rem;
-      // // border: 1px solid #eee;
-      // background-color: #ccc;
-    }
-  }
 }
 </style>

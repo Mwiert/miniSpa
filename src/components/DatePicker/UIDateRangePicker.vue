@@ -69,7 +69,6 @@
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
           @dateSelected="handleFirstDateSelected"
-          @sliderSelected="handleFirstSliderDate"
           @click="sendDateToParent"
           :positionToLeftSingle="positionToLeftSingle"
           @minDate="updateMinDate"
@@ -98,7 +97,7 @@
           :positionToRight="positionToRight"
           :positionToLeft="positionToLeft"
           :newSelectedDays="newSelectedDays"
-          :maxSelectibleDay="maxSelectibleDay"
+          :maxSelectableDays="maxSelectableDays"
           @minDate="updateMinDate"
           @maxDate="updateMaxDate"
           @changedDate="changeDates" />
@@ -125,27 +124,26 @@ export default {
       type: String,
       default: ''
     },
-    isMulti: { type: Boolean, default: false }, //This is for asking to parent whether should the multi date picker available in this implementation
-    isSingle: { type: Boolean, default: true }, //This is for asking to parent whether should the single date picker available in this implementation
+    isMulti: { type: Boolean, default: false },
+    isSingle: { type: Boolean, default: true },
     validateForwardMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateBackMonth: { type: Number, default: 99 }, //This is for validating the month range by giving it 9999 as default value since this is one of the maximum value
     validateForwardYear: { type: Number, default: 99 },
-    validateBackYear: { type: Number, default: 99 }, //This is for validating the year range by giving it 9999 as default value since this is one of the maximum value
+    validateBackYear: { type: Number, default: 99 },
     validateForwardDay: { type: Number, default: 99 },
     validateBackDay: { type: Number, default: 99 },
-    value: {}, //This is for getting the selected date from the parent component TimeBenders
     isPast: { type: Boolean, default: false },
     isFuture: { type: Boolean, default: false },
     initialDate: { type: String, default: dayjs().format('YYYY-MM-DD') },
     spaceBetweenDays: { type: Number, default: 2 },
-    maxSelectibleDay: { type: Number, default: 0 }
+    maxSelectableDays: { type: Number, default: 0 }
   },
   data() {
     return {
-      firstSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
-      secondSelectedDate: {} as date, //This is for getting the selected date from UIDatePicker
-      isSingleDatePickerEnable: false, //This is for enabling the single date picker as default false
-      isMultiDatePickerEnable: false, //This is for enabling the multi date picker as default false
+      firstSelectedDate: {} as date,
+      secondSelectedDate: {} as date,
+      isSingleDatePickerEnable: false,
+      isMultiDatePickerEnable: false,
       presentDate: {} as date,
       minDate: '',
       maxDate: '',
@@ -286,30 +284,7 @@ export default {
         this.$emit('update:modelValue', dates)
       }
     },
-    formatMonth(month) {
-      //We are converting the month number to month name
-      const months = {
-        '01': 'January',
-        '02': 'February',
-        '03': 'March',
-        '04': 'April',
-        '05': 'May',
-        '06': 'June',
-        '07': 'July',
-        '08': 'August',
-        '09': 'September',
-        '10': 'October',
-        '11': 'November',
-        '12': 'December'
-      }
-      //We are returning the month name if not available just return the month's number like on top.
-      return months[month] || month
-    },
-    handleFirstSliderDate(sliderDate: string) {
-      // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
-      this.firstSelectedDate.date = sliderDate
-      this.validateDates()
-    },
+
     handleFirstDateSelected(firstDate: date) {
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.firstSelectedDate = firstDate
@@ -478,44 +453,37 @@ export default {
           // newDate minDate'ten önceyse
           if (newDate.isBefore(minDate)) {
             this.firstSelectedDate.date = minDate.format('YYYY-MM-DD')
-            if (this.maxSelectibleDay != 0) {
-              //Eğer secondDate minDate + maxSelectibleDay'den sonraysa
-              if (secondDate.isAfter(minDate.add(this.maxSelectibleDay, 'day'))) {
+            if (this.maxSelectableDays != 0) {
+              //Eğer secondDate minDate + maxSelectableDays'den sonraysa
+              if (secondDate.isAfter(minDate.add(this.maxSelectableDays, 'day'))) {
                 this.secondSelectedDate.date = minDate
-                  .add(this.maxSelectibleDay, 'day')
+                  .add(this.maxSelectableDays, 'day')
                   .format('YYYY-MM-DD')
               }
             }
-            // this.notification(`First date adjusted to ${minDate.format('DD-MM-YYYY')}  `)
           }
           //firstSelected max'tan büyükse
           else if (newDate.isAfter(maxDate)) {
             this.secondSelectedDate.date = this.maxDate
-            if (this.maxSelectibleDay != 0) {
-              // Eğer firstDate maxDate - maxSelectibleDays'ten sonraysa
+            if (this.maxSelectableDays != 0) {
+              // Eğer firstDate maxDate - maxSelectableDayss'ten sonraysa
 
               this.firstSelectedDate.date = maxDate
-                .subtract(this.maxSelectibleDay, 'day')
+                .subtract(this.maxSelectableDays, 'day')
                 .format('YYYY-MM-DD')
             }
-
-            //this.notification(`Second date adjusted to ${maxDate.format('DD-MM-YYYY')}  `)
           } else if (firstDate.isAfter(secondDate)) {
             this.secondSelectedDate.date = ''
-            //this.secondSelectedDate.selected = false
           } else {
-            if (this.maxSelectibleDay != 0) {
-              // Eğer secondDate ve newDate arasındaki fark maxSelectibleDays'ten fazlaysa
+            if (this.maxSelectableDays != 0) {
+              // Eğer secondDate ve newDate arasındaki fark maxSelectableDayss'ten fazlaysa
               const dayDifference = secondDate.diff(newDate, 'day')
-              if (dayDifference > this.maxSelectibleDay) {
+              if (dayDifference > this.maxSelectableDays) {
                 this.firstSelectedDate.date = newDate.format('YYYY-MM-DD')
                 this.secondSelectedDate.date = newDate
-                  .add(this.maxSelectibleDay, 'day')
+                  .add(this.maxSelectableDays, 'day')
                   .format('YYYY-MM-DD')
               }
-              // this.notification(
-              //   `Second date adjusted to ${dayjs(this.secondSelectedDate.date).format('DD-MM-YYYY')}  `
-              // )
             }
           }
         }
@@ -523,45 +491,36 @@ export default {
           // newDate maxDate'ten sonraysa
           if (newDate.isAfter(maxDate)) {
             this.secondSelectedDate.date = maxDate.format('YYYY-MM-DD')
-            if (this.maxSelectibleDay != 0) {
-              // Eğer firstDate maxDate - maxSelectibleDays'ten sonraysa
-              if (firstDate.isBefore(maxDate.subtract(this.maxSelectibleDay, 'day'))) {
+            if (this.maxSelectableDays != 0) {
+              // Eğer firstDate maxDate - maxSelectableDayss'ten sonraysa
+              if (firstDate.isBefore(maxDate.subtract(this.maxSelectableDays, 'day'))) {
                 this.firstSelectedDate.date = maxDate
-                  .subtract(this.maxSelectibleDay, 'day')
+                  .subtract(this.maxSelectableDays, 'day')
                   .format('YYYY-MM-DD')
               }
             }
-            // this.notification(
-            //   `First date adjusted to ${dayjs(this.firstSelectedDate.date).format('DD-MM-YYYY')} and Second date adjusted to ${maxDate.format('DD-MM-YYYY')} `
-            // )
           } else if (newDate.isBefore(minDate)) {
             this.firstSelectedDate.date = this.minDate
-            if (this.maxSelectibleDay != 0) {
-              //Eğer secondDate minDate + maxSelectibleDay'den sonraysa
+            if (this.maxSelectableDays != 0) {
+              //Eğer secondDate minDate + maxSelectableDays'den sonraysa
 
               this.secondSelectedDate.date = minDate
-                .add(this.maxSelectibleDay, 'day')
+                .add(this.maxSelectableDays, 'day')
                 .format('YYYY-MM-DD')
             } else if (secondDate.isBefore(firstDate)) {
               this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
               this.secondSelectedDate.date = ''
             }
-            // this.notification(
-            //   `First date adjusted to ${dayjs(this.firstSelectedDate.date).format('DD-MM-YYYY')} and Second date adjusted to ${minDate.format('DD-MM-YYYY')} `
-            // )
           } else {
-            if (this.maxSelectibleDay != 0) {
-              // Eğer newDate ile firstDate arasındaki fark maxSelectibleDays'ten fazlaysa
+            if (this.maxSelectableDays != 0) {
+              // Eğer newDate ile firstDate arasındaki fark maxSelectableDayss'ten fazlaysa
               const dayDifference = newDate.diff(firstDate, 'day')
-              if (dayDifference > this.maxSelectibleDay) {
+              if (dayDifference > this.maxSelectableDays) {
                 this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')
                 this.firstSelectedDate.date = newDate
-                  .subtract(this.maxSelectibleDay, 'day')
+                  .subtract(this.maxSelectableDays, 'day')
                   .format('YYYY-MM-DD')
               }
-              // this.notification(
-              //   `First date adjusted to ${dayjs(this.firstSelectedDate.date).format('DD-MM-YYYY')}`
-              // )
             }
           }
         }
@@ -570,11 +529,9 @@ export default {
       else {
         if (newDate.isBefore(this.minDate)) {
           this.firstSelectedDate.date = this.minDate
-          //this.notification(`Selected date ${minDate.format('DD-MM-YYYY')}`)
         }
         if (newDate.isAfter(this.maxDate)) {
           this.firstSelectedDate.date = this.maxDate
-          //this.notification(`Selected date ${maxDate.format('DD-MM-YYYY')}`)
         }
       }
 
@@ -608,7 +565,6 @@ export default {
     this.secondSelectedDate = this.sendInitialDates.secondInitialDate
     //We are filling the initial date when the component is created because we want to see today's date in button when we open our web page.
     this.fillInitialDate()
-
     this.sendDateToParent()
   }
 }

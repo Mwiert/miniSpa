@@ -4,11 +4,9 @@
     class="reisetech-radio-button-c"
     :class="[disabled ? 'disabled' : '', after ? 'after' : '']"
     @click="selectRadioButton">
-    <div class="radio-label">{{ IsRadioLabel }}</div>
-    <!--Here we check radio button is checked or not with computed radioButtonChecked-->
-    <div
-      class="radio-button"
-      :class="[radioButtonClassName, radioButtonChecked ? 'checked' : '']"></div>
+    <div class="radio-label">{{ label }}</div>
+    <!--Here we check radio button is checked or not with computed isChecked-->
+    <div class="radio-button" :class="[className, isChecked ? 'checked' : '']"></div>
   </div>
 </template>
 
@@ -50,14 +48,11 @@ export default {
     }
   },
   data() {
-    return {
-      IsRadioLabel: this.label,
-      radioButtonClassName: this.className
-    }
+    return {}
   },
   computed: {
     // Check every radio button for checked prop
-    radioButtonChecked(): boolean {
+    isChecked(): boolean {
       return this.modelValue === this.value
     }
   },
@@ -118,8 +113,8 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
         background-color: white;
         border-radius: 50%;
       }

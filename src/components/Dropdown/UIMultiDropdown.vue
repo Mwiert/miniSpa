@@ -2,11 +2,21 @@
   <div class="ui-multi-dropdown-c">
     <div class="ui-multi-dropdown-c-wrapper">
       <label class="label" v-if="label?.length !== 0">{{ label }}</label>
-      <button @click="toggleDropdown" class="ui-multi-dropdown-button" :class="{ active: isOpen && !disabled, disabled: disabled}">
+      <button
+        @click="toggleDropdown"
+        class="ui-multi-dropdown-button"
+        :class="{ active: isOpen && !disabled, disabled: disabled }">
         <div class="placeholder-text">{{ labelDisplay }}</div>
-        <SvgIcon class="arrow" :class="{ up: isOpen && !disabled }" :name="'arrow-down'" :size="'s'" />
+        <SvgIcon
+          class="arrow"
+          :class="{ up: isOpen && !disabled }"
+          :name="'arrow-down'"
+          :size="'s'" />
       </button>
-      <div v-if="isOpen && !disabled" class="ui-multi-dropdown-menu" :style="{ fontSize: fontSize + 'px' }">
+      <div
+        v-if="isOpen && !disabled"
+        class="ui-multi-dropdown-menu"
+        :style="{ fontSize: fontSize + 'px' }">
         <div v-if="searchable" class="search-container">
           <div class="search-content-wrapper">
             <input
@@ -74,7 +84,6 @@ export default {
 
   props: {
     items: {
-      // items in the database.
       type: Array,
       required: true,
       default: () => []
@@ -84,7 +93,6 @@ export default {
       default: 'id'
     },
     dataSize: {
-      // how many data will shown in the dropdown.
       type: Number
     },
     maxVisibleItems: {
@@ -105,22 +113,18 @@ export default {
     },
 
     label: {
-      // label on the dropdown to understand what the dropdown contents are.
       type: String
     },
 
     fontSize: {
-      // defined fontsize shown in the dropdown.
       type: Number,
       default: 14
     },
     placeHolder: {
-      // placeHolder before the selection.
-      type: Array,
-      default: () => ['Select an item']
+      type: String,
+      default: 'Select an item'
     },
     searchable: {
-      // in many results user can find what he/she looks for.
       type: Boolean,
       default: false
     },
@@ -242,20 +246,20 @@ export default {
       const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
       return this.filterItemsAccordingToTurkishCharacter(this.searchQuery, turkishLetters)
     },
-    // Filters items according to turkish characters. This function is for reducing code redundancy. 
+    // Filters items according to turkish characters. This function is for reducing code redundancy.
     // If the searchQuery contains any turkish character, it filters the items according to the searchQuery.
     // Otherwise, it filters the items according to the mapped version of SearchQuery
     filterItemsAccordingToTurkishCharacter(searchQuery, turkishLetters) {
       if (this.stringContainsAnyWord(searchQuery, turkishLetters)) {
-        return this.dropdownItems.filter(item =>
+        return this.dropdownItems.filter((item) =>
           String(item[this.displayField].toLowerCase()).includes(searchQuery.toLowerCase())
-        );
+        )
       } else {
-        return this.dropdownItems.filter(item =>
+        return this.dropdownItems.filter((item) =>
           this.mapToTurkishWords(String(item[this.displayField]).toLowerCase()).includes(
             searchQuery.toLowerCase()
           )
-        );
+        )
       }
     },
     filteredItems(): Array<any> {
@@ -265,14 +269,17 @@ export default {
       }
       const turkishLetters = ['ç', 'ı', 'ğ', 'ö', 'ş', 'ü']
       if (this.searchQuery) {
-        let insideItems = this.filterItemsAccordingToTurkishCharacter(this.searchQuery, turkishLetters);
-        let insideSelectedItems = insideItems.filter(item => this.isSelected(item));
-        let insideNonSelectedItems = insideItems.filter(item => !this.isSelected(item));
-        return [...insideSelectedItems, ...insideNonSelectedItems];
+        let insideItems = this.filterItemsAccordingToTurkishCharacter(
+          this.searchQuery,
+          turkishLetters
+        )
+        let insideSelectedItems = insideItems.filter((item) => this.isSelected(item))
+        let insideNonSelectedItems = insideItems.filter((item) => !this.isSelected(item))
+        return [...insideSelectedItems, ...insideNonSelectedItems]
       }
-      let nonSelectedItems = items.filter(item => !this.isSelected(item))
+      let nonSelectedItems = items.filter((item) => !this.isSelected(item))
       // Concatenate selected items at the top
-      return [...this.selectedItems, ...nonSelectedItems];
+      return [...this.selectedItems, ...nonSelectedItems]
     },
     //this method shortens the word if the word is too long and puts ... at the end
     isLongItem(item): string {
@@ -424,7 +431,6 @@ export default {
         flex-direction: row;
         font-size: 15px;
         // font-weight: bold;
-
       }
 
       .arrow {

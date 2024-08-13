@@ -113,7 +113,7 @@
     <UIButton
       :id="'homebutton1'"
       text="Home"
-      :isSpinnerActive="loadingStates.home.isLoading"
+      :isSpinner="loadingStates.home.isLoading"
       :isDisabled="loadingStates.home.isDisabled"
       @click="setLoadingState('home')"
       routerUrl="/" />
@@ -123,7 +123,7 @@
       text="Flight"
       :icon="'refresh'"
       :size="'small'"
-      :isSpinnerActive="loadingStates.flight.isLoading"
+      :isSpinner="loadingStates.flight.isLoading"
       :isDisabled="loadingStates.flight.isDisabled"
       @click="setLoadingState('flight')"
       v-model="buttonValue" />
@@ -134,7 +134,7 @@
       text="Hotel"
       :icon="'refresh'"
       :iconSize="'s'"
-      :isSpinnerActive="loadingStates.hotel.isLoading"
+      :isSpinner="loadingStates.hotel.isLoading"
       :isDisabled="loadingStates.hotel.isDisabled"
       @click="setLoadingState('hotel')" />
 
@@ -143,7 +143,7 @@
       :id="'ppgbutton'"
       text="PowerPuffGirls"
       :icon="'refresh'"
-      :isSpinnerActive="loadingStates.default.isLoading"
+      :isSpinner="loadingStates.default.isLoading"
       :isDisabled="loadingStates.default.isDisabled"
       @click="setLoadingState('default')" />
 
@@ -151,7 +151,7 @@
       :id="'flightoutline'"
       className="flight outline"
       text="Flight"
-      :isSpinnerActive="loadingStates.flightOutline.isLoading"
+      :isSpinner="loadingStates.flightOutline.isLoading"
       :icon="'refresh'"
       :isDisabled="loadingStates.flightOutline.isDisabled"
       @click="setLoadingState('flightOutline')" />
@@ -160,13 +160,13 @@
       :id="'hoteloutline'"
       className="hotel outline"
       text="Hotel"
-      :isSpinnerActive="loadingStates.hotelOutline.isLoading"
+      :isSpinner="loadingStates.hotelOutline.isLoading"
       :isDisabled="loadingStates.hotelOutline.isDisabled"
       @click="setLoadingState('hotelOutline')" />
     <UIButton
       :id="'disabled'"
       text="Disabled"
-      :isSpinnerActive="loadingStates.disabledButton.isLoading"
+      :isSpinner="loadingStates.disabledButton.isLoading"
       :isDisabled="loadingStates.disabledButton.isDisabled"
       @click="setLoadingState('disabledButton')" />
 

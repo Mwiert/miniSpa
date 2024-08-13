@@ -455,8 +455,8 @@ export default {
     &::before {
       content: '';
       position: absolute; //Position relative to parent
-      top: -10px; //10px above the calendar
-      left: 15px; //15px from the left of the calendar
+      top: -10px;
+      left: 15px;
       width: 0;
       height: 0;
       border-left: 10px solid transparent; //This is the left border of the triangle invisible
@@ -562,7 +562,6 @@ export default {
       pointer-events: none;
       cursor: not-allowed;
     }
-    //If the specific date is selected, it is colored with accent-primary-color which is light-blue
     .days li.selected {
       background-color: $accent-primary-color;
       border-radius: 4px;

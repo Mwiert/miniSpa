@@ -8,8 +8,8 @@
       @click="handleClick"
       v-if="routerUrl == ''">
       <!-- Icon's name should be the name of the .svg file. iconSize is default m in SvgIcon.vue file.-->
-      <SvgIcon v-if="icon && !isSpinnerActive" :size="iconSize" :name="icon" class="icon" />
-      <span v-if="isSpinnerActive" class="spinner"></span>
+      <SvgIcon v-if="icon && !isSpinner" :size="iconSize" :name="icon" class="icon" />
+      <span v-if="isSpinner" class="spinner"></span>
       <span v-else>{{ text }}</span>
     </button>
     <button
@@ -19,8 +19,8 @@
       @click="handlerUrl(routerUrl)"
       v-else>
       <!-- Icon's name should be the name of the .svg file-->
-      <SvgIcon v-if="icon && !isSpinnerActive" :size="iconSize" :name="icon" class="icon" />
-      <span v-if="isSpinnerActive" class="spinner"></span>
+      <SvgIcon v-if="icon && !isSpinner" :size="iconSize" :name="icon" class="icon" />
+      <span v-if="isSpinner" class="spinner"></span>
       <span v-else>{{ text }}</span>
     </button>
   </div>
@@ -30,12 +30,10 @@
 export default {
   name: 'UIButton',
   props: {
-    // id is the unique identifier of the button
     id: {
       type: String,
       default: ''
     },
-    // Classes such as hotel and flight are derived from the .reisetech-btn class.
     className: {
       type: String,
       default: 'default'
@@ -45,12 +43,10 @@ export default {
       type: String,
       default: 'Button'
     },
-    // routeUrl is the routing Url
     routerUrl: {
       type: [String, Object],
       default: ''
     },
-    // icon is the icons on the button if button has one
     icon: {
       type: String,
       default: ''
@@ -59,22 +55,18 @@ export default {
       type: String,
       default: '16px'
     },
-    // isSpinner is checking loading animation for button exist or not
-    isSpinnerActive: {
+    isSpinner: {
       type: Boolean,
       default: false
     },
-    // isDisabled is checking button is active or disabled
     isDisabled: {
       type: Boolean,
       default: false
     },
-    // Size of the button
     size: {
       type: String,
       default: 'large'
     },
-    //Status of the button
     modelValue: {
       type: Boolean
     }

@@ -2,20 +2,20 @@
   <div class="error-wrapper-c">
     <div class="error">Error:</div>
     <br />
-    <div class="error-message" v-html="flexi.errors.message"></div>
+    <div v-html="flexi.errors.message"></div>
     <div class="readme">
       <p>The expected prop structure is <code>:propName (any valid name) = "an object"</code>.</p>
       <p>The object should include the following fields:</p>
       <ul>
         <li>options (optional): { }</li>
-        <li class="rows">rows (required): [ ]
-        </li>
+        <li class="rows">rows (required): [ ]</li>
         <li>columns (required): [ ]</li>
         <li>selectedRows (required): [ ]</li>
       </ul>
       <div class="rows-details">
-        <p>The structure and naming convention for <span class="bolded">rows</span> can be in one of the following
-          three formats:
+        <p>
+          The structure and naming convention for <span class="bolded">rows</span> can be in one of
+          the following three formats:
         </p>
         <ul>
           <li>
@@ -60,21 +60,25 @@
             </code></pre>
           </li>
         </ul>
-        <p>In the first format, <span class="bolded">details</span> object must include a <span
-            class="bolded">status</span> property, which
-          should be <span class="bolded">false</span> (closed) or <span class="bolded">true</span> (open). This is
-          necessary for toggling the
-          visibility of details when a row is clicked. <br />In the <span class="bolded">row</span> object, values can
-          be
-          directly assigned to fields. However, if a field
-          has subfields, the value to be displayed in the table should be assigned to the <span
-            class="bolded">value</span> property. </p>
+        <p>
+          In the first format, <span class="bolded">details</span> object must include a
+          <span class="bolded">status</span> property, which should be
+          <span class="bolded">false</span> (closed) or <span class="bolded">true</span> (open).
+          This is necessary for toggling the visibility of details when a row is clicked. <br />In
+          the <span class="bolded">row</span> object, values can be directly assigned to fields.
+          However, if a field has subfields, the value to be displayed in the table should be
+          assigned to the <span class="bolded">value</span> property.
+        </p>
       </div>
-      <p>Both <span class="bolded">rows</span> and <span class="bolded">columns</span> must be filled.</p>
-      <p>Additionally, you can provide custom configurations inside the 'options' object based on values defined in
-        "flexi.config.json".</p>
+      <p>
+        Both <span class="bolded">rows</span> and <span class="bolded">columns</span> must be
+        filled.
+      </p>
+      <p>
+        Additionally, you can provide custom configurations inside the 'options' object based on
+        values defined in "flexi.config.json".
+      </p>
     </div>
-
   </div>
 </template>
 
@@ -101,21 +105,20 @@ export default {
     border-radius: 12px;
     padding: 4px;
     margin-top: 12px;
-  }
 
-  .rows-details {
-    .code-wrapper {
-      margin: 0;
+    .rows-details {
+      .code-wrapper {
+        margin: 0;
+      }
+
+      .comment {
+        color: green;
+      }
+
+      .bolded {
+        font-weight: bold;
+      }
     }
-
-    .comment {
-      color: green
-    }
-  }
-
-  .bolded {
-    font-weight: bold;
-
   }
 }
 </style>
