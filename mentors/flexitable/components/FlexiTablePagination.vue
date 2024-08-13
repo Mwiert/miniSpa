@@ -105,9 +105,7 @@ export default {
 
       this.flexi.options.currentPage = page
     },
-    isValidPage(page) {
-      return page > 0 && page <= this.flexi.options.pages.length
-    },
+
     handleInputChange(event) {
       const value = Number(event.target.value)
       if (value < 1) {

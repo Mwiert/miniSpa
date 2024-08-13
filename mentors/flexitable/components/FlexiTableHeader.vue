@@ -1,35 +1,38 @@
 <template>
-  <div
-    class="flexi-table-header-c"
-    :class="StickyHeaderClass"
-    :style="[gridTemplateColumns, ColumnGap]"
-    ref="print2">
-    <template v-for="column in flexi.columns" :key="column.name">
-      <div class="flexi-table-header-col-wrapper" v-if="HideColumn(column.label)">
-        <div
-          class="flexi-table-header-col"
-          :class="column.class"
-          @click="handlerSortingColumn(column)">
-          <span class="flexi-table-header-col-value"> {{ column.name }} </span>
+  <thead class="flexi-table-header-c" :class="StickyHeaderClass" ref="printHeader">
+    <tr>
+      <template v-for="(column, index) in flexi.columns" :key="column.name">
+        <th
+          class="table-head-c"
+          :style="{ width: gridTemplateColumns1[index] }"
+          v-if="HideColumn(column.label)">
+          <div class="flexi-table-header-col-wrapper">
+            <div
+              class="flexi-table-header-col"
+              :class="[column.class, { 'flexi-table-header-col-id': column.label === 'id' }]"
+              @click="handlerSortingColumn(column)">
+              <span class="flexi-table-header-col-value"> {{ column.name }} </span>
 
-          <input
-            v-if="column.label === 'id'"
-            type="checkbox"
-            v-model="masterCheckbox"
-            @change="handleMasterCheckboxChange"
-            @click.stop="innerClick" />
+              <input
+                v-if="column.label === 'id'"
+                type="checkbox"
+                v-model="masterCheckbox"
+                @change="handleMasterCheckboxChange"
+                @click.stop="innerClick" />
 
-          <template v-if="flexi.options.sortableColumns.includes(column.label)">
-            <div class="icon-c">
-              <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
-              <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
-              <SvgIcon name="filter-desc" size="xs" v-else />
+              <template v-if="flexi.options.sortableColumns.includes(column.label)">
+                <div class="icon-c">
+                  <SvgIcon name="filter-sortable" size="xs" v-if="column.label != sortedColumn" />
+                  <SvgIcon name="filter-asc" size="xs" v-else-if="sortOrder == 1" />
+                  <SvgIcon name="filter-desc" size="xs" v-else />
+                </div>
+              </template>
             </div>
-          </template>
-        </div>
-      </div>
-    </template>
-  </div>
+          </div>
+        </th>
+      </template>
+    </tr>
+  </thead>
 </template>
 
 <script lang="ts">
@@ -103,53 +106,56 @@ export default {
 
 <style lang="scss" scoped>
 .flexi-table-header-c {
-  border-radius: 12px;
+  background-color: #faf4d9;
+  height: 40px;
 
   &.sticky-header {
-    background-color: #faf4d9;
     position: sticky;
     top: 0;
-    height: 40px;
   }
 
-  .flexi-table-header-col-wrapper {
-    // width: fit-content;
-    cursor: pointer;
-    font-weight: 500;
+  .table-head-c {
+    padding: 0;
     height: 40px;
-    border-right: 1px solid rgba(112, 112, 112, 0.14);
 
-    // &:last-child {
-    //   border-right: none;
-    // }
-
-    // border: 1px solid #eee;
-
-    // &:hover {
-    //   background-color: #f4f4f4;
-    //   border-radius: 1rem;
-    // }
-
-    .flexi-table-header-col {
+    .flexi-table-header-col-wrapper {
       display: flex;
       align-items: center;
+      cursor: pointer;
+      font-weight: 500;
       height: 40px;
-      justify-content: space-between;
 
-      .icon-c {
-        background-color: rgba(36, 55, 89, 0.06);
-        width: 16px;
-        height: 24px;
+      .flexi-table-header-col {
+        border-right: 1px solid rgba(112, 112, 112, 0.14);
         display: flex;
-        justify-content: center;
         align-items: center;
-        margin-right: 8px;
+        height: 40px;
+        justify-content: space-between;
+        width: 100%;
 
-        .svg-icon-c {
-          padding: 0;
+        &-value {
+          margin-left: 8px;
+        }
 
-          &:hover {
-            background: rgba(36, 55, 89, 0.06);
+        &-id {
+          justify-content: center;
+        }
+
+        .icon-c {
+          background-color: rgba(36, 55, 89, 0.06);
+          width: 16px;
+          height: 24px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 8px;
+
+          .svg-icon-c {
+            padding: 0;
+
+            &:hover {
+              background: rgba(36, 55, 89, 0.06);
+            }
           }
         }
       }

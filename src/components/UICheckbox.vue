@@ -2,14 +2,14 @@
   <div
     class="reisetech-checkbox-c"
     :class="[after ? 'after' : 'before', disabled ? 'disabled' : '']"
-    :id="checkboxId"
+    :id="id"
     :name="name"
     @click="handleClick">
-    <div v-if="!checkboxChecked" class="checkbox" :class="checkboxClassName"></div>
-    <div v-else class="checkbox--checked" :class="checkboxClassName">
+    <div v-if="!isChecked" class="checkbox" :class="className"></div>
+    <div v-else class="checkbox--checked" :class="className">
       <SvgIcon :name="'tick'" class="icon" />
     </div>
-    <div class="label">{{ checkboxLabel }}</div>
+    <div class="label">{{ label }}</div>
   </div>
 </template>
 
@@ -17,63 +17,50 @@
 export default {
   name: 'UICheckBox',
   props: {
-    //Classes such as hotel and flight are derived from the .reisetech-checkbox class.
-    // .reisetech-checkbox class has the default css style, but the appearance of the checkbox changes depending on the incoming flight and hotel class.
     className: {
       type: String,
       default: ''
     },
-
-    //label is the text of the checkboxes
     label: {
       type: String,
       default: ''
     },
-    //If after state is true, checkbox takes 'after' which means the label will take place before the checkbox's box, otherwise and default it will take 'before' which means the box will take place before the label
     after: {
       type: Boolean,
       default: false
     },
-    //name is name of the checkbox
     name: {
       type: String,
       default: ''
     },
-    //if checkbox is checked the 'checked' prop will be true, otherwise and default is false
     modelValue: {
       type: Boolean,
       default: false
     },
-    //if disabled prop is true the checkbox will be non-interactive, otherwise and default it is false
     disabled: {
       type: Boolean,
       default: false
     },
-    //id is for each checkbox item to be marked with
     id: {
       type: String
     }
   },
   data() {
     return {
-      checkboxClassName: this.className,
-      checkboxLabel: this.label,
-      checkboxId: this.id,
-      checkboxChecked: this.modelValue,
-      checkboxName: this.name
+      isChecked: this.modelValue
     }
   },
   watch: {
     checked(newValue) {
-      this.checkboxChecked = newValue
+      this.isChecked = newValue
     }
   },
   methods: {
     //Emits true or false according to the checked state of the checkbox. Returns true if checked, false if unchecked
     handleClick() {
       if (this.disabled) return
-      this.checkboxChecked = !this.checkboxChecked
-      this.$emit('update:modelValue', this.checkboxChecked)
+      this.isChecked = !this.isChecked
+      this.$emit('update:modelValue', this.isChecked)
     }
   }
 }
@@ -154,8 +141,8 @@ $hotel-color-filter: invert(66%) sepia(84%) saturate(4705%) hue-rotate(353deg) b
       }
 
       .icon {
-        width: 9px;
-        height: 8px;
+        width: 11px;
+        height: 10px;
         position: absolute;
         top: 50%;
         left: 50%;

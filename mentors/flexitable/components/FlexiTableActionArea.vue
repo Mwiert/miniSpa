@@ -8,7 +8,11 @@
     </div>
     <div class="ui-button-wrapper">
       <!-- Render buttons -->
-      <UIButton v-for="(button, index) in buttons" :key="index" :text="button.label" @click="button.function" />
+      <UIButton
+        v-for="(button, index) in buttons"
+        :key="index"
+        :text="button.label"
+        @click="button.function" />
     </div>
   </div>
 </template>

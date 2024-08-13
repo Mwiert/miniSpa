@@ -1,23 +1,23 @@
 <template>
   <div class="table-container" ref="table">
     <table class="custom-table">
-      <FlexiTableHeader1 ref="head" />
-      <FlexiTableBody1 ref="body" />
+      <FlexiTableHeader ref="head" />
+      <FlexiTableBody ref="body" />
     </table>
   </div>
 </template>
 
 <script lang="ts">
-import FlexiTableHeader1 from './FlexiTableHeader1.vue'
-import FlexiTableBody1 from './FlexiTableBody1.vue'
+import FlexiTableHeader from './FlexiTableHeader.vue'
+import FlexiTableBody from './FlexiTableBody.vue'
 
 export default {
   name: 'FlexiTable',
   inject: ['flexi'],
 
   components: {
-    FlexiTableHeader1,
-    FlexiTableBody1
+    FlexiTableHeader,
+    FlexiTableBody
   }
 }
 </script>

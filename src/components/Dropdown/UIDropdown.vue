@@ -73,7 +73,6 @@ export default {
   name: 'UIDropdown',
   props: {
     items: {
-      // items in the database.
       type: Array,
       required: true,
       default: () => []
@@ -93,17 +92,14 @@ export default {
       type: String
     },
     fontSize: {
-      // defined fontsize shown in the dropdown.
       type: Number,
       default: 14
     },
     placeHolder: {
-      // placeHolder before the selection.
       type: String,
       default: 'Select an item'
     },
     searchable: {
-      // in many results user can find what he/she looks for.
       type: Boolean,
       default: false
     },
@@ -115,7 +111,6 @@ export default {
     },
 
     dataSize: {
-      // how many data will shown in the dropdown.
       type: Number
     },
     sortField: {

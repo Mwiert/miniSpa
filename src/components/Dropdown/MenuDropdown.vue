@@ -61,7 +61,6 @@ export default {
       type: String,
       default: 'action'
     },
-    //styling color - hotel,flight
     className: {
       type: String,
       default: ''
@@ -159,26 +158,6 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/variables.scss';
 
-@keyframes dropdownAnimation {
-  0% {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes droprightAnimation {
-  0% {
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 .menu-dropdown-c {
   margin: 5px;
   display: inline-flex;
@@ -408,6 +387,26 @@ export default {
           }
         }
       }
+    }
+  }
+  @keyframes dropdownAnimation {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes droprightAnimation {
+    0% {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 }

@@ -1,11 +1,37 @@
 <template>
-  <UIMultiDropdown v-if="isMulti" v-model="selectedItems" :items="dropdownItems" :fontSize="fontSize" :label="label"
-    :dataSize="dataSize" :searchable="searchable" :maxVisibleItems="maxVisibleItems" :hasActionBox="hasActionBox"
-    :sortField="sortField" :sortByAscending="sortByAscending" :maxItemThreshold="maxItemThreshold" :disabled="disabled"
+  <UIMultiDropdown
+    v-if="isMulti"
+    v-model="selectedItems"
+    :items="dropdownItems"
+    :className="className"
+    :placeHolder="placeHolder"
+    :displayField="displayField"
+    :fontSize="fontSize"
+    :label="label"
+    :dataSize="dataSize"
+    :searchable="searchable"
+    :maxVisibleItems="maxVisibleItems"
+    :hasActionBox="hasActionBox"
+    :sortField="sortField"
+    :sortByAscending="sortByAscending"
+    :maxItemThreshold="maxItemThreshold"
+    :disabled="disabled"
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
-  <UIDropdown v-else v-model="selectedItem" :items="dropdownItems" :label="label" :fontSize="fontSize"
-    :searchable="searchable" :dataSize="dataSize" :sortField="sortField" :sortByAscending="sortByAscending"
-    :maxItemThreshold="maxItemThreshold" :unselectable="unselectable" :disabled="disabled"
+  <UIDropdown
+    v-else
+    v-model="selectedItem"
+    :items="dropdownItems"
+    :label="label"
+    :placeHolder="placeHolder"
+    :displayField="displayField"
+    :fontSize="fontSize"
+    :searchable="searchable"
+    :dataSize="dataSize"
+    :sortField="sortField"
+    :sortByAscending="sortByAscending"
+    :maxItemThreshold="maxItemThreshold"
+    :unselectable="unselectable"
+    :disabled="disabled"
     @update:modelValue="($event) => $emit('update:modelValue', $event)" />
 </template>
 
@@ -20,7 +46,7 @@ export default {
     UIMultiDropdown
   },
   props: {
-    enumObj: { type: Object, default: () => { }, required: true },
+    enumObj: { type: Object, default: () => {}, required: true },
 
     dataSize: {
       // how many data will shown in the dropdown.
@@ -44,22 +70,18 @@ export default {
     },
 
     label: {
-      // label on the dropdown to understand what the dropdown contents are.
       type: String
     },
 
     fontSize: {
-      // defined fontsize shown in the dropdown.
       type: Number,
       default: 14
     },
     placeHolder: {
-      // placeHolder before the selection.
-      type: Array,
-      default: () => ['Select an item']
+      type: String,
+      default: 'Select an item'
     },
     searchable: {
-      // in many results user can find what he/she looks for.
       type: Boolean,
       default: false
     },
@@ -70,7 +92,6 @@ export default {
       default: 'name'
     },
     unselectable: {
-      // if the dropdown is unselectable.
       type: Boolean,
       default: false
     },

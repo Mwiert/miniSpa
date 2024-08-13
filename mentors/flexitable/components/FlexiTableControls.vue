@@ -5,13 +5,19 @@
       <div class="spinner"></div>
     </div>
     <div class="ftc-select-wrapper">
-      <UIEnumDropdown v-model="flexi.options.selected" :enumObj="updatedPageOrder"
-        :dataSize="flexi.options.UIDropdownOrderProp.dataSize" :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
+      <UIEnumDropdown
+        v-model="flexi.options.selected"
+        :enumObj="updatedPageOrder"
+        :dataSize="flexi.options.UIDropdownOrderProp.dataSize"
+        :fontSize="flexi.options.UIDropdownOrderProp.fontSize"
         :showAll="flexi.options.UIDropdownOrderProp.showAll" />
       <!--Custom Dropdown-->
 
       <div class="export-buttons">
-        <div class="excel-selector" @mouseover="openComponent = true" @mouseleave="openComponent = false">
+        <div
+          class="excel-selector"
+          @mouseover="openComponent = true"
+          @mouseleave="openComponent = false">
           <SvgIcon name="excel" size="xs" class="excel-button" />
           <div class="excel-wrapper" v-if="openComponent">
             <div class="excel-text" @click="downloadExcel()">Download Excel</div>
@@ -19,15 +25,23 @@
           </div>
         </div>
         <SvgIcon name="pdf" size="xs" class="pdf-button" @click="downloadPdf()"></SvgIcon>
-        <SvgIcon name="print" size="xs" class="print-button" @click="triggerExportPrint()"></SvgIcon>
+        <SvgIcon
+          name="print"
+          size="xs"
+          class="print-button"
+          @click="triggerExportPrint()"></SvgIcon>
         <div class="dropdown">
           <div class="dropdown-icon" @click="Toggle()">
             <SvgIcon class="dropdown-icon" name="columns" size="xs" />
           </div>
 
           <div class="multi" v-if="flexi.options.show">
-            <div class="option" :class="col.status === false ? 'notselected' : 'selected'"
-              v-for="(col, index) in flexi.columns" :key="index" @click="selectHidden(index)">
+            <div
+              class="option"
+              :class="col.status === false ? 'notselected' : 'selected'"
+              v-for="(col, index) in flexi.columns"
+              :key="index"
+              @click="selectHidden(index)">
               <div class="option-text" :class="col.status === false ? 'notselected' : 'selected'">
                 {{ col.name }}
               </div>
@@ -38,8 +52,8 @@
             <button class="clear-button" @click="selectClear">Clear/Select All</button>
           </div>
         </div>
-        <SvgIcon name="freeze" size="xs" class="freeze-button"></SvgIcon>
-        <SvgIcon name="refresh" size="xs" class="refresh-button"></SvgIcon>
+        <SvgIcon name="freeze" size="xs"></SvgIcon>
+        <SvgIcon name="refresh" size="xs"></SvgIcon>
         <div v-if="flexi.options.selected.id === -1" class="show">
           <p class="show" v-html="paginationText()"></p>
         </div>
@@ -51,17 +65,26 @@
     <!-- Search Table -->
     <div class="ftc-right-side-wrapper">
       <div class="mark-sign-wrapper">
-        <FlexiTableActionArea :dropdowns="this.flexi.options.dropdowns" :buttons="this.flexi.options.buttons" />
+        <FlexiTableActionArea
+          :dropdowns="this.flexi.options.dropdowns"
+          :buttons="this.flexi.options.buttons" />
       </div>
 
       <div class="ftc-search-wrapper" v-if="!flexi.options.hideSearch">
         <SvgIcon :name="'search'" size="s" class="search" />
-        <input type="text" v-model="flexi.options.searchWord" @input="
-          debounce(() => {
-            state.filterText = flexi.options.searchWord
-          })
+        <input
+          type="text"
+          v-model="flexi.options.searchWord"
+          @input="
+            debounce(() => {
+              state.filterText = flexi.options.searchWord
+            })
           " />
-        <button type="button" class="clear-button" @click="clearSearch" v-if="flexi.options.searchWord">
+        <button
+          type="button"
+          class="clear-button"
+          @click="clearSearch"
+          v-if="flexi.options.searchWord">
           <SvgIcon :name="'x'" size="s" class="clear" />
         </button>
       </div>
@@ -107,12 +130,12 @@ export default {
     this.updatedPageOrder = this.updatePageOrder()
   },
   methods: {
-    changeStatus() {
-      this.flexi.selectedRows.forEach((element) => {
-        element.row.status.value = this.flexi.options.selectedStatus.name.toLowerCase()
-        element.row.status.class = 'item-' + this.flexi.options.selectedStatus.name.toLowerCase()
-      })
-    },
+    // changeStatus() {
+    //   this.flexi.selectedRows.forEach((element) => {
+    //     element.row.status.value = this.flexi.options.selectedStatus.name.toLowerCase()
+    //     element.row.status.class = 'item-' + this.flexi.options.selectedStatus.name.toLowerCase()
+    //   })
+    // },
     updatePageOrder() {
       let updatedPageOrder = this.flexi.options.pageOrder
       let name = this.flexi.options.pageOrder['-1']
@@ -136,10 +159,8 @@ export default {
     async downloadPdf() {
       this.showSpinner = true
       try {
-        //const headerElement = this.$parent.$refs.flexiheader.$refs.print2
-        //const bodyElement = this.$parent.$refs.flexibody.$refs.tableContainer
-        const bodyElement = this.$parent.$refs.container.$refs.body.$refs.print1
-        const headerElement = this.$parent.$refs.container.$refs.head.$refs.print3
+        const bodyElement = this.$parent.$refs.container.$refs.body.$refs.printBody
+        const headerElement = this.$parent.$refs.container.$refs.head.$refs.printHeader
         const connectedElement = document.createElement('div')
         connectedElement.appendChild(headerElement.cloneNode(true))
         connectedElement.appendChild(bodyElement.cloneNode(true))
@@ -155,7 +176,7 @@ export default {
         // use html2pdf.js to convert the combinedDiv to pdf
         await html2pdf().from(connectedElement).set(options).save()
       } catch (e) {
-        console.log(e)
+        console.warn(e)
       } finally {
         this.showSpinner = false
       }
@@ -214,8 +235,8 @@ export default {
       try {
         const self = this
         const tableTitle = this.flexi.options.tableTitle
-        const divToPrint = this.$parent.$refs.container.$refs.body.$refs.print1
-        const headersContainer = this.$parent.$refs.container.$refs.head.$refs.print3
+        const divToPrint = this.$parent.$refs.container.$refs.body.$refs.printBody
+        const headersContainer = this.$parent.$refs.container.$refs.head.$refs.printHeader
         //const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer
         //const headersContainer = this.$parent.$refs.flexiheader.$refs.print2
 
@@ -306,20 +327,13 @@ export default {
         document.body.appendChild(link)
         link.click()
       } catch (e) {
-        console.log(e)
+        console.warn(e)
       }
-    },
-    cleanTableElements(table) {
-      table.querySelectorAll('script, style, link, meta').forEach((element) => element.remove())
-      return table
     },
 
     // print method style not working
     triggerExportPrint() {
       const divToPrint = this.$parent.$refs.container.$refs.table
-
-      //const divToPrint = this.$parent.$refs.flexibody.$refs.tableContainer //bodyi kapsıyor
-      //const divToPrint2 = this.$parent.$refs.flexiheader.$refs.print2 ///columları
       const newPrintWindow = window.open('', 'Print')
       newPrintWindow.document.write(
         `<html>
@@ -333,7 +347,6 @@ export default {
       )
 
       newPrintWindow.print()
-      //newPrintWindow.close()
     },
     // status true for every column
     selectClear() {
@@ -347,7 +360,7 @@ export default {
     // hide selected column
     selectHidden(index) {
       this.flexi.columns.length - this.flexi.options.hiddenColumns.length >
-        this.flexi.options.minVisibleColumns
+      this.flexi.options.minVisibleColumns
         ? (this.flexi.columns[index].status = !this.flexi.columns[index].status)
         : (this.flexi.columns[index].status = true)
     },
