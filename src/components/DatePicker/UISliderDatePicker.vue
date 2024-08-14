@@ -1,345 +1,235 @@
 <template>
-  <div class="ui-slider-date-picker-c">
-    <div class="center-overlay"></div>
-    <div class="day" @mousedown="startDrag($event)" ref="dayContainer">
-      <span v-for="day in days" :key="day" :class="{ selected: day === selectedDay }">
-        {{ day }}
-      </span>
+  <div class="datepicker-container">
+    <div
+      class="picker-column"
+      @mousedown="startDrag('days')"
+      @mousemove="onDrag('days')"
+      @mouseup="endDrag('days')"
+      @mouseleave="endDrag('days')"
+      @scroll="handleScroll('days')"
+      ref="days">
+      <ul>
+        <li
+          v-for="(day, index) in loopedDays"
+          :key="index"
+          :class="{ active: day - 1 === selectedDayIndex }">
+          {{ day }}
+        </li>
+      </ul>
     </div>
-    <div class="month" @mousedown="startDrag($event)" ref="monthContainer">
-      <span
-        v-for="(month, index) in months"
-        :key="month"
-        :class="{ selected: index === selectedMonth + 3 }">
-        {{ month }}
-      </span>
+
+    <div
+      class="picker-column"
+      @mousedown="startDrag('months')"
+      @mousemove="onDrag('months')"
+      @mouseup="endDrag('months')"
+      @mouseleave="endDrag('months')"
+      @scroll="handleScroll('months')"
+      ref="months">
+      <ul>
+        <li
+          v-for="(month, index) in loopedMonths"
+          :key="index"
+          :class="{ active: (index % 13) + 1 === selectedMonthIndex }">
+          {{ month }}
+        </li>
+      </ul>
     </div>
-    <div class="year" @mousedown="startDrag($event)" ref="yearContainer">
-      <span v-for="year in years" :key="year" :class="{ selected: year === selectedYear }">
-        {{ year }}
-      </span>
+    <div
+      class="picker-column"
+      @mousedown="startDrag('years')"
+      @mousemove="onDrag('years')"
+      @mouseup="endDrag('years')"
+      @mouseleave="endDrag('years')"
+      @scroll="handleScroll('years')"
+      ref="years">
+      <ul>
+        <li
+          v-for="(year, index) in years"
+          :key="index"
+          :class="{ active: index === selectedYearIndex }">
+          {{ year }}
+        </li>
+      </ul>
     </div>
+    <div class="highlight-overlay"></div>
   </div>
-  {{ firstSelected.date }}
 </template>
 
-<script lang="ts">
-import dayjs from 'dayjs'
-
+<script>
 export default {
-  name: 'UISliderDatePicker',
   data() {
     return {
-      days: [] as number[],
-      months: [] as string[],
-      years: [] as number[],
-      selectedDay: dayjs(this.firstSelected.date).date(),
-      selectedMonth: dayjs(this.firstSelected.date).month(),
-      selectedYear: dayjs(this.firstSelected.date).year(),
-      scrolling: false,
-      scrollTimeout: null as number | null,
-      isDragging: false
+      days: Array.from({ length: 31 }, (v, k) => k + 1),
+      months: [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+      ],
+      years: Array.from({ length: 100 }, (v, k) => new Date().getFullYear() - k),
+      selectedDayIndex: new Date().getDate(),
+      selectedMonthIndex: new Date().getMonth(),
+      selectedYearIndex: 0,
+      dragging: false,
+      lastY: 0,
+      scrollTimeout: null
     }
   },
-  props: {
-    firstSelected: { type: Object, default: null }
-  },
-  created() {
-    this.generateMonths()
-    this.generateYears()
-    this.updateDays()
-  },
-  watch: {
-    selectedDay() {
-      this.centerSelectedItem()
-      this.emitSelectedDate()
+  computed: {
+    loopedDays() {
+      return [...this.days, ...this.days, ...this.days]
     },
-    selectedMonth() {
-      this.updateDays()
-      this.centerSelectedItem()
-      this.emitSelectedDate()
-    },
-    selectedYear() {
-      this.updateDays()
-      this.centerSelectedItem()
-      this.emitSelectedDate()
+    loopedMonths() {
+      return [...this.months, ...this.months, ...this.months]
     }
+  },
+  mounted() {
+    this.scrollToDefault()
   },
   methods: {
-    generateDays() {
-      const days: number[] = []
-      const daysInMonth = dayjs().year(this.selectedYear).month(this.selectedMonth).daysInMonth()
-
-      days.push(null, null, null)
-      for (let i = 1; i <= daysInMonth; i++) {
-        days.push(i)
-      }
-      days.push(null, null, null)
-
-      this.days = days
-
-      if (this.selectedDay > daysInMonth) {
-        this.selectedDay = daysInMonth
-      }
+    scrollToDefault() {
+      this.$refs.days.scrollTop = (this.selectedDayIndex + this.days.length) * 44
+      this.$refs.months.scrollTop = (this.selectedMonthIndex + this.months.length) * 44
+      this.$refs.years.scrollTop = this.selectedYearIndex * 44
     },
-    generateMonths() {
-      const months: string[] = []
+    handleScroll(type) {
+      clearTimeout(this.scrollTimeout)
 
-      months.push(null, null, null)
-      for (let i = 0; i < 12; i++) {
-        months.push(dayjs().month(i).format('MMMM'))
-      }
-      months.push(null, null, null)
-
-      this.months = months
-    },
-    generateYears() {
-      const years: number[] = []
-      const currentYear = dayjs().year()
-
-      years.push(null, null, null)
-      for (let i = currentYear - 20; i <= currentYear + 20; i++) {
-        years.push(i)
-      }
-      years.push(null, null, null)
-
-      this.years = years
-    },
-    updateDays() {
-      this.generateDays()
-    },
-    startDrag(event: MouseEvent) {
-      event.preventDefault()
-      const target = event.currentTarget as HTMLElement
-      this.isDragging = true
-
-      const startY = event.clientY
-      const initialScrollTop = target.scrollTop
-
-      const onDrag = (e: MouseEvent) => {
-        const moveY = e.clientY - startY
-        target.scrollTop = initialScrollTop - moveY
-      }
-
-      const onEndDrag = () => {
-        this.isDragging = false
-        document.removeEventListener('mousemove', onDrag)
-        document.removeEventListener('mouseup', onEndDrag)
-        this.scrolling = false
-        this.$nextTick(() => {
-          this.selectCenteredItem()
-        })
-      }
-
-      document.addEventListener('mousemove', onDrag)
-      document.addEventListener('mouseup', onEndDrag)
-      this.scrolling = true
-    },
-    centerSelectedItem() {
-      this.$nextTick(() => {
-        const containers = [
-          this.$refs.dayContainer,
-          this.$refs.monthContainer,
-          this.$refs.yearContainer
-        ]
-
-        containers.forEach((container) => {
-          const items = Array.from(container.children) as HTMLElement[]
-          const containerHeight = container.clientHeight
-          const containerTop = container.scrollTop
-          const centerPosition = containerHeight / 2 + containerTop
-
-          items.forEach((item) => {
-            const itemTop = item.offsetTop
-            const itemBottom = itemTop + item.clientHeight
-            const itemCenter = (itemTop + itemBottom) / 2
-            const distance = Math.abs(itemCenter - centerPosition)
-
-            const normalizedDistance = Math.min(distance / (containerHeight / 2), 1)
-
-            const rotationAngle = 60 * normalizedDistance
-            item.style.transform = `rotateX(${rotationAngle}deg)`
-
-            if (itemCenter === centerPosition) {
-              item.style.transform = `rotateX(0deg)`
-            }
-          })
-        })
-      })
-    },
-    selectCenteredItem() {
-      if (this.scrolling) return
-
-      const dayContainer = this.$refs.dayContainer as HTMLElement
-      const monthContainer = this.$refs.monthContainer as HTMLElement
-      const yearContainer = this.$refs.yearContainer as HTMLElement
-
-      const centerItem = (container: HTMLElement, type: 'day' | 'month' | 'year') => {
-        const items = Array.from(container.children) as HTMLElement[]
-        const containerHeight = container.clientHeight
-        const containerTop = container.scrollTop
-        const centerPosition = containerHeight / 2 + containerTop
-
-        let closestElement: HTMLElement | null = null
-        let closestDistance = Infinity
-
-        for (const item of items) {
-          const itemTop = item.offsetTop
-          const itemBottom = itemTop + item.clientHeight
-          const itemCenter = (itemTop + itemBottom) / 2
-          const distance = Math.abs(itemCenter - centerPosition)
-
-          if (distance < closestDistance) {
-            closestDistance = distance
-            closestElement = item
-          }
-        }
-        if (closestElement) {
-          const centeredText = closestElement.textContent?.trim()
-          if (type === 'day' && centeredText) {
-            this.selectedDay = parseInt(centeredText, 10)
-          } else if (type === 'month' && centeredText) {
-            this.selectedMonth = this.months.indexOf(centeredText) - 3
-          } else if (type === 'year' && centeredText) {
-            this.selectedYear = parseInt(centeredText, 10)
-          }
-        }
-      }
-
-      centerItem(dayContainer, 'day')
-      centerItem(monthContainer, 'month')
-      centerItem(yearContainer, 'year')
-    },
-    emitSelectedDate() {
-      const formattedDate = dayjs()
-        .year(this.selectedYear)
-        .month(this.selectedMonth)
-        .date(this.selectedDay)
-        .format('YYYY-MM-DD')
-      this.$emit('emitSelectedDate', formattedDate)
-    },
-    onScroll() {
-      if (this.isDragging) return
-
-      if (this.scrollTimeout) {
-        clearTimeout(this.scrollTimeout)
+      const maxScrollTop = this[type === 'days' ? 'loopedDays' : 'loopedMonths'].length * 44
+      if (
+        this.$refs[type].scrollTop >=
+        maxScrollTop - 44 * this[type === 'days' ? 'days' : 'months'].length
+      ) {
+        this.$refs[type].scrollTop = 44 * this[type === 'days' ? 'days' : 'months'].length
+      } else if (this.$refs[type].scrollTop <= 0) {
+        this.$refs[type].scrollTop =
+          maxScrollTop - 44 * this[type === 'days' ? 'days' : 'months'].length * 2
       }
 
       this.scrollTimeout = setTimeout(() => {
-        this.selectCenteredItem()
+        let scrollTop = this.$refs[type].scrollTop
+        let index = Math.round(
+          (scrollTop % (this[type === 'days' ? 'days' : 'months'].length * 44)) / 44
+        )
+
+        if (type === 'days') {
+          this.selectedDayIndex = index
+        } else if (type === 'months') {
+          this.selectedMonthIndex = index
+        }
+
+        this.$refs[type].scrollTo({
+          top: index * 44 + this[type === 'days' ? 'days' : 'months'].length * 44,
+          behavior: 'smooth'
+        })
       }, 100)
     },
-    scrollToSelected() {
-  const dayContainer = this.$refs.dayContainer as HTMLElement;
-  const monthContainer = this.$refs.monthContainer as HTMLElement;
-  const yearContainer = this.$refs.yearContainer as HTMLElement;
-
-  this.$nextTick(() => {
-    const dayElement = dayContainer.children[this.selectedDay + 2] as HTMLElement;
-    const monthElement = monthContainer.children[this.selectedMonth + 3] as HTMLElement;
-    const yearIndex = this.years.indexOf(this.selectedYear) + 3;
-
-    // Ensure the index is within bounds
-    if (yearIndex >= 0 && yearIndex < yearContainer.children.length) {
-      const yearElement = yearContainer.children[yearIndex] as HTMLElement;
-
-      dayContainer.scrollTop = dayElement.offsetTop - dayContainer.clientHeight / 2 + dayElement.clientHeight / 2;
-      monthContainer.scrollTop = monthElement.offsetTop - monthContainer.clientHeight / 2 + monthElement.clientHeight / 2;
-      yearContainer.scrollTop = yearElement.offsetTop - yearContainer.clientHeight / 2 + yearElement.clientHeight / 2;
-    } else {
-      console.warn('Year index out of bounds:', yearIndex);
+    startDrag(type) {
+      this.dragging = true
+      this.lastY = event.clientY
+      clearTimeout(this.scrollTimeout) // Drag sırasında kaydırma hizalamayı durdur
+    },
+    onDrag(type) {
+      if (this.dragging) {
+        const deltaY = event.clientY - this.lastY
+        this.$refs[type].scrollTop -= deltaY
+        this.lastY = event.clientY
+      }
+    },
+    endDrag() {
+      this.dragging = false
+      this.handleScroll('days') // Bırakıldığında otomatik hizalama
+      this.handleScroll('months')
+      this.handleScroll('years')
     }
-  });
-},
-  },
-  mounted() {
-    this.$refs.dayContainer.addEventListener('scroll', this.onScroll)
-    this.$refs.monthContainer.addEventListener('scroll', this.onScroll)
-    this.$refs.yearContainer.addEventListener('scroll', this.onScroll)
-    this.$nextTick(() => {
-        this.scrollToSelected()  // Scroll to the selected item
-        this.centerSelectedItem()
-    })
-  },
-  beforeUnmount() {
-    this.$refs.dayContainer.removeEventListener('scroll', this.onScroll)
-    this.$refs.monthContainer.removeEventListener('scroll', this.onScroll)
-    this.$refs.yearContainer.removeEventListener('scroll', this.onScroll)
-  },
-  updated() {
-    this.$nextTick(() => {
-        this.scrollToSelected()  // Ensure scroll position after updates
-    })
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.ui-slider-date-picker-c {
-  display: grid;
-  grid-template-columns: 1fr 3fr 1.5fr;
-  height: calc(9 * 1.5rem + 2 * 16px);
+<style scoped>
+.datepicker-container {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  gap: 16px;
+  height: 200px;
+  overflow: hidden;
   position: relative;
   perspective: 1000px;
+  background-color: white;
 
-  .center-overlay {
-    position: absolute;
-    top: 43%;
-    left: 5%;
-    width: 90%;
-    height: 2rem;
-    border-radius: 10px;
-    background: #f4f4f4;
-    pointer-events: none;
-  }
-
-  .day,
-  .month,
-  .year {
-    display: flex;
-    flex-direction: column;
+  .picker-column {
+    width: 33.33%;
     height: 100%;
-    overflow-y: auto;
-    scroll-snap-type: y mandatory;
-    align-items: center;
-    position: relative;
-    scroll-behavior: smooth;
-    user-select: none;
-    transform-style: preserve-3d;
-    perspective: inherit;
-
-    &::-webkit-scrollbar {
-      width: 0;
-      background: transparent;
-    }
+    overflow-y: scroll;
+    text-align: center;
+    scrollbar-width: none; /* Firefox */
   }
 
-  .day span,
-  .month span,
-  .year span {
-    padding: 4px;
-    cursor: pointer;
-    scroll-snap-align: center;
+  .picker-column::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  li {
+    height: 44px;
+    line-height: 44px;
+    font-size: 20px;
     transition:
-      transform 0.3s ease,
-      opacity 0.3s ease;
+      transform 0.2s,
+      opacity 0.2s;
+    transform-origin: center center;
     opacity: 0.5;
-    min-height: 1.5rem;
-    line-height: 1.5rem;
-    transform: rotateX(0deg);
-    transform-origin: center;
   }
 
-  .day span.selected,
-  .month span.selected,
-  .year span.selected {
-    font-weight: 500;
-    transform: scale(1.2) rotateX(0deg);
+  li.active {
+    font-size: 24px;
     opacity: 1;
+    transform: rotateX(0deg) translateY(0);
+  }
+  li :not(.active) {
+    transform: rotateX(30deg) translateY(-10px);
+    opacity: 0.3;
+  }
+  li:nth-child(1),
+  li:nth-child(2),
+  li:nth-child(3) {
+    transform: rotateX(30deg) translateY(-10px);
+    opacity: 0.3;
+  }
+
+  li:nth-last-child(1),
+  li:nth-last-child(2),
+  li:nth-last-child(3) {
+    transform: rotateX(-30deg) translateY(10px);
+    opacity: 0.3;
+  }
+
+  .highlight-overlay {
+    position: absolute;
+    top: 50%;
+    width: 90%;
+    transform: translateY(-50%);
+    background-color: rgba(200, 200, 200, 0.3);
+    pointer-events: none;
+    left: 5%;
+    height: 40px;
+    border-radius: 10px;
   }
 }
 </style>
