@@ -1,88 +1,58 @@
 <template>
-  <div class="datepicker-container">
-    <div
-      class="picker-column"
-      @mousedown="startDrag('days')"
-      @mousemove="onDrag('days')"
-      @mouseup="endDrag('days')"
-      @mouseleave="endDrag('days')"
-      @scroll="handleScroll('days')"
-      ref="days">
-      <ul>
-        <li
-          v-for="(day, index) in loopedDays"
-          :key="index"
-          :class="{ active: day - 1 === selectedDayIndex }">
-          {{ day }}
-        </li>
-      </ul>
+  <div class="ui-slider-date-picker-c">
+    <div class="center-overlay"></div>
+
+    <div class="day" @mousedown="startDrag($event)" ref="dayContainer">
+      <span
+        v-for="(day, index) in loopedDays"
+        :key="index"
+        :class="{ selected: day === selectedDay }"
+        :style="getRotationStyle(day, selectedDay)">
+        {{ day }}
+      </span>
     </div>
 
-    <div
-      class="picker-column"
-      @mousedown="startDrag('months')"
-      @mousemove="onDrag('months')"
-      @mouseup="endDrag('months')"
-      @mouseleave="endDrag('months')"
-      @scroll="handleScroll('months')"
-      ref="months">
-      <ul>
-        <li
-          v-for="(month, index) in loopedMonths"
-          :key="index"
-          :class="{ active: (index % 13) + 1 === selectedMonthIndex }">
-          {{ month }}
-        </li>
-      </ul>
+    <div class="month" @mousedown="startDrag($event)" ref="monthContainer">
+      <span
+        v-for="(month, index) in loopedMonths"
+        :key="month"
+        :class="{ selected: (index % 12) + 1 === selectedMonth }"
+        :style="getRotationStyle((index % 12) + 1, selectedMonth)">
+        {{ month }}
+      </span>
     </div>
-    <div
-      class="picker-column"
-      @mousedown="startDrag('years')"
-      @mousemove="onDrag('years')"
-      @mouseup="endDrag('years')"
-      @mouseleave="endDrag('years')"
-      @scroll="handleScroll('years')"
-      ref="years">
-      <ul>
-        <li
-          v-for="(year, index) in years"
-          :key="index"
-          :class="{ active: index === selectedYearIndex }">
-          {{ year }}
-        </li>
-      </ul>
+    <div class="year" @mousedown="startDrag($event)" ref="yearContainer">
+      <span
+        v-for="year in years"
+        :key="year"
+        :class="{ selected: year === selectedYear }"
+        :style="getRotationStyle(year, selectedYear)">
+        {{ year }}
+      </span>
     </div>
-    <div class="highlight-overlay"></div>
   </div>
 </template>
+<script lang="ts">
+import dayjs from 'dayjs'
 
-<script>
 export default {
+  name: 'UISliderDatePicker',
   data() {
     return {
-      days: Array.from({ length: 31 }, (v, k) => k + 1),
-      months: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-      ],
-      years: Array.from({ length: 100 }, (v, k) => new Date().getFullYear() - k),
-      selectedDayIndex: new Date().getDate(),
-      selectedMonthIndex: new Date().getMonth(),
-      selectedYearIndex: 0,
-      dragging: false,
-      lastY: 0,
-      scrollTimeout: null
+      days: [] as number[],
+      months: [] as string[],
+      years: [] as number[],
+      selectedDay: dayjs(this.selectedDate.day).date(),
+      selectedMonth: dayjs(this.selectedDate.month).month(),
+      selectedYear: dayjs(this.selectedDate.year).year(),
+      scrolling: false,
+      scrollTimeout: null as number | null,
+      lastScrollTop: 0,
+      isDragging: false
     }
+  },
+  props: {
+    selectedDate: { type: Object, default: null }
   },
   computed: {
     loopedDays() {
@@ -92,144 +62,256 @@ export default {
       return [...this.months, ...this.months, ...this.months]
     }
   },
-  mounted() {
-    this.scrollToDefault()
+  created() {
+    this.generateMonths()
+    this.generateYears()
+    this.updateDays()
+    this.centerSelectedItem()
+  },
+  watch: {
+    selectedDay() {
+      this.centerSelectedItem()
+      this.emitSelectedDate()
+    },
+    selectedMonth() {
+      this.updateDays()
+      this.centerSelectedItem()
+      this.emitSelectedDate()
+    },
+    selectedYear() {
+      this.updateDays()
+      this.centerSelectedItem()
+      this.emitSelectedDate()
+    }
   },
   methods: {
-    scrollToDefault() {
-      this.$refs.days.scrollTop = (this.selectedDayIndex + this.days.length) * 44
-      this.$refs.months.scrollTop = (this.selectedMonthIndex + this.months.length) * 44
-      this.$refs.years.scrollTop = this.selectedYearIndex * 44
-    },
-    handleScroll(type) {
-      clearTimeout(this.scrollTimeout)
-
-      const maxScrollTop = this[type === 'days' ? 'loopedDays' : 'loopedMonths'].length * 44
-      if (
-        this.$refs[type].scrollTop >=
-        maxScrollTop - 44 * this[type === 'days' ? 'days' : 'months'].length
-      ) {
-        this.$refs[type].scrollTop = 44 * this[type === 'days' ? 'days' : 'months'].length
-      } else if (this.$refs[type].scrollTop <= 0) {
-        this.$refs[type].scrollTop =
-          maxScrollTop - 44 * this[type === 'days' ? 'days' : 'months'].length * 2
+    generateDays() {
+      const days: number[] = []
+      const daysInMonth = dayjs().year(this.selectedYear).month(this.selectedMonth).daysInMonth()
+      // console.log(this.selectedDay)
+      // console.log(this.selectedMonth)
+      // console.log(this.selectedYear)
+      for (let i = 1; i <= daysInMonth; i++) {
+        days.push(i)
       }
-
-      this.scrollTimeout = setTimeout(() => {
-        let scrollTop = this.$refs[type].scrollTop
-        let index = Math.round(
-          (scrollTop % (this[type === 'days' ? 'days' : 'months'].length * 44)) / 44
-        )
-
-        if (type === 'days') {
-          this.selectedDayIndex = index
-        } else if (type === 'months') {
-          this.selectedMonthIndex = index
-        }
-
-        this.$refs[type].scrollTo({
-          top: index * 44 + this[type === 'days' ? 'days' : 'months'].length * 44,
-          behavior: 'smooth'
+      this.days = days
+      if (this.selectedDay > daysInMonth) {
+        this.selectedDay = daysInMonth
+      }
+    },
+    generateMonths() {
+      const months: string[] = []
+      for (let i = 0; i < 12; i++) {
+        months.push(dayjs().month(i).format('MMMM'))
+      }
+      this.months = months
+    },
+    generateYears() {
+      const years: number[] = []
+      const currentYear = dayjs().year()
+      for (let i = currentYear - 50; i <= currentYear + 50; i++) {
+        years.push(i)
+      }
+      this.years = years
+    },
+    updateDays() {
+      this.generateDays()
+    },
+    startDrag(event: MouseEvent) {
+      event.preventDefault()
+      const target = event.currentTarget as HTMLElement
+      this.isDragging = true
+      const startY = event.clientY
+      const initialScrollTop = target.scrollTop
+      const onDrag = (e: MouseEvent) => {
+        const moveY = e.clientY - startY
+        target.scrollTop = initialScrollTop - moveY
+      }
+      const onEndDrag = () => {
+        this.isDragging = false
+        document.removeEventListener('mousemove', onDrag)
+        document.removeEventListener('mouseup', onEndDrag)
+        this.scrolling = false
+        this.$nextTick(() => {
+          this.selectCenteredItem()
         })
-      }, 100)
+      }
+      document.addEventListener('mousemove', onDrag)
+      document.addEventListener('mouseup', onEndDrag)
+      this.scrolling = true
     },
-    startDrag(type) {
-      this.dragging = true
-      this.lastY = event.clientY
-      clearTimeout(this.scrollTimeout) // Drag sırasında kaydırma hizalamayı durdur
+    centerSelectedItem() {
+      this.$nextTick(() => {
+        const containers = [
+          this.$refs.dayContainer,
+          this.$refs.monthContainer,
+          this.$refs.yearContainer
+        ]
+        containers.forEach((container, containerIndex) => {
+          const items = Array.from(container.children) as HTMLElement[]
+          items.forEach((item, index) => {
+            const style = this.getRotationStyle(index, this.selectedIndex[containerIndex])
+            Object.assign(item.style, style)
+          })
+        })
+      })
     },
-    onDrag(type) {
-      if (this.dragging) {
-        const deltaY = event.clientY - this.lastY
-        this.$refs[type].scrollTop -= deltaY
-        this.lastY = event.clientY
+    getRotationStyle(index: number, selectedIndex: number) {
+      const totalItems = 7 // Görünür olan toplam öğe sayısı
+      const middleIndex = Math.ceil(totalItems / 2) // Orta öğenin indeksi
+      const maxRotation = 72 // Maksimum döndürme açısı
+      const rotationStep = maxRotation / (middleIndex - 1) // Döndürme adımı
+
+      const position = index - selectedIndex + middleIndex
+
+      let angle = (position - middleIndex) * rotationStep
+
+      if (angle < -maxRotation) angle = -maxRotation
+      if (angle > maxRotation) angle = maxRotation
+
+      return {
+        transform: `rotateX(${angle}deg)`,
+        opacity: position === middleIndex ? 1 : 0.7
       }
     },
-    endDrag() {
-      this.dragging = false
-      this.handleScroll('days') // Bırakıldığında otomatik hizalama
-      this.handleScroll('months')
-      this.handleScroll('years')
+    selectCenteredItem() {
+      if (this.scrolling) return
+      const dayContainer = this.$refs.dayContainer as HTMLElement
+      const monthContainer = this.$refs.monthContainer as HTMLElement
+      const yearContainer = this.$refs.yearContainer as HTMLElement
+      const centerItem = (container: HTMLElement, type: 'day' | 'month' | 'year') => {
+        const items = Array.from(container.children) as HTMLElement[]
+        const containerHeight = container.clientHeight
+        const containerTop = container.scrollTop
+        const centerPosition = containerHeight / 2 + containerTop
+        let closestElement: HTMLElement | null = null
+        let closestDistance = Infinity
+        for (const item of items) {
+          const itemTop = item.offsetTop
+          const itemBottom = itemTop + item.clientHeight
+          const itemCenter = (itemTop + itemBottom) / 2
+          const distance = Math.abs(itemCenter - centerPosition)
+          if (distance < closestDistance) {
+            closestDistance = distance
+            closestElement = item
+          }
+        }
+        if (closestElement) {
+          const centeredText = closestElement.textContent?.trim()
+          if (type === 'day' && centeredText) {
+            this.selectedDay = parseInt(centeredText, 10)
+          } else if (type === 'month' && centeredText) {
+            this.selectedMonth = this.months.indexOf(centeredText) + 1
+          } else if (type === 'year' && centeredText) {
+            this.selectedYear = parseInt(centeredText, 10)
+          }
+        }
+      }
+      centerItem(dayContainer, 'day')
+      centerItem(monthContainer, 'month')
+      centerItem(yearContainer, 'year')
+    },
+    emitSelectedDate() {
+      const formattedDate = dayjs()
+        .year(this.selectedYear)
+        .month(this.selectedMonth)
+        .date(this.selectedDay)
+        .format('DD-MM-YYYY')
+      this.$emit('selected-date', formattedDate)
+    },
+    onScroll() {
+      if (this.isDragging) return
+      if (this.scrollTimeout) {
+        clearTimeout(this.scrollTimeout)
+      }
+      this.scrollTimeout = setTimeout(() => {
+        this.selectCenteredItem()
+      }, 100)
     }
+  },
+  mounted() {
+    this.$refs.dayContainer.addEventListener('scroll', this.onScroll)
+    this.$refs.monthContainer.addEventListener('scroll', this.onScroll)
+    this.$refs.yearContainer.addEventListener('scroll', this.onScroll)
+  },
+  beforeUnmount() {
+    this.$refs.dayContainer.removeEventListener('scroll', this.onScroll)
+    this.$refs.monthContainer.removeEventListener('scroll', this.onScroll)
+    this.$refs.yearContainer.removeEventListener('scroll', this.onScroll)
   }
 }
 </script>
 
-<style scoped>
-.datepicker-container {
+<style lang="scss" scoped>
+.ui-slider-date-picker-c {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  height: calc(9 * 1.5rem + 2 * 16px);
   width: 100%;
-  height: 200px;
-  overflow: hidden;
-  position: relative;
-  perspective: 1000px;
+  padding: 16px;
+  box-sizing: border-box;
   background-color: white;
+  perspective: 900px;
+  border-radius: 10px;
 
-  .picker-column {
-    width: 33.33%;
-    height: 100%;
-    overflow-y: scroll;
-    text-align: center;
-    scrollbar-width: none; /* Firefox */
-  }
-
-  .picker-column::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
-  }
-
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    padding-top: 80px;
-    padding-bottom: 80px;
-  }
-
-  li {
-    height: 44px;
-    line-height: 44px;
-    font-size: 20px;
-    transition:
-      transform 0.2s,
-      opacity 0.2s;
-    transform-origin: center center;
-    opacity: 0.5;
-  }
-
-  li.active {
-    font-size: 24px;
-    opacity: 1;
-    transform: rotateX(0deg) translateY(0);
-  }
-  li :not(.active) {
-    transform: rotateX(30deg) translateY(-10px);
-    opacity: 0.3;
-  }
-  li:nth-child(1),
-  li:nth-child(2),
-  li:nth-child(3) {
-    transform: rotateX(30deg) translateY(-10px);
-    opacity: 0.3;
-  }
-
-  li:nth-last-child(1),
-  li:nth-last-child(2),
-  li:nth-last-child(3) {
-    transform: rotateX(-30deg) translateY(10px);
-    opacity: 0.3;
-  }
-
-  .highlight-overlay {
+  .center-overlay {
     position: absolute;
-    top: 50%;
-    width: 90%;
-    transform: translateY(-50%);
-    background-color: rgba(200, 200, 200, 0.3);
-    pointer-events: none;
+    top: 43%;
     left: 5%;
-    height: 40px;
-    border-radius: 10px;
+    width: 90%;
+    height: 2rem;
+    border-radius: 8px;
+    background: #ececec;
+    pointer-events: none;
+  }
+
+  .day,
+  .month,
+  .year {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    align-items: center;
+    scroll-behavior: smooth;
+    user-select: none;
+    transform-style: preserve-3d;
+    perspective: 900px;
+
+    &::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+  }
+
+  .month {
+    margin-top: 15px;
+  }
+
+  .day span,
+  .month span,
+  .year span {
+    padding: 4px 8px;
+    cursor: pointer;
+    scroll-snap-align: center;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    opacity: 0.5;
+    min-height: 1.5rem;
+    line-height: 1.5rem;
+    transform-origin: center;
+  }
+
+  .day span.selected,
+  .month span.selected,
+  .year span.selected {
+    font-weight: 500;
+    transform: scale(1.2) rotateX(0deg);
+    opacity: 1;
+    margin: 2px 0px;
   }
 }
 </style>

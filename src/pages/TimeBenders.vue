@@ -1,7 +1,7 @@
 <template>
   {{ selectDate }}
   <div class="time-benders-c">
-    <div style="width: 25%"><slider /></div>
+    <!-- <div style="width: 30%"><slider /></div> -->
 
     <div class="single">
       <UIDateRangePicker v-model="selectDate" label="Default calendar" />
@@ -49,12 +49,12 @@
 <script lang="ts">
 //Imports the needed components and interfaces
 import UIDateRangePicker from '../components/DatePicker/UIDateRangePicker.vue'
-import slider from '../components/DatePicker/UISliderDatePicker.vue'
+//import slider from '../components/DatePicker/UISliderDatePicker.vue'
 export default {
   name: 'TimeBenders',
   components: {
-    UIDateRangePicker,
-    slider
+    UIDateRangePicker
+    //slider
   },
   data() {
     return {

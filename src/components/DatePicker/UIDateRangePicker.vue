@@ -69,6 +69,7 @@
           :initialDate="initialDate"
           :isDatePickerEnable="isSingleDatePickerEnable"
           @dateSelected="handleFirstDateSelected"
+          @sliderSelected="handleFirstSliderDate"
           @click="sendDateToParent"
           :positionToLeftSingle="positionToLeftSingle"
           @minDate="updateMinDate"
@@ -201,6 +202,11 @@ export default {
     document.removeEventListener('click', this.handleClickOutside)
   },
   methods: {
+    handleFirstSliderDate(sliderDate: string) {
+      // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
+      this.firstSelectedDate.date = sliderDate
+      this.validateDates()
+    },
     updateMinDate(minDate) {
       this.minDate = minDate
     },
