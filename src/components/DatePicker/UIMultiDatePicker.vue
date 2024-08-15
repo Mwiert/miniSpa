@@ -14,44 +14,51 @@
             <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
-            <span class="current-date">{{
+            <span class="current-date" @click="isSliderOpen">{{
               daysInMonth[15]?.fullDateFormatted.split('-')[1] +
               ' ' +
               daysInMonth[15]?.fullDateFormatted.split('-')[0]
             }}</span>
           </div>
+          <div class="slider" v-if="isSlider">
+            <UISliderDatePicker
+              @emitSelectedDate="handleFirstSelectedDate"
+              :selectedDate="firstSelectedDate" />
+          </div>
           <!-- This is the weekdays section -->
-          <ul class="weekdays">
-            <template v-for="(weekday, index) in weekdays" :key="index">
-              <li>{{ weekday }}</li>
-            </template>
-          </ul>
-          <!-- This is the days section -->
-          <ul class="days">
-            <li
-              v-for="(day, index) in daysInMonth"
-              :key="index"
-              :class="{
-                inactive: day.inactive,
-                active: day.active,
-                selected: day.selected,
-                textDecoration: day.textDecoration,
-                blink: day.blink,
-                between: day.between,
-                isToday: day.isToday,
-                firstInitialDate: day.firstInitialDate,
-                secondInitialDate: day.secondInitialDate
-              }"
-              @click="selectDate(day)">
-              {{ day.number }}
-            </li>
-          </ul>
+          <div v-else>
+            <ul class="weekdays">
+              <template v-for="(weekday, index) in weekdays" :key="index">
+                <li>{{ weekday }}</li>
+              </template>
+            </ul>
+            <!-- This is the days section -->
+            <ul class="days">
+              <li
+                v-for="(day, index) in daysInMonth"
+                :key="index"
+                :class="{
+                  inactive: day.inactive,
+                  active: day.active,
+                  selected: day.selected,
+                  textDecoration: day.textDecoration,
+                  blink: day.blink,
+                  between: day.between,
+                  isToday: day.isToday,
+                  firstInitialDate: day.firstInitialDate,
+                  secondInitialDate: day.secondInitialDate
+                }"
+                @click="selectDate(day)">
+                {{ day.number }}
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div class="calendar">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <span class="current-date">{{
+            <span class="current-date" @click="isSliderOpen">{{
               nextMonthDays[15]?.fullDateFormatted.split('-')[1] +
               ' ' +
               nextMonthDays[15]?.fullDateFormatted.split('-')[0]
@@ -60,32 +67,39 @@
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
+          <div class="slider" v-if="isSlider">
+            <UISliderDatePicker
+              @emitSelectedDate="handleSecondSelectedDate"
+              :selectedDate="secondSelectedDate" />
+          </div>
           <!-- This is the weekdays section -->
-          <ul class="weekdays">
-            <template v-for="(weekday, index) in weekdays" :key="index">
-              <li>{{ weekday }}</li>
-            </template>
-          </ul>
-          <!-- This is the days section -->
-          <ul class="days">
-            <li
-              v-for="(day, index) in nextMonthDays"
-              :key="index"
-              :class="{
-                inactive: day.inactive,
-                active: day.active,
-                selected: day.selected,
-                textDecoration: day.textDecoration,
-                blink: day.blink,
-                between: day.between,
-                isToday: day.isToday,
-                firstInitialDate: day.firstInitialDate,
-                secondInitialDate: day.secondInitialDate
-              }"
-              @click="selectDate(day)">
-              {{ day.number }}
-            </li>
-          </ul>
+          <div v-else>
+            <ul class="weekdays">
+              <template v-for="(weekday, index) in weekdays" :key="index">
+                <li>{{ weekday }}</li>
+              </template>
+            </ul>
+            <!-- This is the days section -->
+            <ul class="days">
+              <li
+                v-for="(day, index) in nextMonthDays"
+                :key="index"
+                :class="{
+                  inactive: day.inactive,
+                  active: day.active,
+                  selected: day.selected,
+                  textDecoration: day.textDecoration,
+                  blink: day.blink,
+                  between: day.between,
+                  isToday: day.isToday,
+                  firstInitialDate: day.firstInitialDate,
+                  secondInitialDate: day.secondInitialDate
+                }"
+                @click="selectDate(day)">
+                {{ day.number }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -96,10 +110,13 @@
 //Imports the needed components and interfaces
 import dayjs from 'dayjs'
 import date from '../../interface/IUIDatePicker'
+import UISliderDatePicker from '../DatePicker/UISliderDatePicker.vue'
 
 export default {
   name: 'UIMultiDatePicker',
-  components: {},
+  components: {
+    UISliderDatePicker
+  },
   data() {
     return {
       weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], //Static weekdays
@@ -119,7 +136,9 @@ export default {
       changedDate: {
         oldDate: null,
         newDate: null
-      }
+      },
+      isSlider: false,
+      formattedDate: ''
     }
   },
   props: {
@@ -140,6 +159,21 @@ export default {
     maxSelectableDays: { type: Number, default: 0 }
   },
   methods: {
+    handleFirstSelectedDate(formattedDate: string) {
+      this.formattedDate = formattedDate
+      this.firstSelectedDate.date = formattedDate
+      this.saveFirstDateHistory = this.firstSelectedDate.date
+      this.$emit('sliderFirstSelected', formattedDate)
+    },
+    handleSecondSelectedDate(formattedDate: string) {
+      this.formattedDate = formattedDate
+      this.secondSelectedDate.date = formattedDate
+      this.saveSecondDateHistory = this.secondSelectedDate.date
+      this.$emit('sliderSecondSelected', formattedDate)
+    },
+    isSliderOpen() {
+      this.isSlider = !this.isSlider
+    },
     checkRange() {
       /*
 
@@ -993,7 +1027,10 @@ export default {
       background: #ffffff;
       margin: 0 10px;
       border-radius: 30px;
-
+      .slider {
+        display: flex;
+        flex-direction: row;
+      }
       .header {
         position: relative;
         display: flex;

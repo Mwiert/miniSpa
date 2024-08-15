@@ -77,8 +77,8 @@ export default {
       saveDateHistory: this.saveDate.date, //Saving the date history so we can see when we close calendar
       prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
       nextDate: dayjs().endOf('month').format('YYYY-MM-DD'),
-      isSlider: false,
-      formattedDate: ''
+      formattedDate: '',
+      isSlider: false
     }
   },
   props: {
