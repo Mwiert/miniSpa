@@ -50,7 +50,9 @@ export default {
     }
   },
   props: {
-    selectedDate: { type: Object, default: null }
+    selectedDate: { type: Object, default: null },
+    minDate: {},
+    maxDate: {}
   },
   created() {
     this.generateMonths()
@@ -104,20 +106,26 @@ export default {
     generateYears() {
       const years: number[] = []
 
-      const startYear = this.selectedYear - 50
-      const endYear = this.selectedYear + 50
+      const startYear = parseInt(this.minDate.split('-')[0], 10)
+      const endYear = parseInt(this.maxDate.split('-')[0], 10)
 
-      years.push(null, null, null)
+      years.push(null, null, null) // Empty slots for padding
 
       for (let i = startYear; i <= endYear; i++) {
         years.push(i)
       }
 
-      years.push(null, null, null)
+      years.push(null, null, null) // Empty slots for padding
 
       this.years = years
-    },
 
+      // Ensure that selectedYear is within the range of years generated
+      if (this.selectedYear < startYear) {
+        this.selectedYear = startYear
+      } else if (this.selectedYear > endYear) {
+        this.selectedYear = endYear
+      }
+    },
     updateDays() {
       this.generateDays()
     },
@@ -216,7 +224,15 @@ export default {
           } else if (type === 'month' && centeredText) {
             this.selectedMonth = this.months.indexOf(centeredText) - 3
           } else if (type === 'year' && centeredText) {
-            this.selectedYear = parseInt(centeredText, 10)
+            const selectedYear = parseInt(centeredText, 10)
+            if (
+              selectedYear >= parseInt(this.minDate.split('-')[0], 10) &&
+              selectedYear <= parseInt(this.maxDate.split('-')[0], 10)
+            ) {
+              this.selectedYear = selectedYear
+            } else {
+              console.warn(`Selected year ${selectedYear} is out of bounds.`)
+            }
           }
         }
       }
@@ -226,11 +242,21 @@ export default {
       centerItem(yearContainer, 'year')
     },
     emitSelectedDate() {
-      const formattedDate = dayjs()
+      let formattedDate = dayjs()
         .year(this.selectedYear)
         .month(this.selectedMonth)
         .date(this.selectedDay)
         .format('YYYY-MM-DD')
+
+      console.log('min ', this.minDate)
+      console.log('max ', this.maxDate)
+      if (formattedDate < this.minDate) {
+        formattedDate = this.minDate
+      }
+      if (formattedDate > this.maxDate) {
+        formattedDate = this.maxDate
+      }
+      console.log(formattedDate)
       this.$emit('emitSelectedDate', formattedDate)
     },
     onScroll() {

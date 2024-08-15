@@ -21,7 +21,9 @@
           <UISliderDatePicker
             v-if="isSlider"
             @emitSelectedDate="handleSelectedDate"
-            :selectedDate="firstSelectedDate" />
+            :selectedDate="firstSelectedDate"
+            :minDate="minDate"
+            :maxDate="maxDate" />
           <div v-else>
             <!-- This is the weekdays section -->
             <ul class="weekdays">
@@ -417,7 +419,7 @@ export default {
       if (newVal) {
         this.calendarDate = dayjs(this.saveDateHistory)
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
-
+        this.isSlider = false
         this.totalDaysInMonth()
         this.checkSkippability()
       }

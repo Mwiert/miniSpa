@@ -23,7 +23,9 @@
           <div class="slider" v-if="isSlider">
             <UISliderDatePicker
               @emitSelectedDate="handleFirstSelectedDate"
-              :selectedDate="firstSelectedDate" />
+              :selectedDate="firstSelectedDate"
+              :minDate="minDate"
+              :maxDate="maxDate" />
           </div>
           <!-- This is the weekdays section -->
           <div v-else>
@@ -70,7 +72,9 @@
           <div class="slider" v-if="isSlider">
             <UISliderDatePicker
               @emitSelectedDate="handleSecondSelectedDate"
-              :selectedDate="secondSelectedDate" />
+              :selectedDate="secondSelectedDate"
+              :minDate="minDate"
+              :maxDate="maxDate" />
           </div>
           <!-- This is the weekdays section -->
           <div v-else>
@@ -907,6 +911,7 @@ export default {
         }
 
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
+        this.isSlider = false
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
