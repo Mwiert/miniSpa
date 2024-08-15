@@ -2,7 +2,11 @@
   <div class="ui-slider-date-picker-c">
     <div class="center-overlay"></div>
     <div class="day" @mousedown="startDrag($event)" ref="dayContainer">
-      <span v-for="day in days" :key="day" :class="{ selected: day === selectedDay }">
+      <span
+        v-for="day in days"
+        :key="day"
+        :class="{ selected: day === selectedDay }"
+        :style="getRotationStyle(day, selectedDay)">
         {{ day }}
       </span>
     </div>
@@ -10,17 +14,21 @@
       <span
         v-for="(month, index) in months"
         :key="month"
-        :class="{ selected: index === selectedMonth + 3 }">
+        :class="{ selected: index === selectedMonth + 3 }"
+        :style="getRotationStyle(index - 3, selectedMonth)">
         {{ month }}
       </span>
     </div>
     <div class="year" @mousedown="startDrag($event)" ref="yearContainer">
-      <span v-for="year in years" :key="year" :class="{ selected: year === selectedYear }">
+      <span
+        v-for="year in years"
+        :key="year"
+        :class="{ selected: year === selectedYear }"
+        :style="getRotationStyle(year, selectedYear)">
         {{ year }}
       </span>
     </div>
   </div>
-  {{ firstSelected.date }}
 </template>
 
 <script lang="ts">
@@ -33,16 +41,18 @@ export default {
       days: [] as number[],
       months: [] as string[],
       years: [] as number[],
-      selectedDay: dayjs(this.firstSelected.date).date(),
-      selectedMonth: dayjs(this.firstSelected.date).month(),
-      selectedYear: dayjs(this.firstSelected.date).year(),
+      selectedDay: dayjs(this.selectedDate.date).date(),
+      selectedMonth: dayjs(this.selectedDate.date).month(),
+      selectedYear: dayjs(this.selectedDate.date).year(),
       scrolling: false,
       scrollTimeout: null as number | null,
       isDragging: false
     }
   },
   props: {
-    firstSelected: { type: Object, default: null }
+    selectedDate: { type: Object, default: null },
+    minDate: {},
+    maxDate: {}
   },
   created() {
     this.generateMonths()
@@ -95,15 +105,26 @@ export default {
     },
     generateYears() {
       const years: number[] = []
-      const currentYear = dayjs().year()
 
-      years.push(null, null, null)
-      for (let i = currentYear - 20; i <= currentYear + 20; i++) {
+      const startYear = parseInt(this.minDate.split('-')[0], 10)
+      const endYear = parseInt(this.maxDate.split('-')[0], 10)
+
+      years.push(null, null, null) // Empty slots for padding
+
+      for (let i = startYear; i <= endYear; i++) {
         years.push(i)
       }
-      years.push(null, null, null)
+
+      years.push(null, null, null) // Empty slots for padding
 
       this.years = years
+
+      // Ensure that selectedYear is within the range of years generated
+      if (this.selectedYear < startYear) {
+        this.selectedYear = startYear
+      } else if (this.selectedYear > endYear) {
+        this.selectedYear = endYear
+      }
     },
     updateDays() {
       this.generateDays()
@@ -142,30 +163,32 @@ export default {
           this.$refs.monthContainer,
           this.$refs.yearContainer
         ]
-
-        containers.forEach((container) => {
+        containers.forEach((container, containerIndex) => {
           const items = Array.from(container.children) as HTMLElement[]
-          const containerHeight = container.clientHeight
-          const containerTop = container.scrollTop
-          const centerPosition = containerHeight / 2 + containerTop
-
-          items.forEach((item) => {
-            const itemTop = item.offsetTop
-            const itemBottom = itemTop + item.clientHeight
-            const itemCenter = (itemTop + itemBottom) / 2
-            const distance = Math.abs(itemCenter - centerPosition)
-
-            const normalizedDistance = Math.min(distance / (containerHeight / 2), 1)
-
-            const rotationAngle = 60 * normalizedDistance
-            item.style.transform = `rotateX(${rotationAngle}deg)`
-
-            if (itemCenter === centerPosition) {
-              item.style.transform = `rotateX(0deg)`
-            }
+          items.forEach((item, index) => {
+            const style = this.getRotationStyle(index, this.selectedIndex[containerIndex])
+            Object.assign(item.style, style)
           })
         })
       })
+    },
+    getRotationStyle(index: number, selectedIndex: number) {
+      const totalItems = 7 // Görünür olan toplam öğe sayısı
+      const middleIndex = Math.ceil(totalItems / 2)
+      const maxRotation = 72 // Maksimum döndürme açısı
+      const rotationStep = maxRotation / (middleIndex - 1)
+
+      const position = index - selectedIndex + middleIndex
+
+      let angle = (position - middleIndex) * rotationStep
+
+      if (angle < -maxRotation) angle = -maxRotation
+      if (angle > maxRotation) angle = maxRotation
+
+      return {
+        transform: `rotateX(${angle}deg)`,
+        opacity: position === middleIndex ? 1 : 0.7
+      }
     },
     selectCenteredItem() {
       if (this.scrolling) return
@@ -201,7 +224,15 @@ export default {
           } else if (type === 'month' && centeredText) {
             this.selectedMonth = this.months.indexOf(centeredText) - 3
           } else if (type === 'year' && centeredText) {
-            this.selectedYear = parseInt(centeredText, 10)
+            const selectedYear = parseInt(centeredText, 10)
+            if (
+              selectedYear >= parseInt(this.minDate.split('-')[0], 10) &&
+              selectedYear <= parseInt(this.maxDate.split('-')[0], 10)
+            ) {
+              this.selectedYear = selectedYear
+            } else {
+              console.warn(`Selected year ${selectedYear} is out of bounds.`)
+            }
           }
         }
       }
@@ -211,11 +242,21 @@ export default {
       centerItem(yearContainer, 'year')
     },
     emitSelectedDate() {
-      const formattedDate = dayjs()
+      let formattedDate = dayjs()
         .year(this.selectedYear)
         .month(this.selectedMonth)
         .date(this.selectedDay)
         .format('YYYY-MM-DD')
+
+      console.log('min ', this.minDate)
+      console.log('max ', this.maxDate)
+      if (formattedDate < this.minDate) {
+        formattedDate = this.minDate
+      }
+      if (formattedDate > this.maxDate) {
+        formattedDate = this.maxDate
+      }
+      console.log(formattedDate)
       this.$emit('emitSelectedDate', formattedDate)
     },
     onScroll() {
@@ -229,36 +270,50 @@ export default {
         this.selectCenteredItem()
       }, 100)
     },
+
     scrollToSelected() {
-  const dayContainer = this.$refs.dayContainer as HTMLElement;
-  const monthContainer = this.$refs.monthContainer as HTMLElement;
-  const yearContainer = this.$refs.yearContainer as HTMLElement;
+      const dayContainer = this.$refs.dayContainer as HTMLElement
+      const monthContainer = this.$refs.monthContainer as HTMLElement
+      const yearContainer = this.$refs.yearContainer as HTMLElement
 
-  this.$nextTick(() => {
-    const dayElement = dayContainer.children[this.selectedDay + 2] as HTMLElement;
-    const monthElement = monthContainer.children[this.selectedMonth + 3] as HTMLElement;
-    const yearIndex = this.years.indexOf(this.selectedYear) + 3;
+      this.$nextTick(() => {
+        const dayElement = dayContainer.children[this.selectedDay + 2] as HTMLElement
+        const monthElement = monthContainer.children[this.selectedMonth + 3] as HTMLElement
+        const yearIndex = this.years.indexOf(this.selectedYear)
 
-    // Ensure the index is within bounds
-    if (yearIndex >= 0 && yearIndex < yearContainer.children.length) {
-      const yearElement = yearContainer.children[yearIndex] as HTMLElement;
+        // Ensure the index is within bounds for the year container
+        if (yearIndex >= 0 && yearIndex < yearContainer.children.length) {
+          const yearElement = yearContainer.children[yearIndex] as HTMLElement
 
-      dayContainer.scrollTop = dayElement.offsetTop - dayContainer.clientHeight / 2 + dayElement.clientHeight / 2;
-      monthContainer.scrollTop = monthElement.offsetTop - monthContainer.clientHeight / 2 + monthElement.clientHeight / 2;
-      yearContainer.scrollTop = yearElement.offsetTop - yearContainer.clientHeight / 2 + yearElement.clientHeight / 2;
-    } else {
-      console.warn('Year index out of bounds:', yearIndex);
+          // Calculate scroll positions
+          dayContainer.scrollTop =
+            dayElement.offsetTop - dayContainer.clientHeight / 2 + dayElement.clientHeight / 2
+          monthContainer.scrollTop =
+            monthElement.offsetTop - monthContainer.clientHeight / 2 + monthElement.clientHeight / 2
+          yearContainer.scrollTop =
+            yearElement.offsetTop - yearContainer.clientHeight / 2 + yearElement.clientHeight / 2
+
+          if (yearContainer.scrollTop < 0) {
+            yearContainer.scrollTop = 0
+          } else if (
+            yearContainer.scrollTop >
+            yearContainer.scrollHeight - yearContainer.clientHeight
+          ) {
+            yearContainer.scrollTop = yearContainer.scrollHeight - yearContainer.clientHeight
+          }
+        } else {
+          console.warn('Year index out of bounds:', yearIndex)
+        }
+      })
     }
-  });
-},
   },
   mounted() {
     this.$refs.dayContainer.addEventListener('scroll', this.onScroll)
-    this.$refs.monthContainer.addEventListener('scroll', this.onScroll)
+    this.$refs.monthContainer.addEventListener('scroll', this.w)
     this.$refs.yearContainer.addEventListener('scroll', this.onScroll)
     this.$nextTick(() => {
-        this.scrollToSelected()  // Scroll to the selected item
-        this.centerSelectedItem()
+      this.scrollToSelected() // Scroll to the selected item
+      this.centerSelectedItem()
     })
   },
   beforeUnmount() {
@@ -268,7 +323,7 @@ export default {
   },
   updated() {
     this.$nextTick(() => {
-        this.scrollToSelected()  // Ensure scroll position after updates
+      this.scrollToSelected() // Ensure scroll position after updates
     })
   }
 }
@@ -278,9 +333,9 @@ export default {
 .ui-slider-date-picker-c {
   display: grid;
   grid-template-columns: 1fr 3fr 1.5fr;
-  height: calc(9 * 1.5rem + 2 * 16px);
+  height: calc(11rem + 25px);
   width: 100%;
-  padding: 16px;
+  padding: 12px;
   box-sizing: border-box;
   gap: 16px;
   position: relative;
@@ -288,12 +343,12 @@ export default {
 
   .center-overlay {
     position: absolute;
-    top: 43%;
-    left: 5%;
-    width: 90%;
-    height: 2rem;
+    top: 42%;
+    left: 3%;
+    width: 96%;
+    height: 1.75rem;
     border-radius: 10px;
-    background: #f4f4f4;
+    background: #ececec;
     pointer-events: none;
   }
 
@@ -328,8 +383,8 @@ export default {
       transform 0.3s ease,
       opacity 0.3s ease;
     opacity: 0.5;
-    min-height: 1.5rem;
-    line-height: 1.5rem;
+    min-height: 1.25rem;
+    line-height: 1.25rem;
     transform: rotateX(0deg);
     transform-origin: center;
   }
