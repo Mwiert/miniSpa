@@ -99,8 +99,8 @@
           :positionToLeft="positionToLeft"
           :newSelectedDays="newSelectedDays"
           :maxSelectableDays="maxSelectableDays"
-          @sliderFirstSelected="handleFirstSliderDate"
-          @sliderSecondSelected="handleSecondSliderDate"
+          @firstSliderSelected="handleFirstSliderDate"
+          @secondSliderSelected="handleSecondSliderDate"
           @minDate="updateMinDate"
           @maxDate="updateMaxDate"
           @changedDate="changeDates" />
@@ -205,14 +205,14 @@ export default {
   },
   methods: {
     handleFirstSliderDate(sliderDate: string) {
+      this.handleResetInitialDates()
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.firstSelectedDate.date = sliderDate
-      this.validateDates()
     },
     handleSecondSliderDate(sliderDate: string) {
+      this.handleResetInitialDates()
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.secondSelectedDate.date = sliderDate
-      this.validateDates()
     },
     updateMinDate(minDate) {
       this.minDate = minDate
@@ -301,6 +301,7 @@ export default {
     handleFirstDateSelected(firstDate: date) {
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.firstSelectedDate = firstDate
+      console.log(this.firstSelectedDate.date)
     },
     handleSecondDateSelected(secondDate: date) {
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)

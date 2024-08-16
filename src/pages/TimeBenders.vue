@@ -4,7 +4,7 @@
     <!-- <div style="width: 30%"><slider /></div> -->
 
     <div class="single">
-      <UIDateRangePicker v-model="selectDate" label="Default calendar" />
+      <UIDateRangePicker v-model="selectDate" :validateBackYear="10" label="Default calendar" />
       <UIDateRangePicker v-model="selectDate" isPast label="Single isPast" />
       <UIDateRangePicker
         v-model="selectDate"
@@ -33,7 +33,8 @@
       <UIDateRangePicker
         v-model="selectDate"
         isMulti
-        :validateForwardYear="4"
+        isPast
+        :validateBackYear="4"
         label="isPast + backMonth:2" />
       <UIDateRangePicker
         v-model="selectDate"

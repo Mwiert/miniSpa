@@ -20,8 +20,8 @@
           </div>
           <UISliderDatePicker
             v-if="isSlider"
-            @emitSelectedDate="handleSelectedDate"
-            :selectedDate="firstSelectedDate"
+            @sliderFirstSelected="handleFirstSliderDate"
+            :firstSelectedDate="saveDate"
             :minDate="minDate"
             :maxDate="maxDate" />
           <div v-else>
@@ -80,7 +80,8 @@ export default {
       prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
       nextDate: dayjs().endOf('month').format('YYYY-MM-DD'),
       formattedDate: '',
-      isSlider: false
+      isSlider: false,
+      isSingle: true
     }
   },
   props: {
@@ -97,7 +98,7 @@ export default {
     newSelectedDays: { type: Object, default: null }
   },
   methods: {
-    handleSelectedDate(formattedDate: string) {
+    handleFirstSliderDate(formattedDate: string) {
       this.formattedDate = formattedDate
       this.firstSelectedDate.date = formattedDate
       this.saveDateHistory = this.firstSelectedDate.date
@@ -147,7 +148,7 @@ export default {
           }
         } else if (this.backYearRange !== 99) {
           this.minDate = dayjs(this.saveDate.date)
-            .subtract(this.backYearRange, 'month')
+            .subtract(this.backYearRange, 'year')
             .format('YYYY-MM-DD')
           if (this.forwardMonthRange !== 99) {
             this.maxDate = dayjs(this.saveDate.date)

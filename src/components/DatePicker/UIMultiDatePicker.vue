@@ -2,13 +2,12 @@
   <!-- This is the main container to create the calendar -->
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
-
     <div
       class="ui-date-picker-wrapper"
       :class="{ positionToRight: positionToRight, positionToLeft: positionToLeft }">
+      <!-- This is the main calendar -->
       <div>
-        <!-- This is the main calendar -->
-        <div class="calendar">
+        <div class="calendar" v-if="!isSlider">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
             <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
@@ -20,15 +19,9 @@
               daysInMonth[15]?.fullDateFormatted.split('-')[0]
             }}</span>
           </div>
-          <div class="slider" v-if="isSlider">
-            <UISliderDatePicker
-              @emitSelectedDate="handleFirstSelectedDate"
-              :selectedDate="firstSelectedDate"
-              :minDate="minDate"
-              :maxDate="maxDate" />
-          </div>
+
           <!-- This is the weekdays section -->
-          <div v-else>
+          <div>
             <ul class="weekdays">
               <template v-for="(weekday, index) in weekdays" :key="index">
                 <li>{{ weekday }}</li>
@@ -57,7 +50,7 @@
           </div>
         </div>
 
-        <div class="calendar">
+        <div class="calendar" v-if="!isSlider">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
             <span class="current-date" @click="isSliderOpen">{{
@@ -69,15 +62,8 @@
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
           </div>
-          <div class="slider" v-if="isSlider">
-            <UISliderDatePicker
-              @emitSelectedDate="handleSecondSelectedDate"
-              :selectedDate="secondSelectedDate"
-              :minDate="minDate"
-              :maxDate="maxDate" />
-          </div>
-          <!-- This is the weekdays section -->
-          <div v-else>
+
+          <div>
             <ul class="weekdays">
               <template v-for="(weekday, index) in weekdays" :key="index">
                 <li>{{ weekday }}</li>
@@ -104,6 +90,28 @@
               </li>
             </ul>
           </div>
+        </div>
+      </div>
+      <div v-if="isSlider">
+        <div class="header">
+          <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
+            <img src="../../assets/icons/arrow-left.svg" alt="" />
+          </button>
+          <span class="current-date" @click="isSliderOpen">{{
+            daysInMonth[15]?.fullDateFormatted.split('-')[1] +
+            ' ' +
+            daysInMonth[15]?.fullDateFormatted.split('-')[0]
+          }}</span>
+        </div>
+        <div class="slider" v-if="isSlider">
+          <UISliderDatePicker
+            v-if="isSlider"
+            @sliderFirstSelected="handleFirstSliderDate"
+            @sliderSecondSelected="handleSecondSliderDate"
+            :firstSelectedDate="firstSelectedDate"
+            :secondSelectedDate="secondSelectedDate"
+            :minDate="minDate"
+            :maxDate="maxDate" />
         </div>
       </div>
     </div>
@@ -142,7 +150,8 @@ export default {
         newDate: null
       },
       isSlider: false,
-      formattedDate: ''
+      formattedDate: '',
+      isMulti: true
     }
   },
   props: {
@@ -163,17 +172,17 @@ export default {
     maxSelectableDays: { type: Number, default: 0 }
   },
   methods: {
-    handleFirstSelectedDate(formattedDate: string) {
+    handleFirstSliderDate(formattedDate: string) {
       this.formattedDate = formattedDate
       this.firstSelectedDate.date = formattedDate
       this.saveFirstDateHistory = this.firstSelectedDate.date
-      this.$emit('sliderFirstSelected', formattedDate)
+      this.$emit('firstSliderSelected', formattedDate)
     },
-    handleSecondSelectedDate(formattedDate: string) {
+    handleSecondSliderDate(formattedDate: string) {
       this.formattedDate = formattedDate
       this.secondSelectedDate.date = formattedDate
       this.saveSecondDateHistory = this.secondSelectedDate.date
-      this.$emit('sliderSecondSelected', formattedDate)
+      this.$emit('secondSliderSelected', formattedDate)
     },
     isSliderOpen() {
       this.isSlider = !this.isSlider
@@ -200,7 +209,7 @@ export default {
           this.minDate = dayjs().subtract(this.backDayRange, 'day').format('YYYY-MM-DD')
           this.maxDate = dayjs().format('YYYY-MM-DD')
         } else {
-          this.minDate = dayjs().subtract(this.backYearRange, 'month').format('YYYY-MM-DD')
+          this.minDate = dayjs().subtract(this.backYearRange, 'year').format('YYYY-MM-DD')
           this.maxDate = dayjs().format('YYYY-MM-DD')
         }
       } else if (this.isFutureValidation) {
@@ -233,7 +242,7 @@ export default {
               .format('YYYY-MM-DD')
           } else {
             this.maxDate = dayjs(this.initialDate)
-              .add(this.forwardYearhRange, 'year')
+              .add(this.forwardYearRange, 'year')
               .format('YYYY-MM-DD')
           }
         } else if (this.backMonthRange !== 99) {
