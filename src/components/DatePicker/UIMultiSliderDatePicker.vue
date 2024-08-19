@@ -52,20 +52,20 @@ export default {
       let secondDate = dayjs(this.secondDate)
 
       const diffDays = secondDate.diff(firstDate, 'day')
+      if (this.maxSelectableDays != 0) {
+        if (diffDays > this.maxSelectableDays) {
+          secondDate = firstDate.add(this.maxSelectableDays, 'day')
 
-      if (diffDays > this.maxSelectableDays) {
-        secondDate = firstDate.add(this.maxSelectableDays, 'day')
-
-        this.secondDate = secondDate.format('YYYY-MM-DD')
-        console.log(this.secondDate)
-      }
-      // Swap dates
-      if (firstDate.isAfter(secondDate)) {
-        let temp = firstDate
-        firstDate = secondDate
-        secondDate = temp
-        this.firstDate = firstDate.format('YYYY-MM-DD')
-        this.secondDate = secondDate.format('YYYY-MM-DD')
+          this.secondDate = secondDate.format('YYYY-MM-DD')
+        }
+        // Swap dates
+        if (firstDate.isAfter(secondDate)) {
+          let temp = firstDate
+          firstDate = secondDate
+          secondDate = temp
+          this.firstDate = firstDate.format('YYYY-MM-DD')
+          this.secondDate = secondDate.format('YYYY-MM-DD')
+        }
       }
     },
     validateSecondDate() {
@@ -73,19 +73,19 @@ export default {
       let secondDate = dayjs(this.secondDate)
 
       const diffDays = secondDate.diff(firstDate, 'day')
+      if (this.maxSelectableDays != 0) {
+        if (diffDays > this.maxSelectableDays) {
+          firstDate = secondDate.subtract(this.maxSelectableDays, 'day')
 
-      if (diffDays > this.maxSelectableDays) {
-        firstDate = secondDate.subtract(this.maxSelectableDays, 'day')
-
-        this.firstDate = firstDate.format('YYYY-MM-DD')
-        console.log(this.firstDate)
-      }
-      if (firstDate.isAfter(secondDate)) {
-        let temp = firstDate
-        firstDate = secondDate
-        secondDate = temp
-        this.firstDate = firstDate.format('YYYY-MM-DD')
-        this.secondDate = secondDate.format('YYYY-MM-DD')
+          this.firstDate = firstDate.format('YYYY-MM-DD')
+        }
+        if (firstDate.isAfter(secondDate)) {
+          let temp = firstDate
+          firstDate = secondDate
+          secondDate = temp
+          this.firstDate = firstDate.format('YYYY-MM-DD')
+          this.secondDate = secondDate.format('YYYY-MM-DD')
+        }
       }
     }
   },
