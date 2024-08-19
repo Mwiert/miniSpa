@@ -20,10 +20,11 @@
           </div>
           <UISliderDatePicker
             v-if="isSlider"
-            @emitSelectedDate="handleSelectedDate"
-            :selectedDate="firstSelectedDate"
+            @sliderFirstSelected="handleFirstSliderDate"
+            :firstSelectedDate="saveDate"
             :minDate="minDate"
-            :maxDate="maxDate" />
+            :maxDate="maxDate"
+            :isSingle="isSingle" />
           <div v-else>
             <!-- This is the weekdays section -->
             <ul class="weekdays">
@@ -94,10 +95,12 @@ export default {
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
     isDatePickerEnable: { type: Boolean },
-    newSelectedDays: { type: Object, default: null }
+    newSelectedDays: { type: Object, default: null },
+
+    isSingle: { type: Boolean, default: true }
   },
   methods: {
-    handleSelectedDate(formattedDate: string) {
+    handleFirstSliderDate(formattedDate: string) {
       this.formattedDate = formattedDate
       this.firstSelectedDate.date = formattedDate
       this.saveDateHistory = this.firstSelectedDate.date
@@ -147,7 +150,7 @@ export default {
           }
         } else if (this.backYearRange !== 99) {
           this.minDate = dayjs(this.saveDate.date)
-            .subtract(this.backYearRange, 'month')
+            .subtract(this.backYearRange, 'year')
             .format('YYYY-MM-DD')
           if (this.forwardMonthRange !== 99) {
             this.maxDate = dayjs(this.saveDate.date)

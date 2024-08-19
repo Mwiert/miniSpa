@@ -99,8 +99,8 @@
           :positionToLeft="positionToLeft"
           :newSelectedDays="newSelectedDays"
           :maxSelectableDays="maxSelectableDays"
-          @sliderFirstSelected="handleFirstSliderDate"
-          @sliderSecondSelected="handleSecondSliderDate"
+          @firstSliderSelected="handleFirstSliderDate"
+          @secondSliderSelected="handleSecondSliderDate"
           @minDate="updateMinDate"
           @maxDate="updateMaxDate"
           @changedDate="changeDates" />
@@ -205,14 +205,14 @@ export default {
   },
   methods: {
     handleFirstSliderDate(sliderDate: string) {
+      this.handleResetInitialDates()
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.firstSelectedDate.date = sliderDate
-      this.validateDates()
     },
     handleSecondSliderDate(sliderDate: string) {
+      this.handleResetInitialDates()
       // We get the selected date from UIDatePicker and set it to selectedDate (Handling the emit from UIDatePicker to UIDateRangePicker)
       this.secondSelectedDate.date = sliderDate
-      this.validateDates()
     },
     updateMinDate(minDate) {
       this.minDate = minDate
@@ -307,8 +307,16 @@ export default {
       this.secondSelectedDate = secondDate
     },
     toggleDatePicker() {
+      if (this.isMulti === true) {
+        this.isSingleDatePickerEnable = false
+        if (this.isMultiDatePickerEnable === false) {
+          this.isMultiDatePickerEnable = true
+        } else {
+          // this.isMultiDatePickerEnable = false
+        }
+      }
       //If the single date picker is enabled on TimeBenders, we are toggling the single date picker
-      if (this.isSingle === true) {
+      else if (this.isSingle === true) {
         //We can implement it by this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable; but it will create problem in muldi date picker implementation
         if (this.isSingleDatePickerEnable === false) {
           this.isSingleDatePickerEnable = true
@@ -318,14 +326,6 @@ export default {
       }
 
       //If the multi date picker is enabled on TimeBenders, we are toggling the multi date picker with related single date picker logic
-      if (this.isMulti === true) {
-        this.isSingleDatePickerEnable = false
-        if (this.isMultiDatePickerEnable === false) {
-          this.isMultiDatePickerEnable = true
-        } else {
-          // this.isMultiDatePickerEnable = false
-        }
-      }
 
       this.$nextTick(() => {
         const datePicker = this.$el.querySelector('.date-picker')
