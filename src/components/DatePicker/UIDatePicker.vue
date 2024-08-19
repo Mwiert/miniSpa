@@ -23,7 +23,8 @@
             @sliderFirstSelected="handleFirstSliderDate"
             :firstSelectedDate="saveDate"
             :minDate="minDate"
-            :maxDate="maxDate" />
+            :maxDate="maxDate"
+            :isSingle="isSingle" />
           <div v-else>
             <!-- This is the weekdays section -->
             <ul class="weekdays">
@@ -80,8 +81,7 @@ export default {
       prevDate: dayjs().startOf('month').format('YYYY-MM-DD'),
       nextDate: dayjs().endOf('month').format('YYYY-MM-DD'),
       formattedDate: '',
-      isSlider: false,
-      isSingle: true
+      isSlider: false
     }
   },
   props: {
@@ -95,7 +95,9 @@ export default {
     isPastValidation: { type: Boolean, default: false },
     isFutureValidation: { type: Boolean, default: false },
     isDatePickerEnable: { type: Boolean },
-    newSelectedDays: { type: Object, default: null }
+    newSelectedDays: { type: Object, default: null },
+
+    isSingle: { type: Boolean, default: true }
   },
   methods: {
     handleFirstSliderDate(formattedDate: string) {

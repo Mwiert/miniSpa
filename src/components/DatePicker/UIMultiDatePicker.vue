@@ -1,19 +1,20 @@
 <template>
   <!-- This is the main container to create the calendar -->
+
   <div class="ui-date-picker-c">
     <!-- This is where we work with our calendar -->
     <div
       class="ui-date-picker-wrapper"
       :class="{ positionToRight: positionToRight, positionToLeft: positionToLeft }">
       <!-- This is the main calendar -->
-      <div>
+      <div class="calender-wrapper">
         <div class="calendar" v-if="!isSlider">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
             <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
-            <span class="current-date" @click="isSliderOpen">{{
+            <span class="current-date" @click.stop="isSliderOpen">{{
               daysInMonth[15]?.fullDateFormatted.split('-')[1] +
               ' ' +
               daysInMonth[15]?.fullDateFormatted.split('-')[0]
@@ -49,11 +50,10 @@
             </ul>
           </div>
         </div>
-
         <div class="calendar" v-if="!isSlider">
           <!-- This is the header section where we have button and dates-->
           <div class="header">
-            <span class="current-date" @click="isSliderOpen">{{
+            <span class="current-date" @click.stop="isSliderOpen">{{
               nextMonthDays[15]?.fullDateFormatted.split('-')[1] +
               ' ' +
               nextMonthDays[15]?.fullDateFormatted.split('-')[0]
@@ -91,27 +91,38 @@
             </ul>
           </div>
         </div>
-      </div>
-      <div v-if="isSlider">
-        <div class="header">
-          <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
-            <img src="../../assets/icons/arrow-left.svg" alt="" />
-          </button>
-          <span class="current-date" @click="isSliderOpen">{{
-            daysInMonth[15]?.fullDateFormatted.split('-')[1] +
-            ' ' +
-            daysInMonth[15]?.fullDateFormatted.split('-')[0]
-          }}</span>
-        </div>
+
         <div class="slider" v-if="isSlider">
-          <UISliderDatePicker
-            v-if="isSlider"
-            @sliderFirstSelected="handleFirstSliderDate"
-            @sliderSecondSelected="handleSecondSliderDate"
-            :firstSelectedDate="firstSelectedDate"
-            :secondSelectedDate="secondSelectedDate"
-            :minDate="minDate"
-            :maxDate="maxDate" />
+          <div class="header">
+            <button id="prev" class="nav-button" @click="onClickToSkip(-1)" v-show="prevDate">
+              <img src="../../assets/icons/arrow-left.svg" alt="" />
+            </button>
+            <span class="current-date" @click.stop="isSliderOpen">{{
+              daysInMonth[15]?.fullDateFormatted.split('-')[1] +
+              ' ' +
+              daysInMonth[15]?.fullDateFormatted.split('-')[0]
+            }}</span>
+
+            <span class="current-date" @click.stop="isSliderOpen">{{
+              nextMonthDays[15]?.fullDateFormatted.split('-')[1] +
+              ' ' +
+              nextMonthDays[15]?.fullDateFormatted.split('-')[0]
+            }}</span>
+            <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
+              <img src="../../assets/icons/arrow-right.svg" alt="" />
+            </button>
+          </div>
+          <div v-if="isSlider">
+            <UISliderDatePicker
+              @sliderFirstSelected="handleFirstSliderDate"
+              @sliderSecondSelected="handleSecondSliderDate"
+              :firstSelectedDate="firstSelectedDate"
+              :secondSelectedDate="secondSelectedDate"
+              :minDate="minDate"
+              :maxDate="maxDate"
+              :isMulti="isMulti"
+              :maxSelectableDays="maxSelectableDays" />
+          </div>
         </div>
       </div>
     </div>
@@ -187,6 +198,7 @@ export default {
     isSliderOpen() {
       this.isSlider = !this.isSlider
     },
+
     checkRange() {
       /*
 
@@ -1033,68 +1045,122 @@ export default {
     &.positionToLeft::before {
       left: 75%;
     }
+    .calender-wrapper {
+      .calendar {
+        padding-top: 1.2rem;
+        width: 300px;
+        height: 220px;
+        background: #ffffff;
+        margin: 0 10px;
+        border-radius: 30px;
 
-    .calendar {
-      padding-top: 1.2rem;
-      width: 300px;
-      height: 220px;
-      background: #ffffff;
-      margin: 0 10px;
-      border-radius: 30px;
-      .slider {
-        display: flex;
-        flex-direction: row;
-      }
-      .header {
-        position: relative;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        width: 100%;
-
-        .nav-button {
-          background-color: transparent;
-          border: none;
-          font-size: 1rem;
-          cursor: pointer;
-          width: 30px;
-          height: 30px;
+        .header {
+          position: relative;
           display: flex;
-          justify-content: center;
+          justify-content: space-evenly;
           align-items: center;
+          width: 100%;
 
-          img {
-            width: 15px;
-            height: 15px;
+          .nav-button {
+            background-color: transparent;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            img {
+              width: 15px;
+              height: 15px;
+            }
+          }
+
+          .nav-button:first-child {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+
+          .nav-button:last-child {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+
+          .current-date {
+            text-align: center;
+            border: 1px solid #848484;
+            border-radius: $border-radius-medium;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
           }
         }
+      }
+      .slider {
+        padding-top: 1.2rem;
+        width: 550px;
+        height: 230px;
+        background: #ffffff;
+        margin: 0 10px;
+        border-radius: 30px;
 
-        .nav-button:first-child {
-          position: absolute;
-          left: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-        }
+        .header {
+          position: relative;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          width: 100%;
 
-        .nav-button:last-child {
-          position: absolute;
-          right: 10px;
-          top: 50%;
-          transform: translateY(-50%);
-        }
+          .nav-button {
+            background-color: transparent;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-        .current-date {
-          text-align: center;
-          border: 1px solid #848484;
-          border-radius: $border-radius-medium;
-          padding: 4px 12px;
-          font-size: 0.9rem;
-          font-weight: 500;
-          cursor: pointer;
+            img {
+              width: 15px;
+              height: 15px;
+            }
+          }
+
+          .nav-button:first-child {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+
+          .nav-button:last-child {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+
+          .current-date {
+            text-align: center;
+            border: 1px solid #848484;
+            border-radius: $border-radius-medium;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+          }
         }
       }
     }
-
     .weekdays,
     .days {
       list-style: none;

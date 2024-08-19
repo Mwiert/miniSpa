@@ -16,14 +16,14 @@
           :firstSelectedDate="firstSelectedDate"
           :secondSelectedDate="secondSelectedDate"
           :minDate="minDate"
-          :maxDate="maxDate" />
+          :maxDate="maxDate"
+          :maxSelectableDays="maxSelectableDays" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import dayjs from 'dayjs'
 import UISingleSliderDatePicker from './UISingleSliderDatePicker.vue'
 import UIMultiSliderDatePicker from './UIMultiSliderDatePicker.vue'
 export default {
@@ -34,7 +34,7 @@ export default {
   },
   props: {
     isMulti: { type: Boolean, default: false },
-    isSingle: { type: Boolean, default: true },
+    isSingle: { type: Boolean, default: false },
     maxSelectableDays: { type: Number, default: 0 },
     firstSelectedDate: { type: Object, default: null },
     secondSelectedDate: { type: Object, default: null },
