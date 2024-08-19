@@ -1,15 +1,18 @@
 <template>
   <div class="sliders">
+    <!-- first{{ firstDate }}<br />
+    <br />
+    second{{ secondDate }} -->
     <div>
       <UISingleSliderDatePicker
         @emitSelectedDate="emitFirstSelectedDate"
-        :selectedDate="firstSelectedDate"
+        :selectedDate="firstDate"
         :minDate="minDate"
         :maxDate="maxDate" />
     </div>
     <UISingleSliderDatePicker
       @emitSelectedDate="emitSecondSelectedDate"
-      :selectedDate="secondSelectedDate"
+      :selectedDate="secondDate"
       :minDate="minDate"
       :maxDate="maxDate" />
   </div>
@@ -30,23 +33,42 @@ export default {
   },
   data() {
     return {
-      firstDate: this.firstSelectedDate,
-      secondDate: this.secondSelectedDate
+      firstDate: this.firstSelectedDate.date,
+      secondDate: this.secondSelectedDate.date
     }
   },
   methods: {
     emitFirstSelectedDate(firstSelected) {
-      this.$emit('emitFirstSelectedDate', firstSelected)
+      this.firstDate = firstSelected
+      this.$emit('emitFirstSelectedDate', this.firstDate)
     },
     emitSecondSelectedDate(secondSelected) {
-      this.$emit('emitSecondSelectedDate', secondSelected)
+      this.secondDate = secondSelected
+      this.$emit('emitSecondSelectedDate', this.secondDate)
     }
   },
   watch: {
-    firstSelectedDate(newVal) {
+    firstDate(newVal) {
+      //console.log('newVal ', newVal)
       this.firstDate = newVal
-      console.log(this.firsttDate.date)
-      console.log(this.firstSelectedDate.date)
+      if (this.secondDate < newVal) {
+        let temp = this.firstDate
+        this.firstDate = this.secondDate
+        this.secondDate = temp
+      }
+
+      //console.log('first', this.firstDate, ' ', this.secondDate)
+    },
+    secondDate(newVal) {
+      // console.log('newVal second ', newVal)
+      this.secondDate = newVal
+      if (this.firstDate > newVal) {
+        let temp = this.secondDate
+        //console.log('temp', temp)
+        this.secondDate = this.firstDate
+        this.firstDate = temp
+      }
+      //console.log('second', this.firstDate, ' ', this.secondDate)
     }
   }
 }

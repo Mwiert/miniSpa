@@ -41,9 +41,9 @@ export default {
       days: [] as number[],
       months: [] as string[],
       years: [] as number[],
-      selectedDay: dayjs(this.selectedDate.date).date(),
-      selectedMonth: dayjs(this.selectedDate.date).month(),
-      selectedYear: dayjs(this.selectedDate.date).year(),
+      selectedDay: dayjs(this.selectedDate).date(),
+      selectedMonth: dayjs(this.selectedDate).month(),
+      selectedYear: dayjs(this.selectedDate).year(),
       scrolling: false,
       scrollTimeout: null as number | null,
       isDragging: false,
@@ -51,16 +51,31 @@ export default {
     }
   },
   props: {
-    selectedDate: { type: Object, default: null },
+    selectedDate: { type: String, default: null },
     minDate: {},
     maxDate: {}
   },
+
   created() {
     this.generateMonths()
     this.generateYears()
     this.updateDays()
   },
   watch: {
+    selectedDate(newDate) {
+      const date = dayjs(newDate)
+
+      this.selectedDay = date.date()
+      this.selectedMonth = date.month()
+      this.selectedYear = date.year()
+      this.updateDays()
+      this.generateMonths()
+      this.generateYears()
+      this.$nextTick(() => {
+        this.scrollToSelected()
+        this.centerSelectedItem()
+      })
+    },
     selectedDay() {
       this.centerSelectedItem()
       this.emitSelectedDate()
@@ -77,6 +92,9 @@ export default {
     }
   },
   methods: {
+    sendModelValue() {
+      this.$emit('update:modelValue', this.selectedDate)
+    },
     generateDays() {
       const days: number[] = []
       const daysInMonth = dayjs().year(this.selectedYear).month(this.selectedMonth).daysInMonth()
@@ -308,7 +326,7 @@ export default {
   },
   mounted() {
     this.$refs.dayContainer.addEventListener('scroll', this.onScroll)
-    this.$refs.monthContainer.addEventListener('scroll', this.w)
+    this.$refs.monthContainer.addEventListener('scroll', this.onScroll)
     this.$refs.yearContainer.addEventListener('scroll', this.onScroll)
     this.$nextTick(() => {
       this.scrollToSelected() // Scroll to the selected item

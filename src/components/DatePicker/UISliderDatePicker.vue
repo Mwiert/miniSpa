@@ -5,7 +5,8 @@
       <div v-if="isSingle">
         <UISingleSliderDatePicker
           @emitSelectedDate="handleFirstSelectedDate"
-          :selectedDate="firstSelectedDate"
+          v-model="test"
+          :selectedDate="firstSelectedDate.date"
           :minDate="minDate"
           :maxDate="maxDate" />
       </div>
@@ -40,6 +41,11 @@ export default {
     secondSelectedDate: { type: Object, default: null },
     minDate: {},
     maxDate: {}
+  },
+  data() {
+    return {
+      test: {}
+    }
   },
 
   methods: {

@@ -1,5 +1,4 @@
 <template>
-  {{ selectDate }}
   <div class="time-benders-c">
     <!-- <div style="width: 30%"><slider /></div> -->
 
@@ -13,7 +12,7 @@
         label="Single isFuture" />
     </div>
     <div class="multi-row">
-      <UIDateRangePicker v-model="selectDate" isMulti isPast label="isPast " positionToRight />
+      <UIDateRangePicker v-model="selectDate" isMulti label="default " positionToRight />
       <UIDateRangePicker
         v-model="selectDate"
         isMulti
