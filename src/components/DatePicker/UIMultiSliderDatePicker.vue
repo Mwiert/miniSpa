@@ -18,6 +18,7 @@
   </div>
 </template>
 <script>
+import dayjs from 'dayjs'
 import UISingleSliderDatePicker from './UISingleSliderDatePicker.vue'
 export default {
   name: 'UIMultiSliderDatePicker',
@@ -45,30 +46,67 @@ export default {
     emitSecondSelectedDate(secondSelected) {
       this.secondDate = secondSelected
       this.$emit('emitSecondSelectedDate', this.secondDate)
+    },
+    validateFirstDate() {
+      let firstDate = dayjs(this.firstDate)
+      let secondDate = dayjs(this.secondDate)
+
+      const diffDays = secondDate.diff(firstDate, 'day')
+
+      if (diffDays > this.maxSelectableDays) {
+        secondDate = firstDate.add(this.maxSelectableDays, 'day')
+
+        this.secondDate = secondDate.format('YYYY-MM-DD')
+        console.log(this.secondDate)
+      }
+      // Swap dates
+      if (firstDate.isAfter(secondDate)) {
+        let temp = firstDate
+        firstDate = secondDate
+        secondDate = temp
+        this.firstDate = firstDate.format('YYYY-MM-DD')
+        this.secondDate = secondDate.format('YYYY-MM-DD')
+      }
+    },
+    validateSecondDate() {
+      let firstDate = dayjs(this.firstDate)
+      let secondDate = dayjs(this.secondDate)
+
+      const diffDays = secondDate.diff(firstDate, 'day')
+
+      if (diffDays > this.maxSelectableDays) {
+        firstDate = secondDate.subtract(this.maxSelectableDays, 'day')
+
+        this.firstDate = firstDate.format('YYYY-MM-DD')
+        console.log(this.firstDate)
+      }
+      if (firstDate.isAfter(secondDate)) {
+        let temp = firstDate
+        firstDate = secondDate
+        secondDate = temp
+        this.firstDate = firstDate.format('YYYY-MM-DD')
+        this.secondDate = secondDate.format('YYYY-MM-DD')
+      }
     }
   },
   watch: {
     firstDate(newVal) {
-      //console.log('newVal ', newVal)
       this.firstDate = newVal
       if (this.secondDate < newVal) {
         let temp = this.firstDate
         this.firstDate = this.secondDate
         this.secondDate = temp
       }
-
-      //console.log('first', this.firstDate, ' ', this.secondDate)
+      this.validateFirstDate()
     },
     secondDate(newVal) {
-      // console.log('newVal second ', newVal)
       this.secondDate = newVal
       if (this.firstDate > newVal) {
         let temp = this.secondDate
-        //console.log('temp', temp)
         this.secondDate = this.firstDate
         this.firstDate = temp
       }
-      //console.log('second', this.firstDate, ' ', this.secondDate)
+      this.validateSecondDate()
     }
   }
 }
