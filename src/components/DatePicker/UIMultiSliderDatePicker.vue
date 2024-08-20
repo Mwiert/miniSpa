@@ -1,8 +1,5 @@
 <template>
   <div class="sliders">
-    <!-- first{{ firstDate }}<br />
-    <br />
-    second{{ secondDate }} -->
     <div>
       <UISingleSliderDatePicker
         @emitSelectedDate="emitFirstSelectedDate"
@@ -30,7 +27,8 @@ export default {
     secondSelectedDate: { type: Object, default: null },
     minDate: {},
     maxDate: {},
-    maxSelectableDays: { type: Number }
+    maxSelectableDays: { type: Number },
+    spaceBetweenDays: { type: Number }
   },
   data() {
     return {
@@ -50,15 +48,18 @@ export default {
     validateFirstDate() {
       let firstDate = dayjs(this.firstDate)
       let secondDate = dayjs(this.secondDate)
+      if (firstDate.isSame(secondDate)) {
+        secondDate = firstDate.add(this.spaceBetweenDays, 'day')
+        this.secondDate = secondDate.format('YYYY-MM-DD')
+      }
 
       const diffDays = secondDate.diff(firstDate, 'day')
       if (this.maxSelectableDays != 0) {
         if (diffDays > this.maxSelectableDays) {
           secondDate = firstDate.add(this.maxSelectableDays, 'day')
-
           this.secondDate = secondDate.format('YYYY-MM-DD')
         }
-        // Swap dates
+
         if (firstDate.isAfter(secondDate)) {
           let temp = firstDate
           firstDate = secondDate
@@ -71,12 +72,14 @@ export default {
     validateSecondDate() {
       let firstDate = dayjs(this.firstDate)
       let secondDate = dayjs(this.secondDate)
-
+      if (firstDate.isSame(secondDate)) {
+        firstDate = secondDate.subtract(this.spaceBetweenDays, 'day')
+        this.firstDate = firstDate.format('YYYY-MM-DD')
+      }
       const diffDays = secondDate.diff(firstDate, 'day')
       if (this.maxSelectableDays != 0) {
         if (diffDays > this.maxSelectableDays) {
           firstDate = secondDate.subtract(this.maxSelectableDays, 'day')
-
           this.firstDate = firstDate.format('YYYY-MM-DD')
         }
         if (firstDate.isAfter(secondDate)) {

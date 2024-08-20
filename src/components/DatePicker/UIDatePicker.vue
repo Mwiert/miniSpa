@@ -428,7 +428,6 @@ export default {
     },
     newSelectedDays: {
       handler(newValue) {
-        console.log(newValue.firstSelectedDate.date)
         this.saveDateHistory = newValue.firstSelectedDate.date
 
         this.calendarDate = dayjs(this.saveDateHistory)

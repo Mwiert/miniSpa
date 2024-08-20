@@ -239,9 +239,7 @@ export default {
       return `${year}-${month}-${day}`
     },
     onFirstDateInput(value) {
-      //this.secondSelectedDate.date = ''
       this.handleResetInitialDates()
-      // const isValidFormat = value.isValidDateFormat()
 
       if (value.isValidDateFormat()) {
         const parsedDate = this.parseDate(value)
@@ -252,7 +250,6 @@ export default {
     },
     onSecondDateInput(value) {
       this.handleResetInitialDates()
-      // const isValidFormat = value.isValidDateFormat()
 
       if (value.isValidDateFormat()) {
         const parsedDate = this.parseDate(value)
@@ -311,8 +308,6 @@ export default {
         this.isSingleDatePickerEnable = false
         if (this.isMultiDatePickerEnable === false) {
           this.isMultiDatePickerEnable = true
-        } else {
-          // this.isMultiDatePickerEnable = false
         }
       }
       //If the single date picker is enabled on TimeBenders, we are toggling the single date picker
@@ -320,8 +315,6 @@ export default {
         //We can implement it by this.isSingleDatePickerEnable = !this.isSingleDatePickerEnable; but it will create problem in muldi date picker implementation
         if (this.isSingleDatePickerEnable === false) {
           this.isSingleDatePickerEnable = true
-        } else {
-          // this.isSingleDatePickerEnable = false
         }
       }
 
@@ -479,7 +472,7 @@ export default {
           else if (newDate.isAfter(maxDate)) {
             this.secondSelectedDate.date = this.maxDate
             if (this.maxSelectableDays != 0) {
-              // Eğer firstDate maxDate - maxSelectableDayss'ten sonraysa
+              // Eğer firstDate maxDate - maxSelectableDays'ten sonraysa
 
               this.firstSelectedDate.date = maxDate
                 .subtract(this.maxSelectableDays, 'day')
@@ -489,7 +482,7 @@ export default {
             this.secondSelectedDate.date = ''
           } else {
             if (this.maxSelectableDays != 0) {
-              // Eğer secondDate ve newDate arasındaki fark maxSelectableDayss'ten fazlaysa
+              // Eğer secondDate ve newDate arasındaki fark maxSelectableDays'ten fazlaysa
               const dayDifference = secondDate.diff(newDate, 'day')
               if (dayDifference > this.maxSelectableDays) {
                 this.firstSelectedDate.date = newDate.format('YYYY-MM-DD')
@@ -505,7 +498,7 @@ export default {
           if (newDate.isAfter(maxDate)) {
             this.secondSelectedDate.date = maxDate.format('YYYY-MM-DD')
             if (this.maxSelectableDays != 0) {
-              // Eğer firstDate maxDate - maxSelectableDayss'ten sonraysa
+              // Eğer firstDate maxDate - maxSelectableDays'ten sonraysa
               if (firstDate.isBefore(maxDate.subtract(this.maxSelectableDays, 'day'))) {
                 this.firstSelectedDate.date = maxDate
                   .subtract(this.maxSelectableDays, 'day')
@@ -526,7 +519,7 @@ export default {
             }
           } else {
             if (this.maxSelectableDays != 0) {
-              // Eğer newDate ile firstDate arasındaki fark maxSelectableDayss'ten fazlaysa
+              // Eğer newDate ile firstDate arasındaki fark maxSelectableDays'ten fazlaysa
               const dayDifference = newDate.diff(firstDate, 'day')
               if (dayDifference > this.maxSelectableDays) {
                 this.secondSelectedDate.date = newDate.format('YYYY-MM-DD')

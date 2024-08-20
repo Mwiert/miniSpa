@@ -63,14 +63,6 @@ export default {
   },
   watch: {
     selectedDate(newDate) {
-      // this.selected = newDate
-
-      // if (this.selected > this.maxDate) {
-      //   this.selected = this.maxDate
-      // }
-      // if (this.selected < this.minDate) {
-      //   this.selected = this.minDate
-      // }
       const date = dayjs(newDate)
 
       this.selectedDay = date.date()
@@ -117,9 +109,6 @@ export default {
         this.selectedYear = dayjs(this.maxDate).year()
       }
     },
-    sendModelValue() {
-      this.$emit('update:modelValue', this.selectedDate)
-    },
     generateDays() {
       const days: number[] = []
       const daysInMonth = dayjs().year(this.selectedYear).month(this.selectedMonth).daysInMonth()
@@ -163,7 +152,6 @@ export default {
 
       this.years = years
 
-      // Ensure that selectedYear is within the range of years generated
       if (this.selectedYear < startYear) {
         this.selectedYear = startYear
       } else if (this.selectedYear > endYear) {
@@ -209,7 +197,6 @@ export default {
         ]
 
         containers.forEach((container, containerIndex) => {
-          // Kontrol: Container mevcut mu ve çocuk elemanları var mı?
           if (container && container.children && container.children.length > 0) {
             const items = Array.from(container.children) as HTMLElement[]
 
@@ -240,7 +227,6 @@ export default {
 
       return {
         transform: `rotateX(${angle}deg)`
-        //opacity: position === middleIndex + 1 ? 1 : 0.7
       }
     },
     selectCenteredItem() {

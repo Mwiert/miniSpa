@@ -24,7 +24,8 @@
         isMulti
         :validateForwardDay="20"
         label="Forward Day:20"
-        positionToLeft />
+        positionToLeft
+        :spaceBetweenDays="4" />
     </div>
 
     <div class="multi-column">
