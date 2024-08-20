@@ -1,7 +1,6 @@
 <template>
+  {{ selectDate }}
   <div class="time-benders-c">
-    <!-- <div style="width: 30%"><slider /></div> -->
-
     <div class="single">
       <UIDateRangePicker v-model="selectDate" :validateBackYear="10" label="Default calendar" />
       <UIDateRangePicker v-model="selectDate" isPast label="Single isPast" />
@@ -25,7 +24,8 @@
         isMulti
         :validateForwardDay="20"
         label="Forward Day:20"
-        positionToLeft />
+        positionToLeft
+        :spaceBetweenDays="4" />
     </div>
 
     <div class="multi-column">
@@ -34,13 +34,13 @@
         isMulti
         isPast
         :validateBackYear="4"
-        label="isPast + backMonth:2" />
+        label="isPast + backYear:4" />
       <UIDateRangePicker
         v-model="selectDate"
         isMulti
         isFuture
         :validateForwardYear="2"
-        label="isFuture " />
+        label="isFuture forwardYear:2 " />
     </div>
   </div>
 </template>

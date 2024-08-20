@@ -121,7 +121,8 @@
               :minDate="minDate"
               :maxDate="maxDate"
               :isMulti="isMulti"
-              :maxSelectableDays="maxSelectableDays" />
+              :maxSelectableDays="maxSelectableDays"
+              :spaceBetweenDays="spaceBetweenDays" />
           </div>
         </div>
       </div>
@@ -180,7 +181,8 @@ export default {
     positionToRight: { type: Boolean, default: false },
     positionToLeft: { type: Boolean, default: false },
     newSelectedDays: { type: Object, default: null },
-    maxSelectableDays: { type: Number, default: 0 }
+    maxSelectableDays: { type: Number, default: 0 },
+    spaceBetweenDays: { type: Number, default: 2 }
   },
   methods: {
     handleFirstSliderDate(formattedDate: string) {
@@ -742,7 +744,7 @@ export default {
       const rightCalendarIndex = dayjs(this.nextMonthDays[15].date).format('YYYY-MM')
       if (startDate.date && endDate.date) {
         // seçilen iki tarih farklı aylardaysa
-        if (startDate.month !== endDate.month) {
+        if (startDate.year !== endDate.year || startDate.month !== endDate.month) {
           // soldaki takvim için
           this.daysInMonth.forEach((day) => {
             if (
@@ -918,7 +920,7 @@ export default {
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
-        this.linedThroughDate() // Her iki takvim için geçerli
+        this.linedThroughDate()
         this.checkSkippability()
       },
       deep: true
@@ -936,14 +938,13 @@ export default {
         this.populdateMonthDays()
         this.checkDateHistory()
         this.updateBetweenDates()
-        this.linedThroughDate() // Her iki takvim için geçerli
+        this.linedThroughDate()
         this.checkSkippability()
       }
     },
     saveFirstDateHistory(newVal) {
       this.saveFirstDateHistory = newVal
 
-      this.saveFirstDateHistory = newVal
       if (!newVal) {
         // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin
         this.daysInMonth.forEach((day) => {

@@ -1,11 +1,9 @@
 <template>
   <div class="ui-date-range-picker-c">
     <div>
-      <!-- This is where we are sending the needed probs into the child named UIDatePicker and for future implementation UIMultiDatePicker -->
       <div v-if="isSingle">
         <UISingleSliderDatePicker
           @emitSelectedDate="handleFirstSelectedDate"
-          v-model="test"
           :selectedDate="firstSelectedDate.date"
           :minDate="minDate"
           :maxDate="maxDate" />
@@ -18,7 +16,8 @@
           :secondSelectedDate="secondSelectedDate"
           :minDate="minDate"
           :maxDate="maxDate"
-          :maxSelectableDays="maxSelectableDays" />
+          :maxSelectableDays="maxSelectableDays"
+          :spaceBetweenDays="spaceBetweenDays" />
       </div>
     </div>
   </div>
@@ -40,12 +39,8 @@ export default {
     firstSelectedDate: { type: Object, default: null },
     secondSelectedDate: { type: Object, default: null },
     minDate: {},
-    maxDate: {}
-  },
-  data() {
-    return {
-      test: {}
-    }
+    maxDate: {},
+    spaceBetweenDays: { type: Number, default: 2 }
   },
 
   methods: {

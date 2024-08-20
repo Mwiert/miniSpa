@@ -79,21 +79,35 @@ export default {
     selectedDay() {
       this.centerSelectedItem()
       this.emitSelectedDate()
+      this.validateSelectedDate()
     },
     selectedMonth() {
       this.updateDays()
       this.centerSelectedItem()
       this.emitSelectedDate()
+      this.validateSelectedDate()
     },
     selectedYear() {
       this.updateDays()
       this.centerSelectedItem()
       this.emitSelectedDate()
+      this.validateSelectedDate()
     }
   },
   methods: {
-    sendModelValue() {
-      this.$emit('update:modelValue', this.selectedDate)
+    validateSelectedDate() {
+      const selectedDate = dayjs(new Date(this.selectedYear, this.selectedMonth, this.selectedDay))
+
+      if (selectedDate.isBefore(this.minDate)) {
+        this.selectedDay = dayjs(this.minDate).date()
+        this.selectedMonth = dayjs(this.minDate).month()
+        this.selectedYear = dayjs(this.minDate).year()
+      }
+      if (selectedDate.isAfter(this.maxDate)) {
+        this.selectedDay = dayjs(this.maxDate).date()
+        this.selectedMonth = dayjs(this.maxDate).month()
+        this.selectedYear = dayjs(this.maxDate).year()
+      }
     },
     generateDays() {
       const days: number[] = []
@@ -138,7 +152,6 @@ export default {
 
       this.years = years
 
-      // Ensure that selectedYear is within the range of years generated
       if (this.selectedYear < startYear) {
         this.selectedYear = startYear
       } else if (this.selectedYear > endYear) {
@@ -184,7 +197,6 @@ export default {
         ]
 
         containers.forEach((container, containerIndex) => {
-          // Kontrol: Container mevcut mu ve çocuk elemanları var mı?
           if (container && container.children && container.children.length > 0) {
             const items = Array.from(container.children) as HTMLElement[]
 
@@ -215,7 +227,6 @@ export default {
 
       return {
         transform: `rotateX(${angle}deg)`
-        //opacity: position === middleIndex + 1 ? 1 : 0.7
       }
     },
     selectCenteredItem() {

@@ -339,7 +339,6 @@ export default {
     },
 
     checkDateHistory() {
-      if (this.isSlider) return
       //Checking the date history and setting the selected date
       for (let i = 0; i < this.daysInMonth.length; i++) {
         //If the date history is equal to the date in the month, set the selected date to true
@@ -430,10 +429,13 @@ export default {
     newSelectedDays: {
       handler(newValue) {
         this.saveDateHistory = newValue.firstSelectedDate.date
+
         this.calendarDate = dayjs(this.saveDateHistory)
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
 
         this.totalDaysInMonth()
+        this.checkDateHistory()
+        this.linedThroughDate()
         this.checkSkippability()
       },
       deep: true
@@ -441,6 +443,7 @@ export default {
   },
   created() {
     //When the component is created, we are checking the range, creating the days in month and checking the date history
+
     this.checkRange()
     this.totalDaysInMonth()
     this.checkDateHistory()
