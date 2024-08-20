@@ -63,6 +63,14 @@ export default {
   },
   watch: {
     selectedDate(newDate) {
+      // this.selected = newDate
+
+      // if (this.selected > this.maxDate) {
+      //   this.selected = this.maxDate
+      // }
+      // if (this.selected < this.minDate) {
+      //   this.selected = this.minDate
+      // }
       const date = dayjs(newDate)
 
       this.selectedDay = date.date()
@@ -79,19 +87,36 @@ export default {
     selectedDay() {
       this.centerSelectedItem()
       this.emitSelectedDate()
+      this.validateSelectedDate()
     },
     selectedMonth() {
       this.updateDays()
       this.centerSelectedItem()
       this.emitSelectedDate()
+      this.validateSelectedDate()
     },
     selectedYear() {
       this.updateDays()
       this.centerSelectedItem()
       this.emitSelectedDate()
+      this.validateSelectedDate()
     }
   },
   methods: {
+    validateSelectedDate() {
+      const selectedDate = dayjs(new Date(this.selectedYear, this.selectedMonth, this.selectedDay))
+
+      if (selectedDate.isBefore(this.minDate)) {
+        this.selectedDay = dayjs(this.minDate).date()
+        this.selectedMonth = dayjs(this.minDate).month()
+        this.selectedYear = dayjs(this.minDate).year()
+      }
+      if (selectedDate.isAfter(this.maxDate)) {
+        this.selectedDay = dayjs(this.maxDate).date()
+        this.selectedMonth = dayjs(this.maxDate).month()
+        this.selectedYear = dayjs(this.maxDate).year()
+      }
+    },
     sendModelValue() {
       this.$emit('update:modelValue', this.selectedDate)
     },
