@@ -943,7 +943,6 @@ export default {
     saveFirstDateHistory(newVal) {
       this.saveFirstDateHistory = newVal
 
-      this.saveFirstDateHistory = newVal
       if (!newVal) {
         // saveFirstDateHistory'i izle eğer saveFirstDateHistory boş ise tetiklensin ve initiallar işaretlensin
         this.daysInMonth.forEach((day) => {
