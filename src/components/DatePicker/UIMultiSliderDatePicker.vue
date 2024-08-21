@@ -7,13 +7,18 @@
         :minDate="minDate"
         :maxDate="maxDate" />
     </div>
-    <UISingleSliderDatePicker
-      @emitSelectedDate="emitSecondSelectedDate"
-      :selectedDate="secondDate"
-      :minDate="minDate"
-      :maxDate="maxDate" />
+    <div class="separator"></div>
+
+    <div>
+      <UISingleSliderDatePicker
+        @emitSelectedDate="emitSecondSelectedDate"
+        :selectedDate="secondDate"
+        :minDate="minDate"
+        :maxDate="maxDate" />
+    </div>
   </div>
 </template>
+
 <script>
 import dayjs from 'dayjs'
 import UISingleSliderDatePicker from './UISingleSliderDatePicker.vue'
@@ -114,10 +119,18 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .sliders {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1px 1fr;
+}
+
+.separator {
+  background-color: #ccc;
+  width: 100%;
+  height: 94%;
+  margin: 0px 2px;
 }
 </style>
