@@ -1,6 +1,10 @@
 <template>
   {{ selectDate }}
   <div class="time-benders-c">
+    <div class="time">
+      <UITimePicker :validateMinutes="10" />
+      <UITimePicker />
+    </div>
     <div class="single">
       <UIDateRangePicker v-model="selectDate" :validateBackYear="10" label="Default calendar" />
       <UIDateRangePicker v-model="selectDate" isPast label="Single isPast" />
@@ -23,6 +27,7 @@
         v-model="selectDate"
         isMulti
         :validateForwardDay="20"
+        :validateBackMonth="1"
         label="Forward Day:20"
         positionToLeft
         :spaceBetweenDays="4" />
@@ -48,12 +53,13 @@
 <script lang="ts">
 //Imports the needed components and interfaces
 import UIDateRangePicker from '../components/DatePicker/UIDateRangePicker.vue'
+import UITimePicker from '../components/DatePicker/UITimePicker.vue'
 //import slider from '../components/DatePicker/UISliderDatePicker.vue'
 export default {
   name: 'TimeBenders',
   components: {
-    UIDateRangePicker
-    //slider
+    UIDateRangePicker,
+    UITimePicker
   },
   data() {
     return {
@@ -74,7 +80,11 @@ export default {
   padding: 1rem;
   width: 100%;
   height: 100%;
-
+  .time {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+  }
   .single {
     display: flex;
     flex-direction: row;
