@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-slider-date-picker-c">
+  <div class="ui-single-time-picker-c">
     <div class="center-overlay"></div>
     <div class="hour" @mousedown="startDrag($event)" ref="hourContainer">
       <span
@@ -51,15 +51,13 @@ export default {
     generateHours() {
       const hours: number[] = []
 
-      // Add placeholders (null) for spacing
       hours.push(null, null)
 
       // Generate hours using dayjs
       for (let i = 0; i < 24; i++) {
-        hours.push(dayjs().hour(i).hour()) // Get hour from 0 to 23
+        hours.push(dayjs().hour(i).hour())
       }
 
-      // Add placeholders (null) for spacing
       hours.push(null, null)
 
       this.hours = hours
@@ -68,15 +66,12 @@ export default {
     generateMinutes() {
       const minutes: number[] = []
 
-      // Add placeholders (null) for spacing
       minutes.push(null, null)
 
-      // Generate minutes using dayjs and minuteRange
       for (let i = 0; i < 60; i += this.minuteRange) {
         minutes.push(dayjs().minute(i).minute()) // Get minute with the given range
       }
 
-      // Add placeholders (null) for spacing
       minutes.push(null, null)
 
       this.minutes = minutes
@@ -106,12 +101,14 @@ export default {
         this.scrolling = false
         this.$nextTick(() => {
           this.selectCenteredItem()
+          this.startDebounceClose()
         })
       }
 
       document.addEventListener('mousemove', onDrag)
       document.addEventListener('mouseup', onEndDrag)
       this.scrolling = true
+      this.clearCloseTimeout()
     },
     centerSelectedItem() {
       this.$nextTick(() => {
@@ -198,6 +195,7 @@ export default {
 
       this.scrollTimeout = setTimeout(() => {
         this.selectCenteredItem()
+        this.startDebounceClose()
       }, 100)
     },
     scrollToSelected() {
@@ -206,7 +204,7 @@ export default {
 
       this.$nextTick(() => {
         if (hourContainer && hourContainer.children.length > 0) {
-          const hourIndex = this.selectedHour + 2 // 3 placeholder olduğu için
+          const hourIndex = this.selectedHour + 2
           const hourElement = hourContainer.children[hourIndex] as HTMLElement
 
           if (hourElement) {
@@ -216,7 +214,7 @@ export default {
         }
 
         if (minuteContainer && minuteContainer.children.length > 0) {
-          const minuteIndex = this.selectedMinute / this.minuteRange + 2 // 3 placeholder olduğu için
+          const minuteIndex = this.selectedMinute / this.minuteRange + 2
           const minuteElement = minuteContainer.children[minuteIndex] as HTMLElement
 
           if (minuteElement) {
@@ -227,6 +225,23 @@ export default {
           }
         }
       })
+    },
+    startDebounceClose() {
+      if (this.closeTimeout) {
+        clearTimeout(this.closeTimeout)
+      }
+      this.closeTimeout = setTimeout(() => {
+        this.closeSlider()
+      }, 1000)
+    },
+    clearCloseTimeout() {
+      if (this.closeTimeout) {
+        clearTimeout(this.closeTimeout)
+        this.closeTimeout = null
+      }
+    },
+    closeSlider() {
+      this.$emit('closeSlider')
     }
   },
   mounted() {
@@ -235,11 +250,13 @@ export default {
     this.$nextTick(() => {
       this.scrollToSelected() // Scroll to the selected item
       this.centerSelectedItem()
+      this.startDebounceClose()
     })
   },
   beforeUnmount() {
     this.$refs.hourContainer.removeEventListener('scroll', this.onScroll)
     this.$refs.minuteContainer.removeEventListener('scroll', this.onScroll)
+    this.clearCloseTimeout()
   },
   updated() {
     this.$nextTick(() => {
@@ -250,10 +267,12 @@ export default {
     selectedHour() {
       this.centerSelectedItem()
       this.emitSelectedTime()
+      this.startDebounceClose()
     },
     selectedMinute() {
       this.centerSelectedItem()
       this.emitSelectedTime()
+      this.startDebounceClose()
     }
   },
   created() {
@@ -263,9 +282,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.ui-slider-date-picker-c {
+.ui-single-time-picker-c {
   display: grid;
-  grid-template-columns: 1fr 0.5px 1fr; /* Orta kolon için otomatik genişlik */
+  grid-template-columns: 1fr 0.5px 1fr;
   height: calc(9rem + 16px);
   width: 100%;
   padding: 12px;
@@ -290,7 +309,7 @@ export default {
 
   .center-overlay {
     position: absolute;
-    top: 36%;
+    top: 40%;
     left: 3%;
     width: 96%;
     height: 1.75rem;
@@ -312,6 +331,7 @@ export default {
     user-select: none;
     transform-style: preserve-3d;
     perspective: inherit;
+    scrollbar-width: none;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -347,9 +367,8 @@ export default {
     align-items: center;
     justify-content: center;
     height: fit-content;
-    top: 36%;
-
-    font-size: 1.25rem;
+    top: 41%;
+    font-size: 18px;
     color: #000;
     z-index: 1000;
   }

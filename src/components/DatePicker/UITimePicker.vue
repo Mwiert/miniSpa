@@ -9,6 +9,7 @@
     <UISingleTimePicker
       v-show="isTimePickerEnable"
       @emitSelectedTime="handleSelectedTime"
+      @closeSlider="closeTimePicker"
       :selectedTime="selectedTime"
       :minuteRange="validateMinutes" />
   </div>
@@ -37,6 +38,9 @@ export default {
     },
     toggleTimePicker() {
       this.isTimePickerEnable = !this.isTimePickerEnable
+    },
+    closeTimePicker() {
+      this.isTimePickerEnable = false
     },
     handleClickOutside(event) {
       if (!this.$el.contains(event.target)) {
@@ -98,8 +102,8 @@ export default {
         margin-left: 2px;
       }
       .icon-rent-a-car-timepicker {
-        width: 24px;
-        height: 24px;
+        width: 18px;
+        height: 18px;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;

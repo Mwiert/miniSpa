@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-date-range-picker-c">
+  <div>
     <div>
       <div v-if="isSingle">
         <UISingleSliderDatePicker
