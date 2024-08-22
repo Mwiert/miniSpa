@@ -737,12 +737,11 @@ export default {
       })
     },
     updateSecondSelected() {
-      const firstDate = dayjs(this.firstSelectedDate.date)
-      const secondDate = dayjs(this.secondSelectedDate.date)
+      if (this.secondSelectedDate.date == '') {
+        return
+      } else {
+        const secondDate = dayjs(this.secondSelectedDate.date)
 
-      const monthDifference = secondDate.diff(firstDate, 'month')
-
-      if (monthDifference >= 1) {
         this.secondSelectedDate = {
           date: secondDate.format('YYYY-MM-DD'),
           number: secondDate.date(),
@@ -939,7 +938,6 @@ export default {
     newSelectedDays: {
       handler(newVal) {
         this.saveFirstDateHistory = newVal.firstSelectedDate.date
-
         this.saveSecondDateHistory = newVal.secondSelectedDate.date
         this.calendarDate = dayjs(this.saveFirstDateHistory)
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')

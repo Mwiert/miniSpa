@@ -9,6 +9,7 @@
     <UISingleTimePicker
       v-show="isTimePickerEnable"
       @emitSelectedTime="handleSelectedTime"
+      @closeSlider="closeTimePicker"
       :selectedTime="selectedTime"
       :minuteRange="validateMinutes" />
   </div>
@@ -37,6 +38,9 @@ export default {
     },
     toggleTimePicker() {
       this.isTimePickerEnable = !this.isTimePickerEnable
+    },
+    closeTimePicker() {
+      this.isTimePickerEnable = false
     },
     handleClickOutside(event) {
       if (!this.$el.contains(event.target)) {

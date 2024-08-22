@@ -101,12 +101,14 @@ export default {
         this.scrolling = false
         this.$nextTick(() => {
           this.selectCenteredItem()
+          this.startDebounceClose()
         })
       }
 
       document.addEventListener('mousemove', onDrag)
       document.addEventListener('mouseup', onEndDrag)
       this.scrolling = true
+      this.clearCloseTimeout()
     },
     centerSelectedItem() {
       this.$nextTick(() => {
@@ -193,6 +195,7 @@ export default {
 
       this.scrollTimeout = setTimeout(() => {
         this.selectCenteredItem()
+        this.startDebounceClose()
       }, 100)
     },
     scrollToSelected() {
@@ -222,6 +225,23 @@ export default {
           }
         }
       })
+    },
+    startDebounceClose() {
+      if (this.closeTimeout) {
+        clearTimeout(this.closeTimeout)
+      }
+      this.closeTimeout = setTimeout(() => {
+        this.closeSlider()
+      }, 1000)
+    },
+    clearCloseTimeout() {
+      if (this.closeTimeout) {
+        clearTimeout(this.closeTimeout)
+        this.closeTimeout = null
+      }
+    },
+    closeSlider() {
+      this.$emit('closeSlider')
     }
   },
   mounted() {
@@ -230,11 +250,13 @@ export default {
     this.$nextTick(() => {
       this.scrollToSelected() // Scroll to the selected item
       this.centerSelectedItem()
+      this.startDebounceClose()
     })
   },
   beforeUnmount() {
     this.$refs.hourContainer.removeEventListener('scroll', this.onScroll)
     this.$refs.minuteContainer.removeEventListener('scroll', this.onScroll)
+    this.clearCloseTimeout()
   },
   updated() {
     this.$nextTick(() => {
@@ -245,10 +267,12 @@ export default {
     selectedHour() {
       this.centerSelectedItem()
       this.emitSelectedTime()
+      this.startDebounceClose()
     },
     selectedMinute() {
       this.centerSelectedItem()
       this.emitSelectedTime()
+      this.startDebounceClose()
     }
   },
   created() {

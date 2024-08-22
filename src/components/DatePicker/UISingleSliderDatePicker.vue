@@ -198,7 +198,7 @@ export default {
 
         containers.forEach((container, containerIndex) => {
           if (container && container.children && container.children.length > 0) {
-            const items = Array.from(container.children) as HTMLElement[]
+            const items = Array.from(container?.children) as HTMLElement[]
 
             items.forEach((item, index) => {
               const style = this.getRotationStyle(index, this.selectedIndex[containerIndex])
