@@ -98,8 +98,8 @@ export default {
         margin-left: 2px;
       }
       .icon-rent-a-car-timepicker {
-        width: 24px;
-        height: 24px;
+        width: 18px;
+        height: 18px;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;

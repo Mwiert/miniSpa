@@ -98,15 +98,15 @@
               <img src="../../assets/icons/arrow-left.svg" alt="" />
             </button>
             <span class="current-date" @click.stop="isSliderOpen">{{
-              daysInMonth[15]?.fullDateFormatted.split('-')[1] +
+              this.firstSelectedDate.fullDateFormatted.split('-')[1] +
               ' ' +
-              daysInMonth[15]?.fullDateFormatted.split('-')[0]
+              this.firstSelectedDate.fullDateFormatted.split('-')[0]
             }}</span>
 
             <span class="current-date" @click.stop="isSliderOpen">{{
-              nextMonthDays[15]?.fullDateFormatted.split('-')[1] +
+              this.secondSelectedDate.fullDateFormatted.split('-')[1] +
               ' ' +
-              nextMonthDays[15]?.fullDateFormatted.split('-')[0]
+              this.secondSelectedDate.fullDateFormatted.split('-')[0]
             }}</span>
             <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
               <img src="../../assets/icons/arrow-right.svg" alt="" />
@@ -184,6 +184,7 @@ export default {
     maxSelectableDays: { type: Number, default: 0 },
     spaceBetweenDays: { type: Number, default: 2 }
   },
+
   methods: {
     handleFirstSliderDate(formattedDate: string) {
       this.formattedDate = formattedDate
@@ -735,6 +736,32 @@ export default {
         day.active = false
       })
     },
+    updateSecondSelected() {
+      const firstDate = dayjs(this.firstSelectedDate.date)
+      const secondDate = dayjs(this.secondSelectedDate.date)
+
+      const monthDifference = secondDate.diff(firstDate, 'month')
+
+      if (monthDifference >= 1) {
+        this.secondSelectedDate = {
+          date: secondDate.format('YYYY-MM-DD'),
+          number: secondDate.date(),
+          inactive: false,
+          active: true,
+          selected: true,
+          textDecoration: false,
+          blink: false,
+          between: false,
+          isToday: secondDate.isSame(dayjs(), 'day'),
+          month: secondDate.format('MM'),
+          year: secondDate.format('YYYY'),
+          day: secondDate.format('DD'),
+          firstInitialDate: false,
+          secondInitialDate: false,
+          fullDateFormatted: secondDate.format('YYYY-MMMM-DD')
+        }
+      }
+    },
     updateBetweenDates() {
       const startDate = this.firstSelectedDate
       const endDate = this.secondSelectedDate
@@ -916,8 +943,10 @@ export default {
         this.saveSecondDateHistory = newVal.secondSelectedDate.date
         this.calendarDate = dayjs(this.saveFirstDateHistory)
         this.currentDate = this.calendarDate.format('YYYY-MM-DD')
+        this.secondSelectedDate = newVal.secondSelectedDate
 
         this.populdateMonthDays()
+        this.updateSecondSelected()
         this.checkDateHistory()
         this.updateBetweenDates()
         this.linedThroughDate()
@@ -941,6 +970,12 @@ export default {
         this.linedThroughDate()
         this.checkSkippability()
       }
+    },
+    saveSecondDateHistory(newVal) {
+      this.saveSecondDateHistory = newVal
+      this.updateSecondSelected()
+      this.checkDateHistory()
+      this.updateBetweenDates()
     },
     saveFirstDateHistory(newVal) {
       this.saveFirstDateHistory = newVal
@@ -1106,17 +1141,19 @@ export default {
       }
       .slider {
         padding-top: 1.2rem;
-        width: 550px;
+        width: 600px;
         height: 230px;
         background: #ffffff;
         margin: 0 10px;
-        border-radius: 30px;
+        border-radius: 50px;
 
         .header {
           position: relative;
           display: flex;
           justify-content: space-around;
           align-items: center;
+          margin-top: 5px;
+          margin-left: 5px;
           width: 100%;
 
           .nav-button {
@@ -1138,14 +1175,14 @@ export default {
 
           .nav-button:first-child {
             position: absolute;
-            left: 10px;
+            left: 5px;
             top: 50%;
             transform: translateY(-50%);
           }
 
           .nav-button:last-child {
             position: absolute;
-            right: 10px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
           }

@@ -51,15 +51,13 @@ export default {
     generateHours() {
       const hours: number[] = []
 
-      // Add placeholders (null) for spacing
       hours.push(null, null)
 
       // Generate hours using dayjs
       for (let i = 0; i < 24; i++) {
-        hours.push(dayjs().hour(i).hour()) // Get hour from 0 to 23
+        hours.push(dayjs().hour(i).hour())
       }
 
-      // Add placeholders (null) for spacing
       hours.push(null, null)
 
       this.hours = hours
@@ -68,15 +66,12 @@ export default {
     generateMinutes() {
       const minutes: number[] = []
 
-      // Add placeholders (null) for spacing
       minutes.push(null, null)
 
-      // Generate minutes using dayjs and minuteRange
       for (let i = 0; i < 60; i += this.minuteRange) {
         minutes.push(dayjs().minute(i).minute()) // Get minute with the given range
       }
 
-      // Add placeholders (null) for spacing
       minutes.push(null, null)
 
       this.minutes = minutes
@@ -206,7 +201,7 @@ export default {
 
       this.$nextTick(() => {
         if (hourContainer && hourContainer.children.length > 0) {
-          const hourIndex = this.selectedHour + 2 // 3 placeholder olduğu için
+          const hourIndex = this.selectedHour + 2
           const hourElement = hourContainer.children[hourIndex] as HTMLElement
 
           if (hourElement) {
@@ -216,7 +211,7 @@ export default {
         }
 
         if (minuteContainer && minuteContainer.children.length > 0) {
-          const minuteIndex = this.selectedMinute / this.minuteRange + 2 // 3 placeholder olduğu için
+          const minuteIndex = this.selectedMinute / this.minuteRange + 2
           const minuteElement = minuteContainer.children[minuteIndex] as HTMLElement
 
           if (minuteElement) {
@@ -265,7 +260,7 @@ export default {
 <style lang="scss" scoped>
 .ui-slider-date-picker-c {
   display: grid;
-  grid-template-columns: 1fr 0.5px 1fr; /* Orta kolon için otomatik genişlik */
+  grid-template-columns: 1fr 0.5px 1fr;
   height: calc(9rem + 16px);
   width: 100%;
   padding: 12px;

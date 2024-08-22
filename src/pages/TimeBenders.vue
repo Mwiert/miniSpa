@@ -54,7 +54,6 @@
 //Imports the needed components and interfaces
 import UIDateRangePicker from '../components/DatePicker/UIDateRangePicker.vue'
 import UITimePicker from '../components/DatePicker/UITimePicker.vue'
-//import slider from '../components/DatePicker/UISliderDatePicker.vue'
 export default {
   name: 'TimeBenders',
   components: {
