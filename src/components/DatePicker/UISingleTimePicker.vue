@@ -232,7 +232,7 @@ export default {
       }
       this.closeTimeout = setTimeout(() => {
         this.closeSlider()
-      }, 1000)
+      }, 1500)
     },
     clearCloseTimeout() {
       if (this.closeTimeout) {

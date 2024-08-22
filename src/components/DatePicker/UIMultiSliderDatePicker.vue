@@ -115,6 +115,24 @@ export default {
         this.firstDate = temp
       }
       this.validateSecondDate()
+    },
+    firstSelectedDate(newVal) {
+      this.firstDate = newVal.date
+      if (this.secondDate < newVal.date) {
+        let temp = this.firstDate
+        this.firstDate = this.secondDate
+        this.secondDate = temp
+      }
+      this.validateFirstDate()
+    },
+    secondSelectedDate(newVal) {
+      this.secondDate = newVal.date
+      if (this.firstDate > newVal.date) {
+        let temp = this.secondDate
+        this.secondDate = this.firstDate
+        this.firstDate = temp
+      }
+      this.validateSecondDate()
     }
   }
 }
