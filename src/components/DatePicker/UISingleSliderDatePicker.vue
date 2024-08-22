@@ -394,6 +394,7 @@ export default {
     user-select: none;
     transform-style: preserve-3d;
     perspective: inherit;
+    scrollbar-width: none;
 
     &::-webkit-scrollbar {
       width: 0;

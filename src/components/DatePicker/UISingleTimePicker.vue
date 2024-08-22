@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-slider-date-picker-c">
+  <div class="ui-single-time-picker-c">
     <div class="center-overlay"></div>
     <div class="hour" @mousedown="startDrag($event)" ref="hourContainer">
       <span
@@ -258,7 +258,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.ui-slider-date-picker-c {
+.ui-single-time-picker-c {
   display: grid;
   grid-template-columns: 1fr 0.5px 1fr;
   height: calc(9rem + 16px);
@@ -285,7 +285,7 @@ export default {
 
   .center-overlay {
     position: absolute;
-    top: 36%;
+    top: 40%;
     left: 3%;
     width: 96%;
     height: 1.75rem;
@@ -307,6 +307,7 @@ export default {
     user-select: none;
     transform-style: preserve-3d;
     perspective: inherit;
+    scrollbar-width: none;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -342,9 +343,8 @@ export default {
     align-items: center;
     justify-content: center;
     height: fit-content;
-    top: 36%;
-
-    font-size: 1.25rem;
+    top: 41%;
+    font-size: 18px;
     color: #000;
     z-index: 1000;
   }

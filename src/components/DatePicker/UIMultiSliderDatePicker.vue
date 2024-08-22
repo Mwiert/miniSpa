@@ -1,5 +1,5 @@
 <template>
-  <div class="sliders">
+  <div class="ui-multi-slider-date-picker">
     <div>
       <UISingleSliderDatePicker
         @emitSelectedDate="emitFirstSelectedDate"
@@ -121,16 +121,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.sliders {
+.ui-multi-slider-date-picker {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
-}
-
-.separator {
-  background-color: #ccc;
-  width: 100%;
-  height: 94%;
-  margin: 0px 2px;
+  .separator {
+    background-color: #ccc;
+    width: 100%;
+    height: 94%;
+    margin: 0px 2px;
+  }
 }
 </style>
