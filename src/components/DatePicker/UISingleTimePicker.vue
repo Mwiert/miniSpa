@@ -286,13 +286,14 @@ export default {
   display: grid;
   grid-template-columns: 1fr 0.5px 1fr;
   height: calc(9rem + 16px);
-  width: 100%;
+  width: 76%;
   padding: 12px;
   box-sizing: border-box;
   gap: 16px;
-  position: relative;
+  top: 90%;
+  position: absolute;
   background-color: #ffffff;
-  perspective: 1000px;
+  z-index: 1000;
   border-radius: 10px;
 
   &::before {
@@ -370,7 +371,6 @@ export default {
     top: 41%;
     font-size: 18px;
     color: #000;
-    z-index: 1000;
   }
 }
 </style>

@@ -471,13 +471,15 @@ export default {
           //firstSelected max'tan büyükse
           else if (newDate.isAfter(maxDate)) {
             this.secondSelectedDate.date = this.maxDate
-            this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
+
             if (this.maxSelectableDays != 0) {
               // Eğer firstDate maxDate - maxSelectableDays'ten sonraysa
 
               this.firstSelectedDate.date = maxDate
                 .subtract(this.maxSelectableDays, 'day')
                 .format('YYYY-MM-DD')
+            } else {
+              this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
             }
           } else if (firstDate.isAfter(secondDate)) {
             this.secondSelectedDate.date = null
@@ -508,12 +510,14 @@ export default {
             }
           } else if (newDate.isBefore(minDate)) {
             this.firstSelectedDate.date = this.minDate
-            this.secondSelectedDate.date = firstDate.format('YYYY-MM-DD')
+
             if (this.maxSelectableDays != 0) {
               //Eğer secondDate minDate + maxSelectableDays'den sonraysa
               this.secondSelectedDate.date = minDate
                 .add(this.maxSelectableDays, 'day')
                 .format('YYYY-MM-DD')
+            } else {
+              this.secondSelectedDate.date = firstDate.format('YYYY-MM-DD')
             }
           } else if (secondDate.isBefore(firstDate)) {
             this.firstSelectedDate.date = secondDate.format('YYYY-MM-DD')
