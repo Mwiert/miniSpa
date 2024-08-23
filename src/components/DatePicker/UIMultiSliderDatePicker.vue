@@ -73,6 +73,8 @@ export default {
           this.secondDate = secondDate.format('YYYY-MM-DD')
         }
       }
+      this.firstSelectedDate.date = this.firstDate
+      this.secondSelectedDate.date = this.secondDate
     },
     validateSecondDate() {
       let firstDate = dayjs(this.firstDate)
@@ -95,6 +97,8 @@ export default {
           this.secondDate = secondDate.format('YYYY-MM-DD')
         }
       }
+      this.firstSelectedDate.date = this.firstDate
+      this.secondSelectedDate.date = this.secondDate
     }
   },
   watch: {

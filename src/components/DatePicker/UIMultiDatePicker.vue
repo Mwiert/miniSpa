@@ -103,11 +103,7 @@
               this.firstSelectedDate.fullDateFormatted.split('-')[0]
             }}</span>
 
-            <span class="current-date" @click.stop="isSliderOpen">{{
-              this.secondSelectedDate.fullDateFormatted.split('-')[1] +
-              ' ' +
-              this.secondSelectedDate.fullDateFormatted.split('-')[0]
-            }}</span>
+            <span class="current-date" @click.stop="isSliderOpen">{{ secondSliderDate }}</span>
             <button id="next" class="nav-button" @click="onClickToSkip(1)" v-show="nextDate">
               <img src="../../assets/icons/arrow-right.svg" alt="" />
             </button>
@@ -184,7 +180,24 @@ export default {
     maxSelectableDays: { type: Number, default: 0 },
     spaceBetweenDays: { type: Number, default: 2 }
   },
+  computed: {
+    secondSliderDate() {
+      if (this.secondSelectedDate.date != null) {
+        return (
+          this.secondSelectedDate.fullDateFormatted.split('-')[1] +
+          ' ' +
+          this.secondSelectedDate.fullDateFormatted.split('-')[0]
+        )
+      } else {
+        const firstDate = dayjs(this.firstSelectedDate.date)
 
+        let secondDate = firstDate.add(this.spaceBetweenDays, 'day').format('YYYY-MMMM-DD')
+        this.secondSelectedDate.date = dayjs(secondDate).format('YYYY-MM-DD')
+        this.updateSecondSelected()
+        return secondDate.split('-')[1] + ' ' + secondDate.split('-')[0]
+      }
+    }
+  },
   methods: {
     handleFirstSliderDate(formattedDate: string) {
       this.formattedDate = formattedDate
@@ -737,7 +750,7 @@ export default {
       })
     },
     updateSecondSelected() {
-      if (this.secondSelectedDate.date == '') {
+      if (this.secondSelectedDate.date == null) {
         return
       } else {
         const secondDate = dayjs(this.secondSelectedDate.date)
@@ -969,12 +982,7 @@ export default {
         this.checkSkippability()
       }
     },
-    saveSecondDateHistory(newVal) {
-      this.saveSecondDateHistory = newVal
-      this.updateSecondSelected()
-      this.checkDateHistory()
-      this.updateBetweenDates()
-    },
+
     saveFirstDateHistory(newVal) {
       this.saveFirstDateHistory = newVal
 
