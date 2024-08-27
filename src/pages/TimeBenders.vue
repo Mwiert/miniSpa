@@ -1,9 +1,10 @@
 <template>
   {{ selectDate }}
+  {{ selectTime }}
   <div class="time-benders-c">
     <div class="time">
-      <UITimePicker :validateMinutes="10" />
-      <UITimePicker />
+      <UITimePicker v-model="selectTime" :validateMinutes="10" />
+      <UITimePicker v-model="selectTime" />
     </div>
     <div class="single">
       <UIDateRangePicker v-model="selectDate" :validateBackYear="10" label="Default calendar" />
@@ -62,7 +63,8 @@ export default {
   },
   data() {
     return {
-      selectDate: {}
+      selectDate: {},
+      selectTime: {}
     }
   }
 }

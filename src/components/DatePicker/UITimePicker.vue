@@ -11,7 +11,8 @@
       @emitSelectedTime="handleSelectedTime"
       @closeSlider="closeTimePicker"
       :selectedTime="selectedTime"
-      :minuteRange="validateMinutes" />
+      :minuteRange="validateMinutes"
+      @click="sendTimeToParent" />
   </div>
 </template>
 
@@ -32,6 +33,11 @@ export default {
       selectedTime: ''
     }
   },
+  watch: {
+    selectedTime() {
+      this.sendTimeToParent()
+    }
+  },
   methods: {
     handleSelectedTime(newTime) {
       this.selectedTime = newTime
@@ -48,13 +54,19 @@ export default {
           this.isTimePickerEnable = false
         }, 100)
       }
+    },
+    sendTimeToParent() {
+      this.$emit('update:modelValue', this.selectedTime)
+    },
+    mounted() {
+      document.addEventListener('click', this.handleClickOutside)
+    },
+    beforeUnmount() {
+      document.removeEventListener('click', this.handleClickOutside)
+    },
+    created() {
+      this.sendTimeToParent()
     }
-  },
-  mounted() {
-    document.addEventListener('click', this.handleClickOutside)
-  },
-  beforeUnmount() {
-    document.removeEventListener('click', this.handleClickOutside)
   }
 }
 </script>
