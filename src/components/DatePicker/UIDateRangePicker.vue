@@ -561,12 +561,14 @@ export default {
           this.newSelectedDays.firstSelectedDate = newVal
           this.newSelectedDays.secondSelectedDate = this.secondSelectedDate
         }
+        this.sendDateToParent()
       },
       deep: true
     },
     secondSelectedDate: {
       handler(newVal) {
         this.newSelectedDays.secondSelectedDate = newVal
+        this.sendDateToParent()
       },
       deep: true
     }
